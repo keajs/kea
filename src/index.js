@@ -1,5 +1,5 @@
 import { select } from 'redux-saga/effects'
-import { createSelector } from 'reselect'
+import { createSelector, createStructuredSelector } from 'reselect'
 import { combineReducers } from 'redux'
 
 class KeaLogic {
@@ -54,15 +54,34 @@ export function createCombinedReducer (logics = []) {
 
   logics.forEach(logic => {
     if (!logic.path) {
-      console.error('No path found for reducer!', logic)
+      console.error('[KEA-LOGIC] No path found for reducer!', logic)
+      console.trace()
       return
     }
     if (!logic.reducer) {
-      console.error('No reducer in logic!', logic.path, logic)
+      console.error('[KEA-LOGIC] No reducer in logic!', logic.path, logic)
+      console.trace()
       return
     }
     reducer[logic.path[logic.path.length - 1]] = logic.reducer
   })
 
   return combineReducers(reducer)
+}
+
+export function selectPropsFromLogic (mapping = {}) {
+  let hash = {}
+
+  Object.keys(mapping).forEach(key => {
+    const selector = mapping[key].selectors ? mapping[key].selectors : mapping[key]
+
+    if (typeof selector[key] !== 'undefined') {
+      hash[key] = selector[key]
+    } else {
+      console.error(`[KEA-LOGIC] selector ${key} missing`)
+      console.trace()
+    }
+  })
+
+  return createStructuredSelector(hash)
 }

@@ -10,6 +10,7 @@ exports.createLogic = createLogic;
 exports.pathSelector = pathSelector;
 exports.createSelectors = createSelectors;
 exports.createCombinedReducer = createCombinedReducer;
+exports.selectPropsFromLogic = selectPropsFromLogic;
 
 var _effects = require('redux-saga/effects');
 
@@ -53,29 +54,29 @@ var KeaLogic = function () {
   }, {
     key: 'fetch',
     value: regeneratorRuntime.mark(function fetch() {
-      var hash,
-          keyArray,
+      var results,
+          keys,
           i,
           _args2 = arguments;
       return regeneratorRuntime.wrap(function fetch$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              hash = {};
-              keyArray = Array.isArray(_args2[0]) ? _args2[0] : _args2;
+              results = {};
+              keys = Array.isArray(_args2[0]) ? _args2[0] : _args2;
               i = 0;
 
             case 3:
-              if (!(i < keyArray.length)) {
+              if (!(i < keys.length)) {
                 _context2.next = 10;
                 break;
               }
 
               _context2.next = 6;
-              return this.get(keyArray[i]);
+              return this.get(keys[i]);
 
             case 6:
-              hash[keyArray[i]] = _context2.sent;
+              results[keys[i]] = _context2.sent;
 
             case 7:
               i++;
@@ -83,7 +84,7 @@ var KeaLogic = function () {
               break;
 
             case 10:
-              return _context2.abrupt('return', hash);
+              return _context2.abrupt('return', results);
 
             case 11:
             case 'end':
@@ -135,15 +136,36 @@ function createCombinedReducer() {
 
   logics.forEach(function (logic) {
     if (!logic.path) {
-      console.error('No path found for reducer!', logic);
+      console.error('[KEA-LOGIC] No path found for reducer!', logic);
+      console.trace();
       return;
     }
     if (!logic.reducer) {
-      console.error('No reducer in logic!', logic.path, logic);
+      console.error('[KEA-LOGIC] No reducer in logic!', logic.path, logic);
+      console.trace();
       return;
     }
     reducer[logic.path[logic.path.length - 1]] = logic.reducer;
   });
 
   return (0, _redux.combineReducers)(reducer);
+}
+
+function selectPropsFromLogic() {
+  var mapping = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  var hash = {};
+
+  Object.keys(mapping).forEach(function (key) {
+    var selector = mapping[key].selectors ? mapping[key].selectors : mapping[key];
+
+    if (typeof selector[key] !== 'undefined') {
+      hash[key] = selector[key];
+    } else {
+      console.error('[KEA-LOGIC] selector ' + key + ' missing');
+      console.trace();
+    }
+  });
+
+  return (0, _reselect.createStructuredSelector)(hash);
 }
