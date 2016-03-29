@@ -1,4 +1,4 @@
-import { select } from 'redux-saga/effects'
+import { select, take, fork, cancel } from 'redux-saga/effects'
 import { createSelector, createStructuredSelector } from 'reselect'
 import { combineReducers } from 'redux'
 
@@ -87,9 +87,30 @@ export function selectPropsFromLogic (mapping = {}) {
 }
 
 class KeaScene {
-  constructor (logics) {
-    this.logics = logics
-    this.reducer = createCombinedReducer(logics)
+  constructor ({ logic, sagas }) {
+    this.logic = logic || []
+    this.reducer = createCombinedReducer(logic)
+    this.sagas = sagas
+
+    if (this.sagas) {
+      this.worker = function * () {
+        let workers = []
+        try {
+          for (let i = 0; i < sagas.length; i++) {
+            const worker = yield fork(sagas[i])
+            workers.push(worker)
+          }
+
+          while (true) {
+            yield take('wait until worker cancellation')
+          }
+        } catch (error) {
+          for (let i = 0; i < workers.length; i++) {
+            yield cancel(workers[i])
+          }
+        }
+      }
+    }
   }
 }
 

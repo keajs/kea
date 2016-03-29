@@ -171,11 +171,91 @@ function selectPropsFromLogic() {
   return (0, _reselect.createStructuredSelector)(hash);
 }
 
-var KeaScene = function KeaScene(logics) {
+var KeaScene = function KeaScene(_ref) {
+  var logic = _ref.logic;
+  var sagas = _ref.sagas;
+
   _classCallCheck(this, KeaScene);
 
-  this.logics = logics;
-  this.reducer = createCombinedReducer(logics);
+  this.logic = logic || [];
+  this.reducer = createCombinedReducer(logic);
+  this.sagas = sagas;
+
+  if (this.sagas) {
+    this.worker = regeneratorRuntime.mark(function _callee() {
+      var workers, i, worker, _i;
+
+      return regeneratorRuntime.wrap(function _callee$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              workers = [];
+              _context3.prev = 1;
+              i = 0;
+
+            case 3:
+              if (!(i < sagas.length)) {
+                _context3.next = 11;
+                break;
+              }
+
+              _context3.next = 6;
+              return (0, _effects.fork)(sagas[i]);
+
+            case 6:
+              worker = _context3.sent;
+
+              workers.push(worker);
+
+            case 8:
+              i++;
+              _context3.next = 3;
+              break;
+
+            case 11:
+              if (!true) {
+                _context3.next = 16;
+                break;
+              }
+
+              _context3.next = 14;
+              return (0, _effects.take)('wait until worker cancellation');
+
+            case 14:
+              _context3.next = 11;
+              break;
+
+            case 16:
+              _context3.next = 27;
+              break;
+
+            case 18:
+              _context3.prev = 18;
+              _context3.t0 = _context3['catch'](1);
+              _i = 0;
+
+            case 21:
+              if (!(_i < workers.length)) {
+                _context3.next = 27;
+                break;
+              }
+
+              _context3.next = 24;
+              return (0, _effects.cancel)(workers[_i]);
+
+            case 24:
+              _i++;
+              _context3.next = 21;
+              break;
+
+            case 27:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, _callee, this, [[1, 18]]);
+    });
+  }
 };
 
 function createScene(args) {
