@@ -86,6 +86,26 @@ export function selectPropsFromLogic (mapping = {}) {
   return createStructuredSelector(hash)
 }
 
+export function createCombinedSaga (sagas) {
+  return function * () {
+    let workers = []
+    try {
+      for (let i = 0; i < sagas.length; i++) {
+        const worker = yield fork(sagas[i])
+        workers.push(worker)
+      }
+
+      while (true) {
+        yield take('wait until worker cancellation')
+      }
+    } catch (error) {
+      for (let i = 0; i < workers.length; i++) {
+        yield cancel(workers[i])
+      }
+    }
+  }
+}
+
 class KeaScene {
   constructor ({ logic, sagas }) {
     this.logic = logic || []
@@ -93,23 +113,7 @@ class KeaScene {
     this.sagas = sagas
 
     if (this.sagas) {
-      this.worker = function * () {
-        let workers = []
-        try {
-          for (let i = 0; i < sagas.length; i++) {
-            const worker = yield fork(sagas[i])
-            workers.push(worker)
-          }
-
-          while (true) {
-            yield take('wait until worker cancellation')
-          }
-        } catch (error) {
-          for (let i = 0; i < workers.length; i++) {
-            yield cancel(workers[i])
-          }
-        }
-      }
+      this.worker = createCombinedSaga(this.sagas)
     }
   }
 }
