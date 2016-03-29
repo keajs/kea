@@ -85,3 +85,14 @@ export function selectPropsFromLogic (mapping = {}) {
 
   return createStructuredSelector(hash)
 }
+
+class KeaScene {
+  constructor (logics) {
+    this.logics = logics
+    this.reducer = createCombinedReducer(logics)
+  }
+}
+
+export function createScene (args) {
+  return new KeaScene(args)
+}

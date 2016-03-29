@@ -11,6 +11,7 @@ exports.pathSelector = pathSelector;
 exports.createSelectors = createSelectors;
 exports.createCombinedReducer = createCombinedReducer;
 exports.selectPropsFromLogic = selectPropsFromLogic;
+exports.createScene = createScene;
 
 var _effects = require('redux-saga/effects');
 
@@ -168,4 +169,15 @@ function selectPropsFromLogic() {
   });
 
   return (0, _reselect.createStructuredSelector)(hash);
+}
+
+var KeaScene = function KeaScene(logics) {
+  _classCallCheck(this, KeaScene);
+
+  this.logics = logics;
+  this.reducer = createCombinedReducer(logics);
+};
+
+function createScene(args) {
+  return new KeaScene(args);
 }
