@@ -43,7 +43,7 @@ var KeaLogic = function () {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return (0, _effects.select)(this.selectors[key]);
+              return (0, _effects.select)(key ? this.selectors[key] : this.selector);
 
             case 2:
               return _context.abrupt('return', _context.sent);
