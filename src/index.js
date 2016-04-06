@@ -10,7 +10,7 @@ class KeaLogic {
   }
 
   * get (key) {
-    return yield select(this.selectors[key])
+    return yield select(key ? this.selectors[key] : this.selector)
   }
 
   * fetch () {
