@@ -69,19 +69,39 @@ export function createCombinedReducer (logics = []) {
   return combineReducers(reducer)
 }
 
-export function selectPropsFromLogic (mapping = {}) {
+export function selectPropsFromLogic (mapping = []) {
+  if (mapping.length % 2 === 1) {
+    console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping)
+    console.trace()
+    return
+  }
+
   let hash = {}
 
-  Object.keys(mapping).forEach(key => {
-    const selector = mapping[key].selectors ? mapping[key].selectors : mapping[key]
+  for (let i = 0; i < mapping.length; i += 2) {
+    const logic = mapping[i]
+    const props = mapping[i + 1]
 
-    if (typeof selector[key] !== 'undefined') {
-      hash[key] = selector[key]
-    } else {
-      console.error(`[KEA-LOGIC] selector ${key} missing`)
-      console.trace()
-    }
-  })
+    const selectors = logic.selectors ? logic.selectors : logic
+
+    props.forEach(query => {
+      let from = query
+      let to = query
+
+      if (query.includes(' as ')) {
+        [from, to] = query.split(' as ')
+      }
+
+      if (from === '*') {
+        hash[to] = logic.selector ? logic.selector : selectors
+      } else if (typeof selectors[from] !== 'undefined') {
+        hash[to] = selectors[from]
+      } else {
+        console.error(`[KEA-LOGIC] selector "${query}" missing for logic:`, logic)
+        console.trace()
+      }
+    })
+  }
 
   return createStructuredSelector(hash)
 }
