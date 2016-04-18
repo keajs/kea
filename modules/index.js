@@ -280,12 +280,14 @@ function createCombinedSaga(sagas) {
 }
 
 var KeaScene = function KeaScene(_ref) {
+  var name = _ref.name;
   var logic = _ref.logic;
   var sagas = _ref.sagas;
   var component = _ref.component;
 
   _classCallCheck(this, KeaScene);
 
+  this.name = name;
   this.logic = logic || [];
   this.reducer = createCombinedReducer(logic);
   this.sagas = sagas;

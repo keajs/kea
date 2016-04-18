@@ -127,7 +127,8 @@ export function createCombinedSaga (sagas) {
 }
 
 class KeaScene {
-  constructor ({ logic, sagas, component }) {
+  constructor ({ name, logic, sagas, component }) {
+    this.name = name
     this.logic = logic || []
     this.reducer = createCombinedReducer(logic)
     this.sagas = sagas
