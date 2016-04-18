@@ -143,3 +143,37 @@ class KeaScene {
 export function createScene (args) {
   return new KeaScene(args)
 }
+
+function lazyLoad (store, lazyLoadableModule) {
+  return (location, cb) => {
+    lazyLoadableModule(module => {
+      const scene = module.default
+      store.addKeaScene(scene)
+      cb(null, scene.component)
+    })
+  }
+}
+
+export function getRoutes (App, store, routes) {
+  return {
+    component: App,
+    childRoutes: Object.keys(routes).map(route => ({
+      path: route,
+      getComponent: lazyLoad(store, routes[route])
+    }))
+  }
+}
+
+export function combineScenesAndRoutes (scenes, routes) {
+  let combined = {}
+
+  Object.keys(routes).forEach(route => {
+    if (scenes[routes[route]]) {
+      combined[route] = scenes[routes[route]]
+    } else {
+      console.error(`[KEA-LOGIC] scene ${routes[route]} not found in scenes object (route: ${route})`)
+    }
+  })
+
+  return combined
+}
