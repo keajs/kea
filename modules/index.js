@@ -27,6 +27,13 @@ var _redux = require('redux');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var KeaLogic = function () {
+  // path,
+  // actions
+  // constants
+  // saga
+  // reducer
+  // selectors
+
   function KeaLogic(args) {
     var _this = this;
 
@@ -35,6 +42,12 @@ var KeaLogic = function () {
     Object.keys(args).forEach(function (key) {
       _this[key] = args[key];
     });
+
+    if (!this.selector && this.path) {
+      this.selector = function (state) {
+        return pathSelector(_this.path, state);
+      };
+    }
   }
 
   _createClass(KeaLogic, [{

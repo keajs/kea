@@ -3,10 +3,20 @@ import { createSelector, createStructuredSelector } from 'reselect'
 import { combineReducers } from 'redux'
 
 class KeaLogic {
+  // path,
+  // actions
+  // constants
+  // saga
+  // reducer
+  // selectors
   constructor (args) {
     Object.keys(args).forEach(key => {
       this[key] = args[key]
     })
+
+    if (!this.selector && this.path) {
+      this.selector = (state) => pathSelector(this.path, state)
+    }
   }
 
   * get (key) {
