@@ -4,12 +4,13 @@
 
 Logic stores consist of 1) actions, 2) reducers, 3) selectors and 4) optionally sagas.
 
-Logic stores augment your components, are stored in redux, and are connected to components via ES6 imports.
+Logic stores augment your components, are stored in redux, and are connected via ES6 imports.
 
 If a picture is worth a thousand words, then [live code](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) is worth a million:
 
 ```js
 // scenes/homepage/index.js - This the root component for the homepage scene
+
 import './styles.scss'
 
 import React, { Component } from 'react'
@@ -96,16 +97,7 @@ Logic stores consist of a path:
 export const path = ['scenes', 'homepage', 'index']
 ```
 
-Constants:
-
-```js
-// CONSTANTS
-export const constants = mirrorCreator([
-  SOME_CONSTANT
-])
-```
-
-Actions, created via [`redux-act`](https://github.com/pauldijou/redux-act):
+Actions, created via [`redux-act`](https://github.com/pauldijou/redux-act), so you don't need to duplicate constants everywhere:
 
 ```js
 // ACTIONS
@@ -114,7 +106,7 @@ export const actions = {
 }
 ```
 
-A reducer, also created via [`redux-act`](https://github.com/pauldijou/redux-act):
+A reducer, also created via [`redux-act`](https://github.com/pauldijou/redux-act). Accepts our action creators directly as keys:
 
 ```js
 // REDUCER
@@ -123,17 +115,17 @@ export const reducer = combineReducers({
     [actions.updateName]: (state, payload) => {
       return payload.name
     }
-  }, 'Chirpy') // default
+  }, 'Chirpy') // the default value
 })
 ```
 
-And selectors to receive, combine and memoize data, created via [`reselect`](https://github.com/reactjs/reselect)
+And selectors (via [`reselect`](https://github.com/reactjs/reselect)) to receive, combine and memoize data:
 
 ```js
 // SELECTORS
 export const selectors = createSelectors(path, reducer) // automatically for all redux keys
 
-selectors.capitalizedName = createSelector(             // and a special one to convert some data
+selectors.capitalizedName = createSelector(             // and a special one to capitalize the name
   selectors.name,
   (name) => {
     return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
@@ -141,25 +133,26 @@ selectors.capitalizedName = createSelector(             // and a special one to 
 )
 ```
 
-You combine them all into a file
+They are merged into a logic store, and exported from `logic.js`:
 
 ```js
 export default createLogic({
   path,
-  // constants,
   actions,
   reducer,
   selectors
 })
 ```
 
-While logic stores can exist anywhere, the convention is to divide your code into:
+The logic store can be imported in any component, saga or other logic store as needed.
+
+While logic stores can exist anywhere, it has proven useful to organise your code like this:
 
 * `scenes` - a scene is a page or a subsystem in your app
 * `components` - react components that are shared between scenes
 * `utils` - javascript utils shared between scenes
 
-The traditional file structure looks like this:
+For example:
 
 ```
 scenes/homepage/
@@ -207,44 +200,38 @@ scenes/
 - store.js
 ```
 
-Each component can have a [`saga`](https://github.com/yelouafi/redux-saga):
+Each react component or logic store can have a [`saga`](https://github.com/yelouafi/redux-saga):
 
 ```js
 // scenes/homepage/slider/saga.js
 
 import sliderLogic from './logic'
+
+// we want to use the updateSlide action to manipulate the scenes/homepage/slider/logic.js store
 const { updateSlide } = sliderLogic.actions
 
 export default function * saga () {
-  try {
-    while (true) {
-      // wait for the updateSlide action to trigger or 5 seconds
-      const { change, timeout } = yield race({
-        change: take(updateSlide().type),
-        timeout: delay(5000)
-      })
+  while (true) {
+    // wait for the updateSlide action to trigger or 5 seconds to pass
+    const { change, timeout } = yield race({
+      change: take(updateSlide().type),
+      timeout: delay(5000)
+    })
 
-      // if timed out, advance the slide
-      if (timeout) {
-        const currentSlide = yield sliderLogic.get('currentSlide')
-        yield put(updateSlide(currentSlide + 1))
-      }
+    // if timed out, advance the slide
+    if (timeout) {
+      const currentSlide = yield sliderLogic.get('currentSlide')
+      yield put(updateSlide(currentSlide + 1))
+    }
 
-      // and wait again
-    }
-  } catch (error) {
-    if (error instanceof SagaCancellationException) {
-      // saga cancelled, do cleanup
-      console.log('Stopping homepage slider saga')
-    } else {
-      // some other error
-      console.error(error)
-    }
+    // and wait again
   }
 }
 ```
 
-And finally, everything is combined in `scene.js`
+Reducers from logic stores can be added to redux via `combineReducers` like any other redux reducer. Sagas can be started any way you like.
+
+If, however you favour convenience (and programmer happiness), you can combine them all into a scene:
 
 ```js
 // scenes/homepage/scene.js
@@ -271,7 +258,7 @@ export default createScene({
 })
 ```
 
-Scenes are combined in routes:
+Combine all your scenes with routes:
 
 ```js
 import { combineScenesAndRoutes } from 'kea-logic'
@@ -290,7 +277,9 @@ const routes = {
 export default combineScenesAndRoutes(scenes, routes)
 ```
 
-and loaded lazily when the time comes.
+... and have those lazily loaded when route is accessed.
+
+## Try it out!
 
 Check out the [example](https://github.com/mariusandra/kea-example) by running:
 
@@ -301,8 +290,11 @@ cd myproject
 npm start
 ```
 
----
-List of public functions
+## What is `kea`?
+
+Read more here about the quest to find [the smartest way to develop react applications](https://github.com/mariusandra/kea).
+
+## List of public functions:
 
 * createLogic
 * pathSelector
@@ -313,3 +305,5 @@ List of public functions
 * createScene
 * getRoutes
 * combineScenesAndRoutes
+
+Proper documentation coming soon! Please help if you can!
