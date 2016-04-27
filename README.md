@@ -2,10 +2,11 @@
 
 `kea-logic` lets you create logic stores, and access their contents from React components as props.
 
-Logic stores consist of actions, reducers and selectors.
-They are stored in redux, and are accessed by importing `logic.js` files in your component, and selecting the data you need.
+Logic stores consist of 1) actions, 2) reducers, 3) selectors and 4) optionally sagas.
 
-An [example](https://github.com/mariusandra/kea-example) ([live demo](http://example.kea.rocks/)) follows:
+Logic stores augment your components, are stored in redux, and are connected to components via ES6 imports.
+
+If a picture is worth a thousand words, then [live code](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) is worth a million:
 
 ```js
 // scenes/homepage/index.js - This the root component for the homepage scene
