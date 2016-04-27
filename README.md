@@ -8,7 +8,7 @@ Logic stores augment your components, are stored in redux, and are connected via
 
 If a picture is worth a thousand words, then [live code](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) is worth a million:
 
-```js
+```jsx
 // scenes/homepage/index.js - This the root component for the homepage scene
 
 import './styles.scss'
