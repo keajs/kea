@@ -13,9 +13,8 @@ var _redux = require('redux');
 
 var NEW_SCENE = exports.NEW_SCENE = '@@kea/NEW_SCENE';
 
-var loadedReducers = {};
+// worker functions are loaded globally, reducers locally in store
 var loadedWorkers = {};
-var currentScene = null;
 
 function createRootSaga() {
   var appSagas = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
@@ -96,27 +95,25 @@ function createCombinedKeaReducer(sceneReducers, appReducers) {
 function createKeaStore(finalCreateStore) {
   var appReducers = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  var rootReducer = createCombinedKeaReducer(loadedReducers, appReducers);
+  var rootReducer = createCombinedKeaReducer({}, appReducers);
 
   var store = finalCreateStore(rootReducer);
 
-  store.clearKeaScene = function () {
-    loadedReducers = {};
-    loadedWorkers = {};
-    currentScene = null;
-  };
+  store.loadedReducers = {};
+  store.currentScene = null;
 
   store.addKeaScene = function (scene) {
     var name = scene.name;
 
 
-    if (currentScene === name) {
+    if (this.currentScene === name) {
       return;
     }
 
-    loadedReducers[name] = scene.reducer;
+    this.loadedReducers[name] = scene.reducer;
     loadedWorkers[name] = scene.worker;
-    this.replaceReducer(createCombinedKeaReducer(loadedReducers, appReducers));
+
+    this.replaceReducer(createCombinedKeaReducer(this.loadedReducers, appReducers));
 
     this.dispatch({
       type: NEW_SCENE,
@@ -125,7 +122,7 @@ function createKeaStore(finalCreateStore) {
       }
     });
 
-    currentScene = name;
+    this.currentScene = name;
   };
 
   return store;

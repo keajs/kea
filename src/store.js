@@ -3,9 +3,8 @@ import { combineReducers } from 'redux'
 
 export const NEW_SCENE = '@@kea/NEW_SCENE'
 
-let loadedReducers = {}
+// worker functions are loaded globally, reducers locally in store
 let loadedWorkers = {}
-let currentScene = null
 
 export function createRootSaga (appSagas = null) {
   return function * () {
@@ -38,26 +37,24 @@ function createCombinedKeaReducer (sceneReducers, appReducers) {
 }
 
 export function createKeaStore (finalCreateStore, appReducers = {}) {
-  const rootReducer = createCombinedKeaReducer(loadedReducers, appReducers)
+  const rootReducer = createCombinedKeaReducer({}, appReducers)
 
   const store = finalCreateStore(rootReducer)
 
-  store.clearKeaScene = function () {
-    loadedReducers = {}
-    loadedWorkers = {}
-    currentScene = null
-  }
+  store.loadedReducers = {}
+  store.currentScene = null
 
   store.addKeaScene = function (scene) {
     const { name } = scene
 
-    if (currentScene === name) {
+    if (this.currentScene === name) {
       return
     }
 
-    loadedReducers[name] = scene.reducer
+    this.loadedReducers[name] = scene.reducer
     loadedWorkers[name] = scene.worker
-    this.replaceReducer(createCombinedKeaReducer(loadedReducers, appReducers))
+
+    this.replaceReducer(createCombinedKeaReducer(this.loadedReducers, appReducers))
 
     this.dispatch({
       type: NEW_SCENE,
@@ -66,7 +63,7 @@ export function createKeaStore (finalCreateStore, appReducers = {}) {
       }
     })
 
-    currentScene = name
+    this.currentScene = name
   }
 
   return store
