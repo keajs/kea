@@ -100,6 +100,12 @@ function createKeaStore(finalCreateStore) {
 
   var store = finalCreateStore(rootReducer);
 
+  store.clearKeaScene = function () {
+    loadedReducers = {};
+    loadedWorkers = {};
+    currentScene = null;
+  };
+
   store.addKeaScene = function (scene) {
     var name = scene.name;
 

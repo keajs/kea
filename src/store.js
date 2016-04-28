@@ -42,6 +42,12 @@ export function createKeaStore (finalCreateStore, appReducers = {}) {
 
   const store = finalCreateStore(rootReducer)
 
+  store.clearKeaScene = function () {
+    loadedReducers = {}
+    loadedWorkers = {}
+    currentScene = null
+  }
+
   store.addKeaScene = function (scene) {
     const { name } = scene
 
