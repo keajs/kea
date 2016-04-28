@@ -20,60 +20,65 @@ function createRootSaga() {
   var appSagas = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
   return regeneratorRuntime.mark(function _callee() {
-    var runningSaga, _ref, payload;
+    var runningSaga, ranAppSagas, _ref, payload;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             runningSaga = null;
+            ranAppSagas = false;
 
-            if (!appSagas) {
-              _context.next = 4;
+          case 2:
+            if (!true) {
+              _context.next = 20;
               break;
             }
 
-            _context.next = 4;
+            _context.next = 5;
+            return (0, _effects.take)(NEW_SCENE);
+
+          case 5:
+            _ref = _context.sent;
+            payload = _ref.payload;
+
+            if (!(!ranAppSagas && appSagas)) {
+              _context.next = 11;
+              break;
+            }
+
+            _context.next = 10;
             return (0, _effects.call)(appSagas);
 
-          case 4:
-            if (!true) {
+          case 10:
+            ranAppSagas = true;
+
+          case 11:
+            if (!runningSaga) {
+              _context.next = 14;
+              break;
+            }
+
+            _context.next = 14;
+            return (0, _effects.cancel)(runningSaga);
+
+          case 14:
+            if (!loadedWorkers[payload.name]) {
               _context.next = 18;
               break;
             }
 
-            _context.next = 7;
-            return (0, _effects.take)(NEW_SCENE);
-
-          case 7:
-            _ref = _context.sent;
-            payload = _ref.payload;
-
-            if (!runningSaga) {
-              _context.next = 12;
-              break;
-            }
-
-            _context.next = 12;
-            return (0, _effects.cancel)(runningSaga);
-
-          case 12:
-            if (!loadedWorkers[payload.name]) {
-              _context.next = 16;
-              break;
-            }
-
-            _context.next = 15;
+            _context.next = 17;
             return (0, _effects.fork)(loadedWorkers[payload.name]);
 
-          case 15:
+          case 17:
             runningSaga = _context.sent;
 
-          case 16:
-            _context.next = 4;
+          case 18:
+            _context.next = 2;
             break;
 
-          case 18:
+          case 20:
           case 'end':
             return _context.stop();
         }

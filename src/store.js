@@ -9,13 +9,15 @@ let loadedWorkers = {}
 export function createRootSaga (appSagas = null) {
   return function * () {
     let runningSaga = null
-
-    if (appSagas) {
-      yield call(appSagas)
-    }
+    let ranAppSagas = false
 
     while (true) {
       const { payload } = yield take(NEW_SCENE)
+
+      if (!ranAppSagas && appSagas) {
+        yield call(appSagas)
+        ranAppSagas = true
+      }
 
       if (runningSaga) {
         yield cancel(runningSaga)
