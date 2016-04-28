@@ -1,6 +1,6 @@
 {
   "name": "kea-logic",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "tasty butter that merges action creators, reducers and selectors",
   "main": "modules/index.js",
   "scripts": {
