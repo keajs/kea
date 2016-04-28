@@ -108,6 +108,10 @@ function createKeaStore(finalCreateStore) {
   store.currentScene = null;
 
   store.addKeaScene = function (scene) {
+    if (!scene) {
+      return;
+    }
+
     var name = scene.name;
 
 

@@ -47,6 +47,10 @@ export function createKeaStore (finalCreateStore, appReducers = {}) {
   store.currentScene = null
 
   store.addKeaScene = function (scene) {
+    if (!scene) {
+      return
+    }
+
     const { name } = scene
 
     if (this.currentScene === name) {
