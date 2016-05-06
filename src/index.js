@@ -1,7 +1,7 @@
 export { createLogic } from './logic'
 export { pathSelector, createSelectors } from './selectors'
 export { selectPropsFromLogic } from './props'
-export { createCombinedReducer } from './reducer'
+export { createCombinedReducer, createPersistentReducer } from './reducer'
 export { createCombinedSaga } from './saga'
 export { createScene } from './scene'
 export { getRoutes, combineScenesAndRoutes } from './routes'

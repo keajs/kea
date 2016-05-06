@@ -45,6 +45,12 @@ Object.defineProperty(exports, 'createCombinedReducer', {
     return _reducer.createCombinedReducer;
   }
 });
+Object.defineProperty(exports, 'createPersistentReducer', {
+  enumerable: true,
+  get: function get() {
+    return _reducer.createPersistentReducer;
+  }
+});
 
 var _saga = require('./saga');
 

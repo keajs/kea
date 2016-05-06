@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { createReducer } from 'redux-act'
 
 export function createCombinedReducer (logics = []) {
   let reducer = {}
@@ -18,4 +19,38 @@ export function createCombinedReducer (logics = []) {
   })
 
   return combineReducers(reducer)
+}
+
+function storageAvailable (type) {
+  try {
+    var storage = window[type]
+    var x = '__storage_test__'
+    storage.setItem(x, x)
+    storage.removeItem(x)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+let storageCache = {}
+
+export function createPersistentReducer (actions, defaultValue, key) {
+  if (storageAvailable('localStorage')) {
+    let storage = window.localStorage
+    const value = storage[key] || defaultValue
+    storageCache[key] = value
+
+    const reducer = createReducer(actions, value)
+    return (state, payload) => {
+      const result = reducer(state, payload)
+      if (storageCache[key] !== result) {
+        storage[key] = result
+        storageCache[key] = result
+      }
+      return result
+    }
+  } else {
+    return createReducer(actions, defaultValue)
+  }
 }

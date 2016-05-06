@@ -3,9 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 exports.createCombinedReducer = createCombinedReducer;
+exports.createPersistentReducer = createPersistentReducer;
 
 var _redux = require('redux');
+
+var _reduxAct = require('redux-act');
 
 function createCombinedReducer() {
   var logics = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
@@ -27,4 +33,44 @@ function createCombinedReducer() {
   });
 
   return (0, _redux.combineReducers)(reducer);
+}
+
+function storageAvailable(type) {
+  try {
+    var storage = window[type];
+    var x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+var storageCache = {};
+
+function createPersistentReducer(actions, defaultValue, key) {
+  if (storageAvailable('localStorage')) {
+    var _ret = function () {
+      var storage = window.localStorage;
+      var value = storage[key] || defaultValue;
+      storageCache[key] = value;
+
+      var reducer = (0, _reduxAct.createReducer)(actions, value);
+      return {
+        v: function v(state, payload) {
+          var result = reducer(state, payload);
+          if (storageCache[key] !== result) {
+            storage[key] = result;
+            storageCache[key] = result;
+          }
+          return result;
+        }
+      };
+    }();
+
+    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+  } else {
+    return (0, _reduxAct.createReducer)(actions, defaultValue);
+  }
 }
