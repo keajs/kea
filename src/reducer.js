@@ -38,15 +38,17 @@ let storageCache = {}
 export function createPersistentReducer (actions, defaultValue, key) {
   if (storageAvailable('localStorage')) {
     let storage = window.localStorage
-    const value = storage[key] || defaultValue
+
+    const value = storage[key] ? JSON.parse(storage[key]) : defaultValue
     storageCache[key] = value
 
     const reducer = createReducer(actions, value)
+
     return (state, payload) => {
       const result = reducer(state, payload)
       if (storageCache[key] !== result) {
-        storage[key] = result
         storageCache[key] = result
+        storage[key] = JSON.stringify(result)
       }
       return result
     }

@@ -53,16 +53,18 @@ function createPersistentReducer(actions, defaultValue, key) {
   if (storageAvailable('localStorage')) {
     var _ret = function () {
       var storage = window.localStorage;
-      var value = storage[key] || defaultValue;
+
+      var value = storage[key] ? JSON.parse(storage[key]) : defaultValue;
       storageCache[key] = value;
 
       var reducer = (0, _reduxAct.createReducer)(actions, value);
+
       return {
         v: function v(state, payload) {
           var result = reducer(state, payload);
           if (storageCache[key] !== result) {
-            storage[key] = result;
             storageCache[key] = result;
+            storage[key] = JSON.stringify(result);
           }
           return result;
         }
