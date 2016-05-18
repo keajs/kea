@@ -13,7 +13,10 @@ export function selectPropsFromLogic (mapping = []) {
     const logic = mapping[i]
     const props = mapping[i + 1]
 
-    const selectors = logic.selectors ? logic.selectors : logic
+    // we were given a function (state) => state.something as logic input
+    const isFunction = typeof logic === 'function'
+
+    const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
 
     props.forEach(query => {
       let from = query
@@ -24,7 +27,9 @@ export function selectPropsFromLogic (mapping = []) {
       }
 
       if (from === '*') {
-        hash[to] = logic.selector ? logic.selector : selectors
+        hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
+      } else if (isFunction) {
+        hash[to] = (state) => logic(state)[from]
       } else if (typeof selectors[from] !== 'undefined') {
         hash[to] = selectors[from]
       } else {
