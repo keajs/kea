@@ -25,7 +25,10 @@ function selectPropsFromLogic() {
     var logic = mapping[i];
     var props = mapping[i + 1];
 
-    var selectors = logic.selectors ? logic.selectors : logic;
+    // we were given a function (state) => state.something as logic input
+    var isFunction = typeof logic === 'function';
+
+    var selectors = isFunction ? null : logic.selectors ? logic.selectors : logic;
 
     props.forEach(function (query) {
       var from = query;
@@ -41,7 +44,11 @@ function selectPropsFromLogic() {
       }
 
       if (from === '*') {
-        hash[to] = logic.selector ? logic.selector : selectors;
+        hash[to] = isFunction ? logic : logic.selector ? logic.selector : selectors;
+      } else if (isFunction) {
+        hash[to] = function (state) {
+          return logic(state)[from];
+        };
       } else if (typeof selectors[from] !== 'undefined') {
         hash[to] = selectors[from];
       } else {
