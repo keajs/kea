@@ -42,7 +42,7 @@ function selectActionsFromLogic() {
         to = _query$split2[1];
       }
 
-      if (typeof actions[from] !== 'undefined') {
+      if (typeof actions[from] === 'function') {
         hash[to] = actions[from];
       } else {
         console.error('[KEA-LOGIC] action "' + query + '" missing for logic:', logic);
