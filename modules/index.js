@@ -37,6 +37,21 @@ Object.defineProperty(exports, 'selectPropsFromLogic', {
   }
 });
 
+var _actions = require('./actions');
+
+Object.defineProperty(exports, 'selectActionsFromLogic', {
+  enumerable: true,
+  get: function get() {
+    return _actions.selectActionsFromLogic;
+  }
+});
+Object.defineProperty(exports, 'actionMerge', {
+  enumerable: true,
+  get: function get() {
+    return _actions.actionMerge;
+  }
+});
+
 var _reducer = require('./reducer');
 
 Object.defineProperty(exports, 'createCombinedReducer', {
