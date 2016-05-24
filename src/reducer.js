@@ -62,9 +62,13 @@ export function createStructureReducer (path, structure) {
 
   Object.keys(structure).forEach(key => {
     const mapping = structure[key]
-    reducers[key] = mapping.persist
-                      ? createPersistentReducer(mapping.reducer, mapping.value, path.join('.') + key)
-                      : createReducer(mapping.reducer, mapping.value)
+    if (typeof mapping.reducer === 'function') {
+      reducers[key] = mapping.reducer
+    } else {
+      reducers[key] = mapping.persist
+                        ? createPersistentReducer(mapping.reducer, mapping.value, path.join('.') + key)
+                        : createReducer(mapping.reducer, mapping.value)
+    }
   })
 
   return combineReducers(reducers)
