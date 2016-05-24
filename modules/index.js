@@ -93,10 +93,10 @@ Object.defineProperty(exports, 'createScene', {
 
 var _structure = require('./structure');
 
-Object.defineProperty(exports, 'createStructure', {
+Object.defineProperty(exports, 'createMapping', {
   enumerable: true,
   get: function get() {
-    return _structure.createStructure;
+    return _structure.createMapping;
   }
 });
 

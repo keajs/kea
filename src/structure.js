@@ -1,4 +1,4 @@
-export function createStructure (reducer, value, type, options) {
+export function createMapping (reducer, value, type, options) {
   const mapping = {
     type,
     value,

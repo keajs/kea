@@ -3,8 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createStructure = createStructure;
-function createStructure(reducer, value, type, options) {
+exports.createMapping = createMapping;
+function createMapping(reducer, value, type, options) {
   var mapping = {
     type: type,
     value: value,
