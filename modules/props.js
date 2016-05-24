@@ -122,9 +122,11 @@ function propTypesFromMapping(mapping) {
 
     var _loop3 = function _loop3(_i) {
       var logic = mapping.actions[_i];
-      var actions = mapping.actions[_i + 1];
+      var actionsArray = mapping.actions[_i + 1];
 
-      actions.forEach(function (query) {
+      var actions = logic && logic.actions ? logic.actions : logic;
+
+      actionsArray.forEach(function (query) {
         var from = query;
         var to = query;
 
@@ -137,9 +139,7 @@ function propTypesFromMapping(mapping) {
           to = _query$split6[1];
         }
 
-        var action = logic.actions[from];
-
-        if (action) {
+        if (actions[from]) {
           propTypes[to] = _react.PropTypes.func;
         } else {
           console.error('[KEA-LOGIC] action "' + query + '" missing for logic:', logic);

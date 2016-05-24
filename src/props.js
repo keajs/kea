@@ -87,9 +87,11 @@ export function propTypesFromMapping (mapping) {
 
     for (let i = 0; i < mapping.actions.length; i += 2) {
       const logic = mapping.actions[i]
-      const actions = mapping.actions[i + 1]
+      const actionsArray = mapping.actions[i + 1]
 
-      actions.forEach(query => {
+      const actions = logic && logic.actions ? logic.actions : logic
+
+      actionsArray.forEach(query => {
         let from = query
         let to = query
 
@@ -97,9 +99,7 @@ export function propTypesFromMapping (mapping) {
           [from, to] = query.split(' as ')
         }
 
-        const action = logic.actions[from]
-
-        if (action) {
+        if (actions[from]) {
           propTypes[to] = PropTypes.func
         } else {
           console.error(`[KEA-LOGIC] action "${query}" missing for logic:`, logic)
