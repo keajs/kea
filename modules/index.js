@@ -66,6 +66,12 @@ Object.defineProperty(exports, 'createPersistentReducer', {
     return _reducer.createPersistentReducer;
   }
 });
+Object.defineProperty(exports, 'createStructureReducer', {
+  enumerable: true,
+  get: function get() {
+    return _reducer.createStructureReducer;
+  }
+});
 
 var _saga = require('./saga');
 
@@ -82,6 +88,15 @@ Object.defineProperty(exports, 'createScene', {
   enumerable: true,
   get: function get() {
     return _scene.createScene;
+  }
+});
+
+var _structure = require('./structure');
+
+Object.defineProperty(exports, 'createStructure', {
+  enumerable: true,
+  get: function get() {
+    return _structure.createStructure;
   }
 });
 

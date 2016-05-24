@@ -8,6 +8,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.createCombinedReducer = createCombinedReducer;
 exports.createPersistentReducer = createPersistentReducer;
+exports.createStructureReducer = createStructureReducer;
 
 var _redux = require('redux');
 
@@ -75,4 +76,15 @@ function createPersistentReducer(actions, defaultValue, key) {
   } else {
     return (0, _reduxAct.createReducer)(actions, defaultValue);
   }
+}
+
+function createStructureReducer(path, structure) {
+  var reducers = {};
+
+  Object.keys(structure).forEach(function (key) {
+    var mapping = structure[key];
+    reducers[key] = mapping.persist ? createPersistentReducer(mapping.reducer, mapping.value, path.join('.') + key) : (0, _reduxAct.createReducer)(mapping.reducer, mapping.value);
+  });
+
+  return (0, _redux.combineReducers)(reducers);
 }

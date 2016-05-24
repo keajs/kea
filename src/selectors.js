@@ -6,7 +6,7 @@ export function pathSelector (path, state) {
 
 export function createSelectors (path, reducer, additional = {}) {
   const selector = (state) => pathSelector(path, state)
-  const keys = Object.keys(reducer())
+  const keys = Object.keys(typeof reducer === 'function' ? reducer() : reducer)
 
   let selectors = {
     root: selector

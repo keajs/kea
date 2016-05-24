@@ -20,7 +20,7 @@ function createSelectors(path, reducer) {
   var selector = function selector(state) {
     return pathSelector(path, state);
   };
-  var keys = Object.keys(reducer());
+  var keys = Object.keys(typeof reducer === 'function' ? reducer() : reducer);
 
   var selectors = {
     root: selector
