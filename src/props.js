@@ -1,3 +1,4 @@
+import { PropTypes } from 'react'
 import { createStructuredSelector } from 'reselect'
 
 export function selectPropsFromLogic (mapping = []) {
@@ -40,4 +41,75 @@ export function selectPropsFromLogic (mapping = []) {
   }
 
   return createStructuredSelector(hash)
+}
+
+export function propTypesFromMapping (mapping) {
+  let propTypes = {}
+
+  if (mapping.props) {
+    if (mapping.props.length % 2 === 1) {
+      console.error('[KEA-LOGIC] uneven props mapping given to propTypesFromLogic:', mapping)
+      console.trace()
+      return
+    }
+    for (let i = 0; i < mapping.props.length; i += 2) {
+      const logic = mapping.props[i]
+      const props = mapping.props[i + 1]
+
+      props.forEach(query => {
+        let from = query
+        let to = query
+
+        if (query.includes(' as ')) {
+          [from, to] = query.split(' as ')
+        }
+
+        const structure = logic.structure[from]
+
+        if (structure && structure.type) {
+          propTypes[to] = structure.type
+        } else {
+          console.error(`[KEA-LOGIC] prop type "${query}" missing for logic:`, logic)
+          console.trace()
+        }
+      })
+    }
+  }
+
+  if (mapping.actions) {
+    if (mapping.actions.length % 2 === 1) {
+      console.error('[KEA-LOGIC] uneven actions mapping given to propTypesFromLogic:', mapping)
+      console.trace()
+      return
+    }
+
+    let actions = {}
+
+    for (let i = 0; i < mapping.actions.length; i += 2) {
+      const logic = mapping.actions[i]
+      const actions = mapping.actions[i + 1]
+
+      actions.forEach(query => {
+        let from = query
+        let to = query
+
+        if (query.includes(' as ')) {
+          [from, to] = query.split(' as ')
+        }
+
+        const action = logic.actions[from]
+
+        if (action) {
+          propTypes[to] = PropTypes.func
+        } else {
+          console.error(`[KEA-LOGIC] action "${query}" missing for logic:`, logic)
+          console.trace()
+        }
+      })
+    }
+
+    propTypes.actions = PropTypes.shape(actions)
+  }
+
+  return propTypes
 }

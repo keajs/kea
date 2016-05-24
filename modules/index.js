@@ -36,6 +36,12 @@ Object.defineProperty(exports, 'selectPropsFromLogic', {
     return _props.selectPropsFromLogic;
   }
 });
+Object.defineProperty(exports, 'propTypesFromMapping', {
+  enumerable: true,
+  get: function get() {
+    return _props.propTypesFromMapping;
+  }
+});
 
 var _actions = require('./actions');
 
@@ -97,6 +103,15 @@ Object.defineProperty(exports, 'createMapping', {
   enumerable: true,
   get: function get() {
     return _structure.createMapping;
+  }
+});
+
+var _connect = require('./connect');
+
+Object.defineProperty(exports, 'connectMapping', {
+  enumerable: true,
+  get: function get() {
+    return _connect.connectMapping;
   }
 });
 
