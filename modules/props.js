@@ -69,6 +69,8 @@ function selectPropsFromLogic() {
 }
 
 function propTypesFromMapping(mapping) {
+  var extra = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
   var propTypes = {};
 
   if (mapping.props) {
@@ -153,6 +155,10 @@ function propTypesFromMapping(mapping) {
     }
 
     propTypes.actions = _react.PropTypes.shape(actions);
+  }
+
+  if (extra) {
+    Object.assign(propTypes, extra);
   }
 
   return propTypes;

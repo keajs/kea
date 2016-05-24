@@ -43,7 +43,7 @@ export function selectPropsFromLogic (mapping = []) {
   return createStructuredSelector(hash)
 }
 
-export function propTypesFromMapping (mapping) {
+export function propTypesFromMapping (mapping, extra = null) {
   let propTypes = {}
 
   if (mapping.props) {
@@ -109,6 +109,10 @@ export function propTypesFromMapping (mapping) {
     }
 
     propTypes.actions = PropTypes.shape(actions)
+  }
+
+  if (extra) {
+    Object.assign(propTypes, extra)
   }
 
   return propTypes
