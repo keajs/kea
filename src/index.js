@@ -1,3 +1,4 @@
+import Logic from './logic'
 export { createLogic } from './logic'
 export { pathSelector, createSelectors } from './selectors'
 export { selectPropsFromLogic, propTypesFromMapping } from './props'
@@ -9,3 +10,5 @@ export { createMapping } from './structure'
 export { connectMapping } from './connect'
 export { getRoutes, combineScenesAndRoutes } from './routes'
 export { NEW_SCENE, createRootSaga, createKeaStore } from './store'
+
+export default Logic
