@@ -1,7 +1,7 @@
 import Logic from './logic'
 export { createLogic } from './logic'
 export { pathSelector, createSelectors } from './selectors'
-export { selectPropsFromLogic, propTypesFromMapping } from './props'
+export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
 export { selectActionsFromLogic, actionMerge } from './actions'
 export { createCombinedReducer, createPersistentReducer, createStructureReducer } from './reducer'
 export { createCombinedSaga } from './saga'
