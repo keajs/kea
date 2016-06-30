@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createScene = createScene;
 
-var _reducer = require('./reducer');
-
 var _saga = require('./saga');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21,8 +19,7 @@ var KeaScene = function KeaScene(_ref) {
 
   this.name = name;
   this.logic = logic || [];
-  this.reducer = (0, _reducer.createCombinedReducer)(logic);
-  this.sagas = sagas;
+  this.sagas = sagas || [];
   this.component = component;
 
   if (this.sagas) {

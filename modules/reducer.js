@@ -6,35 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-exports.createCombinedReducer = createCombinedReducer;
 exports.createPersistentReducer = createPersistentReducer;
 exports.createStructureReducer = createStructureReducer;
 
 var _redux = require('redux');
 
 var _reduxAct = require('redux-act');
-
-function createCombinedReducer() {
-  var logics = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-
-  var reducer = {};
-
-  logics.forEach(function (logic) {
-    if (!logic.path) {
-      console.error('[KEA-LOGIC] No path found for reducer!', logic);
-      console.trace();
-      return;
-    }
-    if (!logic.reducer) {
-      console.error('[KEA-LOGIC] No reducer in logic!', logic.path, logic);
-      console.trace();
-      return;
-    }
-    reducer[logic.path[logic.path.length - 1]] = logic.reducer;
-  });
-
-  return (0, _redux.combineReducers)(reducer);
-}
 
 function storageAvailable(type) {
   try {
