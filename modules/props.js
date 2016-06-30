@@ -165,35 +165,39 @@ function propTypesFromMapping(mapping) {
   return propTypes;
 }
 
+function havePropsChangedDebug(nextProps) {
+  var _this = this;
+
+  var changedProps = Object.keys(nextProps).filter(function (key) {
+    return key !== 'actions' && nextProps[key] !== _this.props[key];
+  });
+  if (changedProps.length > 0) {
+    changedProps.forEach(function (key) {
+      console.log('prop \'' + key + '\' changed', _this.props[key], nextProps[key]);
+    });
+    return true;
+  }
+  return false;
+}
+
+function havePropsChangedProduction(nextProps) {
+  for (var key in nextProps) {
+    if (key === 'actions') {
+      continue;
+    }
+    if (nextProps[key] !== this.props[key]) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function havePropsChanged() {
   var debug = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
   if (debug) {
-    return function (nextProps) {
-      var _this = this;
-
-      var changedProps = Object.keys(nextProps).filter(function (key) {
-        return key !== 'actions' && nextProps[key] !== _this.props[key];
-      });
-      if (changedProps.length > 0) {
-        changedProps.forEach(function (key) {
-          console.log('prop \'' + key + '\' changed', _this.props[key], nextProps[key]);
-        });
-        return true;
-      }
-      return false;
-    };
+    return havePropsChangedDebug;
   } else {
-    return function (nextProps) {
-      for (var key in nextProps) {
-        if (key === 'actions') {
-          continue;
-        }
-        if (nextProps[key] !== this.props[key]) {
-          return true;
-        }
-      }
-      return false;
-    };
+    return havePropsChangedProduction;
   }
 }
