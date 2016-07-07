@@ -1,18 +1,39 @@
 The principal operation of a website is to stream data between endpoints. Bytes start at the user's keyboard, pass through layers of application logic, land in the database and return back as impeccable HTML and CSS constructions.
 
-`kea-logic` brings your data to life on the frontend side. It uses components you know and love (`react`, `redux`, `redux-act`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine.
+`kea-logic` makes these transformations a joy to perform on the frontend. It uses components you know and love (`react`, `redux`, `redux-act`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine that brings your data to life.
 
-[`kea`](https://github.com/mariusandra/kea) is a collection of projects intended to fix the backend as well.
+There are many other projects under the [`kea`](https://github.com/mariusandra/kea) name that you may want to check out.
 
 # kea-logic
 
-`kea-logic` lets you create logic stores with actions. These connect to React components and redux-sagas and carry data between them.
+`kea-logic` gives you logic stores with actions. These act as glue between React components and sagas.
 
 The logic stores are designed to be well-readable, self-documenting and easily refactorable. You'll know how it works even if you have never seen the code before.
 
-In addition to this, `kea-logic` provides are helpers to simplify routing, code splitting and other parts of a good website.
+In addition to this, `kea-logic` provides helpers to simplify routing, code splitting and other parts of a good webapp.
 
-Please check out the [example application](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) that will be dissected below.
+## Try it out!
+
+Open the [demo app](http://example.kea.rocks/), [browse its code](https://github.com/mariusandra/kea-example) and read below for an explanation of the parts.
+
+To run the example on your machine, just type these commands:
+
+```
+npm install kea -g
+kea new my-project
+cd my-project
+npm start
+```
+
+and open [http://localhost:2000/](http://localhost:2000/).
+
+Later inside `my-project` run these to hack away:
+
+```
+kea g scene-name                               # new scene
+kea g scene-name/component-name                # component under the scene
+kea g scene-name/component-name/really-nested  # deeply nested logic
+```
 
 # Logic stores
 
@@ -297,25 +318,6 @@ export default combineScenesAndRoutes(scenes, routes)
 ```
 
 ... and have those scenes lazily loaded when route is accessed.
-
-## Try it out!
-
-Check out the [example](https://github.com/mariusandra/kea-example) by running:
-
-```
-npm install kea -g
-kea new myproject
-cd myproject
-npm start
-```
-
-Later inside `myproject` just run these to hack away:
-
-```
-kea g scene-name                               # new scene
-kea g scene-name/component-name                # component under the scene
-kea g scene-name/component-name/really-nested  # deeply nested logic
-```
 
 ## What is `kea`?
 
