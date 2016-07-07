@@ -1,12 +1,24 @@
+The principal operation of a website is to stream data between endpoints. Bytes start at the user's keyboard, pass through layers of application logic, land in the database and return back as impeccable HTML and CSS constructions.
+
+`kea-logic` brings your data to life on the frontend side. It uses components you know and love (`react`, `redux`, `redux-act`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine.
+
+[`kea`](https://github.com/mariusandra/kea) is a collection of projects intended to fix the backend as well.
+
 # kea-logic
 
-`kea-logic` lets you create logic stores, and access their contents from React components as props.
+`kea-logic` lets you create logic stores with actions. These connect to React components and redux-sagas and carry data between them.
 
-Logic stores consist of 1) actions, 2) reducers, 3) selectors and 4) optionally sagas.
+The logic stores are designed to be well-readable, self-documenting and easily refactorable. You'll know how it works even if you have never seen the code before.
 
-Logic stores augment your components, are stored in redux, and are connected via ES6 imports.
+In addition to this, `kea-logic` provides are helpers to simplify routing, code splitting and other parts of a good website.
 
-If a picture is worth a thousand words, then [live code](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) is worth a million:
+Please check out the [example application](https://github.com/mariusandra/kea-example) ([demo](http://example.kea.rocks/)) that will be dissected below.
+
+# Logic stores
+
+Logic stores consist of 1) actions, 2) structure (reducer + selector + proptype), and 3) optionally sagas.
+
+Logic stores are connected through ES6 imports.
 
 ```jsx
 // scenes/homepage/index.js - This the root component for the homepage scene
@@ -14,54 +26,53 @@ If a picture is worth a thousand words, then [live code](https://github.com/mari
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { selectPropsFromLogic } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea-logic'
 
-// a helper component
-import Slider from './slider'
+// A helper component.
+import Slider from '~/scenes/homepage/slider'
+
+// Note, you should always import with the full path, so you can easily move things around, and refactor just by searching for the path.
 
 // logic stores: 1) for this "homepage" scene root component and 2) the slider helper component
-import sceneLogic from './logic'
-import sliderLogic from './slider/logic'
+import sceneLogic from '~/scenes/homepage/logic'
+import sliderLogic from '~/scenes/homepage/slider/logic'
 
-// we declare that we want to use this logic store action:
-const { updateName } = sceneLogic.actions
-
-// the props we need from the imported logic stores
-const propSelector = selectPropsFromLogic([
-  sceneLogic, [
-    'name',
-    'capitalizedName'
+// select which fields of data and which actions we want from the above imported logic stores
+const mapping = {
+  actions: [
+    sceneLogic, [
+      'updateName'
+    ]
   ],
-  sliderLogic, [
-    'currentSlide',
-    'currentImage'
+  props: [
+    sceneLogic, [
+      'name',
+      'capitalizedName'
+    ],
+    sliderLogic, [
+      'currentSlide',
+      'currentImage'
+    ]
   ]
-])
+}
 
 // the scene component itself
 class HomepageScene extends Component {
-  static propTypes = {
-    // redux
-    dispatch: React.PropTypes.func.isRequired,
-
-    // sceneLogic
-    name: React.PropTypes.string.isRequired,
-    capitalizedName: React.PropTypes.string.isRequired,
-
-    // sliderLogic
-    currentSlide: React.PropTypes.number.isRequired,
-    currentImage: React.PropTypes.object.isRequired
-  }
+  // react will know the PropTypes automatically
+  static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
 
   // binding to 'this', hence the fat arrow syntax
-  this.updateName = () => {
-    const { dispatch, name } = this.props
+  // this way we can just pass onUpdate={this.updateName} in render()
+  updateName = () => {
+    // each function defines on top which props and actions it needs
+    const { name } = this.props
+    const { updateName } = this.props.actions
 
     const newName = window.prompt('Please enter the name', name)
 
     if (newName) {
-      dispatch(updateName(newName))
+      // call the action to update the data
+      updateName(newName)
     }
   }
 
@@ -84,75 +95,77 @@ class HomepageScene extends Component {
   }
 }
 
-// finally, connect the prop selector to the scene via redux
-export default connect(propSelector)(HomepageScene)
+// finally, connect the mapping to the scene
+export default connectMapping(mapping)(HomepageScene)
 ```
 
-Logic stores consist of a path:
+Logic stores consist of many parts:
+
+They all have a path in the redux tree.
 
 ```js
 // scenes/homepage/logic.js - all of the code below will be in this one file
-
-// PATH
-export const path = ['scenes', 'homepage', 'index']
+class SceneLogic extends Logic {
+  // PATH
+  path = () => ['scenes', 'homepage', 'index']
 ```
 
-Actions, created via [`redux-act`](https://github.com/pauldijou/redux-act), so you don't need to duplicate constants everywhere:
+They have (redux-act) actions. Give them a keyword, a help text and the payload object generator.
 
 ```js
-// ACTIONS
-export const actions = {
-  updateName: createAction('change the name of the bird', (name) => ({ name }))
+  // ACTIONS
+  actions = ({ constants }) => ({
+    updateName: createAction('change the name of the bird', (name) => ({ name }))
+  })
+```
+
+They have a *structure*, consisting of `redux` and `reselect` with type declarations and optional persistence. Everything here is a pure function working with immutable data.
+
+```js
+  // STRUCTURE
+  structure = ({ actions, constants }) => ({
+    name: createMapping({
+      [actions.updateName]: (state, payload) => {
+        return payload.name
+      }
+    }, 'Chirpy', PropTypes.string)
+  })
+```
+
+And finally selectors (via [`reselect`](https://github.com/reactjs/reselect)) to transform and cache data:
+
+```js
+  // SELECTORS
+  selectors = ({ path, structure, constants, selectors, addSelector }) => {
+    // define the name of the selector, its PropType and tell it what data you want
+    addSelector('capitalizedName', PropTypes.string, [
+      selectors.name,
+      // otherLogic.selectors.nameFromOtherFile
+    ], (name) => {
+      // and return the answer
+      return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+    })
+  }
 }
 ```
 
-A reducer, also created via [`redux-act`](https://github.com/pauldijou/redux-act). Accepts our action creators directly as keys:
+Logic stores are exported as singletons from these `logic.js` files:
 
 ```js
-// REDUCER
-export const reducer = combineReducers({
-  name: createReducer({
-    [actions.updateName]: (state, payload) => {
-      return payload.name
-    }
-  }, 'Chirpy') // the default value
-})
-```
-
-And selectors (via [`reselect`](https://github.com/reactjs/reselect)) to receive, combine and memoize data:
-
-```js
-// SELECTORS
-export const selectors = createSelectors(path, reducer) // automatically for all redux keys
-
-selectors.capitalizedName = createSelector(             // and a special one to capitalize the name
-  selectors.name,
-  (name) => {
-    return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-  }
-)
-```
-
-They are merged into a logic store, and exported from `logic.js`:
-
-```js
-export default createLogic({
-  path,
-  actions,
-  reducer,
-  selectors
-})
+export default new SceneLogic().init()
 ```
 
 The logic store can be imported in any component, saga or other logic store as needed.
 
-While logic stores can exist anywhere, it has proven useful to organise your code like this:
+While logic stores can exist anywhere, it is recommended organise your code like this:
 
 * `scenes` - a scene is a page or a subsystem in your app
 * `components` - react components that are shared between scenes
 * `utils` - javascript utils shared between scenes
 
-For example:
+Also, as we strive for simplicity, readability and clarity, we will skip semicolons. They are added/removed as needed in the transpiling/minimising stage, and add no value. Any "I forgot the semicolon" errors you might be worried about will be caught by the linter anyway. (Please install eslint and plugins for your IDE!)
+
+Here's a typical structure:
 
 ```
 scenes/homepage/
@@ -200,17 +213,24 @@ scenes/
 - store.js
 ```
 
-Each react component or logic store can have a [`saga`](https://github.com/yelouafi/redux-saga):
+Each logic store can have a [`saga`](https://github.com/yelouafi/redux-saga):
 
 ```js
 // scenes/homepage/slider/saga.js
+import delay from '~/utils/delay'
 
-import sliderLogic from './logic'
+import sliderLogic from '~/scenes/homepage/slider/logic'
 
-// we want to use the updateSlide action to manipulate the scenes/homepage/slider/logic.js store
-const { updateSlide } = sliderLogic.actions
+// we want to call the updateSlide action on the slider's logic store
+const actions = selectActionsFromLogic([
+  sliderLogic, [
+    'updateSlide'
+  ]
+])
 
 export default function * saga () {
+  const { updateSlide } = actions
+
   while (true) {
     // wait for the updateSlide action to trigger or 5 seconds to pass
     const { change, timeout } = yield race({
@@ -229,9 +249,7 @@ export default function * saga () {
 }
 ```
 
-Reducers from logic stores can be added to redux via `combineReducers` like any other redux reducer. Sagas can be started any way you like.
-
-If, however you favour convenience (and programmer happiness), you can combine them all into a scene:
+All code is combined into scenes. Scenes are defined in `scene.js` files:
 
 ```js
 // scenes/homepage/scene.js
@@ -258,9 +276,10 @@ export default createScene({
 })
 ```
 
-Combine all your scenes with routes:
+Give `redux-router` a helping hand:
 
 ```js
+// routes.js
 import { combineScenesAndRoutes } from 'kea-logic'
 
 const scenes = {
@@ -277,7 +296,7 @@ const routes = {
 export default combineScenesAndRoutes(scenes, routes)
 ```
 
-... and have those lazily loaded when route is accessed.
+... and have those scenes lazily loaded when route is accessed.
 
 ## Try it out!
 
@@ -296,14 +315,18 @@ Read more here about the quest to find [the smartest way to develop react applic
 
 ## List of public functions:
 
-* createLogic
-* pathSelector
-* createSelectors
-* createCombinedReducer
-* selectPropsFromLogic
-* createCombinedSaga
-* createScene
-* getRoutes
-* combineScenesAndRoutes
+```
+export { createLogic } from './logic'
+export { pathSelector, createSelectors } from './selectors'
+export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
+export { selectActionsFromLogic, actionMerge } from './actions'
+export { createPersistentReducer, createStructureReducer } from './reducer'
+export { createCombinedSaga } from './saga'
+export { createScene } from './scene'
+export { createMapping } from './structure'
+export { connectMapping } from './connect'
+export { getRoutes, combineScenesAndRoutes } from './routes'
+export { NEW_SCENE, createRootSaga, createKeaStore } from './store'
+```
 
-Proper documentation coming soon! Please help if you can!
+More documentation coming soon! Please help if you can!
