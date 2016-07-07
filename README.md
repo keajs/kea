@@ -106,7 +106,7 @@ class HomepageScene extends Component {
       <div className='homepage-scene'>
         <Slider />
         <h1>
-          Hello, I'm <em onClick={this.updateName}>{capitalizedName}</em> the Kea
+          Hello, I am <em onClick={this.updateName}>{capitalizedName}</em> the Kea
         </h1>
         <p>
           You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url} target='_blank'>{currentImage.author}</a>
