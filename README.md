@@ -41,7 +41,7 @@ Logic stores consist of 1) actions, 2) structure (reducer + selector + proptype)
 
 Logic stores are connected through ES6 imports.
 
-```jsx
+```js
 // scenes/homepage/index.js - This the root component for the homepage scene
 
 import './styles.scss'
