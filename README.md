@@ -309,13 +309,21 @@ cd myproject
 npm start
 ```
 
+Later inside `myproject` just run these to hack away:
+
+```
+kea g scene-name                               # new scene
+kea g scene-name/component-name                # component under the scene
+kea g scene-name/component-name/really-nested  # deeply nested logic
+```
+
 ## What is `kea`?
 
 Read more here about the quest to find [the smartest way to develop react applications](https://github.com/mariusandra/kea).
 
 ## List of public functions:
 
-```
+```js
 export { createLogic } from './logic'
 export { pathSelector, createSelectors } from './selectors'
 export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
