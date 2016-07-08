@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux'
 import { createCombinedSaga } from './saga'
 
 class KeaScene {
@@ -9,7 +10,16 @@ class KeaScene {
 
     if (this.sagas) {
       this.worker = createCombinedSaga(this.sagas)
+      this.saga = this.worker
     }
+  }
+
+  combineReducers () {
+    let sceneReducers = {}
+    this.logic.forEach(logic => {
+      sceneReducers[logic.path[logic.path.length - 1]] = logic.reducer
+    })
+    return combineReducers(sceneReducers)
   }
 }
 
