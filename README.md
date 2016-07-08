@@ -205,9 +205,123 @@ sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ..
 // or plug them into other kea-logic components for maximum interoperability
 ```
 
+# Side effects (API calls, etc)
+
+Since logic stores are strictly composed of [pure functions](https://en.wikipedia.org/wiki/Pure_function) that operate on [immutable data](https://en.wikipedia.org/wiki/Immutable_object), we need an alternative place to handle all of the messy business logic of the app.
+
+Enter [`sagas`](https://github.com/yelouafi/redux-saga).
+
+This is where you wait for actions to be triggered, run async processing logic, and send the results back through another action.
+
+Using sagas complex async processing logic can be written in an elegant and linear fashion. Here's one example that updates the homepage slider component:
+
+```js
+// scenes/homepage/slider/saga.js
+import delay from '~/utils/delay'
+
+import sliderLogic from '~/scenes/homepage/slider/logic'
+
+// we want to call the updateSlide action on the slider's logic store
+const actions = selectActionsFromLogic([
+  sliderLogic, [
+    'updateSlide'
+  ]
+])
+
+export default function * saga () {
+  const { updateSlide } = actions
+
+  while (true) {
+    // wait for someone to call the updateSlide action or 5 seconds to pass
+    const { change, timeout } = yield race({
+      change: take(updateSlide().type),
+      timeout: delay(5000)
+    })
+
+    // if timed out, advance the slide
+    if (timeout) {
+      const currentSlide = yield sliderLogic.get('currentSlide')
+      yield put(updateSlide(currentSlide + 1))
+    }
+
+    // reset the clock to 5 seconds and wait again
+  }
+}
+```
+
+Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) to grasp their power!
+
+# Scenes
+
+You can always treat the logic store reducers and sagas manually and plug them into your existing application.
+
+If, however, you favor convenience, you may combine them into scenes.
+
+Scenes are defined in `scene.js` files like so:
+
+```js
+// scenes/homepage/scene.js
+import { createScene } from 'kea-logic'
+
+import sceneComponent from '~/scenes/homepage/index'
+import sceneLogic from '~/scenes/homepage/logic'
+import sceneSaga from '~/scenes/homepage/saga'
+
+import sliderLogic from '~/scenes/homepage/slider/logic'
+import sliderSaga from '~/scenes/homepage/slider/saga'
+
+export default createScene({
+  name: 'homepage',
+  component: sceneComponent,
+  logic: [
+    sceneLogic,
+    sliderLogic
+  ],
+  sagas: [
+    sceneSaga,
+    sliderSaga
+  ]
+})
+```
+
+You may then access the combined scene like so:
+
+```js
+import homepageScene from '~/scenes/homepage'
+
+homepageScene.saga === function * () { ... }                    // start the scene sagas in parallel
+homepageScene.combineReducers() === function (state, action) {} // calls redux's combineReducers
+```
+
+or plug it into the kea-logic routing helpers.
+
+# Routes
+
+Give `redux-router` a helping hand:
+
+```js
+// routes.js
+import { combineScenesAndRoutes } from 'kea-logic'
+
+const scenes = {
+  homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),
+  todos: require('bundle?lazy&name=todos!./todos/scene.js')
+}
+
+const routes = {
+  '/': 'homepage',
+  '/todos': 'todos',
+  '/todos/:visible': 'todos'
+}
+
+export default combineScenesAndRoutes(scenes, routes)
+```
+
+... and have those scenes lazily loaded when route is accessed.
+
 # Code structure
 
-While logic stores can exist anywhere, it is recommended organise your code like this:
+While logic stores can exist anywhere, it is highly recommended to organise your code like this:
 
 * `scenes` - a scene is a page or a subsystem in your app
 * `components` - react components that are shared between scenes
@@ -263,90 +377,7 @@ scenes/
 - store.js
 ```
 
-Each logic store can have a [`saga`](https://github.com/yelouafi/redux-saga):
 
-```js
-// scenes/homepage/slider/saga.js
-import delay from '~/utils/delay'
-
-import sliderLogic from '~/scenes/homepage/slider/logic'
-
-// we want to call the updateSlide action on the slider's logic store
-const actions = selectActionsFromLogic([
-  sliderLogic, [
-    'updateSlide'
-  ]
-])
-
-export default function * saga () {
-  const { updateSlide } = actions
-
-  while (true) {
-    // wait for the updateSlide action to trigger or 5 seconds to pass
-    const { change, timeout } = yield race({
-      change: take(updateSlide().type),
-      timeout: delay(5000)
-    })
-
-    // if timed out, advance the slide
-    if (timeout) {
-      const currentSlide = yield sliderLogic.get('currentSlide')
-      yield put(updateSlide(currentSlide + 1))
-    }
-
-    // and wait again
-  }
-}
-```
-
-All code is combined into scenes. Scenes are defined in `scene.js` files:
-
-```js
-// scenes/homepage/scene.js
-import { createScene } from 'kea-logic'
-
-import sceneComponent from '~/scenes/homepage/index'
-import sceneLogic from '~/scenes/homepage/logic'
-import sceneSaga from '~/scenes/homepage/saga'
-
-import sliderLogic from '~/scenes/homepage/slider/logic'
-import sliderSaga from '~/scenes/homepage/slider/saga'
-
-export default createScene({
-  name: 'homepage',
-  component: sceneComponent,
-  logic: [
-    sceneLogic,
-    sliderLogic
-  ],
-  sagas: [
-    sceneSaga,
-    sliderSaga
-  ]
-})
-```
-
-Give `redux-router` a helping hand:
-
-```js
-// routes.js
-import { combineScenesAndRoutes } from 'kea-logic'
-
-const scenes = {
-  homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),
-  todos: require('bundle?lazy&name=todos!./todos/scene.js')
-}
-
-const routes = {
-  '/': 'homepage',
-  '/todos': 'todos',
-  '/todos/:visible': 'todos'
-}
-
-export default combineScenesAndRoutes(scenes, routes)
-```
-
-... and have those scenes lazily loaded when route is accessed.
 
 ## What is `kea`?
 
