@@ -122,35 +122,45 @@ Logic stores consist of many parts:
 They all have a path in the redux tree.
 
 ```js
-// scenes/homepage/logic.js - all of the code below will be in this one file
+// scenes/homepage/logic.js
 class SceneLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'index']
 ```
 
-They have (redux-act) actions. Give them a keyword, a help text and the payload object generator.
+All the data declared below will live in your redux store under `scenes.homepage.index`.
+
+Logic stores use `redux-act` action generators. Give them a keyword, a help text and the payload object generator.
 
 ```js
   // ACTIONS
   actions = ({ constants }) => ({
-    updateName: createAction('change the name of the bird', (name) => ({ name }))
+    updateName: createAction('change the name of the bird', (name) => ({ name })),
+    increaseAge: createAction('make the bird older', (amount = 1) => ({ amount })),
+    decreaseAge: createAction('make the bird younger', (amount = 1) => ({ amount }))
   })
+
+  // Calling `updateName('new name')` will create an object like:
+  // { type: "[3] change the name of the bird", payload: { name: 'new name' } }
 ```
 
-They have a *structure*, consisting of `redux` and `reselect` with type declarations and optional persistence. Everything here is a pure function working with immutable data.
+Logic stores have a *structure*, created with `redux`, `redux-act` and `reselect` plus type declarations and optional persistence. Everything here is a pure function working with immutable data.
 
 ```js
   // STRUCTURE
   structure = ({ actions, constants }) => ({
     name: createMapping({
-      [actions.updateName]: (state, payload) => {
-        return payload.name
-      }
-    }, 'Chirpy', PropTypes.string)
+      [actions.updateName]: (state, payload) => payload.name
+    }, 'Chirpy', PropTypes.string),
+
+    age: createMapping({
+      [actions.increaseAge]: (state, payload) => state + payload.amount,
+      [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
+    }, 3, PropTypes.number, { persist: true })
   })
 ```
 
-And finally selectors (via [`reselect`](https://github.com/reactjs/reselect)) to transform and cache data:
+Finally, we add custom [`reselect`](https://github.com/reactjs/reselect) selectors to transform and cache data:
 
 ```js
   // SELECTORS
@@ -158,10 +168,15 @@ And finally selectors (via [`reselect`](https://github.com/reactjs/reselect)) to
     // define the name of the selector, its PropType and tell it what data you want
     addSelector('capitalizedName', PropTypes.string, [
       selectors.name,
-      // otherLogic.selectors.nameFromOtherFile
     ], (name) => {
-      // and return the answer
       return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+    })
+
+    addSelector('description', PropTypes.string, [
+      selectors.capitalizedName,
+      selectors.age
+    ], (capitalizedName, age) => {
+      return `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
     })
   }
 }
@@ -173,7 +188,24 @@ Logic stores are exported as singletons from these `logic.js` files:
 export default new SceneLogic().init()
 ```
 
-The logic store can be imported in any component, saga or other logic store as needed.
+Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a more complete example.
+
+Once defined, a logic store can be imported in any component, saga or other logic store as needed.
+
+```js
+import sceneLogic from '~/scenes/homepage/logic'
+
+// use them just like this
+sceneLogic.path === ['scenes', 'homepage', 'index']
+sceneLogic.actions === { updateName: function(name), increaseAge: function(amount), ... }
+sceneLogic.reducer === function (state, action) { ... }
+sceneLogic.selector === (state) => state.scenes.homepage.index
+sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ... }
+
+// or plug them into other kea-logic components for maximum interoperability
+```
+
+# Code structure
 
 While logic stores can exist anywhere, it is recommended organise your code like this:
 
