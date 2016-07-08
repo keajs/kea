@@ -327,7 +327,7 @@ While logic stores can exist anywhere, it is highly recommended to organise your
 * `components` - react components that are shared between scenes
 * `utils` - javascript utils shared between scenes
 
-Also, as we strive for simplicity, readability and clarity, we will skip semicolons. They are added/removed as needed in the transpiling/minimising stage, and add no value. Any "I forgot the semicolon" errors you might be worried about will be caught by the linter anyway. (Please install eslint and plugins for your IDE!)
+Side note: as we strive for simplicity, readability and clarity, we will use [JavaScript Standard Style](http://standardjs.com/rules.html) and skip semicolons. They are added/removed as needed in the transpiling/minimising stage, and add no value. Any "I forgot the semicolon" errors you might be worried about will be caught by the linter anyway. (Please install eslint and plugins for your IDE!)
 
 Here's a typical structure:
 
@@ -377,9 +377,9 @@ scenes/
 - store.js
 ```
 
-
-
 ## What is `kea`?
+
+All of this is a work in progress. Any and all help is greatly appreciated!
 
 Read more here about the quest to find [the smartest way to develop react applications](https://github.com/mariusandra/kea).
 
