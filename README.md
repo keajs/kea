@@ -41,18 +41,16 @@ Logic stores consist of 1) actions, 2) structure (reducer + selector + proptype)
 
 Logic stores are connected through ES6 imports.
 
+Let's first look at a React component that uses these stores:
+
 ```js
-// scenes/homepage/index.js - This the root component for the homepage scene
-
-import './styles.scss'
-
-import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea-logic'
+// scenes/homepage/index.js - This the root component for the homepage scene. skipping some imports
 
 // A helper component.
 import Slider from '~/scenes/homepage/slider'
 
-// Note, you should always import with the full path, so you can easily move things around, and refactor just by searching for the path.
+// Note, you should always import with the full path, so you can easily move things around
+// and refactor just by searching for the path.
 
 // logic stores: 1) for this "homepage" scene root component and 2) the slider helper component
 import sceneLogic from '~/scenes/homepage/logic'
@@ -77,13 +75,13 @@ const mapping = {
   ]
 }
 
-// the scene component itself
 class HomepageScene extends Component {
+
   // react will know the PropTypes automatically
   static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
 
   // binding to 'this', hence the fat arrow syntax
-  // this way we can just pass onUpdate={this.updateName} in render()
+  // this way we can just pass onClick={this.updateName} in render()
   updateName = () => {
     // each function defines on top which props and actions it needs
     const { name } = this.props
@@ -92,8 +90,7 @@ class HomepageScene extends Component {
     const newName = window.prompt('Please enter the name', name)
 
     if (newName) {
-      // call the action to update the data
-      updateName(newName)
+      updateName(newName) // call the action to update the data
     }
   }
 
@@ -109,7 +106,7 @@ class HomepageScene extends Component {
           Hello, I am <em onClick={this.updateName}>{capitalizedName}</em> the Kea
         </h1>
         <p>
-          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url} target='_blank'>{currentImage.author}</a>
+          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url}>{currentImage.author}</a>
         </p>
       </div>
     )
