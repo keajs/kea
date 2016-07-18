@@ -1,4 +1,4 @@
-import { take, fork, cancel } from 'redux-saga/effects'
+import { take, fork, cancel, cancelled } from 'redux-saga/effects'
 
 export function createCombinedSaga (sagas) {
   return function * () {
@@ -12,9 +12,11 @@ export function createCombinedSaga (sagas) {
       while (true) {
         yield take('wait until worker cancellation')
       }
-    } catch (error) {
-      for (let i = 0; i < workers.length; i++) {
-        yield cancel(workers[i])
+    } finally {
+      if (yield cancelled()) {
+        for (let i = 0; i < workers.length; i++) {
+          yield cancel(workers[i])
+        }
       }
     }
   }
