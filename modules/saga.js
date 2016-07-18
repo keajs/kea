@@ -52,12 +52,16 @@ function createCombinedSaga(sagas) {
             break;
 
           case 16:
-            _context.next = 27;
-            break;
+            _context.prev = 16;
+            _context.next = 19;
+            return (0, _effects.cancelled)();
 
-          case 18:
-            _context.prev = 18;
-            _context.t0 = _context['catch'](1);
+          case 19:
+            if (!_context.sent) {
+              _context.next = 27;
+              break;
+            }
+
             _i = 0;
 
           case 21:
@@ -75,10 +79,13 @@ function createCombinedSaga(sagas) {
             break;
 
           case 27:
+            return _context.finish(16);
+
+          case 28:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, this, [[1, 18]]);
+    }, _callee, this, [[1,, 16, 28]]);
   });
 }
