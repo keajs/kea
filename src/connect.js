@@ -1,20 +1,28 @@
 import { createPropTransforms } from './props'
-import { selectActionsFromLogic } from './actions'
+import { createActionTransforms } from './actions'
 import { connect } from 'react-redux'
 
 export function connectMapping (mapping) {
-  const actionSelector = selectActionsFromLogic(mapping.actions)
+  const actionTransforms = createActionTransforms(mapping.actions)
   const propTransforms = createPropTransforms(mapping.props)
 
   const actionMerge = function (stateProps, dispatchProps, ownProps) {
-    let newState = {}
+    let props = Object.assign({}, ownProps, stateProps)
+    let actions = Object.assign({}, dispatchProps)
 
     Object.keys(propTransforms.transforms).forEach(key => {
-      newState[key] = propTransforms.transforms[key](stateProps[key], ownProps)
+      props[key] = propTransforms.transforms[key](stateProps[key], ownProps)
     })
 
-    return Object.assign({}, ownProps, stateProps, newState, {actions: dispatchProps})
+    Object.keys(actionTransforms.transforms).forEach(key => {
+      const newArgs = actionTransforms.transforms[key].map(k => ownProps[k])
+      actions[key] = function (...args) {
+        return dispatchProps[key](...newArgs, ...args)
+      }
+    })
+
+    return Object.assign({}, props, { actions })
   }
 
-  return connect(propTransforms.selectors, actionSelector, actionMerge)
+  return connect(propTransforms.selectors, actionTransforms.actions, actionMerge)
 }

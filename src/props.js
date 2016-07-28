@@ -31,9 +31,11 @@ export function createPropTransforms (mapping = []) {
       const matches = from.match(/^(.*)\[(.*)\]$/)
 
       if (matches) {
+        if (from === to) {
+          to = matches[1]
+        }
         from = matches[1]
         transforms[to] = (value, props) => {
-          console.log(4, matches[2], props[matches[2]])
           return value[props[matches[2]]]
         }
       }
@@ -85,6 +87,9 @@ export function propTypesFromMapping (mapping, extra = null) {
         const matches = from.match(/^(.*)\[(.*)\]$/)
 
         if (matches) {
+          if (from === to) {
+            to = matches[1]
+          }
           from = matches[1]
         }
 
@@ -121,6 +126,15 @@ export function propTypesFromMapping (mapping, extra = null) {
 
         if (query.includes(' as ')) {
           [from, to] = query.split(' as ')
+        }
+
+        const matches = from.match(/^(.*)\((.*)\)$/)
+
+        if (matches) {
+          if (from === to) {
+            to = matches[1]
+          }
+          from = matches[1]
         }
 
         if (actions[from]) {
