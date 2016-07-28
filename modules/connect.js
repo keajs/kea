@@ -11,19 +11,35 @@ var _actions = require('./actions');
 
 var _reactRedux = require('react-redux');
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function connectMapping(mapping) {
-  var actionSelector = (0, _actions.selectActionsFromLogic)(mapping.actions);
+  var actionTransforms = (0, _actions.createActionTransforms)(mapping.actions);
   var propTransforms = (0, _props.createPropTransforms)(mapping.props);
 
   var actionMerge = function actionMerge(stateProps, dispatchProps, ownProps) {
-    var newState = {};
+    var props = Object.assign({}, ownProps, stateProps);
+    var actions = Object.assign({}, dispatchProps);
 
     Object.keys(propTransforms.transforms).forEach(function (key) {
-      newState[key] = propTransforms.transforms[key](stateProps[key], ownProps);
+      props[key] = propTransforms.transforms[key](stateProps[key], ownProps);
     });
 
-    return Object.assign({}, ownProps, stateProps, newState, { actions: dispatchProps });
+    Object.keys(actionTransforms.transforms).forEach(function (key) {
+      var newArgs = actionTransforms.transforms[key].map(function (k) {
+        return ownProps[k];
+      });
+      actions[key] = function () {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return dispatchProps[key].apply(dispatchProps, _toConsumableArray(newArgs).concat(args));
+      };
+    });
+
+    return Object.assign({}, props, { actions: actions });
   };
 
-  return (0, _reactRedux.connect)(propTransforms.selectors, actionSelector, actionMerge);
+  return (0, _reactRedux.connect)(propTransforms.selectors, actionTransforms.actions, actionMerge);
 }
