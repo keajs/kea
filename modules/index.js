@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.actionMerge = exports.selectActionsFromLogic = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = exports.createLogic = undefined;
+exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.selectActionsFromLogic = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = exports.createLogic = undefined;
 
 var _logic = require('./logic');
 
@@ -56,12 +56,6 @@ Object.defineProperty(exports, 'selectActionsFromLogic', {
   enumerable: true,
   get: function get() {
     return _actions.selectActionsFromLogic;
-  }
-});
-Object.defineProperty(exports, 'actionMerge', {
-  enumerable: true,
-  get: function get() {
-    return _actions.actionMerge;
   }
 });
 

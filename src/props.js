@@ -1,7 +1,7 @@
 import { PropTypes } from 'react'
 import { createStructuredSelector } from 'reselect'
 
-export function selectPropsFromLogic (mapping = []) {
+export function createPropTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping)
     console.trace()
@@ -9,6 +9,7 @@ export function selectPropsFromLogic (mapping = []) {
   }
 
   let hash = {}
+  let transforms = {}
 
   for (let i = 0; i < mapping.length; i += 2) {
     const logic = mapping[i]
@@ -27,6 +28,16 @@ export function selectPropsFromLogic (mapping = []) {
         [from, to] = query.split(' as ')
       }
 
+      const matches = from.match(/^(.*)\[(.*)\]$/)
+
+      if (matches) {
+        from = matches[1]
+        transforms[to] = (value, props) => {
+          console.log(4, matches[2], props[matches[2]])
+          return value[props[matches[2]]]
+        }
+      }
+
       if (from === '*') {
         hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
       } else if (isFunction) {
@@ -40,11 +51,18 @@ export function selectPropsFromLogic (mapping = []) {
     })
   }
 
-  return createStructuredSelector(hash)
+  return {
+    selectors: createStructuredSelector(hash),
+    transforms: transforms
+  }
+}
+
+export function selectPropsFromLogic (mapping = []) {
+  return createPropTransforms(mapping).selectors
 }
 
 export function propTypesFromMapping (mapping, extra = null) {
-  let propTypes = {}
+  let propTypes = Object.assign({}, mapping.passedProps || {})
 
   if (mapping.props) {
     if (mapping.props.length % 2 === 1) {
@@ -62,6 +80,12 @@ export function propTypesFromMapping (mapping, extra = null) {
 
         if (query.includes(' as ')) {
           [from, to] = query.split(' as ')
+        }
+
+        const matches = from.match(/^(.*)\[(.*)\]$/)
+
+        if (matches) {
+          from = matches[1]
         }
 
         const structure = logic.structure[from]

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+exports.createPropTransforms = createPropTransforms;
 exports.selectPropsFromLogic = selectPropsFromLogic;
 exports.propTypesFromMapping = propTypesFromMapping;
 exports.havePropsChanged = havePropsChanged;
@@ -14,7 +15,7 @@ var _react = require('react');
 
 var _reselect = require('reselect');
 
-function selectPropsFromLogic() {
+function createPropTransforms() {
   var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
   if (mapping.length % 2 === 1) {
@@ -24,6 +25,7 @@ function selectPropsFromLogic() {
   }
 
   var hash = {};
+  var transforms = {};
 
   var _loop = function _loop(i) {
     var logic = mapping[i];
@@ -47,6 +49,16 @@ function selectPropsFromLogic() {
         to = _query$split2[1];
       }
 
+      var matches = from.match(/^(.*)\[(.*)\]$/);
+
+      if (matches) {
+        from = matches[1];
+        transforms[to] = function (value, props) {
+          console.log(4, matches[2], props[matches[2]]);
+          return value[props[matches[2]]];
+        };
+      }
+
       if (from === '*') {
         hash[to] = isFunction ? logic : logic.selector ? logic.selector : selectors;
       } else if (isFunction) {
@@ -66,13 +78,22 @@ function selectPropsFromLogic() {
     _loop(i);
   }
 
-  return (0, _reselect.createStructuredSelector)(hash);
+  return {
+    selectors: (0, _reselect.createStructuredSelector)(hash),
+    transforms: transforms
+  };
+}
+
+function selectPropsFromLogic() {
+  var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+  return createPropTransforms(mapping).selectors;
 }
 
 function propTypesFromMapping(mapping) {
   var extra = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-  var propTypes = {};
+  var propTypes = Object.assign({}, mapping.passedProps || {});
 
   if (mapping.props) {
     if (mapping.props.length % 2 === 1) {
@@ -96,6 +117,12 @@ function propTypesFromMapping(mapping) {
 
           from = _query$split4[0];
           to = _query$split4[1];
+        }
+
+        var matches = from.match(/^(.*)\[(.*)\]$/);
+
+        if (matches) {
+          from = matches[1];
         }
 
         var structure = logic.structure[from];

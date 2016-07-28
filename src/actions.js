@@ -1,7 +1,3 @@
-export function actionMerge (stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, ownProps, stateProps, {actions: dispatchProps})
-}
-
 export function selectActionsFromLogic (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectActionsFromLogic:', mapping)
