@@ -43,7 +43,7 @@ export function createPropTransforms (mapping = []) {
       if (from === '*') {
         hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
       } else if (isFunction) {
-        hash[to] = (state) => logic(state)[from]
+        hash[to] = (state) => (logic(state) || {})[from]
       } else if (typeof selectors[from] !== 'undefined') {
         hash[to] = selectors[from]
       } else {

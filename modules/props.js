@@ -65,7 +65,7 @@ function createPropTransforms() {
         hash[to] = isFunction ? logic : logic.selector ? logic.selector : selectors;
       } else if (isFunction) {
         hash[to] = function (state) {
-          return logic(state)[from];
+          return (logic(state) || {})[from];
         };
       } else if (typeof selectors[from] !== 'undefined') {
         hash[to] = selectors[from];
