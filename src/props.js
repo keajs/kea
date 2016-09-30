@@ -76,32 +76,34 @@ export function propTypesFromMapping (mapping, extra = null) {
       const logic = mapping.props[i]
       const props = mapping.props[i + 1]
 
-      props.forEach(query => {
-        let from = query
-        let to = query
+      if (logic && logic.structure) {
+        props.forEach(query => {
+          let from = query
+          let to = query
 
-        if (query.includes(' as ')) {
-          [from, to] = query.split(' as ')
-        }
-
-        const matches = from.match(/^(.*)\[(.*)\]$/)
-
-        if (matches) {
-          if (from === to) {
-            to = matches[1]
+          if (query.includes(' as ')) {
+            [from, to] = query.split(' as ')
           }
-          from = matches[1]
-        }
 
-        const structure = logic.structure[from]
+          const matches = from.match(/^(.*)\[(.*)\]$/)
 
-        if (structure && structure.type) {
-          propTypes[to] = structure.type
-        } else {
-          console.error(`[KEA-LOGIC] prop type "${query}" missing for logic:`, logic)
-          console.trace()
-        }
-      })
+          if (matches) {
+            if (from === to) {
+              to = matches[1]
+            }
+            from = matches[1]
+          }
+
+          const structure = logic.structure[from]
+
+          if (structure && structure.type) {
+            propTypes[to] = structure.type
+          } else {
+            console.error(`[KEA-LOGIC] prop type "${query}" missing for logic:`, logic)
+            console.trace()
+          }
+        })
+      }
     }
   }
 
