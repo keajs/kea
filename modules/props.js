@@ -108,37 +108,39 @@ function propTypesFromMapping(mapping) {
       var logic = mapping.props[i];
       var props = mapping.props[i + 1];
 
-      props.forEach(function (query) {
-        var from = query;
-        var to = query;
+      if (logic && logic.structure) {
+        props.forEach(function (query) {
+          var from = query;
+          var to = query;
 
-        if (query.includes(' as ')) {
-          var _query$split3 = query.split(' as ');
+          if (query.includes(' as ')) {
+            var _query$split3 = query.split(' as ');
 
-          var _query$split4 = _slicedToArray(_query$split3, 2);
+            var _query$split4 = _slicedToArray(_query$split3, 2);
 
-          from = _query$split4[0];
-          to = _query$split4[1];
-        }
-
-        var matches = from.match(/^(.*)\[(.*)\]$/);
-
-        if (matches) {
-          if (from === to) {
-            to = matches[1];
+            from = _query$split4[0];
+            to = _query$split4[1];
           }
-          from = matches[1];
-        }
 
-        var structure = logic.structure[from];
+          var matches = from.match(/^(.*)\[(.*)\]$/);
 
-        if (structure && structure.type) {
-          propTypes[to] = structure.type;
-        } else {
-          console.error('[KEA-LOGIC] prop type "' + query + '" missing for logic:', logic);
-          console.trace();
-        }
-      });
+          if (matches) {
+            if (from === to) {
+              to = matches[1];
+            }
+            from = matches[1];
+          }
+
+          var structure = logic.structure[from];
+
+          if (structure && structure.type) {
+            propTypes[to] = structure.type;
+          } else {
+            console.error('[KEA-LOGIC] prop type "' + query + '" missing for logic:', logic);
+            console.trace();
+          }
+        });
+      }
     };
 
     for (var i = 0; i < mapping.props.length; i += 2) {
