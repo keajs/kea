@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { createReducer } from 'redux-act'
 
 function storageAvailable (type) {
   try {
@@ -14,6 +13,16 @@ function storageAvailable (type) {
 }
 
 let storageCache = {}
+
+function createReducer (mapping, defaultValue) {
+  return (state = defaultValue, action) => {
+    if (mapping[action.type]) {
+      return mapping[action.type](state, action.payload)
+    } else {
+      return state
+    }
+  }
+}
 
 export function createPersistentReducer (actions, defaultValue, key) {
   if (storageAvailable('localStorage')) {

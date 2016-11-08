@@ -17,7 +17,8 @@ export function connectMapping (mapping) {
     Object.keys(actionTransforms.transforms).forEach(key => {
       const newArgs = actionTransforms.transforms[key].map(k => ownProps[k])
       actions[key] = function (...args) {
-        return dispatchProps[key](...newArgs, ...args)
+        const allArgs = [...newArgs, ...args]
+        return dispatchProps[key](...allArgs)
       }
     })
 

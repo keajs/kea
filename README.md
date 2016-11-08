@@ -1,6 +1,6 @@
 The principal operation of a website is to stream data between endpoints. Bytes start at the user's keyboard, pass through layers of application logic, land in the database and return back as impeccable HTML and CSS constructions.
 
-`kea-logic` makes these transformations a joy to perform on the frontend. It uses components you know and love (`react`, `redux`, `redux-act`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine that brings your data to life.
+`kea-logic` makes these transformations a joy to perform on the frontend. It uses components you know and love (`react`, `redux`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine that brings your data to life.
 
 There are many other projects under the [`kea`](https://github.com/mariusandra/kea) name that you may want to check out.
 
@@ -130,21 +130,21 @@ class SceneLogic extends Logic {
 
 All the data declared below will live in your redux store under `scenes.homepage.index`.
 
-Logic stores use `redux-act` action generators. Give them a keyword, a help text and the payload object generator.
+The action generators are inspired by `redux-act`, but don't need a description. Give them a keyword and the payload object generator.
 
 ```js
   // ACTIONS
   actions = ({ constants }) => ({
-    updateName: createAction('change the name of the bird', (name) => ({ name })),
-    increaseAge: createAction('make the bird older', (amount = 1) => ({ amount })),
-    decreaseAge: createAction('make the bird younger', (amount = 1) => ({ amount }))
+    updateName: (name) => ({ name }),
+    increaseAge: (amount = 1) => ({ amount }),
+    decreaseAge: (amount = 1) => ({ amount })
   })
 
   // Calling `updateName('new name')` will create an object like:
-  // { type: "[3] change the name of the bird", payload: { name: 'new name' } }
+  // { type: 'updateName@homepage.index', payload: { name: 'new name' } }
 ```
 
-Logic stores have a *structure*, created with `redux`, `redux-act` and `reselect` plus type declarations and optional persistence. Everything here is a pure function working with immutable data.
+Logic stores have a *structure*, created with `redux` and `reselect` plus type declarations and optional persistence. Everything here is a pure function working with immutable data.
 
 ```js
   // STRUCTURE

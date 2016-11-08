@@ -1,5 +1,4 @@
 import Logic from './logic'
-export { createLogic } from './logic'
 export { pathSelector, createSelectors } from './selectors'
 export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
 export { selectActionsFromLogic } from './actions'

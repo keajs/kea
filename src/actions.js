@@ -50,3 +50,29 @@ export function createActionTransforms (mapping = []) {
 export function selectActionsFromLogic (mapping = []) {
   return createActionTransforms(mapping).actions
 }
+
+let alreadyCreated = {}
+
+export function createActions (mapping = {}, path) {
+  const actions = {}
+  const [scenes, ...rest] = path
+
+  let fullPath = scenes === 'scenes' ? rest.join('.') : path.join('.')
+  Object.keys(mapping).forEach(key => {
+    const fullKey = `${key}@${fullPath}`
+
+    if (alreadyCreated[fullKey]) {
+      console.error(`[KEA-LOGIC] Already created action "${fullKey}"`)
+    }
+
+    actions[key] = (...payloadArgs) => ({
+      type: fullKey,
+      payload: mapping[key] === true ? ({}) : mapping[key](...payloadArgs)
+    })
+    actions[key].toString = () => fullKey
+
+    alreadyCreated[fullKey] = true
+  })
+
+  return actions
+}
