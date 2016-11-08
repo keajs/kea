@@ -15,7 +15,7 @@ function pathSelector(path, state) {
 }
 
 function createSelectors(path, reducer) {
-  var additional = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+  var additional = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var selector = function selector(state) {
     return pathSelector(path, state);

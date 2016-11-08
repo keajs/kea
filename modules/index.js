@@ -3,16 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.selectActionsFromLogic = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = exports.createLogic = undefined;
-
-var _logic = require('./logic');
-
-Object.defineProperty(exports, 'createLogic', {
-  enumerable: true,
-  get: function get() {
-    return _logic.createLogic;
-  }
-});
+exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.selectActionsFromLogic = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = undefined;
 
 var _selectors = require('./selectors');
 
@@ -145,6 +136,8 @@ Object.defineProperty(exports, 'createKeaStore', {
     return _store.createKeaStore;
   }
 });
+
+var _logic = require('./logic');
 
 var _logic2 = _interopRequireDefault(_logic);
 

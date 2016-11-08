@@ -20,7 +20,7 @@ var NEW_SCENE = exports.NEW_SCENE = '@@kea/NEW_SCENE';
 var loadedWorkers = {};
 
 function createRootSaga() {
-  var appSagas = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+  var appSagas = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
   return regeneratorRuntime.mark(function _callee() {
     var runningSaga, ranAppSagas, _ref, payload;
@@ -101,7 +101,7 @@ function createCombinedKeaReducer(sceneReducers, appReducers) {
 }
 
 function createKeaStore(finalCreateStore) {
-  var appReducers = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var appReducers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var rootReducer = createCombinedKeaReducer({}, appReducers);
 
@@ -153,11 +153,9 @@ function createKeaStore(finalCreateStore) {
               return;
             }
 
-            var _path = _slicedToArray(path, 3);
-
-            var sceneName = _path[1];
-            var logicName = _path[2];
-
+            var _path = _slicedToArray(path, 3),
+                sceneName = _path[1],
+                logicName = _path[2];
 
             if (!_this.loadedReducers[sceneName]) {
               _this.loadedReducers[sceneName] = {};

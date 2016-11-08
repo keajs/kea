@@ -34,7 +34,8 @@ function connectMapping(mapping) {
           args[_key] = arguments[_key];
         }
 
-        return dispatchProps[key].apply(dispatchProps, _toConsumableArray(newArgs).concat(args));
+        var allArgs = [].concat(_toConsumableArray(newArgs), args);
+        return dispatchProps[key].apply(dispatchProps, _toConsumableArray(allArgs));
       };
     });
 

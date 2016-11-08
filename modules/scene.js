@@ -16,10 +16,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var KeaScene = function () {
   function KeaScene(_ref) {
-    var name = _ref.name;
-    var logic = _ref.logic;
-    var sagas = _ref.sagas;
-    var component = _ref.component;
+    var name = _ref.name,
+        logic = _ref.logic,
+        sagas = _ref.sagas,
+        component = _ref.component;
 
     _classCallCheck(this, KeaScene);
 

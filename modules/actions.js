@@ -8,8 +8,12 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.createActionTransforms = createActionTransforms;
 exports.selectActionsFromLogic = selectActionsFromLogic;
+exports.createActions = createActions;
+
+function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+
 function createActionTransforms() {
-  var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectActionsFromLogic:', mapping);
@@ -71,7 +75,43 @@ function createActionTransforms() {
 }
 
 function selectActionsFromLogic() {
-  var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   return createActionTransforms(mapping).actions;
+}
+
+var alreadyCreated = {};
+
+function createActions() {
+  var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var path = arguments[1];
+
+  var actions = {};
+
+  var _path = _toArray(path),
+      scenes = _path[0],
+      rest = _path.slice(1);
+
+  var fullPath = scenes === 'scenes' ? rest.join('.') : path.join('.');
+  Object.keys(mapping).forEach(function (key) {
+    var fullKey = key + '@' + fullPath;
+
+    if (alreadyCreated[fullKey]) {
+      console.error('[KEA-LOGIC] Already created action "' + fullKey + '"');
+    }
+
+    actions[key] = function () {
+      return {
+        type: fullKey,
+        payload: mapping[key] === true ? {} : mapping[key].apply(mapping, arguments)
+      };
+    };
+    actions[key].toString = function () {
+      return fullKey;
+    };
+
+    alreadyCreated[fullKey] = true;
+  });
+
+  return actions;
 }

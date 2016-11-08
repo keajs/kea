@@ -16,7 +16,7 @@ var _react = require('react');
 var _reselect = require('reselect');
 
 function createPropTransforms() {
-  var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping);
@@ -87,13 +87,13 @@ function createPropTransforms() {
 }
 
 function selectPropsFromLogic() {
-  var mapping = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   return createPropTransforms(mapping).selectors;
 }
 
 function propTypesFromMapping(mapping) {
-  var extra = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+  var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
   var propTypes = Object.assign({}, mapping.passedProps || {});
 
@@ -236,7 +236,7 @@ function havePropsChangedProduction(nextProps) {
 }
 
 function havePropsChanged() {
-  var debug = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+  var debug = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
   if (debug) {
     return havePropsChangedDebug;
