@@ -386,10 +386,10 @@ Read more here about the quest to find [the smartest way to develop react applic
 ## List of public functions:
 
 ```js
-export { createLogic } from './logic'
+export default Logic
 export { pathSelector, createSelectors } from './selectors'
 export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
-export { selectActionsFromLogic, actionMerge } from './actions'
+export { selectActionsFromLogic } from './actions'
 export { createPersistentReducer, createStructureReducer } from './reducer'
 export { createCombinedSaga } from './saga'
 export { createScene } from './scene'
