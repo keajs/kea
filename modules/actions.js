@@ -8,6 +8,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.createActionTransforms = createActionTransforms;
 exports.selectActionsFromLogic = selectActionsFromLogic;
+exports.createAction = createAction;
 exports.createActions = createActions;
 
 function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
@@ -82,35 +83,47 @@ function selectActionsFromLogic() {
 
 var alreadyCreated = {};
 
+function createAction(type, payloadCreator) {
+  if (alreadyCreated[type]) {
+    console.error('[KEA-LOGIC] Already created action "' + type + '"');
+  }
+
+  var action = function action() {
+    return {
+      type: type,
+      payload: typeof payloadCreator === 'function' ? payloadCreator.apply(undefined, arguments) : payloadCreator
+    };
+  };
+  action.toString = function () {
+    return type;
+  };
+
+  alreadyCreated[type] = true;
+
+  return action;
+}
+
+var toSpaces = function toSpaces(key) {
+  return key.replace(/(?:^|\.?)([A-Z])/g, function (x, y) {
+    return ' ' + y.toLowerCase();
+  }).replace(/^ /, '');
+};
+
 function createActions() {
   var mapping = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var path = arguments[1];
 
   var actions = {};
 
-  var _path = _toArray(path),
-      scenes = _path[0],
-      rest = _path.slice(1);
+  var _ref = typeof path === 'string' ? path.split('.') : path,
+      _ref2 = _toArray(_ref),
+      scenes = _ref2[0],
+      rest = _ref2.slice(1);
 
-  var fullPath = scenes === 'scenes' ? rest.join('.') : path.join('.');
+  var fullPath = scenes === 'scenes' ? rest.join('.') : scenes + (rest.length > 0 ? '.' + rest.join('.') : '');
   Object.keys(mapping).forEach(function (key) {
-    var fullKey = key + '@' + fullPath;
-
-    if (alreadyCreated[fullKey]) {
-      console.error('[KEA-LOGIC] Already created action "' + fullKey + '"');
-    }
-
-    actions[key] = function () {
-      return {
-        type: fullKey,
-        payload: mapping[key] === true ? {} : mapping[key].apply(mapping, arguments)
-      };
-    };
-    actions[key].toString = function () {
-      return fullKey;
-    };
-
-    alreadyCreated[fullKey] = true;
+    var fullKey = toSpaces(key) + ' (' + fullPath + ')';
+    actions[key] = createAction(fullKey, mapping[key]);
   });
 
   return actions;

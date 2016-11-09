@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.selectActionsFromLogic = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = undefined;
+exports.createKeaStore = exports.createRootSaga = exports.NEW_SCENE = exports.combineScenesAndRoutes = exports.getRoutes = exports.connectMapping = exports.createMapping = exports.createScene = exports.createCombinedSaga = exports.createStructureReducer = exports.createPersistentReducer = exports.createReducer = exports.selectActionsFromLogic = exports.createActions = exports.createAction = exports.havePropsChanged = exports.propTypesFromMapping = exports.selectPropsFromLogic = exports.createSelectors = exports.pathSelector = undefined;
 
 var _selectors = require('./selectors');
 
@@ -43,6 +43,18 @@ Object.defineProperty(exports, 'havePropsChanged', {
 
 var _actions = require('./actions');
 
+Object.defineProperty(exports, 'createAction', {
+  enumerable: true,
+  get: function get() {
+    return _actions.createAction;
+  }
+});
+Object.defineProperty(exports, 'createActions', {
+  enumerable: true,
+  get: function get() {
+    return _actions.createActions;
+  }
+});
 Object.defineProperty(exports, 'selectActionsFromLogic', {
   enumerable: true,
   get: function get() {
@@ -52,6 +64,12 @@ Object.defineProperty(exports, 'selectActionsFromLogic', {
 
 var _reducer = require('./reducer');
 
+Object.defineProperty(exports, 'createReducer', {
+  enumerable: true,
+  get: function get() {
+    return _reducer.createReducer;
+  }
+});
 Object.defineProperty(exports, 'createPersistentReducer', {
   enumerable: true,
   get: function get() {
