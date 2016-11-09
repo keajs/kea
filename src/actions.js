@@ -53,25 +53,32 @@ export function selectActionsFromLogic (mapping = []) {
 
 let alreadyCreated = {}
 
+export function createAction (type, payloadCreator) {
+  if (alreadyCreated[type]) {
+    console.error(`[KEA-LOGIC] Already created action "${type}"`)
+  }
+
+  const action = (...payloadArgs) => ({
+    type: type,
+    payload: typeof payloadCreator === 'function' ? payloadCreator(...payloadArgs) : payloadCreator
+  })
+  action.toString = () => type
+
+  alreadyCreated[type] = true
+
+  return action
+}
+
+const toSpaces = (key) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
+
 export function createActions (mapping = {}, path) {
   const actions = {}
-  const [scenes, ...rest] = path
+  const [scenes, ...rest] = typeof path === 'string' ? path.split('.') : path
 
-  let fullPath = scenes === 'scenes' ? rest.join('.') : path.join('.')
+  let fullPath = scenes === 'scenes' ? rest.join('.') : scenes + (rest.length > 0 ? '.' + rest.join('.') : '')
   Object.keys(mapping).forEach(key => {
-    const fullKey = `${key}@${fullPath}`
-
-    if (alreadyCreated[fullKey]) {
-      console.error(`[KEA-LOGIC] Already created action "${fullKey}"`)
-    }
-
-    actions[key] = (...payloadArgs) => ({
-      type: fullKey,
-      payload: mapping[key] === true ? ({}) : mapping[key](...payloadArgs)
-    })
-    actions[key].toString = () => fullKey
-
-    alreadyCreated[fullKey] = true
+    const fullKey = `${toSpaces(key)} (${fullPath})`
+    actions[key] = createAction(fullKey, mapping[key])
   })
 
   return actions

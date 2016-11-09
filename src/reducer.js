@@ -14,7 +14,7 @@ function storageAvailable (type) {
 
 let storageCache = {}
 
-function createReducer (mapping, defaultValue) {
+export function createReducer (mapping, defaultValue) {
   return (state = defaultValue, action) => {
     if (mapping[action.type]) {
       return mapping[action.type](state, action.payload)
