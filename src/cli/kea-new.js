@@ -68,12 +68,12 @@ fs.readFile(projectPackage, 'utf8', function (err, data) {
   json.version = '0.0.1'
 
   fs.writeFile(projectPackage, JSON.stringify(json, null, 2), function() {
-    console.log('--> Running npm install')
-    execSync(`cd ./${projectName} && npm install`)
-
     console.log('')
     console.log(`All set! Next steps:`)
     console.log(`  cd ${projectName}`)
+    console.log(`  One of:`)
+    console.log(`    npm install`)
+    console.log(`    yarn`)
     console.log(`  npm start`)
   })
 });
