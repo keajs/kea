@@ -11,39 +11,83 @@ A `kea` is two things:
 
 1) `kea/logic` - Redux Logic Stores. Actions, Reducers, PropTypes and Selectors in one easy to read file!
 
-2) `kea/saga` - ES classes to control side-effects via Redux-Sagas
+2) `kea/saga` - ES6+ class to control side-effects via Redux-Sagas
 
 3) `kea/cli` - Scaffolding. Easy project and code generation.
 
 4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (TODO: the code is still under `kea/logic` and must be refactored out)
 
-## Try it out!
-
-Open the [demo app](http://example.kea.rocks/), [browse its code](https://github.com/mariusandra/kea-example) and read below for an explanation of the parts.
-
-To run the example on your machine, just type these commands:
-
-```
-npm install kea -g
-kea new my-project
-cd my-project
-npm install # or yarn
-npm start
-```
-
-and open [http://localhost:2000/](http://localhost:2000/).
-
-Later inside `my-project` run these to hack away:
-
-```
-kea g scene-name                               # new scene
-kea g scene-name/component-name                # component under the scene
-kea g scene-name/component-name/really-nested  # deeply nested logic
-```
-
 # Logic stores
 
-Logic stores consist of actions, reducers, selectors and proptypes.
+Logic stores consist of actions, reducers, selectors and prop types. They look like this:
+
+```js
+// scenes/homepage/logic.js
+class HomepageLogic extends Logic {
+  // PATH
+  path = () => ['scenes', 'homepage', 'index']
+
+  // ACTIONS
+  actions = ({ constants }) => ({
+    updateName: (name) => ({ name }),
+    increaseAge: (amount = 1) => ({ amount }),
+    decreaseAge: (amount = 1) => ({ amount })
+  })
+
+  // STRUCTURE
+  structure = ({ actions, constants }) => ({
+    name: ['Chirpy', PropTypes.string, {
+      [actions.updateName]: (state, payload) => payload.name
+    }],
+
+    age: [3, PropTypes.number, { persist: true }, { // persist = save the age in LocalStorage
+      [actions.increaseAge]: (state, payload) => state + payload.amount,
+      [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
+    }]
+  })
+
+  // SELECTORS
+  selectors = ({ path, structure, constants, selectors, addSelector }) => {
+    // define the name of the selector, its PropType and tell it what data you want
+    addSelector('capitalizedName', PropTypes.string, [
+      selectors.name,
+    ], (name) => {
+      return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+    })
+
+    addSelector('description', PropTypes.string, [
+      selectors.capitalizedName,
+      selectors.age
+    ], (capitalizedName, age) => {
+      return `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
+    })
+  }
+}
+
+// exported as a singleton
+export default new HomepageLogic().init()
+```
+
+Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
+
+Once defined, a logic store can be imported anywhere:
+
+```js
+import sceneLogic from '~/scenes/homepage/logic'
+
+// use them just like this
+sceneLogic.path === ['scenes', 'homepage', 'index']
+sceneLogic.actions === { updateName: function(name), increaseAge: function(amount), ... }
+sceneLogic.reducer === function (state, action) { ... }
+sceneLogic.selector === (state) => state.scenes.homepage.index
+sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ... }
+
+// or plug them into other kea-logic components for maximum interoperability
+```
+
+... so you can start using them in your project right away!
+
+
 
 Let's have a look at a React component that uses these stores:
 
@@ -121,93 +165,6 @@ class HomepageScene extends Component {
 export default connectMapping(mapping)(HomepageScene)
 ```
 
-Logic stores consist of many parts:
-
-They all have a path in the redux tree.
-
-```js
-// scenes/homepage/logic.js
-class SceneLogic extends Logic {
-  // PATH
-  path = () => ['scenes', 'homepage', 'index']
-```
-
-All the data declared below will live in your redux store under `scenes.homepage.index`.
-
-The action generators are inspired by `redux-act`, but don't need a description. Give them a keyword and the payload object generator.
-
-```js
-  // ACTIONS
-  actions = ({ constants }) => ({
-    updateName: (name) => ({ name }),
-    increaseAge: (amount = 1) => ({ amount }),
-    decreaseAge: (amount = 1) => ({ amount })
-  })
-
-  // Calling `updateName('new name')` will create an object like:
-  // { type: 'updateName@homepage.index', payload: { name: 'new name' } }
-```
-
-Logic stores have a *structure*, created with `redux` and `reselect` plus type declarations and optional persistence. Everything here is a pure function working with immutable data.
-
-```js
-  // STRUCTURE
-  structure = ({ actions, constants }) => ({
-    name: ['Chirpy', PropTypes.string, {
-      [actions.updateName]: (state, payload) => payload.name
-    }],
-
-    age: [3, PropTypes.number, { persist: true }, {
-      [actions.increaseAge]: (state, payload) => state + payload.amount,
-      [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
-    }]
-  })
-```
-
-Finally, we add custom [`reselect`](https://github.com/reactjs/reselect) selectors to transform and cache data:
-
-```js
-  // SELECTORS
-  selectors = ({ path, structure, constants, selectors, addSelector }) => {
-    // define the name of the selector, its PropType and tell it what data you want
-    addSelector('capitalizedName', PropTypes.string, [
-      selectors.name,
-    ], (name) => {
-      return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-    })
-
-    addSelector('description', PropTypes.string, [
-      selectors.capitalizedName,
-      selectors.age
-    ], (capitalizedName, age) => {
-      return `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
-    })
-  }
-}
-```
-
-Logic stores are exported as singletons from these `logic.js` files:
-
-```js
-export default new SceneLogic().init()
-```
-
-Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a more complete example.
-
-Once defined, a logic store can be imported in any component, saga or other logic store as needed.
-
-```js
-import sceneLogic from '~/scenes/homepage/logic'
-
-// use them just like this
-sceneLogic.path === ['scenes', 'homepage', 'index']
-sceneLogic.actions === { updateName: function(name), increaseAge: function(amount), ... }
-sceneLogic.reducer === function (state, action) { ... }
-sceneLogic.selector === (state) => state.scenes.homepage.index
-sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ... }
-
-// or plug them into other kea-logic components for maximum interoperability
-```
 
 # Side effects (API calls, etc)
 
@@ -381,6 +338,30 @@ scenes/
 - index.html
 - index.js
 - store.js
+```
+
+## Try it out!
+
+Open the [demo app](http://example.kea.rocks/), [browse its code](https://github.com/mariusandra/kea-example) and read below for an explanation of the parts.
+
+To run the example on your machine, just type these commands:
+
+```
+npm install kea -g
+kea new my-project
+cd my-project
+npm install # or yarn
+npm start
+```
+
+and open [http://localhost:2000/](http://localhost:2000/).
+
+Later inside `my-project` run these to hack away:
+
+```
+kea g scene-name                               # new scene
+kea g scene-name/component-name                # component under the scene
+kea g scene-name/component-name/really-nested  # deeply nested logic
 ```
 
 ## What is `kea`?
