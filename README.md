@@ -1,16 +1,21 @@
-The principal operation of a website is to stream data between endpoints. Bytes start at the user's keyboard, pass through layers of application logic, land in the database and return back as impeccable HTML and CSS constructions.
+# Kea
 
-`kea-logic` makes these transformations a joy to perform on the frontend. It uses components you know and love (`react`, `redux`, `redux-saga`, `reselect`, `react-router`) to create a well-oiled machine that brings your data to life.
+![Kea the mountain parrot](https://raw.githubusercontent.com/mariusandra/kea/master/kea-small.jpg)
 
-There are many other projects under the [`kea`](https://github.com/mariusandra/kea) name that you may want to check out.
+A `kea` is two things:
 
-# kea-logic
+1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand
+2. An equally smart architecture for frontend webapps
 
-`kea-logic` gives you logic stores with actions. These act as glue between React components and sagas.
+# What's in the box?
 
-The logic stores are designed to be well-readable, self-documenting and easily refactorable. You'll know how it works even if you have never seen the code before.
+1) `kea/logic` - Redux Logic Stores. Actions, Reducers, PropTypes and Selectors in one easy to read file!
 
-In addition to this, `kea-logic` provides helpers to simplify routing, code splitting and other parts of a good webapp.
+2) `kea/saga` - ES classes to control side-effects via Redux-Sagas
+
+3) `kea/cli` - Scaffolding. Easy project and code generation.
+
+4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (TODO: the code is still under `kea/logic` and must be refactored out)
 
 ## Try it out!
 
@@ -22,6 +27,7 @@ To run the example on your machine, just type these commands:
 npm install kea -g
 kea new my-project
 cd my-project
+npm install # or yarn
 npm start
 ```
 
@@ -37,11 +43,9 @@ kea g scene-name/component-name/really-nested  # deeply nested logic
 
 # Logic stores
 
-Logic stores consist of 1) actions, 2) structure (reducer + selector + proptype), and 3) optionally sagas.
+Logic stores consist of actions, reducers, selectors and proptypes.
 
-Logic stores are connected through ES6 imports.
-
-Let's first look at a React component that uses these stores:
+Let's have a look at a React component that uses these stores:
 
 ```js
 // scenes/homepage/index.js - This the root component for the homepage scene. skipping some imports
