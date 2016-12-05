@@ -221,34 +221,34 @@ Using sagas complex async processing logic can be written in an elegant and line
 
 ```js
 // scenes/homepage/slider/saga.js
-import delay from '~/utils/delay'
-
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-// we want to call the updateSlide action on the slider's logic store
-const actions = selectActionsFromLogic([
-  sliderLogic, [
-    'updateSlide'
-  ]
-])
+export default class HomepageSliderSaga extends Saga {
+  // we want to call the updateSlide action on the slider's logic store
+  actions = () => ([
+    sliderLogic, [
+      'updateSlide'
+    ]
+  ])
 
-export default function * saga () {
-  const { updateSlide } = actions
+  run = function * () {
+    const { updateSlide } = this.actions
 
-  while (true) {
-    // wait for someone to call the updateSlide action or 5 seconds to pass
-    const { change, timeout } = yield race({
-      change: take(updateSlide().type),
-      timeout: delay(5000)
-    })
+    while (true) {
+      // wait for someone to call the updateSlide action or 5 seconds to pass
+      const { timeout } = yield race({
+        change: take(updateSlide),
+        timeout: delay(5000)
+      })
 
-    // if timed out, advance the slide
-    if (timeout) {
-      const currentSlide = yield sliderLogic.get('currentSlide')
-      yield put(updateSlide(currentSlide + 1))
+      // if timed out, advance the slide
+      if (timeout) {
+        const currentSlide = yield sliderLogic.get('currentSlide')
+        yield put(updateSlide(currentSlide + 1))
+      }
+
+      // reset the clock to 5 seconds and wait again
     }
-
-    // reset the clock to 5 seconds and wait again
   }
 }
 ```
