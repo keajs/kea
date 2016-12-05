@@ -153,14 +153,14 @@ Logic stores have a *structure*, created with `redux` and `reselect` plus type d
 ```js
   // STRUCTURE
   structure = ({ actions, constants }) => ({
-    name: createMapping({
+    name: ['Chirpy', PropTypes.string, {
       [actions.updateName]: (state, payload) => payload.name
-    }, 'Chirpy', PropTypes.string),
+    }],
 
-    age: createMapping({
+    age: [3, PropTypes.number, { persist: true }, {
       [actions.increaseAge]: (state, payload) => state + payload.amount,
       [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
-    }, 3, PropTypes.number, { persist: true })
+    }]
   })
 ```
 

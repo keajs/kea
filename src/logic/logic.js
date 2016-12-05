@@ -4,6 +4,7 @@ import { createSelector } from 'reselect'
 import { createStructureReducer } from './reducer'
 import { pathSelector, createSelectors } from './selectors'
 import { createActions } from './actions'
+import { convertStructureArrays } from './structure'
 
 export default class Logic {
   path = () => []
@@ -20,7 +21,7 @@ export default class Logic {
     object.selector = (state) => pathSelector(object.path, state)
     object.constants = this.constants(object)
     object.actions = createActions(this.actions(object), object.path)
-    object.structure = this.structure(object)
+    object.structure = convertStructureArrays(this.structure(object))
     object.reducer = this.reducer(object)
     object.selectors = createSelectors(object.path, object.structure)
 
