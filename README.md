@@ -253,7 +253,9 @@ export default class HomepageSliderSaga extends Saga {
 }
 ```
 
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) to grasp their power!
+[Here are all the functions available in the Saga class](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)
+
+Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) for more!
 
 # Scenes
 
