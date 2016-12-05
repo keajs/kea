@@ -5,7 +5,7 @@ class KeaScene {
   constructor ({ name, logic, sagas, component }) {
     this.name = name
     this.logic = logic || []
-    this.sagas = sagas || []
+    this.sagas = sagas ? sagas.map(Saga => Saga._isKeaSagaClass ? new Saga().init() : Saga) : []
     this.component = component
 
     if (this.sagas) {
