@@ -1,13 +1,6 @@
 import Logic from './logic'
-export { pathSelector, createSelectors } from './selectors'
-export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
-export { createAction, createActions, selectActionsFromLogic } from './actions'
-export { createReducer, createPersistentReducer, createStructureReducer } from './reducer'
-export { createCombinedSaga } from './saga'
-export { createScene } from './scene'
-export { createMapping } from './structure'
-export { connectMapping } from './connect'
-export { getRoutes, combineScenesAndRoutes } from './routes'
-export { NEW_SCENE, createRootSaga, createKeaStore } from './store'
+import Saga from './saga'
 
-export default Logic
+export { pathSelector, createSelectors, selectPropsFromLogic, propTypesFromMapping, havePropsChanged, createAction, createActions, selectActionsFromLogic, createReducer, createPersistentReducer, createStructureReducer, createCombinedSaga, createScene, createMapping, connectMapping, getRoutes, combineScenesAndRoutes, NEW_SCENE, createRootSaga, createKeaStore } from './logic'
+
+export { Logic, Saga }
