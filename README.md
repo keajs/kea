@@ -149,9 +149,18 @@ export default class HomepageSaga extends Saga {
 Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) or check out
 [another example](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)!
 
+Hook them into `kea/scene` (explained below) or call from your existing code like this:
+
+```js
+const homepageSaga = new HomepageSaga().init()
+
+// from your existing saga
+yield call(homepageSaga)
+```
+
 # Component
 
-Let's have a look at a React component that uses these stores:
+Let's have a look at a React component that uses logic stores:
 
 ```js
 // scenes/homepage/index.js - This the root component for the homepage scene. skipping some imports
