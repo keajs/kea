@@ -78,20 +78,24 @@ sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ..
 
 # Side effects (API calls, etc)
 
+`kea/saga` provides a `Saga` class for beautiful orchestration of side effect via redux-saga.
+
 ```js
 import Saga from 'kea/saga'
 
+import homepageLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
 export default class HomepageSaga extends Saga {
+  // pull in actions from logic stores
   actions = () => ([
-    sliderLogic, [
-      'updateSlide'
-    ],
     homepageLogic, [
       'updateName',
       'increaseAge',
       'decreaseAge'
+    ],
+    sliderLogic, [
+      'updateSlide'
     ]
   ])
 
@@ -102,7 +106,7 @@ export default class HomepageSaga extends Saga {
     [actions.decreaseAge]: this.ageLogger
   })
 
-  // main loop of saga
+  // main loop of saga - update the slide every 5 sec
   run = function * () {
     const { updateSlide } = this.actions
 
