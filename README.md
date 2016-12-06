@@ -66,12 +66,14 @@ Once defined, a logic store can be imported anywhere:
 ```js
 import sceneLogic from '~/scenes/homepage/logic'
 
-// you can start using them in your project right away!
+// you can start using it in your project right away!
+// ... as long as you have set the "path" to where it can be found in your reducer tree
 sceneLogic.path === ['scenes', 'homepage', 'index']
-sceneLogic.actions === { updateName: function(name), increaseAge: function(amount), ... }
-sceneLogic.reducer === function (state, action) { ... }
 sceneLogic.selector === (state) => state.scenes.homepage.index
-sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ... }
+
+sceneLogic.actions === { updateName: (name) => { ... }, increaseAge: (amount) => { ... }, ... }
+sceneLogic.reducer === function (state, action) { ... }
+sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, capitalizedName: ... }
 
 // or plug them into other kea-logic components for maximum interoperability
 ```
@@ -99,19 +101,21 @@ export default class HomepageSaga extends Saga {
     ]
   ])
 
-  // bind actions to functions
+  // bind some actions to worker functions
   takeEvery = ({ actions }) => ({
     [actions.updateName]: this.nameLogger,
     [actions.increaseAge]: this.ageLogger,
     [actions.decreaseAge]: this.ageLogger
   })
 
-  // main loop of saga - update the slide every 5 sec
+  // main loop of saga
+  // - update the slide every 5 sec
   run = function * () {
+    // to ease readability we list the actions this function uses on the top
     const { updateSlide } = this.actions
 
     while (true) {
-      // wait for someone to call the updateSlide action or 5 seconds to pass
+      // wait for someone to call the updateSlide action or for 5 seconds to pass
       const { timeout } = yield race({
         change: take(updateSlide),
         timeout: delay(5000)
@@ -119,7 +123,9 @@ export default class HomepageSaga extends Saga {
 
       // if timed out, advance the slide
       if (timeout) {
+        // in a saga you can access logic store contents via "yield logic.get('property')"
         const currentSlide = yield sliderLogic.get('currentSlide')
+        // dispatch the updateSlide action
         yield put(updateSlide(currentSlide + 1))
       }
 
@@ -127,7 +133,7 @@ export default class HomepageSaga extends Saga {
     }
   }
 
-  // clean up
+  // clean up if needed
   cancelled = function * () {
     console.log('Closing saga')
   }
