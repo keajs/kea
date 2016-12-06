@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 As we're at the 0.x phase, breaking changes will still happen. They will be documented here.
 
-## 0.14.0 - 2016-12-06
+## 0.14.1 - 2016-12-06
 ### Changed
 - Deprecated `addSelector` in favor of the new easier to read format. [See here](https://github.com/mariusandra/kea-example/commit/241d30faf8dd6d631d5d891ae3ebc3adc1c3fac3) for an example.
 
