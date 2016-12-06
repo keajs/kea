@@ -1,5 +1,3 @@
-# Kea
-
 ![Kea Logo](https://kea.rocks/img/logo.png)
 
 A `kea` is two things:
