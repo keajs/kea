@@ -1,6 +1,6 @@
 # Kea
 
-![Kea the mountain parrot](https://raw.githubusercontent.com/mariusandra/kea/master/kea-small.jpg)
+![Kea Logo](https://kea.rocks/img/logo.png)
 
 A `kea` is two things:
 
@@ -363,12 +363,6 @@ kea g scene-name                               # new scene
 kea g scene-name/component-name                # component under the scene
 kea g scene-name/component-name/really-nested  # deeply nested logic
 ```
-
-## What is `kea`?
-
-All of this is a work in progress. Any and all help is greatly appreciated!
-
-Read more here about the quest to find [the smartest way to develop react applications](https://github.com/mariusandra/kea).
 
 ## List of public functions:
 
