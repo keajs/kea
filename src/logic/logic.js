@@ -6,6 +6,8 @@ import { pathSelector, createSelectors } from './selectors'
 import { createActions } from './actions'
 import { convertStructureArrays } from './structure'
 
+let gaveWarning = false
+
 export default class Logic {
   path = () => []
   selector = (state) => state
@@ -25,7 +27,21 @@ export default class Logic {
     object.reducer = this.reducer(object)
     object.selectors = createSelectors(object.path, object.structure)
 
-    this.selectors({...object, addSelector: object::this.addSelector})
+    // create the custom selectors
+    let response = this.selectors({...object, addSelector: object::this.addSelector})
+
+    if (typeof response === 'object') {
+      const keys = Object.keys(response)
+      for (let i = 0; i < keys.length; i++) {
+        const s = response[keys[i]]
+
+        // s[0]() == [type, args]
+        const a = s[0]()
+
+        object.structure[keys[i]] = { type: a.shift() }
+        object.selectors[keys[i]] = createSelector(...a, s[1])
+      }
+    }
 
     Object.assign(this, object)
 
@@ -33,6 +49,11 @@ export default class Logic {
   }
 
   addSelector (name, type, args, func) {
+    if (!gaveWarning) {
+      console.warn(`[KEA-LOGIC] addSelector is deprecated. Please use the new compact Array format.`)
+      gaveWarning = true
+    }
+
     this.structure[name] = { type }
     this.selectors[name] = createSelector(...args, func)
   }

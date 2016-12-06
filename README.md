@@ -5,22 +5,23 @@ A `kea` is two things:
 1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand
 2. An equally smart architecture for frontend webapps
 
-# What's in the box?
+# What's included?
 
 1) `kea/logic` - Redux Logic Stores. Actions, Reducers, PropTypes and Selectors in one easy to read file!
 
-2) `kea/saga` - ES6+ class to control side-effects via Redux-Sagas
+2) `kea/saga` - The perfect complement to control side effects.
 
 3) `kea/cli` - Scaffolding. Easy project and code generation.
 
-4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (TODO: the code is still under `kea/logic` and must be refactored out)
+4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (TODO: the code is still under `kea/logic` and will be refactored soon)
 
 # Logic stores
 
 Logic stores consist of actions, reducers, selectors and prop types. They look like this:
 
 ```js
-// scenes/homepage/logic.js
+import Logic from 'kea/logic'
+
 class HomepageLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'index']
@@ -45,21 +46,17 @@ class HomepageLogic extends Logic {
   })
 
   // SELECTORS
-  selectors = ({ path, structure, constants, selectors, addSelector }) => {
-    // define the name of the selector, its PropType and tell it what data you want
-    addSelector('capitalizedName', PropTypes.string, [
-      selectors.name,
-    ], (name) => {
-      return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-    })
+  selectors = ({ path, structure, selectors, constants }) => ({
+    capitalizedName: [
+      () => [PropTypes.string, selectors.name],
+      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+    ],
 
-    addSelector('description', PropTypes.string, [
-      selectors.capitalizedName,
-      selectors.age
-    ], (capitalizedName, age) => {
-      return `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
-    })
-  }
+    description: [
+      () => [PropTypes.string, selectors.capitalizedName, selectors.age],
+      (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
+    ]
+  })
 }
 
 // exported as a singleton
@@ -86,6 +83,56 @@ sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ..
 ... so you can start using them in your project right away!
 
 
+# Side effects (API calls, etc)
+
+Since logic stores are strictly composed of [pure functions](https://en.wikipedia.org/wiki/Pure_function) that operate on [immutable data](https://en.wikipedia.org/wiki/Immutable_object), we need an alternative place to handle all of the messy business logic of the app.
+
+Enter [`sagas`](https://github.com/yelouafi/redux-saga).
+
+This is where you wait for actions to be triggered, run async processing logic, and send the results back through another action.
+
+Using sagas complex async processing logic can be written in an elegant and linear fashion. Here's one example that updates the homepage slider component:
+
+```js
+import Saga from 'kea/saga'
+
+import sliderLogic from '~/scenes/homepage/slider/logic'
+
+export default class HomepageSliderSaga extends Saga {
+  // we want to call the updateSlide action on the slider's logic store
+  actions = () => ([
+    sliderLogic, [
+      'updateSlide'
+    ]
+  ])
+
+  run = function * () {
+    const { updateSlide } = this.actions
+
+    while (true) {
+      // wait for someone to call the updateSlide action or 5 seconds to pass
+      const { timeout } = yield race({
+        change: take(updateSlide),
+        timeout: delay(5000)
+      })
+
+      // if timed out, advance the slide
+      if (timeout) {
+        const currentSlide = yield sliderLogic.get('currentSlide')
+        yield put(updateSlide(currentSlide + 1))
+      }
+
+      // reset the clock to 5 seconds and wait again
+    }
+  }
+}
+```
+
+[Here are all the functions available in the Saga class](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)
+
+Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) for more!
+
+# Component
 
 Let's have a look at a React component that uses these stores:
 
@@ -163,54 +210,6 @@ class HomepageScene extends Component {
 export default connectMapping(mapping)(HomepageScene)
 ```
 
-
-# Side effects (API calls, etc)
-
-Since logic stores are strictly composed of [pure functions](https://en.wikipedia.org/wiki/Pure_function) that operate on [immutable data](https://en.wikipedia.org/wiki/Immutable_object), we need an alternative place to handle all of the messy business logic of the app.
-
-Enter [`sagas`](https://github.com/yelouafi/redux-saga).
-
-This is where you wait for actions to be triggered, run async processing logic, and send the results back through another action.
-
-Using sagas complex async processing logic can be written in an elegant and linear fashion. Here's one example that updates the homepage slider component:
-
-```js
-// scenes/homepage/slider/saga.js
-import sliderLogic from '~/scenes/homepage/slider/logic'
-
-export default class HomepageSliderSaga extends Saga {
-  // we want to call the updateSlide action on the slider's logic store
-  actions = () => ([
-    sliderLogic, [
-      'updateSlide'
-    ]
-  ])
-
-  run = function * () {
-    const { updateSlide } = this.actions
-
-    while (true) {
-      // wait for someone to call the updateSlide action or 5 seconds to pass
-      const { timeout } = yield race({
-        change: take(updateSlide),
-        timeout: delay(5000)
-      })
-
-      // if timed out, advance the slide
-      if (timeout) {
-        const currentSlide = yield sliderLogic.get('currentSlide')
-        yield put(updateSlide(currentSlide + 1))
-      }
-
-      // reset the clock to 5 seconds and wait again
-    }
-  }
-}
-```
-
-[Here are all the functions available in the Saga class](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)
-
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) for more!
 
 # Scenes
 
