@@ -23,17 +23,14 @@ Logic stores consist of actions, reducers, selectors and prop types. They look l
 import Logic from 'kea/logic'
 
 class HomepageLogic extends Logic {
-  // PATH
   path = () => ['scenes', 'homepage', 'index']
 
-  // ACTIONS
   actions = ({ constants }) => ({
     updateName: (name) => ({ name }),
     increaseAge: (amount = 1) => ({ amount }),
     decreaseAge: (amount = 1) => ({ amount })
   })
 
-  // STRUCTURE
   structure = ({ actions, constants }) => ({
     name: ['Chirpy', PropTypes.string, {
       [actions.updateName]: (state, payload) => payload.name
@@ -45,7 +42,6 @@ class HomepageLogic extends Logic {
     }]
   })
 
-  // SELECTORS
   selectors = ({ path, structure, selectors, constants }) => ({
     capitalizedName: [
       () => [PropTypes.string, selectors.name],
@@ -70,7 +66,7 @@ Once defined, a logic store can be imported anywhere:
 ```js
 import sceneLogic from '~/scenes/homepage/logic'
 
-// use them just like this
+// you can start using them in your project right away!
 sceneLogic.path === ['scenes', 'homepage', 'index']
 sceneLogic.actions === { updateName: function(name), increaseAge: function(amount), ... }
 sceneLogic.reducer === function (state, action) { ... }
@@ -80,32 +76,33 @@ sceneLogic.selectors === { name: (state) => state.scenes.homepage.index.name, ..
 // or plug them into other kea-logic components for maximum interoperability
 ```
 
-... so you can start using them in your project right away!
-
-
 # Side effects (API calls, etc)
-
-Since logic stores are strictly composed of [pure functions](https://en.wikipedia.org/wiki/Pure_function) that operate on [immutable data](https://en.wikipedia.org/wiki/Immutable_object), we need an alternative place to handle all of the messy business logic of the app.
-
-Enter [`sagas`](https://github.com/yelouafi/redux-saga).
-
-This is where you wait for actions to be triggered, run async processing logic, and send the results back through another action.
-
-Using sagas complex async processing logic can be written in an elegant and linear fashion. Here's one example that updates the homepage slider component:
 
 ```js
 import Saga from 'kea/saga'
 
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-export default class HomepageSliderSaga extends Saga {
-  // we want to call the updateSlide action on the slider's logic store
+export default class HomepageSaga extends Saga {
   actions = () => ([
     sliderLogic, [
       'updateSlide'
+    ],
+    homepageLogic, [
+      'updateName',
+      'increaseAge',
+      'decreaseAge'
     ]
   ])
 
+  // bind actions to functions
+  takeEvery = ({ actions }) => ({
+    [actions.updateName]: this.nameLogger,
+    [actions.increaseAge]: this.ageLogger,
+    [actions.decreaseAge]: this.ageLogger
+  })
+
+  // main loop of saga
   run = function * () {
     const { updateSlide } = this.actions
 
@@ -125,12 +122,28 @@ export default class HomepageSliderSaga extends Saga {
       // reset the clock to 5 seconds and wait again
     }
   }
+
+  // clean up
+  cancelled = function * () {
+    console.log('Closing saga')
+  }
+
+  // on every updateName
+  nameLogger = function * (action) {
+    const { name } = action.payload
+    console.log(`The name changed to: ${name}!`)
+  }
+
+  // on every increaseAge, decreaseAge
+  ageLogger = function * (action) {
+    const age = yield homepageLogic.get('age')
+    console.log(`The age changed to: ${age}!`)
+  }
 }
 ```
 
-[Here are all the functions available in the Saga class](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)
-
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) for more!
+Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) or check out
+[another example](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)!
 
 # Component
 
