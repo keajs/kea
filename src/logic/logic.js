@@ -15,7 +15,7 @@ export default class Logic {
   actions = () => ({})
   structure = () => ({})
   reducer = ({ path, structure }) => createStructureReducer(path, structure)
-  selectors = ({ selectors }) => (selectors)
+  selectors = ({ selectors }) => ({})
 
   init () {
     let object = {}
