@@ -9,6 +9,7 @@ class Saga {
   }
 
   init () {
+    // no need to re-create the function
     if (this._saga) {
       return this._saga
     }
@@ -21,7 +22,7 @@ class Saga {
       }
     }
 
-    // run and assign actions
+    // create actions object
     let object = {}
     object.actions = this.actions ? selectActionsFromLogic(this.actions(object)) : {}
     Object.assign(this, object)
@@ -31,7 +32,7 @@ class Saga {
     // generate the saga
     this._saga = function * () {
       try {
-        // run takeEvery and takeLatest
+        // start takeEvery and takeLatest watchers
         let ops = { takeEvery, takeLatest }
         let opKeys = Object.keys(ops)
         for (let k = 0; k < opKeys.length; k++) {

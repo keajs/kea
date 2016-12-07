@@ -24,11 +24,14 @@
     "watch": "./node_modules/.bin/babel -w src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e",
+  },
   "peerDependencies": {
     "react": "*",
     "react-redux": "*",
     "redux": "3.x",
-    "redux-saga": "0.x",
+    "redux-saga": ">= 0.12",
     "reselect": "2.x"
   },
   "devDependencies": {
@@ -42,7 +45,6 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "change-case": "^3.0.0",
-    "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e",
     "eslint": "^3.9.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.3.1",

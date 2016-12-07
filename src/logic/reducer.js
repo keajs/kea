@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+// storageAvailable('localStorage') == true or false
 function storageAvailable (type) {
   try {
     var storage = window[type]
@@ -14,6 +15,7 @@ function storageAvailable (type) {
 
 let storageCache = {}
 
+// create reducer function from such an object { [action]: (state, payload) => state }
 export function createReducer (mapping, defaultValue) {
   return (state = defaultValue, action) => {
     if (mapping[action.type]) {
@@ -24,6 +26,8 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
+// create reducer function from such an object { [action]: (state, payload) => state }
+// with the added benefit that it's stored in localStorage
 export function createPersistentReducer (actions, defaultValue, key) {
   if (storageAvailable('localStorage')) {
     let storage = window.localStorage
@@ -46,19 +50,44 @@ export function createPersistentReducer (actions, defaultValue, key) {
   }
 }
 
-export function createStructureReducer (path, structure) {
+// input: object with values: { value, type, reducer, ...options } or function(state, action) {}
+// output: combined reducer function (state, action) {}
+export function combineReducerObjects (path, objects) {
   const reducers = {}
 
-  Object.keys(structure).forEach(key => {
-    const mapping = structure[key]
-    if (typeof mapping.reducer === 'function') {
-      reducers[key] = mapping.reducer
+  Object.keys(objects).forEach(key => {
+    const object = objects[key]
+    if (typeof object.reducer === 'function') {
+      reducers[key] = object.reducer
     } else {
-      reducers[key] = mapping.persist
-                        ? createPersistentReducer(mapping.reducer, mapping.value, path.join('.') + key)
-                        : createReducer(mapping.reducer, mapping.value)
+      reducers[key] = object.persist
+                        ? createPersistentReducer(object.reducer, object.value, path.join('.') + key)
+                        : createReducer(object.reducer, object.value)
     }
   })
 
   return combineReducers(reducers)
+}
+
+// input: object with values: [value, type, options, reducer]
+// output: object with values: { value, type, reducer, ...options }
+export function convertReducerArrays (reducers) {
+  if (!reducers) {
+    return reducers
+  }
+
+  const keys = Object.keys(reducers)
+  for (let i = 0; i < keys.length; i++) {
+    const s = reducers[keys[i]]
+    if (Array.isArray(s)) {
+      // s = [ value, type, options, reducer ]
+      reducers[keys[i]] = Object.assign({
+        value: s[0],
+        type: s[1], // proptype
+        reducer: s[3] || s[2]
+      }, s[3] ? s[2] : {})
+    }
+  }
+
+  return reducers
 }

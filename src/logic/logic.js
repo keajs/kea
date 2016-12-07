@@ -1,34 +1,48 @@
 import { select } from 'redux-saga/effects'
 import { createSelector } from 'reselect'
 
-import { createStructureReducer } from './reducer'
+import { combineReducerObjects, convertReducerArrays } from './reducer'
 import { pathSelector, createSelectors } from './selectors'
 import { createActions } from './actions'
-import { convertStructureArrays } from './structure'
 
-let gaveWarning = false
+let gaveAddSelectorWarning = false
+let gaveStructureWarning = false
 
-export default class Logic {
+class Logic {
   path = () => []
   selector = (state) => state
   constants = () => ({})
   actions = () => ({})
-  structure = () => ({})
-  reducer = ({ path, structure }) => createStructureReducer(path, structure)
+  reducers = () => ({})
+  reducer = ({ path, reducers }) => combineReducerObjects(path, reducers)
   selectors = ({ selectors }) => ({})
 
   init () {
     let object = {}
+
     object.path = this.path()
     object.selector = (state) => pathSelector(object.path, state)
     object.constants = this.constants(object)
     object.actions = createActions(this.actions(object), object.path)
-    object.structure = convertStructureArrays(this.structure(object))
-    object.reducer = this.reducer(object)
-    object.selectors = createSelectors(object.path, object.structure)
 
-    // create the custom selectors
-    let response = this.selectors({...object, addSelector: object::this.addSelector})
+    // reducers
+    if (this.structure) {
+      // DEPRECATED
+      if (!gaveStructureWarning) {
+        console.warn(`[KEA-LOGIC] structure = () => ({}) is deprecated. Please rename it to reducers = () => ({}).`)
+        gaveStructureWarning = true
+      }
+      object.reducers = convertReducerArrays(this.structure(object))
+    } else {
+      object.reducers = convertReducerArrays(this.reducers(object))
+    }
+    object.reducer = this.reducer(object)
+
+    object.selectors = createSelectors(object.path, Object.keys(object.reducers))
+
+    // selectors
+    // TODO: remove addSelector deprecation
+    let response = this.selectors({...object, addSelector: object::this._addSelector})
 
     if (typeof response === 'object') {
       const keys = Object.keys(response)
@@ -38,7 +52,7 @@ export default class Logic {
         // s[0]() == [type, args]
         const a = s[0]()
 
-        object.structure[keys[i]] = { type: a.shift() }
+        object.reducers[keys[i]] = { type: a.shift() }
         object.selectors[keys[i]] = createSelector(...a, s[1])
       }
     }
@@ -48,10 +62,11 @@ export default class Logic {
     return this
   }
 
-  addSelector (name, type, args, func) {
-    if (!gaveWarning) {
+  // DEPRECATED
+  _addSelector (name, type, args, func) {
+    if (!gaveAddSelectorWarning) {
       console.warn(`[KEA-LOGIC] addSelector is deprecated. Please use the new compact Array format.`)
-      gaveWarning = true
+      gaveAddSelectorWarning = true
     }
 
     this.structure[name] = { type }
@@ -74,3 +89,7 @@ export default class Logic {
     return results
   }
 }
+
+Logic._isKeaLogicClass = true
+
+export default Logic
