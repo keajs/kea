@@ -62,7 +62,7 @@ export default new HomepageLogic().init()
 
 Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
 
-Once exported, a logic store can be imported anywhere:
+Once imported, a logic store can be used anywhere:
 
 ```js
 import homepageLogic from '~/scenes/homepage/logic'
