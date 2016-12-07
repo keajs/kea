@@ -1,8 +1,6 @@
 import Logic from 'kea/logic'
 import { PropTypes } from 'react'
 
-import mirrorCreator from 'mirror-creator'
-
 // const outerActions = selectActionsFromLogic([
 //   otherScene, [
 //     'doSomething'
@@ -12,11 +10,11 @@ import mirrorCreator from 'mirror-creator'
 class $$CapitalComponent$$Logic extends Logic {
   path = () => ['scenes', '$$camelScene$$', '$$camelComponent$$']
 
-  constants = () => mirrorCreator([
+  constants = () => [
     // 'SHOW_ALL',
     // 'SHOW_ACTIVE',
     // 'SHOW_COMPLETED'
-  ])
+  ]
 
   actions = ({ constants }) => ({
     // showAll: true,

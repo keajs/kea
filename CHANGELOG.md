@@ -1,14 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+As we're at the 0.x phase, deprecations and breaking changes will still happen. They will be documented here.
 
-As we're at the 0.x phase, breaking changes will still happen. They will be documented here.
+Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
-## 0.15 - 2016-12-07
+## 0.15.2 - 2016-12-07
 ### Changed
 - In `kea/logic`, renamed `structure = () = ({})` to `reducers = () = ({})` in order to maintain compatibility of terms with redux.
+- Moved `createScene`, `NEW_SCENE`, `createCombinedSaga`, `getRoutes`, `combineScenesAndRoutes`, `createRootSaga` and `createKeaStore` from `kea/logic` to `kea/scene`
+- You no longer need to use `mirrorCreator` or comparable to create constants. Just pass in an array.
 
 ## 0.14.1 - 2016-12-06
 ### Changed
@@ -27,11 +28,8 @@ As we're at the 0.x phase, breaking changes will still happen. They will be docu
 
 ## 0.11.1 - 2016-11-09
 ### Changed
-- Exposed functions `createAction`, `createActions`, `createReducer`
-- Changed format of `type` to be more readable
-
-## 0.11.0 - 2016-11-08
-### Changed
 - [BREAKING] Removed dependency on redux-act
 - [BREAKING] Changed format for Logic actions. Now you don't need to run the redux-act createAction() anymore and no description is needed. See the example in README.md or [this commit](https://github.com/mariusandra/kea/commit/b2b9f9037af2d1ab5beba139fdb9b8cb210f98fa) for the new format.
 - Removed deprecated createLogic() function
+- Exposed functions `createAction`, `createActions`, `createReducer`
+- Changed format of `type` to be more readable

@@ -240,11 +240,9 @@ If, however, you favor convenience, you may combine them into scenes.
 
 Scenes are defined in `scene.js` files like so:
 
-(NB: this part will be refactored from `kea/logic` to `kea/scene` soon)
-
 ```js
 // scenes/homepage/scene.js
-import { createScene } from 'kea/logic'
+import { createScene } from 'kea/scene'
 
 import sceneComponent from '~/scenes/homepage/index'
 import sceneLogic from '~/scenes/homepage/logic'
@@ -284,7 +282,7 @@ Give `redux-router` a helping hand:
 
 ```js
 // routes.js
-import { combineScenesAndRoutes } from 'kea/logic'
+import { combineScenesAndRoutes } from 'kea/scene'
 
 const scenes = {
   homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),

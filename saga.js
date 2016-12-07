@@ -1,1 +1,1 @@
-module.exports = require('./lib/saga')
+module.exports = require('./lib/saga/index.js')

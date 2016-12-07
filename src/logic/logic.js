@@ -8,6 +8,18 @@ import { createActions } from './actions'
 let gaveAddSelectorWarning = false
 let gaveStructureWarning = false
 
+// convert ['A', 'B'] ==> { 'A': 'A', 'B': 'B' }
+function convertConstants (c) {
+  if (Array.isArray(c)) {
+    let a = {}
+    for (let i = 0; i < c.length; i++) {
+      a[c[i]] = c[i]
+    }
+    return a
+  }
+  return c
+}
+
 class Logic {
   path = () => []
   selector = (state) => state
@@ -22,7 +34,7 @@ class Logic {
 
     object.path = this.path()
     object.selector = (state) => pathSelector(object.path, state)
-    object.constants = this.constants(object)
+    object.constants = convertConstants(this.constants(object))
     object.actions = createActions(this.actions(object), object.path)
 
     // reducers

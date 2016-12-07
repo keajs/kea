@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { createCombinedSaga } from './saga'
 
-class KeaScene {
+class Scene {
   constructor ({ name, logic, sagas, component }) {
     this.name = name
     this.logic = logic || []
@@ -23,6 +23,6 @@ class KeaScene {
   }
 }
 
-export function createScene (args) {
-  return new KeaScene(args)
-}
+Scene._isKeaSceneClass = true
+
+export default Scene
