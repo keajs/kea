@@ -243,7 +243,6 @@ class HomepageScene extends Component {
 export default connectMapping(mapping)(HomepageScene)
 ```
 
-
 # Scenes
 
 You can always treat the logic store reducers and sagas manually and plug them into your existing application.
@@ -392,22 +391,6 @@ Later inside `my-project` run these to hack away:
 kea g scene-name                               # new scene
 kea g scene-name/component-name                # component under the scene
 kea g scene-name/component-name/really-nested  # deeply nested logic
-```
-
-## List of public functions:
-
-```js
-export default Logic
-export { pathSelector, createSelectors } from './selectors'
-export { selectPropsFromLogic, propTypesFromMapping, havePropsChanged } from './props'
-export { selectActionsFromLogic } from './actions'
-export { createPersistentReducer, createStructureReducer } from './reducer'
-export { createCombinedSaga } from './saga'
-export { createScene } from './scene'
-export { createMapping } from './structure'
-export { connectMapping } from './connect'
-export { getRoutes, combineScenesAndRoutes } from './routes'
-export { NEW_SCENE, createRootSaga, createKeaStore } from './store'
 ```
 
 More documentation coming soon! Please help if you can!
