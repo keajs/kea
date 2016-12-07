@@ -2,18 +2,22 @@
 
 A `kea` is two things:
 
-1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand
-2. An equally smart architecture for frontend webapps
+1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand.
+2. An equally smart architecture for frontend webapps, built on top of React and Redux.
 
 # What's included?
 
-1) `kea/logic` - Redux Logic Stores. Actions, Reducers, Selectors and PropTypes in one easy to read file!
+1. `kea/logic` - Redux Logic Stores. Actions, Reducers, Selectors and PropTypes in one easy to read file!
 
-2) `kea/saga` - Smooth and readable side effects.
+2. `kea/saga` - Smooth and readable side effects.
 
-3) `kea/cli` - Scaffolding. Easy project and code generation.
+3. `kea/scene` - Combine Logic and Sagas into scenes, include routing and code splitting.
 
-4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting
+4. `kea/cli` - Scaffolding. Easy project and code generation.
+
+# Try it out
+
+Open the [demo app](http://example.kea.rocks/) and [browse its code](https://github.com/mariusandra/kea-example).
 
 # Logic stores
 
@@ -358,7 +362,7 @@ scenes/
 - store.js
 ```
 
-## Try it out!
+# Scaffolding
 
 Open the [demo app](http://example.kea.rocks/) and [browse its code](https://github.com/mariusandra/kea-example).
 
