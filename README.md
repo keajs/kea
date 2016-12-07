@@ -13,7 +13,7 @@ A `kea` is two things:
 
 3) `kea/cli` - Scaffolding. Easy project and code generation.
 
-4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (TODO: the code is still under `kea/logic` and will be refactored soon)
+4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (NB: the code is still under `kea/logic` and will be refactored to `kea/scene` soon)
 
 # Logic stores
 
@@ -86,13 +86,13 @@ homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name,
 ```js
 import Saga from 'kea/saga'
 
-import homepageLogic from '~/scenes/homepage/logic'
+import sceneLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
 export default class HomepageSaga extends Saga {
   // pull in actions from logic stores
   actions = () => ([
-    homepageLogic, [
+    sceneLogic, [
       'updateName',
       'increaseAge',
       'decreaseAge'
@@ -147,7 +147,7 @@ export default class HomepageSaga extends Saga {
 
   // on every increaseAge, decreaseAge
   ageLogger = function * (action) {
-    const age = yield homepageLogic.get('age')
+    const age = yield sceneLogic.get('age')
     console.log(`The age changed to: ${age}!`)
   }
 }
@@ -170,19 +170,11 @@ yield call(homepageSaga)
 Let's have a look at a React component that uses logic stores:
 
 ```js
-// scenes/homepage/index.js - This the root component for the homepage scene. skipping some imports
-
-// A helper component.
 import Slider from '~/scenes/homepage/slider'
 
-// Note, you should always import with the full path, so you can easily move things around
-// and refactor just by searching for the path.
-
-// logic stores: 1) for this "homepage" scene root component and 2) the slider helper component
 import sceneLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-// select which fields of data and which actions we want from the above imported logic stores
 const mapping = {
   actions: [
     sceneLogic, [
@@ -202,27 +194,21 @@ const mapping = {
 }
 
 class HomepageScene extends Component {
-
-  // react will know the PropTypes automatically
   static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
 
-  // binding to 'this', hence the fat arrow syntax
-  // this way we can just pass onClick={this.updateName} in render()
   updateName = () => {
-    // each function defines on top which props and actions it needs
+    // for readability we always define the props and actions we need on top
     const { name } = this.props
     const { updateName } = this.props.actions
 
     const newName = window.prompt('Please enter the name', name)
 
     if (newName) {
-      updateName(newName) // call the action to update the data
+      updateName(newName) // no need for dispatch
     }
   }
 
-  // render the component
   render () {
-    // the data we need from the imported stores
     const { capitalizedName, currentSlide, currentImage } = this.props
 
     return (
@@ -239,13 +225,13 @@ class HomepageScene extends Component {
   }
 }
 
-// finally, connect the mapping to the scene
+// connect the mapping to the scene
 export default connectMapping(mapping)(HomepageScene)
 ```
 
 # Scenes
 
-You can always treat the logic store reducers and sagas manually and plug them into your existing application.
+You can always use the logic store reducers and sagas manually in your existing application.
 
 If, however, you favor convenience, you may combine them into scenes.
 
@@ -253,7 +239,7 @@ Scenes are defined in `scene.js` files like so:
 
 ```js
 // scenes/homepage/scene.js
-import { createScene } from 'kea-logic'
+import { createScene } from 'kea/logic'
 
 import sceneComponent from '~/scenes/homepage/index'
 import sceneLogic from '~/scenes/homepage/logic'
@@ -293,7 +279,7 @@ Give `redux-router` a helping hand:
 
 ```js
 // routes.js
-import { combineScenesAndRoutes } from 'kea-logic'
+import { combineScenesAndRoutes } from 'kea/logic'
 
 const scenes = {
   homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),
@@ -371,9 +357,9 @@ scenes/
 
 ## Try it out!
 
-Open the [demo app](http://example.kea.rocks/), [browse its code](https://github.com/mariusandra/kea-example) and read below for an explanation of the parts.
+Open the [demo app](http://example.kea.rocks/) and [browse its code](https://github.com/mariusandra/kea-example).
 
-To run the example on your machine, just type these commands:
+To run the same example app on your machine, just type these commands:
 
 ```
 npm install kea -g
