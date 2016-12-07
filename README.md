@@ -7,13 +7,13 @@ A `kea` is two things:
 
 # What's included?
 
-1) `kea/logic` - Redux Logic Stores. Actions, Reducers, PropTypes and Selectors in one easy to read file!
+1) `kea/logic` - Redux Logic Stores. Actions, Reducers, Selectors and PropTypes in one easy to read file!
 
-2) `kea/saga` - The perfect complement to control side effects.
+2) `kea/saga` - Smooth and readable side effects.
 
 3) `kea/cli` - Scaffolding. Easy project and code generation.
 
-4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting (NB: the code is still under `kea/logic` and will be refactored to `kea/scene` soon)
+4) `kea/scene` - Combine Logic and Sagas into scenes, complete with routing and code splitting
 
 # Logic stores
 
@@ -37,7 +37,7 @@ class HomepageLogic extends Logic {
       [actions.updateName]: (state, payload) => payload.name
     }],
 
-    age: [3, PropTypes.number, { persist: true }, { // persist = save the age in LocalStorage
+    age: [3, PropTypes.number, { persist: true }, { // persist == save in LocalStorage
       [actions.increaseAge]: (state, payload) => state + payload.amount,
       [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
     }]
@@ -81,7 +81,7 @@ homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name,
 
 # Side effects (API calls, etc)
 
-`kea/saga` provides a `Saga` class for beautiful orchestration of side effect via redux-saga.
+`kea/saga` provides a `Saga` class for beautiful orchestration of side effects via redux-saga.
 
 ```js
 import Saga from 'kea/saga'
@@ -108,11 +108,12 @@ export default class HomepageSaga extends Saga {
     [actions.increaseAge]: this.ageLogger,
     [actions.decreaseAge]: this.ageLogger
   })
+  // also available: takeLatest
 
   // main loop of saga
   // - update the slide every 5 sec
   run = function * () {
-    // to ease readability we always list the actions functions uses on the top
+    // to ease readability we always list the actions we use on top
     const { updateSlide } = this.actions
 
     while (true) {
@@ -161,7 +162,7 @@ Hook them into `kea/scene` (explained below) or call from your existing code lik
 ```js
 const homepageSaga = new HomepageSaga().init()
 
-// from your existing saga
+// from your existing saga:
 yield call(homepageSaga)
 ```
 
@@ -170,6 +171,8 @@ yield call(homepageSaga)
 Let's have a look at a React component that uses logic stores:
 
 ```js
+import { propTypesFromMapping, connectMapping } from 'kea/logic'
+
 import Slider from '~/scenes/homepage/slider'
 
 import sceneLogic from '~/scenes/homepage/logic'
@@ -231,11 +234,13 @@ export default connectMapping(mapping)(HomepageScene)
 
 # Scenes
 
-You can always use the logic store reducers and sagas manually in your existing application.
+You can use all the logic store reducers and sagas individually in your existing application.
 
 If, however, you favor convenience, you may combine them into scenes.
 
 Scenes are defined in `scene.js` files like so:
+
+(NB: this part will be refactored from `kea/logic` to `kea/scene` soon)
 
 ```js
 // scenes/homepage/scene.js
@@ -273,7 +278,7 @@ homepageScene.combineReducers() === function (state, action) {} // calls redux's
 
 or plug it into the kea-logic routing helpers.
 
-# Routes
+# Routing
 
 Give `redux-router` a helping hand:
 
