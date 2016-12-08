@@ -81,7 +81,7 @@ class Logic {
       gaveAddSelectorWarning = true
     }
 
-    this.structure[name] = { type }
+    this.reducers[name] = { type }
     this.selectors[name] = createSelector(...args, func)
   }
 
