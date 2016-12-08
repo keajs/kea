@@ -59,12 +59,15 @@ class HomepageLogic extends Logic {
 
   selectors = ({ selectors, constants }) => ({
     capitalizedName: [
-      () => [PropTypes.string, selectors.name],
+      () => [ PropTypes.string,
+              selectors.name ],
       (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
     ],
 
     description: [
-      () => [PropTypes.string, selectors.capitalizedName, selectors.age],
+      () => [ PropTypes.string,
+              selectors.capitalizedName,
+              selectors.age ],
       (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
     ]
   })
