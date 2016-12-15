@@ -5,6 +5,10 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
+## 0.15.4 - 2016-12-12
+### Changed
+- Fixed a bug with kea-cli/generate
+
 ## 0.15.2 - 2016-12-07
 ### Changed
 - In `kea/logic`, renamed `structure = () = ({})` to `reducers = () = ({})` in order to maintain compatibility of terms with redux.
