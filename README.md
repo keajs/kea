@@ -7,7 +7,7 @@ A `kea` is two things:
 
 # What's included?
 
-1. `kea/logic` - Redux Logic Stores. Actions, Reducers, Selectors and PropTypes in one easy to read file!
+1. `kea/logic` - Redux Logic Stores. Think of it as an *ES6+ data-import system* built on Redux.
 
 2. `kea/saga` - Smooth and readable side effects.
 
@@ -75,11 +75,11 @@ export default class HomepageLogic extends Logic {
 }
 ```
 
+*Dislike `@decorators`? [Here's how to survive without them](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md)*
+
 Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
 
-*NB! Instead of the `@initLogic` decorator you may also export with `export default new HomepageLogic().init()`.*
-
-Once imported, a logic store can be used anywhere:
+Once imported, logic stores expose familiar concepts:
 
 ```js
 import homepageLogic from '~/scenes/homepage/logic'
@@ -95,6 +95,71 @@ homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name,
 
 // or plug them into other kea components for maximum interoperability
 ```
+
+# Component
+
+Let's `@connect` to a React component:
+
+```js
+import { connect } from 'kea/logic'
+
+import Slider from '~/scenes/homepage/slider'
+
+import sceneLogic from '~/scenes/homepage/logic'
+import sliderLogic from '~/scenes/homepage/slider/logic'
+
+@connect({
+  actions: [
+    sceneLogic, [
+      'updateName'
+    ]
+  ],
+  props: [
+    sceneLogic, [
+      'name',
+      'capitalizedName'
+    ],
+    sliderLogic, [
+      'currentSlide',
+      'currentImage'
+    ]
+  ]
+})
+export default class HomepageScene extends Component {
+  // propTypes are added automatically. Add additional ones only when needed
+  // static propTypes = {}
+
+  updateName = () => {
+    // the convention is to fetch the props and actions we need on top
+    const { name } = this.props
+    const { updateName } = this.props.actions
+
+    const newName = window.prompt('Please enter the name', name)
+
+    if (newName) {
+      updateName(newName) // no need for dispatch
+    }
+  }
+
+  render () {
+    const { capitalizedName, currentSlide, currentImage } = this.props
+
+    return (
+      <div className='homepage-scene'>
+        <Slider />
+        <h1>
+          Hello, I am <em onClick={this.updateName}>{capitalizedName}</em> the Kea
+        </h1>
+        <p>
+          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url}>{currentImage.author}</a>
+        </p>
+      </div>
+    )
+  }
+}
+```
+
+*Dislike `@decorators`? [Here's how to survive without them](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md)*
 
 # Side effects (API calls, etc)
 
@@ -181,84 +246,6 @@ const homepageSaga = new HomepageSaga().init()
 
 // from your existing saga:
 yield call(homepageSaga)
-```
-
-# Component
-
-Let's have a look at a React component that uses logic stores:
-
-```js
-import { connect } from 'kea/logic'
-
-import Slider from '~/scenes/homepage/slider'
-
-import sceneLogic from '~/scenes/homepage/logic'
-import sliderLogic from '~/scenes/homepage/slider/logic'
-
-@connect({
-  actions: [
-    sceneLogic, [
-      'updateName'
-    ]
-  ],
-  props: [
-    sceneLogic, [
-      'name',
-      'capitalizedName'
-    ],
-    sliderLogic, [
-      'currentSlide',
-      'currentImage'
-    ]
-  ]
-})
-export default class HomepageScene extends Component {
-  updateName = () => {
-    // for readability we always define the props and actions we need on top
-    const { name } = this.props
-    const { updateName } = this.props.actions
-
-    const newName = window.prompt('Please enter the name', name)
-
-    if (newName) {
-      updateName(newName) // no need for dispatch
-    }
-  }
-
-  render () {
-    const { capitalizedName, currentSlide, currentImage } = this.props
-
-    return (
-      <div className='homepage-scene'>
-        <Slider />
-        <h1>
-          Hello, I am <em onClick={this.updateName}>{capitalizedName}</em> the Kea
-        </h1>
-        <p>
-          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url}>{currentImage.author}</a>
-        </p>
-      </div>
-    )
-  }
-}
-```
-
-If you prefer not to use decorators, the code above would look like this:
-
-```js
-import { propTypesFromMapping, connectMapping } from 'kea/logic'
-
-const mapping = {
-  actions: [ ... ],
-  props: [ ... ]
-}
-
-class HomepageScene extends Component {
-  static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
-  // ...
-}
-
-export default connectMapping(mapping)(HomepageScene)
 ```
 
 # Scenes
