@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 // utils
 
@@ -13,7 +13,7 @@ import sceneLogic from '~/scenes/$$dash-scene$$/logic'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
 
-const mapping = {
+@connect({
   actions: [
     sceneLogic, [
       // 'showAll',
@@ -25,11 +25,8 @@ const mapping = {
       // 'visibilityFilter'
     ]
   ]
-}
-
-class $$CapitalScene$$Scene extends Component {
-  static propTypes = propTypesFromMapping(mapping)
-
+})
+export default class $$CapitalScene$$Scene extends Component {
   render () {
     // const { visibilityFilter } = this.props
     // const { showAll, setVisibilityFilter } = this.props.actions
@@ -40,5 +37,3 @@ class $$CapitalScene$$Scene extends Component {
     )
   }
 }
-
-export default connectMapping(mapping)($$CapitalScene$$Scene)

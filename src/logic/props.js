@@ -64,7 +64,7 @@ export function selectPropsFromLogic (mapping = []) {
 }
 
 export function propTypesFromMapping (mapping, extra = null) {
-  let propTypes = Object.assign({}, mapping.passedProps || {})
+  let propTypes = Object.assign({}, mapping.propTypes || mapping.passedProps || {})
 
   if (mapping.props) {
     if (mapping.props.length % 2 === 1) {

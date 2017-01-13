@@ -20,10 +20,19 @@
     "kea-generate": "lib/cli/kea-generate.js"
   },
   "scripts": {
-    "compile": "./node_modules/.bin/babel src --out-dir lib",
-    "watch": "./node_modules/.bin/babel -w src --out-dir lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "dev": "./node_modules/.bin/babel -w src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
   },
+  "files": [
+    "assets",
+    "lib",
+    "src",
+    "logic.js",
+    "saga.js",
+    "scene.js"
+  ],
   "dependencies": {
     "change-case": "3.0.0",
     "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e"

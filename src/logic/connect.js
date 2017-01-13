@@ -1,6 +1,6 @@
-import { createPropTransforms } from './props'
+import { createPropTransforms, propTypesFromMapping } from './props'
 import { createActionTransforms } from './actions'
-import { connect } from 'react-redux'
+import { connect as reduxConnect } from 'react-redux'
 
 export function connectMapping (mapping) {
   const actionTransforms = createActionTransforms(mapping.actions)
@@ -25,5 +25,14 @@ export function connectMapping (mapping) {
     return Object.assign({}, props, { actions })
   }
 
-  return connect(propTransforms.selectors, actionTransforms.actions, actionMerge)
+  return reduxConnect(propTransforms.selectors, actionTransforms.actions, actionMerge)
+}
+
+export function connect (mapping) {
+  return function (Klass) {
+    if (mapping.props) {
+      Klass.propTypes = Object.assign({}, propTypesFromMapping(mapping), Klass.propTypes || {})
+    }
+    return connectMapping(mapping)(Klass)
+  }
 }

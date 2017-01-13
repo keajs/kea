@@ -34,10 +34,11 @@ and open [http://localhost:2000/](http://localhost:2000/).
 Logic stores consist of actions, reducers and selectors. They include prop types and look like this:
 
 ```js
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 import { PropTypes } from 'react'
 
-class HomepageLogic extends Logic {
+@initLogic
+export default class HomepageLogic extends Logic {
   path = () => ['scenes', 'homepage', 'index']
 
   actions = ({ constants }) => ({
@@ -72,12 +73,11 @@ class HomepageLogic extends Logic {
     ]
   })
 }
-
-// exported as a singleton
-export default new HomepageLogic().init()
 ```
 
 Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
+
+*NB! Instead of the `@initLogic` decorator you may also export with `export default new HomepageLogic().init()`.*
 
 Once imported, a logic store can be used anywhere:
 
@@ -188,14 +188,14 @@ yield call(homepageSaga)
 Let's have a look at a React component that uses logic stores:
 
 ```js
-import { propTypesFromMapping, connectMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 import Slider from '~/scenes/homepage/slider'
 
 import sceneLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-const mapping = {
+@connect({
   actions: [
     sceneLogic, [
       'updateName'
@@ -211,11 +211,8 @@ const mapping = {
       'currentImage'
     ]
   ]
-}
-
-class HomepageScene extends Component {
-  static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
-
+})
+export default class HomepageScene extends Component {
   updateName = () => {
     // for readability we always define the props and actions we need on top
     const { name } = this.props
@@ -244,8 +241,23 @@ class HomepageScene extends Component {
     )
   }
 }
+```
 
-// connect the mapping to the scene
+If you prefer not to use decorators, the code above would look like this:
+
+```js
+import { propTypesFromMapping, connectMapping } from 'kea/logic'
+
+const mapping = {
+  actions: [ ... ],
+  props: [ ... ]
+}
+
+class HomepageScene extends Component {
+  static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
+  // ...
+}
+
 export default connectMapping(mapping)(HomepageScene)
 ```
 

@@ -20,6 +20,10 @@ function convertConstants (c) {
   return c
 }
 
+export function initLogic (Klass) {
+  return new Klass().init()
+}
+
 class Logic {
   path = () => []
   selector = (state) => state

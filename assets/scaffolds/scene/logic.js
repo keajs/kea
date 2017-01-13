@@ -1,4 +1,4 @@
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 import { PropTypes } from 'react'
 
 // const outerActions = selectActionsFromLogic([
@@ -7,7 +7,8 @@ import { PropTypes } from 'react'
 //   ]
 // ])
 
-class $$CapitalScene$$Logic extends Logic {
+@initLogic
+export default class $$CapitalScene$$Logic extends Logic {
   path = () => ['scenes', '$$camelScene$$', 'index']
 
   constants = () => [
@@ -36,5 +37,3 @@ class $$CapitalScene$$Logic extends Logic {
     // ]
   })
 }
-
-export default new $$CapitalScene$$Logic().init()
