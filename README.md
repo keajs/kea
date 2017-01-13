@@ -7,11 +7,11 @@ A `kea` is two things:
 
 # What's included?
 
-1. `kea/logic` - Redux Logic Stores. Think of it as an *ES6+ data-import system* built on Redux.
+1. `kea/logic` - Redux Logic Stores. Think of it as an **ES6+ data-import system** built on top of Redux.
 
-2. `kea/saga` - Smooth and readable side effects.
+2. `kea/saga` - ES6 classes for readable side effects.
 
-3. `kea/scene` - Combine Logic and Sagas into scenes, include routing and code splitting.
+3. `kea/scene` - Logic + Sagas = Scenes. Includes routing and code splitting.
 
 4. `kea/cli` - Scaffolding. Easy project and code generation.
 
@@ -75,7 +75,7 @@ export default class HomepageLogic extends Logic {
 }
 ```
 
-*Dislike `@decorators`? [Here's how to survive without them](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md)*
+*Note: all of this can be done without `@decorators`. [Here's how](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md).*
 
 Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
 
@@ -159,8 +159,7 @@ export default class HomepageScene extends Component {
 }
 ```
 
-*Dislike `@decorators`? [Here's how to survive without them](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md)*
-
+*Note: all of this can be done without `@decorators`. [Here's how](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md).*
 # Side effects (API calls, etc)
 
 `kea/saga` provides a `Saga` class for beautiful orchestration of side effects via redux-saga.
