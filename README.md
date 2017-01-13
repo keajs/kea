@@ -126,11 +126,10 @@ import sliderLogic from '~/scenes/homepage/slider/logic'
   ]
 })
 export default class HomepageScene extends Component {
-  // propTypes are added automatically. Add additional ones only when needed
+  // propTypes are added automatically. Add additional ones when passed manually
   // static propTypes = {}
 
   updateName = () => {
-    // the convention is to fetch the props and actions we need on top
     const { name } = this.props
     const { updateName } = this.props.actions
 
