@@ -7,7 +7,7 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## 0.17.0 - 2017-01-13
 ### Changed
-- [BREAKING] The propType is now the 3rd element in the selector array. See here how to refactor.
+- [BREAKING] The propType is now the 3rd element in the selector array. [See here how to refactor.](https://github.com/mariusandra/kea-example/commit/5df64d6c2dc3674964cc987804a8535678078103#diff-44518ef03bc2b98deccc270f728518c3)
 
 ## 0.16.0 - 2017-01-13
 ### Changed
