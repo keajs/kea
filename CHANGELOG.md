@@ -5,6 +5,10 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
+## 0.17.0 - 2017-01-13
+### Changed
+- [BREAKING] The propType is now the 3rd element in the selector array. See here how to refactor.
+
 ## 0.16.0 - 2017-01-13
 ### Changed
 - Added `@connect` and `@initLogic` decorators. Reverse the steps [here](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md) to upgrade.

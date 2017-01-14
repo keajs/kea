@@ -64,12 +64,13 @@ class Logic {
       const keys = Object.keys(response)
       for (let i = 0; i < keys.length; i++) {
         const s = response[keys[i]]
+        // s == [() => args, selectorFunction, propType]
 
-        // s[0]() == [type, args]
-        const a = s[0]()
-
-        object.reducers[keys[i]] = { type: a.shift() }
-        object.selectors[keys[i]] = createSelector(...a, s[1])
+        const args = s[0]()
+        if (s[2]) {
+          object.reducers[keys[i]] = { type: s[2] }
+        }
+        object.selectors[keys[i]] = createSelector(...args, s[1])
       }
     }
 

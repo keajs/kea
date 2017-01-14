@@ -50,16 +50,15 @@ export default class HomepageLogic extends Logic {
 
   selectors = ({ selectors, constants }) => ({
     capitalizedName: [
-      () => [ PropTypes.string,
-              selectors.name ],
-      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+      () => [ selectors.name ],
+      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' '),
+      PropTypes.string
     ],
 
     description: [
-      () => [ PropTypes.string,
-              selectors.capitalizedName,
-              selectors.age ],
-      (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`
+      () => [ selectors.capitalizedName, selectors.age ],
+      (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`,
+      PropTypes.string
     ]
   })
 }
