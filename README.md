@@ -17,17 +17,7 @@ A `kea` is two things:
 
 # Try it out
 
-Open the [demo app](http://example.kea.rocks/) and [browse its code](https://github.com/mariusandra/kea-example) or run:
-
-```
-npm install kea -g
-kea new my-project
-cd my-project
-yarn # or npm install
-npm start
-```
-
-and open [http://localhost:2000/](http://localhost:2000/).
+Open the [demo app](http://example.kea.rocks/), then [view the source on GitHub](https://github.com/mariusandra/kea-example) or [edit it live in Gomix](https://gomix.com/#!/project/kea-example).
 
 # Logic stores
 
