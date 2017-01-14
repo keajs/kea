@@ -17,7 +17,7 @@ A `kea` is two things:
 
 # Try it out
 
-Open the [demo app](http://example.kea.rocks/), then [view the source on GitHub](https://github.com/mariusandra/kea-example) or [edit it live in Gomix](https://gomix.com/#!/project/kea-example).
+Open the [demo app](http://example.kea.rocks/), then [edit it live in Gomix](https://gomix.com/#!/project/kea-example) or [view its source on GitHub](https://github.com/mariusandra/kea-example).
 
 # Logic stores
 
