@@ -16,13 +16,13 @@ export default class HomepageLogic extends Logic {
 use this
 
 ```js
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 
-export default class HomepageLogic extends Logic {
+class HomepageLogic extends Logic {
   // ...
 }
 
-export default new HomepageLogic().init()
+export default initLogic(HomepageLogic)
 ```
 
 ## Components
@@ -46,7 +46,7 @@ export default class HomepageScene extends Component {
 use this
 
 ```js
-import { propTypesFromMapping, connectMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 const mapping = {
   actions: [],
@@ -54,12 +54,10 @@ const mapping = {
 }
 
 class HomepageScene extends Component {
-  static propTypes = propTypesFromMapping(mapping, { /* extra PropTypes if needed */ })
-
   render () {
     // ...
   }
 }
 
-export default connectMapping(mapping)(HomepageScene)
+export default connect(mapping)(HomepageScene)
 ```
