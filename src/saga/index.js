@@ -1,5 +1,4 @@
-import { takeEvery, takeLatest } from 'redux-saga'
-import { call, cancelled } from 'redux-saga/effects'
+import { call, cancelled, takeEvery, takeLatest } from 'redux-saga/effects'
 
 import { selectActionsFromLogic } from '../logic'
 

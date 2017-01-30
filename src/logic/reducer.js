@@ -19,7 +19,7 @@ let storageCache = {}
 export function createReducer (mapping, defaultValue) {
   return (state = defaultValue, action) => {
     if (mapping[action.type]) {
-      return mapping[action.type](state, action.payload)
+      return mapping[action.type](state, action.payload, action.meta)
     } else {
       return state
     }
