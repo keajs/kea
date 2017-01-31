@@ -5,6 +5,11 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
+## 0.17.1 - 2017-01-30
+### Changed
+- [PR4](https://github.com/mariusandra/kea/pull/4). Add action.meta to reducer mapping.
+- [PR4](https://github.com/mariusandra/kea/pull/4). Upgrade takeEvery, takeLatest usage for redux-saga >= 0.14 compatibility.
+
 ## 0.17.0 - 2017-01-13
 ### Changed
 - [BREAKING] The propType is now the 3rd element in the selector array. [See here how to refactor.](https://github.com/mariusandra/kea-example/commit/5df64d6c2dc3674964cc987804a8535678078103#diff-44518ef03bc2b98deccc270f728518c3)
