@@ -1,47 +1,356 @@
 <html>
 <head>
   <title>Kea</title>
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/railscasts.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
   <style>
     body {
       text-align: center;
       font-family: 'Lato', sans-serif;
-      background: #efefef;
+      font-weight: 300;
+      /*background: #efece6;*/
+      background: #fff;
+      margin: 0;
     }
-    img.logo {
-      min-width: 30%;
-      width: 500px;
-      max-width: 50%;
-      margin-top: 50px;
+    header {
+      /*background-image: linear-gradient(#9ecaea 13%, #c7e1f3 56%, #efece6);*/
+      background: #b4dec1;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      margin-bottom: 30px;
     }
-    h1 {
+    a.logo-container {
+      width: 240px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    a.logo-container img.logo {
+      height: 75px;
+      width: 75px;
+      vertical-align: middle;
+      float: left;
+    }
+    a.logo-container span.logo-text {
       font-family: 'Lato', sans-serif;
       text-transform: uppercase;
+      font-weight: 400;
       font-size: 50px;
-      margin-top: 30px;
       margin-bottom: 0px;
       letter-spacing: 10px;
       padding-left: 5px;
+      color: #000;
+      text-decoration: none;
+      vertical-align: middle;
+      line-height: 45px;
+      padding-top: 5px;
+      display: inline-block;
     }
-    em {
+    a.logo-container em {
       display: block;
-      margin-bottom: 30px;
       font-style: normal;
-      color: #888888;
+      color: #000;
+      margin-left: 145px;
+    }
+    header .links {
+      float: right;
+      margin-top: 25px;
+    }
+    .spacing, section {
+      padding: 0 30px;
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    h1 {
+      font-family: 'Lato', sans-serif;
+      /*text-transform: uppercase;*/
+      font-size: 40px;
+    }
+    h2 {
+      font-family: 'Lato', sans-serif;
+      text-transform: uppercase;
+      font-size: 30px;
+      margin-top: 40px;
     }
     a {
       color: darkgreen;
     }
+    p {
+      line-height: 30px;
+      font-size: 20px;
+    }
+    @media (max-width: 639px) {
+      header .links {
+        float: none;
+        margin-top: 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class='container'>
-    <a href='https://github.com/mariusandra/kea'>
-      <img class='logo' src='img/logo.svg' alt='Kea' />
-    </a>
-    <h1>Kea</h1>
-    <em>v0.17.0</em>
-    <a href='https://github.com/mariusandra/kea'>Fork on Github</a> | <a href='https://gomix.com/#!/project/kea-example'>Mix in Gomix</a>
-  </div>
+  <header>
+    <div class='spacing'>
+      <a href='https://github.com/mariusandra/kea' class='logo-container'>
+        <img class='logo' src='img/logo.svg' alt='Kea' />
+        <span class='logo-text'>Kea</span>
+        <em>v0.17.1</em>
+      </a>
+      <div class='links'>
+        <a href='https://github.com/mariusandra/kea'>Fork on Github</a> | <a href='https://gomix.com/#!/project/kea-example'>Mix in Gomix</a>
+      </div>
+    </div>
+  </header>
+  <section>
+    <h2>Maintainable Redux</h2>
+
+    <p>
+      <a href='http://redux.js.org/'>Redux</a> brought the <strong>best paradigms of functional programming</strong> into frontend web development.
+      By reducing the amount of operations you perform on your data, you greatly increase the maintability of your application,
+      leading to <strong>clean and bug-free code</strong>.
+    </p>
+
+    <p>
+      However, <strong>unlimited liberty comes at a cost</strong>. Setting up your project can take days.
+      Finding <a href='https://github.com/xgrommx/awesome-redux'>all the right pieces</a> can take weeks. Thunk? Saga? Act? Rx? Ducks? Promises? Routes? Bacon? Immutable? Reselect? Reactuate? Reswitch? ...
+    </p>
+
+    <p>
+      <a href='https://github.com/mariusandra/kea'>Kea</a> provides an unified approach to organising your application, making Redux in practice
+      <strong>as easy to use as <a href='https://github.com/mobxjs/mobx'>MobX</a></strong>, but without
+      <a href='https://github.com/mobxjs/mobx/blob/gh-pages/docs/best/react.md'>all the edge cases</a>.
+    </p>
+
+    <p>
+      We do this by separating your data into <strong>Logic Stores</strong>, connecting them to your <strong>Components</strong> and orchestrating side-effects via <strong>Saga Classes</strong>.
+    </p>
+
+    <p>
+      This separation of concerns brings clarity and maintainability.
+    </p>
+
+    <p>
+      Kea is already used in production for large websites, from <a href='https://www.apprentus.com'>two-sided marketplaces</a> to <a href='http://gsmauto.eu/'>fleet tracking</a>.
+      It's battle tested and it works.
+    </p>
+  </section>
+  <section>
+    <h2>1. Logic Stores</h2>
+
+    <p><strong>Logic Stores are to data what JSX is to templates.</strong></p>
+
+    <p>Instead of splitting your action creators, constants, reducers and selectors over 8 files in 4 directories, combine them into clear and consise Logic Stores.</p>
+
+<pre><code class="javascript">
+  import Logic, { initLogic } from 'kea/logic'
+  import { PropTypes } from 'react'
+
+  @initLogic
+  export default class HomepageLogic extends Logic {
+    path = () => ['scenes', 'homepage', 'index']
+
+    actions = ({ constants }) => ({
+      updateName: (name) => ({ name }),
+      increaseAge: (amount = 1) => ({ amount }),
+      decreaseAge: (amount = 1) => ({ amount })
+    })
+
+    reducers = ({ actions, constants }) => ({
+      name: ['Chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }],
+
+      age: [3, PropTypes.number, {
+        [actions.increaseAge]: (state, payload) => state + payload.amount,
+        [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
+      }]
+    })
+
+    selectors = ({ selectors, constants }) => ({
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => name.trim().split(' ').map(k => (
+                    `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`
+                  )).join(' '),
+        PropTypes.string
+      ],
+
+      description: [
+        () => [selectors.capitalizedName, selectors.age],
+        (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`,
+        PropTypes.string
+      ]
+    })
+  }
+
+</code>
+</pre>
+    <p>
+      This specific example exports 3 action creators (<code>updateName</code>, <code>increaseAge</code>, <code>decreaseAge</code>) and
+      four selectors (<code>name</code>, <code>age</code>, <code>capitalizedName</code>, <code>description</code>).
+    </p>
+
+    <p>
+      Just <code>import homepageLogic from './logic'</code> and use all of them directly!
+    </p>
+  </section>
+  <section>
+    <h2>2. Component connection</h2>
+    <p>Now that your data is defined, just <code>@connect</code> the required properties and actions to your components:</p>
+
+<pre><code class="javascript">
+  import { connect } from 'kea/logic'
+
+  import Slider from '~/scenes/homepage/slider'
+
+  import sceneLogic from '~/scenes/homepage/logic'
+  import sliderLogic from '~/scenes/homepage/slider/logic'
+
+  @connect({
+    actions: [
+      sceneLogic, [
+        'updateName'
+      ]
+    ],
+    props: [
+      sceneLogic, [
+        'name',
+        'capitalizedName'
+      ],
+      sliderLogic, [
+        'currentSlide',
+        'currentImage'
+      ]
+    ]
+  })
+  export default class HomepageScene extends Component {
+    updateName = () => {
+      const { name } = this.props
+      const { updateName } = this.props.actions
+
+      const newName = window.prompt('Please enter the name', name)
+
+      if (newName) {
+        updateName(newName) // no need for dispatch
+      }
+    }
+
+    render () {
+      const { capitalizedName, currentSlide, currentImage } = this.props
+
+      return (
+        &lt;div className='homepage-scene'&gt;
+          &lt;Slider /&gt;
+          &lt;h1&gt;
+            Hello, I am &lt;em onClick={this.updateName}&gt;{capitalizedName}&lt;/em&gt; the Kea
+          &lt;/h1&gt;
+          &lt;p&gt;
+            You are viewing image #{currentSlide + 1},
+            taken by &lt;a href={currentImage.url}&gt;{currentImage.author}&lt;/a&gt;
+          &lt;/p&gt;
+        &lt;/div&gt;
+      )
+    }
+  }
+
+</code></pre>
+  </section>
+  <section>
+    <h2>3. Saga Classes</h2>
+
+    <p>
+      <a href='https://github.com/redux-saga/redux-saga'>Sagas</a> are wonderful for handling side-effects, but they can feel a little bit lost in your application.
+    </p>
+
+    <p>
+      Kea Saga Classes provide a unified interface to orchestrate them.
+    </p>
+
+<pre><code class="javascript">
+  import Saga from 'kea/saga'
+
+  import sceneLogic from '~/scenes/homepage/logic'
+  import sliderLogic from '~/scenes/homepage/slider/logic'
+
+  export default class HomepageSaga extends Saga {
+
+    // pull in actions from logic stores
+    actions = () => ([
+      sceneLogic, [
+        'updateName',
+        'increaseAge',
+        'decreaseAge'
+      ],
+      sliderLogic, [
+        'updateSlide'
+      ]
+    ])
+
+    // run a worker when an action is called
+    takeEvery = ({ actions }) => ({
+      [actions.updateName]: this.nameLogger,
+      [actions.increaseAge]: this.ageLogger,
+      [actions.decreaseAge]: this.ageLogger
+    })
+
+    // main loop of saga
+    // - update the slide every 5 sec
+    run = function * () {
+      // to ease readability we always list the actions we use on top
+      const { updateSlide } = this.actions
+
+      while (true) {
+        // wait for someone to call the updateSlide action or for 5 seconds to pass
+        const { timeout } = yield race({
+          change: take(updateSlide),
+          timeout: delay(5000)
+        })
+
+        // if timed out, advance the slide
+        if (timeout) {
+          // you can the contents of a logic store instance via "yield logic.get('property')"
+          const currentSlide = yield sliderLogic.get('currentSlide')
+          // dispatch the updateSlide action
+          yield put(updateSlide(currentSlide + 1))
+        }
+
+        // re-run loop - wait again for 5 sec
+      }
+    }
+
+    // clean up if needed
+    cancelled = function * () {
+      console.log('Closing saga')
+    }
+
+    // on every updateName
+    nameLogger = function * (action) {
+      const { name } = action.payload
+      console.log(`The name changed to: ${name}!`)
+    }
+
+    // on every increaseAge, decreaseAge
+    ageLogger = function * (action) {
+      const age = yield sceneLogic.get('age')
+      console.log(`The age changed to: ${age}!`)
+    }
+  }
+
+</code>
+    </pre>
+  </section>
+  <section>
+    <h2>... and a lot more</h2>
+    <p>Scenes, Routes, Scaffolding, etc.</p>
+    <p><a href='https://github.com/mariusandra/kea'>Check out the project page on Github for more!</a></p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </section>
+
 </body>
 </html>
