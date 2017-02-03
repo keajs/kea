@@ -1,4 +1,4 @@
-import { createScene } from 'kea/logic'
+import { createScene } from 'kea/scene'
 
 import sceneComponent from '~/scenes/$$dash-scene$$/index'
 
