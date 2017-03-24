@@ -32,8 +32,9 @@ export default class $$CapitalScene$$Logic extends Logic {
 
   selectors = ({ constants, selectors }) => ({
     // todoCount: [
-    //   () => [PropTypes.number, selectors.todos],
-    //   (todos) => todos.length
+    //   () => [selectors.todos],
+    //   (todos) => todos.length,
+    //   PropTypes.number
     // ]
   })
 }
