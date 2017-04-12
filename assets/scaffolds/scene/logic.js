@@ -23,7 +23,7 @@ export default class $$CapitalScene$$Logic extends Logic {
   })
 
   reducers = ({ actions, constants }) => ({
-    // visibilityFilter: [constants.SHOW_ALL, PropTypes.string,
+    // visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
     //   [actions.showAll]: () => constants.SHOW_ALL,
     //   [actions.setVisibilityFilter]: (_, payload) => payload.filter
     //   [outerActions.doSomething]: (state, payload) => payload.keep ? state : payload.new
