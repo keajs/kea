@@ -25,7 +25,11 @@ export function createRootSaga (appSagas = null) {
       }
 
       if (loadedWorkers[name]) {
-        runningSaga = yield fork(loadedWorkers[name])
+        if (background) {
+          yield fork(loadedWorkers[name])
+        } else {
+          runningSaga = yield fork(loadedWorkers[name])
+        }
       }
     }
   }
