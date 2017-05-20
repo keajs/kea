@@ -9,19 +9,19 @@ import { connect } from 'kea/logic'
 // components
 
 // logic
-import sceneLogic from '~/scenes/$$dash-scene$$/logic'
+import $$camelScene$$ from '~/scenes/$$dash-scene$$/logic'
 
-// const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
+// const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = $$camelScene$$.constants
 
 @connect({
   actions: [
-    sceneLogic, [
+    $$camelScene$$, [
       // 'showAll',
       // 'setVisibilityFilter'
     ]
   ],
   props: [
-    sceneLogic, [
+    $$camelScene$$, [
       // 'visibilityFilter'
     ]
   ]
