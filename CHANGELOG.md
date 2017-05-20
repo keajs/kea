@@ -5,6 +5,10 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
+## 0.18.0 - 2017-05-20
+### Changed
+- Use `store.addKeaScene(savedScene, true)` to load scenes in the background without replacing the sagas of the "active" scene
+
 ## 0.17.1 - 2017-01-30
 ### Changed
 - [PR4](https://github.com/mariusandra/kea/pull/4). Add action.meta to reducer mapping.
