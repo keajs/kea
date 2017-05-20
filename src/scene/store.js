@@ -13,18 +13,19 @@ export function createRootSaga (appSagas = null) {
 
     while (true) {
       const { payload } = yield take(NEW_SCENE)
+      const { name, background } = payload
 
       if (!ranAppSagas && appSagas) {
         yield call(appSagas)
         ranAppSagas = true
       }
 
-      if (runningSaga) {
+      if (!background && runningSaga) {
         yield cancel(runningSaga)
       }
 
-      if (loadedWorkers[payload.name]) {
-        runningSaga = yield fork(loadedWorkers[payload.name])
+      if (loadedWorkers[name]) {
+        runningSaga = yield fork(loadedWorkers[name])
       }
     }
   }
@@ -48,7 +49,7 @@ export function createKeaStore (finalCreateStore, appReducers = {}) {
   store.currentScene = null
 
   // create a function that will load all new reducers
-  store.addKeaScene = function (scene) {
+  store.addKeaScene = function (scene, background = false) {
     if (!scene) {
       return
     }
@@ -107,7 +108,8 @@ export function createKeaStore (finalCreateStore, appReducers = {}) {
     this.dispatch({
       type: NEW_SCENE,
       payload: {
-        name
+        name,
+        background
       }
     })
 
