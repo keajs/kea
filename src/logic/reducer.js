@@ -66,7 +66,11 @@ export function combineReducerObjects (path, objects) {
     }
   })
 
-  return combineReducers(reducers)
+  if (Object.keys(reducers).length > 0) {
+    return combineReducers(reducers)
+  } else {
+    return () => ({})
+  }
 }
 
 // input: object with values: [value, type, options, reducer]
