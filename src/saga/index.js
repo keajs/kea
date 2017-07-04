@@ -1,6 +1,5 @@
-import { call, cancelled, takeEvery, takeLatest } from 'redux-saga/effects'
-
 import { selectActionsFromLogic } from '../logic'
+import { createSaga } from './create'
 
 class Saga {
   constructor () {
@@ -26,46 +25,8 @@ class Saga {
     object.actions = this.actions ? selectActionsFromLogic(this.actions(object)) : {}
     Object.assign(this, object)
 
-    const _this = this
-
     // generate the saga
-    this._saga = function * () {
-      try {
-        // start takeEvery and takeLatest watchers
-        let ops = { takeEvery, takeLatest }
-        let opKeys = Object.keys(ops)
-        for (let k = 0; k < opKeys.length; k++) {
-          var op = opKeys[k]
-          if (_this[op]) {
-            let list = _this[op](object)
-
-            let keys = Object.keys(list)
-            for (let i = 0; i < keys.length; i++) {
-              let fn = list[keys[i]]
-              if (Array.isArray(fn)) {
-                for (let j = 0; j < fn.length; j++) {
-                  yield ops[op](keys[i], fn[j])
-                }
-              } else {
-                yield ops[op](keys[i], fn)
-              }
-            }
-          }
-        }
-
-        // call the run function
-        if (_this.run) {
-          yield call(_this.run)
-        }
-      } finally {
-        // call the cancelled function if cancelled
-        if (yield cancelled()) {
-          if (_this.cancelled) {
-            yield call(_this.cancelled)
-          }
-        }
-      }
-    }
+    this._saga = createSaga(this, object)
 
     return this._saga
   }

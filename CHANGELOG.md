@@ -5,6 +5,10 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
+## Uncommitted
+### Changed
+- Deprecated: `run` and `cancelled` replaced with `start` and `stop` in Saga classes
+
 ## 0.18.0 - 2017-05-20
 ### Changed
 - Use `store.addKeaScene(savedScene, true)` to load scenes in the background without replacing the sagas of the "active" scene
