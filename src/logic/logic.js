@@ -1,4 +1,4 @@
-import { init } from './init'
+import { createLogic } from './create'
 import { combineReducerObjects } from './reducer'
 
 export function initLogic (Klass) {
@@ -16,7 +16,7 @@ class Logic {
 
   init () {
     let object = {}
-    return init(this, object)
+    return createLogic(this, object)
   }
 }
 

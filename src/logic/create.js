@@ -20,7 +20,7 @@ function convertConstants (c) {
   return c
 }
 
-export function init (_this, object) {
+export function createLogic (_this, object = {}) {
   object.path = _this.path()
   object.selector = (state) => pathSelector(object.path, state)
   object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
@@ -39,7 +39,8 @@ export function init (_this, object) {
   } else {
     object.reducers = {}
   }
-  object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(_this.path, _this.reducers)
+
+  object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(object.path, object.reducers)
 
   object.selectors = createSelectors(object.path, Object.keys(object.reducers))
 
