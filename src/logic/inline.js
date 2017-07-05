@@ -86,14 +86,19 @@ export function inline (_this) {
         let sagas = _this.sagas || []
 
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-          const { start, stop, takeEvery, takeLatest, workers } = _this
-          this._sagaBase = { start, stop, takeEvery, takeLatest, workers, props: this.props }
+          this._sagaBase = {
+            start: _this.start,
+            stop: _this.stop,
+            takeEvery: _this.takeEvery,
+            takeLatest: _this.takeLatest,
+            workers: _this.workers,
+            props: this.props
+          }
 
           let sagaActions = Object.assign({}, connectedActions)
 
           // inject key to the payload of inline actions
           Object.keys(object.actions).forEach(actionKey => {
-            console.log('updating', actionKey)
             sagaActions[actionKey] = (...args) => {
               const createdAction = object.actions[actionKey](...args)
               return {
