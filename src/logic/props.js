@@ -1,6 +1,8 @@
 import { PropTypes } from 'react'
 import { createStructuredSelector } from 'reselect'
 
+import { safePathSelector } from './selectors'
+
 export function createPropTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping)
@@ -12,11 +14,17 @@ export function createPropTransforms (mapping = []) {
   let transforms = {}
 
   for (let i = 0; i < mapping.length; i += 2) {
-    const logic = mapping[i]
+    let logic = mapping[i]
     const props = mapping[i + 1]
 
     // we were given a function (state) => state.something as logic input
-    const isFunction = typeof logic === 'function'
+    let isFunction = typeof logic === 'function'
+
+    // path selector array
+    if (Array.isArray(logic)) {
+      logic = state => safePathSelector(mapping[i], state)
+      isFunction = true
+    }
 
     const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
 
