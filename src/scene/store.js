@@ -1,4 +1,5 @@
 import { call, take, cancel, fork } from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
 import { combineReducers } from 'redux'
 
 export const NEW_SCENE = '@@kea/NEW_SCENE'
@@ -16,6 +17,8 @@ export function createRootSaga (appSagas = null) {
   return function * () {
     let runningSaga = null
     let ranAppSagas = false
+
+    yield fork(componentSagaWatcher)
 
     while (true) {
       const { payload } = yield take(NEW_SCENE)
@@ -43,13 +46,46 @@ export function createRootSaga (appSagas = null) {
 
 export const keaSceneSaga = createRootSaga()
 
-// function createCombinedKeaReducer (sceneReducers, appReducers) {
-//   const hasScenes = sceneReducers && Object.keys(sceneReducers).length > 0
+let emitter
+let cancelCounter = 1
+let toCancel = {}
 
-//   return combineReducers(Object.assign({}, appReducers, {
-//     scenes: hasScenes ? combineReducers(sceneReducers) : () => ({})
-//   }))
-// }
+function createComponentChannel (socket) {
+  return eventChannel(emit => {
+    emitter = emit
+    return () => {}
+  })
+}
+
+function * componentSagaWatcher () {
+  const channel = yield call(createComponentChannel)
+
+  while (true) {
+    const { startSaga, cancelSaga, saga, counter } = yield take(channel)
+    if (startSaga) {
+      toCancel[counter] = yield fork(saga)
+    }
+    if (cancelSaga) {
+      yield cancel(toCancel[counter])
+    }
+  }
+}
+
+export function startSaga (saga) {
+  if (emitter) {
+    cancelCounter += 1
+    emitter({ startSaga: true, saga, counter: cancelCounter })
+    return cancelCounter
+  }
+
+  return null
+}
+
+export function cancelSaga (counter) {
+  if (emitter) {
+    emitter({ cancelSaga: true, counter })
+  }
+}
 
 export function keaReducer (pathStart = 'scenes') {
   if (!reducerTree[pathStart]) {

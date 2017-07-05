@@ -3,10 +3,13 @@ import { createActions, createActionTransforms } from './actions'
 import { combineReducerObjects, convertReducerArrays } from './reducer'
 import { convertConstants } from './create'
 import { pathSelector, createSelectors } from './selectors'
-import { addReducer } from '../scene/store'
+import { addReducer, startSaga, cancelSaga } from '../scene/store'
+import { createCombinedSaga } from '../scene/saga'
 import shallowEqual from '../utils/shallow-equal'
-import { createSelector } from 'reselect'
+import { createSaga } from '../saga/create'
 
+import { createSelector } from 'reselect'
+import { select } from 'redux-saga/effects'
 import { connectAdvanced } from 'react-redux'
 
 let inlineCache = {}
@@ -66,6 +69,82 @@ export function inline (_this) {
     // connected actions and props/selectors
     const connectedActions = createActionTransforms(mapping.actions).actions
     const connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
+
+    let sagaObject = {}
+
+    // check for sagas
+    if (_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
+      let runningSaga
+
+      const originalComponentDidMount = Klass.prototype.componentDidMount
+      Klass.prototype.componentDidMount = function () {
+        console.log('component did mount')
+
+        const key = _this.key(this.props)
+        const path = _this.path(key)
+
+        let sagas = _this.sagas || []
+
+        if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
+          const { start, stop, takeEvery, takeLatest, workers } = _this
+          sagaObject = { start, stop, takeEvery, takeLatest, workers, props: this.props }
+
+          let sagaActions = Object.assign({}, connectedActions)
+
+          // inject key to the payload of inline actions
+          Object.keys(object.actions).forEach(actionKey => {
+            console.log('updating', actionKey)
+            sagaActions[actionKey] = (...args) => {
+              const createdAction = object.actions[actionKey](...args)
+              return {
+                ...createdAction,
+                payload: {
+                  key,
+                  ...createdAction.payload
+                }
+              }
+            }
+            sagaActions[actionKey].toString = object.actions[actionKey].toString
+          })
+
+          const saga = createSaga(sagaObject, { actions: sagaActions })
+          sagas.push(saga)
+        }
+
+        if (sagas.length > 0) {
+          runningSaga = startSaga(createCombinedSaga(sagas))
+        }
+
+        sagaObject.get = function * (key) {
+          const { selectors, selector } = cachedSelectors(path)
+          return yield select(key ? selectors[key] : selector)
+        }
+
+        sagaObject.fetch = function * () {
+          let results = {}
+
+          const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
+
+          for (let i = 0; i < keys.length; i++) {
+            results[keys[i]] = yield sagaObject.get(keys[i])
+          }
+
+          return results
+        }
+
+        originalComponentDidMount && originalComponentDidMount.bind(this)()
+      }
+
+      const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
+      Klass.prototype.componentWillUnmount = function () {
+        console.log('component will unmount')
+        if (runningSaga) {
+          cancelSaga(runningSaga)
+        }
+
+        originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
+      }
+    }
 
     const selectorFactory = (dispatch, options) => {
       let lastProps = {}

@@ -7,7 +7,7 @@ let _gaveCancelledWarning = false
 // this = object with keys { takeEvery, takeLatest, start, stop }
 // object = what is passed to the functions takeEvery and takeLatest, should have { actions }
 export function createSaga (_this, object = {}) {
-  // bind all functions to this
+  // bind all functions to _this
   const keys = Object.keys(_this)
   for (let i = 0; i < keys.length; i++) {
     if (typeof _this[keys[i]] === 'function') {
@@ -15,7 +15,7 @@ export function createSaga (_this, object = {}) {
     }
   }
 
-  object.actions = _this.actions ? selectActionsFromLogic(_this.actions(object)) : {}
+  object.actions = _this.actions ? selectActionsFromLogic(_this.actions(object)) : (object.actions || {})
   Object.assign(_this, object)
 
   // generate the saga
