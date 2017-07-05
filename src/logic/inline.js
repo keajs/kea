@@ -47,6 +47,9 @@ export function inline (_this) {
     const actionTransforms = createActionTransforms(mapping.actions)
     const propTransforms = createPropTransforms(mapping.props)
 
+    // TODO: cache props like here:
+    // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-todos-of-a-specific-user-depending-on-props-and-inject-propsuserid-into-the-action-1
+
     const selectorFactory = (dispatch, options) => (state, props) => {
       const key = _this.key ? _this.key(props) : 'index'
 
@@ -126,7 +129,7 @@ export function inline (_this) {
             ...createdAction,
             payload: {
               key,
-              ...createdAction[createdAction.payload]
+              ...createdAction.payload
             }
           })
         }
