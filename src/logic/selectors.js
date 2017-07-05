@@ -6,6 +6,10 @@ export function pathSelector (path, state) {
   return ([state]).concat(path).reduce((v, a) => v[a])
 }
 
+export function safePathSelector (path, state) {
+  return ([state]).concat(path).reduce((v, a) => (v || {})[a])
+}
+
 // input: ['states', 'something', 'other'], ['key1', 'key2', 'key3'], { bla: 'asdf' }
 // output: {
 //   root: (state) => states.something.other,
