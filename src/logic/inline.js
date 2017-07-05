@@ -3,11 +3,16 @@ import { createActions, createActionTransforms } from './actions'
 import { combineReducerObjects, convertReducerArrays } from './reducer'
 import { convertConstants } from './create'
 import { pathSelector, createSelectors } from './selectors'
+import { addReducer } from '../scene/store'
 import { createSelector } from 'reselect'
 
 import { connectAdvanced } from 'react-redux'
 
 let inlineCache = {}
+
+export function cachedSelectors (path) {
+  return inlineCache[path.join('.')] || {}
+}
 
 export function inline (_this) {
   return function (Klass) {
@@ -18,8 +23,6 @@ export function inline (_this) {
     object.path = _this.path('').filter(p => p)
     object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
     object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
-    object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
-    object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(false, object.reducers)
 
     // the { connect: { props, actions } } part
     const mapping = _this.connect || {}
@@ -28,9 +31,10 @@ export function inline (_this) {
     let propTypes = Object.assign({}, mapping.props ? propTypesFromMapping(mapping) : {}, Klass.propTypes || {})
 
     // add proptypes from reducer
-    Object.keys(object.reducers).forEach(reducerKey => {
-      if (object.reducers[reducerKey].type) {
-        propTypes[reducerKey] = object.reducers[reducerKey].type
+    const reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
+    Object.keys(reducers).forEach(reducerKey => {
+      if (reducers[reducerKey].type) {
+        propTypes[reducerKey] = reducers[reducerKey].type
       }
     })
 
@@ -47,8 +51,7 @@ export function inline (_this) {
       path: _this.path,
       constants: object.constants,
       actions: object.actions,
-      reducers: object.reducers,
-      reducer: object.reducer
+      find: (key) => cachedSelectors(_this.path(key))
     }
 
     // convert this.props.actions to this.actions in the component
@@ -78,36 +81,55 @@ export function inline (_this) {
       console.log(`Inline selectorFactory for ${joinedPath}`)
       console.log({ props, state, key, path })
 
-      // is the reducer created
-      let reducerCreated = true
-      try {
-        const object = selector(state)
-        if (typeof object !== 'undefined') {
-          reducerCreated = false
-        }
-      } catch (e) {
-        reducerCreated = false
-      }
-
       let selector
       let selectors
 
-      if (reducerCreated && inlineCache[joinedPath]) {
+      // now we must check if the reducer is already in redux, or we need to add it
+      // if we need to add it, create "dummy" selectors for the default values until then
+
+      // is the reducer created? if we have "true" in the cache, it's definitely created
+      let reducerCreated = inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated
+
+      // if it's not let's double check. maybe it is now?
+      if (!reducerCreated) {
+        try {
+          selector = (state) => pathSelector(path, state)
+          reducerCreated = typeof selector(state) !== 'undefined'
+        } catch (e) {
+          reducerCreated = false
+        }
+      }
+
+      // we have the selectors cached! with the current reducerCreated state!
+      if (inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated === reducerCreated) {
+        console.log('cache hit!')
         selector = inlineCache[joinedPath].selector
         selectors = inlineCache[joinedPath].selectors
-      } else {
-        selector = (state) => pathSelector(path, state)
 
+      // either we have nothing cached or the cache is invalid. regenerate the selectors!
+      } else {
+        if (!selector) {
+          selector = (state) => pathSelector(path, state)
+        }
+
+        // add { path } and { key } to the reducer creator function
+        let localObject = Object.assign({}, object, { path, key })
+        localObject.reducers = _this.reducers ? convertReducerArrays(_this.reducers(localObject)) : {}
+        localObject.reducer = _this.reducer ? _this.reducer(localObject) : combineReducerObjects(path, localObject.reducers)
+
+        // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
         if (reducerCreated) {
-          selectors = createSelectors(path, Object.keys(object.reducers))
+          selectors = createSelectors(path, Object.keys(localObject.reducers))
         } else {
+          addReducer(path, localObject.reducer, true)
           selectors = {}
-          Object.keys(object.reducers).forEach(key => {
-            selectors[key] = () => object.reducers[key].value
+          Object.keys(localObject.reducers).forEach(key => {
+            selectors[key] = () => localObject.reducers[key].value
           })
         }
 
-        const selectorResponse = _this.selectors ? _this.selectors(Object.assign({}, object, { selectors, key })) : {}
+        // create
+        const selectorResponse = _this.selectors ? _this.selectors(Object.assign({}, localObject, { selectors })) : {}
 
         Object.keys(selectorResponse).forEach(selectorKey => {
           // s == [() => args, selectorFunction, propType]
@@ -117,11 +139,11 @@ export function inline (_this) {
           selectors[selectorKey] = createSelector(...args, s[1])
         })
 
-        if (reducerCreated) {
-          inlineCache[joinedPath] = {
-            selector,
-            selectors
-          }
+        // store in the cache
+        inlineCache[joinedPath] = {
+          reducerCreated,
+          selector,
+          selectors
         }
       }
 
@@ -129,7 +151,7 @@ export function inline (_this) {
 
       let actions = {}
 
-      // pass conneted actions as is
+      // pass conneted actions as they are
       Object.keys(connectedActions).forEach(actionKey => {
         actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
       })

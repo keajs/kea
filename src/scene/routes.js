@@ -1,8 +1,10 @@
+import { addKeaScene } from './store'
+
 function lazyLoad (store, lazyLoadableModule) {
   return (location, cb) => {
     lazyLoadableModule(module => {
       const scene = module.default
-      store.addKeaScene(scene)
+      addKeaScene(scene, false, store)
       cb(null, scene.component)
     })
   }

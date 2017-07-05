@@ -5,6 +5,12 @@ export const NEW_SCENE = '@@kea/NEW_SCENE'
 
 // worker functions are loaded globally, reducers locally in store
 let loadedWorkers = {}
+let loadedScenes = {} // all loaded scenes
+let currentScene = null
+
+// all reducers that are created
+let reducerTree = {}
+let rootReducers = {}
 
 export function createRootSaga (appSagas = null) {
   return function * () {
@@ -35,90 +41,143 @@ export function createRootSaga (appSagas = null) {
   }
 }
 
-function createCombinedKeaReducer (sceneReducers, appReducers) {
-  const hasScenes = sceneReducers && Object.keys(sceneReducers).length > 0
+// function createCombinedKeaReducer (sceneReducers, appReducers) {
+//   const hasScenes = sceneReducers && Object.keys(sceneReducers).length > 0
 
-  return combineReducers(Object.assign({}, appReducers, {
-    scenes: hasScenes ? combineReducers(sceneReducers) : () => ({})
-  }))
+//   return combineReducers(Object.assign({}, appReducers, {
+//     scenes: hasScenes ? combineReducers(sceneReducers) : () => ({})
+//   }))
+// }
+
+export function keaReducer (pathStart = 'scenes') {
+  if (!reducerTree[pathStart]) {
+    reducerTree[pathStart] = {}
+    regenerateRootReducer(pathStart)
+  }
+
+  return (state = {}, action) => {
+    return rootReducers[pathStart] ? rootReducers[pathStart](state, action) : state
+  }
 }
 
-export function createKeaStore (finalCreateStore, appReducers = {}) {
-  const rootReducer = createCombinedKeaReducer({}, appReducers)
+export function keaMiddlware () {
 
-  const store = finalCreateStore(rootReducer)
+}
 
-  store.loadedScenes = {} // all loaded scenes
-  store.loadedReducers = {}
-  store.currentScene = null
+export function addReducer (path, reducer, regenerate = false) {
+  const pathStart = path[0]
 
-  // create a function that will load all new reducers
-  store.addKeaScene = function (scene, background = false) {
-    if (!scene) {
-      return
+  if (typeof reducerTree[pathStart] === 'undefined') {
+    console.error(`[KEA-LOGIC] Path starting with "${pathStart}" is not connected to the reducer tree!`, path)
+    return
+  }
+
+  let pointer = reducerTree
+
+  for (let i = 0; i < path.length; i++) {
+    const pathPart = path[i]
+
+    // last part of the path, so [..., pathPart] = path
+    if (i === path.length - 1) {
+      // there's already something here!
+      if (pointer[pathPart]) {
+        // if it's a function, assume it's a reducer and replacing it is fine
+        // otherwise give an error
+        if (typeof pointer[pathPart] !== 'function') {
+          console.error(`[KEA-LOGIC] Can not add reducer to "${path.join('.')}". There is something in the way:`, pointer[pathPart])
+          return
+        }
+      }
+
+      pointer[pathPart] = reducer
+    } else {
+      if (!pointer[pathPart]) {
+        pointer[pathPart] = {}
+      }
+      pointer = pointer[pathPart]
     }
+  }
 
-    const { name } = scene
+  if (regenerate) {
+    regenerateRootReducer(pathStart)
+  }
+}
 
-    if (this.currentScene === name) {
-      return
+export function regenerateRootReducer (pathStart) {
+  rootReducers[pathStart] = recursiveCreateReducer(reducerTree[pathStart])
+}
+
+export function recursiveCreateReducer (treeNode) {
+  let children = {}
+  Object.keys(treeNode).forEach(key => {
+    if (typeof treeNode[key] === 'function') {
+      children[key] = treeNode[key]
+    } else {
+      children[key] = recursiveCreateReducer(treeNode[key])
     }
+  })
 
-    if (!this.loadedScenes[name]) {
-      // store the scene and saga
-      loadedWorkers[name] = scene.worker
-      this.loadedScenes[name] = scene
+  return Object.keys(children).length > 0 ? combineReducers(children) : (state, action) => state
+}
 
-      // go through all loaded scenes and recreate the reducers
-      // this is so because scenes can load logic from other scenes
-      Object.keys(this.loadedScenes).forEach(key => {
-        let { logic } = this.loadedScenes[key]
+// add reducers and sagas from the scene into the state
+export function addKeaScene (scene, background = false, store = null) {
+  if (!scene) {
+    return
+  }
 
-        logic.forEach(logicClass => {
-          const { path } = logicClass
+  const { name } = scene
 
-          if (path.length !== 3 || path[0] !== 'scenes') {
-            console.error(`[KEA-LOGIC] logic class in scene "${key}" does not follow the path structure ["scenes", "sceneName", "logicName"]:`, path)
-            return
-          }
+  if (currentScene === name) {
+    return
+  }
 
-          if (!logicClass.reducer) {
-            console.error('[KEA-LOGIC] No reducer in logic!', logicClass.path, logicClass)
-            console.trace()
-            return
-          }
+  if (!loadedScenes[name]) {
+    // store the scene and saga
+    loadedWorkers[name] = scene.worker
+    loadedScenes[name] = scene
 
-          const [, sceneName, logicName] = path
+    let rootReducersToRegenerate = {}
 
-          if (!this.loadedReducers[sceneName]) {
-            this.loadedReducers[sceneName] = {}
-          }
+    // go through all loaded scenes and recreate the reducers
+    // this is so because scenes can load logic from other scenes
+    Object.keys(loadedScenes).forEach(key => {
+      let { logic } = loadedScenes[key]
 
-          if (!this.loadedReducers[sceneName][logicName]) {
-            this.loadedReducers[sceneName][logicName] = logicClass.reducer
-          }
-        })
+      logic.forEach(logicClass => {
+        const { path, reducer } = logicClass
+
+        if (!path || !Array.isArray(path)) {
+          console.error(`[KEA-LOGIC] No path for logic in scene ${name}!`, logicClass)
+          return
+        }
+
+        if (!reducer) {
+          console.error('[KEA-LOGIC] No reducer in logic!', path, logicClass)
+          console.trace()
+          return
+        }
+
+        addReducer(path, reducer, false)
+
+        rootReducersToRegenerate[path[0]] = true
       })
+    })
 
-      let combinedReducers = {}
+    Object.keys(rootReducersToRegenerate).forEach(pathStart => {
+      regenerateRootReducer(pathStart)
+    })
+  }
 
-      Object.keys(this.loadedReducers).forEach(sceneName => {
-        combinedReducers[sceneName] = combineReducers(this.loadedReducers[sceneName])
-      })
-
-      this.replaceReducer(createCombinedKeaReducer(combinedReducers, appReducers))
-    }
-
-    this.dispatch({
+  if (store) {
+    store.dispatch({
       type: NEW_SCENE,
       payload: {
         name,
         background
       }
     })
-
-    this.currentScene = name
   }
 
-  return store
+  currentScene = name
 }
