@@ -67,9 +67,6 @@ export function inline (_this) {
     const connectedActions = createActionTransforms(mapping.actions).actions
     const connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
 
-    // TODO: cache props like here:
-    // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-todos-of-a-specific-user-depending-on-props-and-inject-propsuserid-into-the-action-1
-
     const selectorFactory = (dispatch, options) => {
       let lastProps = {}
       let result = null
