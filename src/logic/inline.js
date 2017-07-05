@@ -28,6 +28,7 @@ export function inline (_this) {
     object.path = _this.path('').filter(p => p)
     object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
     object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
+    object.props = {}
 
     // the { connect: { props, actions } } part
     const mapping = _this.connect || {}
@@ -92,6 +93,8 @@ export function inline (_this) {
             takeEvery: _this.takeEvery,
             takeLatest: _this.takeLatest,
             workers: _this.workers,
+            key: key,
+            path: path,
             props: this.props
           }
 
@@ -207,7 +210,7 @@ export function inline (_this) {
           }
 
           // add { path } and { key } to the reducer creator function
-          let localObject = Object.assign({}, object, { path, key })
+          let localObject = Object.assign({}, object, { path, key, props: nextOwnProps })
           localObject.reducers = _this.reducers ? convertReducerArrays(_this.reducers(localObject)) : {}
           localObject.reducer = _this.reducer ? _this.reducer(localObject) : combineReducerObjects(path, localObject.reducers)
 
