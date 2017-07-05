@@ -70,8 +70,6 @@ export function inline (_this) {
     const connectedActions = createActionTransforms(mapping.actions).actions
     const connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
 
-    let sagaObject = {}
-
     // check for sagas
     if (_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
       let runningSaga
@@ -80,6 +78,8 @@ export function inline (_this) {
       Klass.prototype.componentDidMount = function () {
         console.log('component did mount')
 
+        this._sagaBase = {}
+
         const key = _this.key(this.props)
         const path = _this.path(key)
 
@@ -87,7 +87,7 @@ export function inline (_this) {
 
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
           const { start, stop, takeEvery, takeLatest, workers } = _this
-          sagaObject = { start, stop, takeEvery, takeLatest, workers, props: this.props }
+          this._sagaBase = { start, stop, takeEvery, takeLatest, workers, props: this.props }
 
           let sagaActions = Object.assign({}, connectedActions)
 
@@ -107,7 +107,7 @@ export function inline (_this) {
             sagaActions[actionKey].toString = object.actions[actionKey].toString
           })
 
-          const saga = createSaga(sagaObject, { actions: sagaActions })
+          const saga = createSaga(this._sagaBase, { actions: sagaActions })
           sagas.push(saga)
         }
 
@@ -115,24 +115,31 @@ export function inline (_this) {
           runningSaga = startSaga(createCombinedSaga(sagas))
         }
 
-        sagaObject.get = function * (key) {
+        this._sagaBase.get = function * (key) {
           const { selectors, selector } = cachedSelectors(path)
           return yield select(key ? selectors[key] : selector)
         }
 
-        sagaObject.fetch = function * () {
+        this._sagaBase.fetch = function * () {
           let results = {}
 
           const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
 
           for (let i = 0; i < keys.length; i++) {
-            results[keys[i]] = yield sagaObject.get(keys[i])
+            results[keys[i]] = yield this._sagaBase.get(keys[i])
           }
 
           return results
         }
 
         originalComponentDidMount && originalComponentDidMount.bind(this)()
+      }
+
+      const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
+      Klass.prototype.componentWillReceiveProps = function (nextProps) {
+        this._sagaBase.props = nextProps
+
+        originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
       }
 
       const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
