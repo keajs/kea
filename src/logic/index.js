@@ -2,6 +2,7 @@
 import Logic from './logic'
 export { initLogic } from './logic'
 export { createLogic } from './create'
+export { inline } from './inline'
 export { pathSelector, createSelectors } from './selectors'
 export { createAction, createActions, selectActionsFromLogic } from './actions'
 export { createReducer, createPersistentReducer, combineReducerObjects } from './reducer'

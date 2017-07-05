@@ -33,6 +33,14 @@ export function connect (mapping) {
     if (mapping.props) {
       Klass.propTypes = Object.assign({}, propTypesFromMapping(mapping), Klass.propTypes || {})
     }
+
+    // convert this.props.actions to this.actions
+    const originalComponentWillMount = Klass.prototype.componentWillMount
+    Klass.prototype.componentWillMount = function () {
+      this.actions = this.props.actions
+      originalComponentWillMount && originalComponentWillMount.bind(this)()
+    }
+
     return connectMapping(mapping)(Klass)
   }
 }

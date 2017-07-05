@@ -54,6 +54,7 @@ export function createPropTransforms (mapping = []) {
   }
 
   return {
+    selectorFunctions: hash,
     selectors: createStructuredSelector(hash),
     transforms: transforms
   }

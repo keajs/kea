@@ -9,7 +9,7 @@ let gaveAddSelectorWarning = false
 let gaveStructureWarning = false
 
 // convert ['A', 'B'] ==> { 'A': 'A', 'B': 'B' }
-function convertConstants (c) {
+export function convertConstants (c) {
   if (Array.isArray(c)) {
     let a = {}
     for (let i = 0; i < c.length; i++) {
@@ -21,7 +21,8 @@ function convertConstants (c) {
 }
 
 export function createLogic (_this, object = {}) {
-  object.path = _this.path()
+  object.key = _this.key ? _this.key(object.props || {}) : undefined
+  object.path = _this.path(object.key)
   object.selector = (state) => pathSelector(object.path, state)
   object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
   object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
