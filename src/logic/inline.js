@@ -14,38 +14,53 @@ export function inline (_this) {
     // createLogic(_this, )
     let object = {}
 
-    // object.key = _this.key ? _this.key(object.props || {}) : undefined
     // pregenerate as many things as we can
     object.path = _this.path('').filter(p => p)
     object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
     object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
-
-    const reducerObject = _this.reducers ? _this.reducers(object) : {}
-    object.reducers = convertReducerArrays(reducerObject)
-    object.reducerDefaults = {}
-    Object.keys(reducerObject).forEach(key => {
-      object.reducerDefaults[key] = reducerObject[key].value
-    })
-
+    object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
     object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(false, object.reducers)
 
-    // TODO: give all of this to kea so that it can start creating objects of this type
-    // TODO: add propTypes from selectors to reducers
-    // if (mapping.props) {
-    //   Klass.propTypes = Object.assign({}, propTypesFromMapping(mapping), Klass.propTypes || {})
-    // }
+    // the { connect: { props, actions } } part
+    const mapping = _this.connect || {}
 
-    // convert this.props.actions to this.actions
+    // get default proptypes and add connected ones
+    let propTypes = Object.assign({}, mapping.props ? propTypesFromMapping(mapping) : {}, Klass.propTypes || {})
+
+    // add proptypes from reducer
+    Object.keys(object.reducers).forEach(reducerKey => {
+      if (object.reducers[reducerKey].type) {
+        propTypes[reducerKey] = object.reducers[reducerKey].type
+      }
+    })
+
+    // add proptypes from selectors
+    const selectorsThatDontWork = _this.selectors ? _this.selectors({}) : {}
+    Object.keys(selectorsThatDontWork).forEach(selectorKey => {
+      if (selectorsThatDontWork[selectorKey][2]) {
+        propTypes[selectorKey] = selectorsThatDontWork[selectorKey][2]
+      }
+    })
+
+    // add kea metadata to component
+    Klass.kea = {
+      path: _this.path,
+      constants: object.constants,
+      actions: object.actions,
+      reducers: object.reducers,
+      reducer: object.reducer
+    }
+
+    // convert this.props.actions to this.actions in the component
     const originalComponentWillMount = Klass.prototype.componentWillMount
     Klass.prototype.componentWillMount = function () {
       this.actions = this.props.actions
-      originalComponentWillMount.bind(this)()
+      originalComponentWillMount && originalComponentWillMount.bind(this)()
     }
 
-    const mapping = _this.connect || {}
-
-    const actionTransforms = createActionTransforms(mapping.actions)
-    const propTransforms = createPropTransforms(mapping.props)
+    // connected actions and props/selectors
+    const connectedActions = createActionTransforms(mapping.actions).actions
+    const connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
 
     // TODO: cache props like here:
     // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-todos-of-a-specific-user-depending-on-props-and-inject-propsuserid-into-the-action-1
@@ -88,27 +103,25 @@ export function inline (_this) {
         } else {
           selectors = {}
           Object.keys(object.reducers).forEach(key => {
-            selectors[key] = () => object.reducerDefaults[key]
+            selectors[key] = () => object.reducers[key].value
           })
         }
 
         const selectorResponse = _this.selectors ? _this.selectors(Object.assign({}, object, { selectors, key })) : {}
 
         Object.keys(selectorResponse).forEach(selectorKey => {
-          const s = selectorResponse[selectorKey]
           // s == [() => args, selectorFunction, propType]
+          const s = selectorResponse[selectorKey]
 
           const args = s[0]()
-          // TODO: move this one level up
-          // if (s[2]) {
-          //   object.reducers[selectorKey] = { type: s[2] }
-          // }
           selectors[selectorKey] = createSelector(...args, s[1])
         })
 
-        inlineCache[joinedPath] = {
-          selector,
-          selectors
+        if (reducerCreated) {
+          inlineCache[joinedPath] = {
+            selector,
+            selectors
+          }
         }
       }
 
@@ -117,8 +130,8 @@ export function inline (_this) {
       let actions = {}
 
       // pass conneted actions as is
-      Object.keys(actionTransforms.actions).forEach(actionKey => {
-        actions[actionKey] = (...args) => dispatch(actionTransforms.actions[actionKey](...args))
+      Object.keys(connectedActions).forEach(actionKey => {
+        actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
       })
 
       // inject key to the payload of inline actions
@@ -140,8 +153,8 @@ export function inline (_this) {
       let newProps = {}
 
       // connected props
-      Object.keys(propTransforms.selectorFunctions).forEach(propKey => {
-        newProps[propKey] = propTransforms.selectorFunctions[propKey](state)
+      Object.keys(connectedSelectors).forEach(propKey => {
+        newProps[propKey] = connectedSelectors[propKey](state)
       })
 
       Object.keys(selectors).forEach(selectorKey => {
