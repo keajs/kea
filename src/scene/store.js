@@ -41,6 +41,8 @@ export function createRootSaga (appSagas = null) {
   }
 }
 
+export const keaSceneSaga = createRootSaga()
+
 // function createCombinedKeaReducer (sceneReducers, appReducers) {
 //   const hasScenes = sceneReducers && Object.keys(sceneReducers).length > 0
 
