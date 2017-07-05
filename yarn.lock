@@ -3170,9 +3170,9 @@ redeyed@~1.0.0:
   dependencies:
     esprima "~3.0.0"
 
-redux-saga@0.x:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.13.0.tgz#9294386550deb0d56bc9a1b3c90a613e7ddb6593"
+redux-saga@0.15.4:
+  version "0.15.4"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.15.4.tgz#27982a947280053b7ecbb5d3170c837a5fe6b261"
 
 redux@3.7.1:
   version "3.7.1"
