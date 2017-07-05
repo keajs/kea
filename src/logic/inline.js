@@ -10,6 +10,7 @@ import { createSelector } from 'reselect'
 import { connectAdvanced } from 'react-redux'
 
 let inlineCache = {}
+let actionCache = {}
 
 export function cachedSelectors (path) {
   return inlineCache[path.join('.')] || {}
@@ -154,29 +155,6 @@ export function inline (_this) {
 
         console.log({ selector, selectors })
 
-        let actions = {}
-
-        // pass conneted actions as they are
-        Object.keys(connectedActions).forEach(actionKey => {
-          actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
-        })
-
-        // inject key to the payload of inline actions
-        Object.keys(object.actions).forEach(actionKey => {
-          actions[actionKey] = (...args) => {
-            const createdAction = object.actions[actionKey](...args)
-            return dispatch({
-              ...createdAction,
-              payload: {
-                key,
-                ...createdAction.payload
-              }
-            })
-          }
-        })
-
-        console.log({ actions })
-
         let nextProps = Object.assign({}, nextOwnProps)
 
         // connected props
@@ -189,6 +167,34 @@ export function inline (_this) {
         })
 
         console.log({ nextProps })
+
+        let actions = actionCache[joinedPath]
+
+        if (!actions) {
+          actions = {}
+
+          // pass conneted actions as they are
+          Object.keys(connectedActions).forEach(actionKey => {
+            actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
+          })
+
+          // inject key to the payload of inline actions
+          Object.keys(object.actions).forEach(actionKey => {
+            actions[actionKey] = (...args) => {
+              const createdAction = object.actions[actionKey](...args)
+              return dispatch({
+                ...createdAction,
+                payload: {
+                  key,
+                  ...createdAction.payload
+                }
+              })
+            }
+          })
+          console.log({ actions })
+
+          actionCache[joinedPath] = actions
+        }
 
         // if the props did not change, return the old cached object
         if (!result || !shallowEqual(lastProps, nextProps)) {
