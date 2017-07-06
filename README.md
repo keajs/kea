@@ -125,8 +125,6 @@ import { kea } from 'kea'
     console.log('Stopping homepage slider saga')
   },
 
-  // sagas: [ array of sagas from elsewhere that run with the component ],
-
   takeEvery: ({ actions, workers }) => ({
     [actions.updateSlide]: workers.updateSlide
   }),
@@ -139,6 +137,10 @@ import { kea } from 'kea'
       }
     }
   }
+
+  // Also implemented:
+  // takeLatest: () => ({}),
+  // sagas: [ array of sagas from elsewhere that run with the component ],
 })
 export default class Slider extends Component {
   render () {
@@ -172,11 +174,11 @@ All the "old" code works as it should.
 Starting with `0.19` to connect `kea` to your application, all you need to do is to hook up `redux` and `redux-saga` as you normally would, and then just add `keaReducer` and `keaSaga`, like this:
 
 ```js
-import { keaSaga, keaReducer } from 'kea' // kea line
+import { keaSaga, keaReducer } from 'kea' // add this
 
 const reducers = combineReducers({
   routing: routerReducer,
-  scenes: keaReducer('scenes') // kea line
+  scenes: keaReducer('scenes') // add this
 })
 
 const sagaMiddleware = createSagaMiddleware()
@@ -187,7 +189,7 @@ const finalCreateStore = compose(
 
 const store = finalCreateStore(reducers)
 
-sagaMiddleware.run(keaSaga) // kea line
+sagaMiddleware.run(keaSaga) // add this
 ```
 
 # Logic stores
