@@ -72,7 +72,9 @@ export default class Slider extends Component {
 }
 ```
 
-Also add Sagas and they will be started and terminated together with your component! Each instance of the component runs their own sagas!
+Then when the logic grows too big, you may extract it from your components and give it a new home in `logic.js` files.
+
+Inline kea also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
 
 ```jsx
 import { kea } from 'kea'
