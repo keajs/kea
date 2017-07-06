@@ -19,6 +19,124 @@ A `kea` is two things:
 
 Open the [demo app](http://example.kea.rocks/), then [edit it live in Gomix](https://gomix.com/#!/project/kea-example) or [view its source on GitHub](https://github.com/mariusandra/kea-example).
 
+# NEW! v0.19 - INLINE KEA
+
+There is a new feature called "inline kea", which is released with the beta version `0.19-0`.
+
+With it you may add logic to your components by writing it like this:
+
+```jsx
+import { kea } from 'kea'
+
+@kea({
+  key: (props) => props.id,
+
+  path: (key) => ['scenes', 'homepage', 'slider', key],
+
+  actions: () => ({
+    updateSlide: index => ({ index })
+  }),
+
+  reducers: ({ actions, key, props }) => ({
+    currentSlide: [props.initialSlide || 0, PropTypes.number, {
+      [actions.updateSlide]: (state, payload) => payload.key === key ? payload.index % images.length : state
+    }]
+  }),
+
+  selectors: ({ selectors }) => ({
+    currentImage: [
+      () => [selectors.currentSlide],
+      (currentSlide) => images[currentSlide],
+      PropTypes.object
+    ]
+  }),
+
+  start: function * () {
+    const { updateSlide } = this.actions
+
+    console.log('Starting homepage slider saga')
+    // console.log(this, this.actions, this.props)
+
+    while (true) {
+      const { timeout } = yield race({
+        change: take(action => action.type === updateSlide.toString() && action.payload.key === this.key),
+        timeout: delay(5000)
+      })
+
+      if (timeout) {
+        const currentSlide = yield this.get('currentSlide')
+        yield put(updateSlide(currentSlide + 1))
+      }
+    }
+  },
+
+  stop: function * () {
+    console.log('Stopping homepage slider saga')
+  },
+
+  takeEvery: ({ actions, workers }) => ({
+    [actions.updateSlide]: workers.updateSlide
+  }),
+
+  workers: {
+    updateSlide: function * (action) {
+      if (action.payload.key === this.key) {
+        console.log('slide update triggered', action.payload.key, this.key, this.props.id)
+        // console.log(action, this)
+      }
+    }
+  }
+})
+export default class Slider extends Component {
+  render () {
+    const { currentSlide, currentImage } = this.props
+    const { updateSlide } = this.actions
+
+    const title = `Image copyright by ${currentImage.author}`
+
+    return (
+      <div className='kea-slider'>
+        <img src={currentImage.src} alt={title} title={title} />
+        <div className='buttons'>
+          {range(images.length).map(i => (
+            <span key={i} className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+}
+```
+
+See [slider/index.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/homepage/slider/index.js) in the [example](https://github.com/mariusandra/kea-example/) for more!
+
+This feature is still in beta and has a few obvious issues (cache cleanup! performance tuning!), but it works! Stay tuned for more updates and please report any and all bugs you find with it.
+
+All the "old" code works as it should.
+
+# NEW! v0.19 - Connecting to redux
+
+Starting with `0.19` to connect `kea` to your application, all you need to do is to hook up `redux` and `redux-saga` as you normally would, and then just add `keaReducer` and `keaSaga`, like this:
+
+```js
+import { keaSaga, keaReducer } from 'kea' // kea line
+
+const reducers = combineReducers({
+  routing: routerReducer,
+  scenes: keaReducer('scenes') // kea line
+})
+
+const sagaMiddleware = createSagaMiddleware()
+const finalCreateStore = compose(
+  applyMiddleware(sagaMiddleware),
+  applyMiddleware(routerMiddleware(browserHistory))
+)(createStore)
+
+const store = finalCreateStore(reducers)
+
+sagaMiddleware.run(keaSaga) // kea line
+```
+
 # Logic stores
 
 Logic stores consist of actions, reducers and selectors. They include prop types and look like this:
