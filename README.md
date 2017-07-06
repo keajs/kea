@@ -74,6 +74,8 @@ export default class Slider extends Component {
 
 Then when the logic grows too big, you may extract it from your components and give it a new home in `logic.js` files.
 
+Then use the `connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})` to connect to external logic classes, as described below.
+
 Inline kea also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
 
 ```jsx
