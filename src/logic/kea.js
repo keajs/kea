@@ -98,7 +98,7 @@ export function kea (_this) {
             stop: _this.stop,
             takeEvery: _this.takeEvery,
             takeLatest: _this.takeLatest,
-            workers: _this.workers,
+            workers: _this.workers ? Object.assign({}, _this.workers) : {},
             key: key,
             path: path,
             props: this.props
