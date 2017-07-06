@@ -10,6 +10,7 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 - Deprecated: `run` and `cancelled` replaced with `start` and `stop` in Saga classes
 - Added inline kea
 - New and easier way to hook up to `redux`
+- Use `this.actions` instead of `this.props.actions` in components
 
 ## 0.18.0 - 2017-05-20
 ### Changed
