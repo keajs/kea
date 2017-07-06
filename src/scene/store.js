@@ -44,7 +44,7 @@ export function createRootSaga (appSagas = null) {
   }
 }
 
-export const keaSceneSaga = createRootSaga()
+export const keaSaga = createRootSaga()
 
 let emitter
 let cancelCounter = 1

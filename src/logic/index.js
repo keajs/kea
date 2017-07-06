@@ -1,8 +1,8 @@
 // logic
 import Logic from './logic'
+export { kea } from './kea'
 export { initLogic } from './logic'
 export { createLogic } from './create'
-export { inline } from './inline'
 export { pathSelector, safePathSelector, createSelectors } from './selectors'
 export { createAction, createActions, selectActionsFromLogic } from './actions'
 export { createReducer, createPersistentReducer, combineReducerObjects } from './reducer'
