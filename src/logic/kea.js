@@ -19,7 +19,9 @@ export function cachedSelectors (path) {
   return inlineCache[path.join('.')] || {}
 }
 
-export function inline (_this) {
+const DEBUG = false
+
+export function kea (_this) {
   return function (Klass) {
     // createLogic(_this, )
     let object = {}
@@ -77,7 +79,11 @@ export function inline (_this) {
 
       const originalComponentDidMount = Klass.prototype.componentDidMount
       Klass.prototype.componentDidMount = function () {
-        console.log('component did mount')
+        if (DEBUG) {
+          console.log('component did mount')
+        }
+
+        // this === component instance
 
         this._sagaBase = {}
 
@@ -152,7 +158,9 @@ export function inline (_this) {
 
       const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
       Klass.prototype.componentWillUnmount = function () {
-        console.log('component will unmount')
+        if (DEBUG) {
+          console.log('component will unmount')
+        }
         if (runningSaga) {
           cancelSaga(runningSaga)
         }
@@ -175,8 +183,10 @@ export function inline (_this) {
         const path = _this.path(key)
         const joinedPath = path.join('.')
 
-        console.log(`Inline selectorFactory for ${joinedPath}`)
-        console.log({ nextOwnProps, nextState, key, path })
+        if (DEBUG) {
+          console.log(`Inline selectorFactory for ${joinedPath}`)
+          console.log({ nextOwnProps, nextState, key, path })
+        }
 
         let selector
         let selectors
@@ -199,7 +209,9 @@ export function inline (_this) {
 
         // we have the selectors cached! with the current reducerCreated state!
         if (inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated === reducerCreated) {
-          console.log('cache hit!')
+          if (DEBUG) {
+            console.log('cache hit!')
+          }
           selector = inlineCache[joinedPath].selector
           selectors = inlineCache[joinedPath].selectors
 
@@ -244,7 +256,9 @@ export function inline (_this) {
           }
         }
 
-        console.log({ selector, selectors })
+        if (DEBUG) {
+          console.log({ selector, selectors })
+        }
 
         let nextProps = Object.assign({}, nextOwnProps)
 
@@ -257,7 +271,9 @@ export function inline (_this) {
           nextProps[selectorKey] = selectors[selectorKey](nextState)
         })
 
-        console.log({ nextProps })
+        if (DEBUG) {
+          console.log({ nextProps })
+        }
 
         let actions = actionCache[joinedPath]
 
@@ -282,7 +298,9 @@ export function inline (_this) {
               })
             }
           })
-          console.log({ actions })
+          if (DEBUG) {
+            console.log({ actions })
+          }
 
           actionCache[joinedPath] = actions
         }
@@ -297,6 +315,6 @@ export function inline (_this) {
       }
     }
 
-    return connectAdvanced(selectorFactory, { methodName: 'inline' })(Klass)
+    return connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
   }
 }
