@@ -25,6 +25,55 @@ There is a new feature called "inline kea", which is released with the beta vers
 
 With it you may add logic to your components by writing it like this:
 
+
+```jsx
+import { kea } from 'kea'
+
+@kea({
+  key: (props) => props.id,
+  path: (key) => ['scenes', 'homepage', 'slider', key],
+
+  actions: () => ({
+    updateSlide: index => ({ index })
+  }),
+
+  reducers: ({ actions, key, props }) => ({
+    currentSlide: [props.initialSlide || 0, PropTypes.number, {
+      [actions.updateSlide]: (state, payload) => payload.key === key ? payload.index % images.length : state
+    }]
+  }),
+
+  selectors: ({ selectors }) => ({
+    currentImage: [
+      () => [selectors.currentSlide],
+      (currentSlide) => images[currentSlide],
+      PropTypes.object
+    ]
+  })
+})
+export default class Slider extends Component {
+  render () {
+    const { currentSlide, currentImage } = this.props
+    const { updateSlide } = this.actions
+
+    const title = `Image copyright by ${currentImage.author}`
+
+    return (
+      <div className='kea-slider'>
+        <img src={currentImage.src} alt={title} title={title} />
+        <div className='buttons'>
+          {range(images.length).map(i => (
+            <span key={i} className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+}
+```
+
+Also add Sagas and they will be started and terminated together with your component! Each instance of the component runs their own sagas!
+
 ```jsx
 import { kea } from 'kea'
 
@@ -73,6 +122,8 @@ import { kea } from 'kea'
   stop: function * () {
     console.log('Stopping homepage slider saga')
   },
+
+  // sagas: [ array of sagas from elsewhere that run with the component ],
 
   takeEvery: ({ actions, workers }) => ({
     [actions.updateSlide]: workers.updateSlide
