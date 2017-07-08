@@ -1,8 +1,15 @@
 /* global test, expect */
 import { kea } from '../logic/kea'
+import { clearActionCache } from '../logic/actions'
+import { keaReducer, clearStore } from '../scene/store'
+
 import { PropTypes } from 'react'
 
 test('singleton logic has all the right properties', () => {
+  clearActionCache()
+  clearStore()
+  keaReducer('scenes')
+
   const response = kea({
     path: () => ['scenes', 'homepage', 'index'],
     constants: () => [
@@ -76,6 +83,10 @@ test('singleton logic has all the right properties', () => {
 })
 
 test('it is not a singleton if there is a key', () => {
+  clearActionCache()
+  clearStore()
+  keaReducer('scenes')
+
   const response = kea({
     key: (props) => props.id,
     path: (key) => ['scenes', 'homepage', 'index', key],

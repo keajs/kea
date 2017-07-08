@@ -23,7 +23,7 @@ const DEBUG = false
 
 export function kea (_this) {
   const hasMapping = !!(_this.connect)
-  const hasLogic = !!(_this.actions || _this.reducer || _this.selectors)
+  const hasLogic = !!(_this.path || _this.actions || _this.reducer || _this.selectors)
   const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest)
   const isSingleton = !_this.key
 
@@ -74,6 +74,28 @@ export function kea (_this) {
     }
   }
 
+  let propTypes = {}
+  let mapping = {}
+  let connectedActions = {}
+  let connectedSelectors = {}
+
+  if (hasMapping) {
+    // the { connect: { props, actions } } part
+    mapping = _this.connect || {}
+
+    // get default proptypes and add connected ones
+    propTypes = Object.assign({}, mapping.props ? propTypesFromMapping(mapping) : {})
+
+    // connected actions and props/selectors
+    connectedActions = createActionTransforms(mapping.actions).actions
+    connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
+
+    if (isSingleton) {
+      object.actions = Object.assign({}, connectedActions, object.actions)
+      object.selectors = Object.assign({}, connectedSelectors, object.selectors)
+    }
+  }
+
   const response = function (Klass) {
     // initializing as a singleton
     if (Klass === false) {
@@ -84,21 +106,8 @@ export function kea (_this) {
       return Object.assign(_this, object)
     }
 
-    let propTypes = {}
-    let mapping = {}
-    let connectedActions = {}
-    let connectedSelectors = {}
-
-    if (hasMapping) {
-      // the { connect: { props, actions } } part
-      mapping = _this.connect || {}
-
-      // get default proptypes and add connected ones
-      propTypes = Object.assign({}, mapping.props ? propTypesFromMapping(mapping) : {}, Klass.propTypes || {})
-
-      // connected actions and props/selectors
-      connectedActions = createActionTransforms(mapping.actions).actions
-      connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
+    if (Klass.propTypes) {
+      propTypes = Object.assign({}, propTypes, Klass.propTypes)
     }
 
     if (hasLogic) {
@@ -408,6 +417,15 @@ export function kea (_this) {
 
   response._isKeaFunction = true
   response._isKeaSingleton = isSingleton
+
+  if (object.path) {
+    if (isSingleton) {
+      addReducer(object.path, object.reducer, true)
+      response._keaReducerConnected = true
+    } else {
+      response._keaReducerConnected = false
+    }
+  }
 
   return response
 }

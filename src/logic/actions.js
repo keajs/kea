@@ -62,6 +62,10 @@ export function selectActionsFromLogic (mapping = []) {
 
 let alreadyCreated = {}
 
+export function clearActionCache () {
+  alreadyCreated = {}
+}
+
 export function createAction (type, payloadCreator) {
   if (alreadyCreated[type]) {
     console.error(`[KEA-LOGIC] Already created action "${type}"`)

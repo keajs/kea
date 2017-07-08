@@ -13,6 +13,14 @@ let currentScene = null
 let reducerTree = {}
 let rootReducers = {}
 
+export function clearStore () {
+  loadedWorkers = {}
+  loadedScenes = {}
+  currentScene = null
+  reducerTree = {}
+  rootReducers = {}
+}
+
 export function createRootSaga (appSagas = null) {
   return function * () {
     let runningSaga = null
