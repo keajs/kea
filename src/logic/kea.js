@@ -51,6 +51,9 @@ export function kea (_this) {
       // s == [() => args, selectorFunction, propType]
       const s = selectorResponse[selectorKey]
       const args = s[0]()
+      if (s[2]) {
+        object.reducers[selectorKey] = { type: s[2] }
+      }
       object.selectors[selectorKey] = createSelector(...args, s[1])
     })
 
