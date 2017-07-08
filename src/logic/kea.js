@@ -78,7 +78,7 @@ export function kea (_this) {
     // initializing as a singleton
     if (Klass === false) {
       if (!isSingleton) {
-        console.error(`[KEA-LOGIC] Standalone kea({}) functions must have no keys!`)
+        console.error(`[KEA-LOGIC] Standalone "export default kea({})" functions must have no "key"!`, object.path, Klass)
       }
 
       return Object.assign(_this, object)
@@ -407,9 +407,7 @@ export function kea (_this) {
   response.selectors = object.selectors
 
   response._isKeaFunction = true
-  if (isSingleton) {
-    response._isKeaSingleton = true
-  }
+  response._isKeaSingleton = isSingleton
 
   return response
 }

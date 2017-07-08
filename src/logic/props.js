@@ -19,7 +19,7 @@ export function createPropTransforms (mapping = []) {
     const props = mapping[i + 1]
 
     // we were given a function (state) => state.something as logic input
-    let isFunction = typeof logic === 'function'
+    let isFunction = (typeof logic === 'function') && !logic._isKeaFunction
 
     // path selector array
     if (Array.isArray(logic)) {
@@ -27,13 +27,11 @@ export function createPropTransforms (mapping = []) {
       isFunction = true
     }
 
-    if (isFunction && logic._isKeaFunction) {
-      if (!logic._keaSingleton) {
-        logic._keaSingleton = logic(false)
-        addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+    if (logic._isKeaSingleton) {
+      if (!logic._keaReducerConnected) {
+        addReducer(logic.path, logic.reducer, true)
+        logic._keaReducerConnected = true
       }
-      logic = logic._keaSingleton
-      isFunction = false
     }
 
     const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
@@ -95,12 +93,11 @@ export function propTypesFromMapping (mapping, extra = null) {
       let logic = mapping.props[i]
       const props = mapping.props[i + 1]
 
-      if (logic._isKeaFunction) {
-        if (!logic._keaSingleton) {
-          logic._keaSingleton = logic(false)
-          addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+      if (logic._isKeaSingleton) {
+        if (!logic._keaReducerConnected) {
+          addReducer(logic.path, logic.reducer, true)
+          logic._keaReducerConnected = true
         }
-        logic = logic._keaSingleton
       }
 
       if (logic && logic.reducers) {
@@ -147,12 +144,11 @@ export function propTypesFromMapping (mapping, extra = null) {
       let logic = mapping.actions[i]
       const actionsArray = mapping.actions[i + 1]
 
-      if (logic._isKeaFunction) {
-        if (!logic._keaSingleton) {
-          logic._keaSingleton = logic(false)
-          addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+      if (logic._isKeaSingleton) {
+        if (!logic._keaReducerConnected) {
+          addReducer(logic.path, logic.reducer, true)
+          logic._keaReducerConnected = true
         }
-        logic = logic._keaSingleton
       }
 
       const actions = logic && logic.actions ? logic.actions : logic

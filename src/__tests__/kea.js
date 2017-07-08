@@ -2,7 +2,7 @@
 import { kea } from '../logic/kea'
 import { PropTypes } from 'react'
 
-test('singleton logic has the right properties', () => {
+test('singleton logic has all the right properties', () => {
   const response = kea({
     path: () => ['scenes', 'homepage', 'index'],
     constants: () => [
@@ -73,4 +73,53 @@ test('singleton logic has the right properties', () => {
   // root selector
   expect(response.selector(state)).toEqual(defaultValues)
   expect(response.selectors.root(state)).toEqual(defaultValues)
+})
+
+test('it is not a singleton if there is a key', () => {
+  const response = kea({
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'homepage', 'index', key],
+    constants: () => [
+      'SOMETHING',
+      'SOMETHING_ELSE'
+    ],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  // check generic
+  expect(response._isKeaFunction).toBe(true)
+  expect(response._isKeaSingleton).toBe(false)
+  expect(response.path).toEqual(['scenes', 'homepage', 'index'])
+  expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+
+  // actions
+  expect(Object.keys(response.actions)).toEqual(['updateName'])
+  const { updateName } = response.actions
+  expect(typeof updateName).toBe('function')
+  expect(updateName.toString()).toBe('update name (homepage.index)')
+  expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
+
+  // reducers
+  expect(response.reducer).not.toBeDefined()
+  expect(response.reducers).not.toBeDefined()
+
+  // selectors
+  expect(response.selector).not.toBeDefined()
+  expect(response.selectors).not.toBeDefined()
 })

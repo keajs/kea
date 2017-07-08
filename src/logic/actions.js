@@ -14,12 +14,11 @@ export function createActionTransforms (mapping = []) {
     let logic = mapping[i]
     const actionsArray = mapping[i + 1]
 
-    if (logic._isKeaFunction) {
-      if (!logic._keaSingleton) {
-        logic._keaSingleton = logic(false)
-        addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+    if (logic._isKeaSingleton) {
+      if (!logic._keaReducerConnected) {
+        addReducer(logic.path, logic.reducer, true)
+        logic._keaReducerConnected = true
       }
-      logic = logic._keaSingleton
     }
 
     const actions = logic && logic.actions ? logic.actions : logic
