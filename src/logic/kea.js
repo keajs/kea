@@ -22,28 +22,69 @@ export function cachedSelectors (path) {
 const DEBUG = false
 
 export function kea (_this) {
-  const response = function (Klass) {
-    if (Klass === false) {
-      return createLogic(_this)
+  const hasMapping = !!(_this.connect)
+  const hasLogic = !!(_this.actions || _this.reducer || _this.selectors)
+  const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest)
+  const isSingleton = !_this.key
+
+  let object = {}
+
+  // pregenerate as many things as we can
+  if (hasLogic) {
+    // we don't know yet if it's going to be a singleton (no key) or inline (key)
+    // however the actions and constants are common for all, so get a path without the dynamic
+    // component and initialize them
+    object.path = _this.path('').filter(p => p)
+    object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
+    object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
+    object.props = {}
+  }
+
+  if (hasLogic && isSingleton) {
+    object.selector = (state) => pathSelector(object.path, state)
+    object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
+    object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(object.path, object.reducers)
+    object.selectors = createSelectors(object.path, Object.keys(object.reducers))
+
+    const selectorResponse = _this.selectors ? _this.selectors(object) : {}
+    Object.keys(selectorResponse).forEach(selectorKey => {
+      // s == [() => args, selectorFunction, propType]
+      const s = selectorResponse[selectorKey]
+      const args = s[0]()
+      object.selectors[selectorKey] = createSelector(...args, s[1])
+    })
+
+    object.get = function * (key) {
+      return yield select(key ? object.selectors[key] : object.selector)
     }
 
-    const hasMapping = !!(_this.connect)
-    const hasLogic = !!(_this.actions || _this.reducer || _this.selectors)
-    const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest)
+    object.fetch = function * () {
+      let results = {}
 
-    let object = {}
+      const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
+
+      for (let i = 0; i < keys.length; i++) {
+        results[keys[i]] = yield object.get(keys[i])
+      }
+
+      return results
+    }
+  }
+
+  const response = function (Klass) {
+    // initializing as a singleton
+    if (Klass === false) {
+      if (!isSingleton) {
+        console.error(`[KEA-LOGIC] Standalone kea({}) functions must have no keys!`)
+      }
+
+      return Object.assign(_this, object)
+    }
+
     let propTypes = {}
     let mapping = {}
     let connectedActions = {}
     let connectedSelectors = {}
-
-    // pregenerate as many things as we can
-    if (hasLogic) {
-      object.path = _this.path('').filter(p => p)
-      object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
-      object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
-      object.props = {}
-    }
 
     if (hasMapping) {
       // the { connect: { props, actions } } part
@@ -73,7 +114,9 @@ export function kea (_this) {
           propTypes[selectorKey] = selectorsThatDontWork[selectorKey][2]
         }
       })
+    }
 
+    if (Klass && hasLogic) {
       // add kea metadata to component
       Klass.kea = {
         path: _this.path,
@@ -83,7 +126,7 @@ export function kea (_this) {
       }
     }
 
-    if (hasLogic || hasMapping) {
+    if (Klass && (hasLogic || hasMapping)) {
       // convert this.props.actions to this.actions in the component
       const originalComponentWillMount = Klass.prototype.componentWillMount
       Klass.prototype.componentWillMount = function () {
@@ -93,7 +136,7 @@ export function kea (_this) {
     }
 
     // check for sagas
-    if (hasSaga) {
+    if (Klass && hasSaga) {
       let runningSaga
 
       const originalComponentDidMount = Klass.prototype.componentDidMount
@@ -351,6 +394,14 @@ export function kea (_this) {
 
     return connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
   }
+
+  response.path = object.path
+  response.constants = object.constants
+  response.actions = object.actions
+  response.reducer = object.reducer
+  response.reducers = object.reducers
+  response.selector = object.selector
+  response.selectors = object.selectors
 
   response._isKeaFunction = true
 
