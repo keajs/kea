@@ -1,7 +1,7 @@
 import { createPropTransforms, propTypesFromMapping } from './props'
 import { createActions, createActionTransforms } from './actions'
 import { combineReducerObjects, convertReducerArrays } from './reducer'
-import { convertConstants, createLogic } from './create'
+import { convertConstants } from './create'
 import { pathSelector, createSelectors } from './selectors'
 import { addReducer, startSaga, cancelSaga } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
@@ -407,6 +407,9 @@ export function kea (_this) {
   response.selectors = object.selectors
 
   response._isKeaFunction = true
+  if (isSingleton) {
+    response._isKeaSingleton = true
+  }
 
   return response
 }
