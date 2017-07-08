@@ -47,7 +47,7 @@ export function createLogic (_this, object = {}) {
 
   // selectors
   // TODO: remove addSelector deprecation
-  let response = _this.selectors({...object, addSelector: _addSelector.bind(object)})
+  let response = _this.selectors ? _this.selectors({...object, addSelector: _addSelector.bind(object)}) : {}
 
   if (typeof response === 'object') {
     const keys = Object.keys(response)

@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-dir lib",
-    "dev": "./node_modules/.bin/babel -w src --out-dir lib",
+    "start": "./node_modules/.bin/babel -w src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build"
   },

@@ -1,3 +1,5 @@
+import { addReducer } from '../scene/store'
+
 export function createActionTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectActionsFromLogic:', mapping)
@@ -9,8 +11,16 @@ export function createActionTransforms (mapping = []) {
   let transforms = {}
 
   for (let i = 0; i < mapping.length; i += 2) {
-    const logic = mapping[i]
+    let logic = mapping[i]
     const actionsArray = mapping[i + 1]
+
+    if (logic._isKeaFunction) {
+      if (!logic._keaSingleton) {
+        logic._keaSingleton = logic(false)
+        addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+      }
+      logic = logic._keaSingleton
+    }
 
     const actions = logic && logic.actions ? logic.actions : logic
 

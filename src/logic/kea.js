@@ -1,7 +1,7 @@
 import { createPropTransforms, propTypesFromMapping } from './props'
 import { createActions, createActionTransforms } from './actions'
 import { combineReducerObjects, convertReducerArrays } from './reducer'
-import { convertConstants } from './create'
+import { convertConstants, createLogic } from './create'
 import { pathSelector, createSelectors } from './selectors'
 import { addReducer, startSaga, cancelSaga } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
@@ -22,7 +22,11 @@ export function cachedSelectors (path) {
 const DEBUG = false
 
 export function kea (_this) {
-  return function (Klass) {
+  const response = function (Klass) {
+    if (Klass === false) {
+      return createLogic(_this)
+    }
+
     const hasMapping = !!(_this.connect)
     const hasLogic = !!(_this.actions || _this.reducer || _this.selectors)
     const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest)
@@ -347,4 +351,8 @@ export function kea (_this) {
 
     return connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
   }
+
+  response._isKeaFunction = true
+
+  return response
 }

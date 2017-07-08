@@ -2,6 +2,7 @@ import { PropTypes } from 'react'
 import { createStructuredSelector } from 'reselect'
 
 import { safePathSelector } from './selectors'
+import { addReducer } from '../scene/store'
 
 export function createPropTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {
@@ -24,6 +25,15 @@ export function createPropTransforms (mapping = []) {
     if (Array.isArray(logic)) {
       logic = state => safePathSelector(mapping[i], state)
       isFunction = true
+    }
+
+    if (isFunction && logic._isKeaFunction) {
+      if (!logic._keaSingleton) {
+        logic._keaSingleton = logic(false)
+        addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+      }
+      logic = logic._keaSingleton
+      isFunction = false
     }
 
     const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
@@ -82,8 +92,16 @@ export function propTypesFromMapping (mapping, extra = null) {
       return
     }
     for (let i = 0; i < mapping.props.length; i += 2) {
-      const logic = mapping.props[i]
+      let logic = mapping.props[i]
       const props = mapping.props[i + 1]
+
+      if (logic._isKeaFunction) {
+        if (!logic._keaSingleton) {
+          logic._keaSingleton = logic(false)
+          addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+        }
+        logic = logic._keaSingleton
+      }
 
       if (logic && logic.reducers) {
         props.forEach(query => {
@@ -126,8 +144,16 @@ export function propTypesFromMapping (mapping, extra = null) {
     let actions = {}
 
     for (let i = 0; i < mapping.actions.length; i += 2) {
-      const logic = mapping.actions[i]
+      let logic = mapping.actions[i]
       const actionsArray = mapping.actions[i + 1]
+
+      if (logic._isKeaFunction) {
+        if (!logic._keaSingleton) {
+          logic._keaSingleton = logic(false)
+          addReducer(logic._keaSingleton.path, logic._keaSingleton.reducer, true)
+        }
+        logic = logic._keaSingleton
+      }
 
       const actions = logic && logic.actions ? logic.actions : logic
 
