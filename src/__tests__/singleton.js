@@ -1,13 +1,16 @@
-/* global test, expect */
+/* global test, expect, beforeEach */
 import { kea } from '../logic/kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, clearStore } from '../scene/store'
 
 import { PropTypes } from 'react'
 
-test('singleton logic has all the right properties', () => {
+beforeEach(() => {
   clearActionCache()
   clearStore()
+})
+
+test('singleton logic has all the right properties', () => {
   keaReducer('scenes')
 
   const response = kea({
@@ -83,8 +86,6 @@ test('singleton logic has all the right properties', () => {
 })
 
 test('it is not a singleton if there is a key', () => {
-  clearActionCache()
-  clearStore()
   keaReducer('scenes')
 
   const response = kea({

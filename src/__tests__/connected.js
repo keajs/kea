@@ -1,14 +1,16 @@
-/* global test, expect */
+/* global test, expect, beforeEach */
 import { kea } from '../logic/kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, clearStore } from '../scene/store'
 
 import { PropTypes } from 'react'
 
-test('connected props and actions get passed, reducers get added to the store', () => {
+beforeEach(() => {
   clearActionCache()
   clearStore()
+})
 
+test('connected props and actions get passed, reducers get added to the store', () => {
   const scenesReducer = keaReducer('scenes')
 
   const reducerState1 = scenesReducer({}, { type: 'discard' })
