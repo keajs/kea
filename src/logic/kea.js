@@ -26,7 +26,7 @@ let nonameCounter = 0
 export function kea (_this) {
   const hasMapping = !!(_this.connect)
   const hasLogic = !!(_this.path || _this.actions || _this.reducer || _this.selectors)
-  const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest)
+  const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest || (_this.connect && _this.connect.sagas))
   const isSingleton = !_this.key
 
   let object = {}
@@ -155,8 +155,6 @@ export function kea (_this) {
 
     // check for sagas
     if (Klass && hasSaga) {
-      let runningSaga
-
       const originalComponentDidMount = Klass.prototype.componentDidMount
       Klass.prototype.componentDidMount = function () {
         if (DEBUG) {
@@ -165,11 +163,16 @@ export function kea (_this) {
 
         // this === component instance
         this._sagaBase = {}
+        this._runningSaga = null
 
         const key = _this.key ? _this.key(this.props) : 'index'
         const path = _this.path(key)
 
         let sagas = _this.sagas || []
+
+        if (_this.connect && _this.connect.sagas) {
+          sagas = sagas.concat(_this.connect.sagas)
+        }
 
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
           this._sagaBase = {
@@ -205,7 +208,7 @@ export function kea (_this) {
         }
 
         if (sagas.length > 0) {
-          runningSaga = startSaga(createCombinedSaga(sagas))
+          this._runningSaga = startSaga(createCombinedSaga(sagas))
         }
 
         this._sagaBase.get = function * (key) {
@@ -240,8 +243,8 @@ export function kea (_this) {
         if (DEBUG) {
           console.log('component will unmount')
         }
-        if (runningSaga) {
-          cancelSaga(runningSaga)
+        if (this._runningSaga) {
+          cancelSaga(this._runningSaga)
         }
 
         originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
