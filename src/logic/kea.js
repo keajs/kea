@@ -407,7 +407,7 @@ export function kea (_this) {
         // if the props did not change, return the old cached object
         if (!result || !shallowEqual(lastProps, nextProps)) {
           lastProps = nextProps
-          result = Object.assign({}, nextProps, { actions })
+          result = Object.assign({}, nextProps, { actions, dispatch })
         }
 
         return result
