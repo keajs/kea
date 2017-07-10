@@ -110,6 +110,10 @@ export function keaMiddlware () {
 
 }
 
+export function firstReducerRoot () {
+  return Object.keys(reducerTree)[0]
+}
+
 export function addReducer (path, reducer, regenerate = false) {
   const pathStart = path[0]
 

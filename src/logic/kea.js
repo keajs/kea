@@ -3,7 +3,7 @@ import { createActions, createActionTransforms } from './actions'
 import { combineReducerObjects, convertReducerArrays } from './reducer'
 import { convertConstants } from './create'
 import { pathSelector, createSelectors } from './selectors'
-import { addReducer, startSaga, cancelSaga } from '../scene/store'
+import { firstReducerRoot, addReducer, startSaga, cancelSaga } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
 import shallowEqual from '../utils/shallow-equal'
 import { createSaga } from '../saga/create'
@@ -21,6 +21,8 @@ export function cachedSelectors (path) {
 
 const DEBUG = false
 
+let nonameCounter = 0
+
 export function kea (_this) {
   const hasMapping = !!(_this.connect)
   const hasLogic = !!(_this.path || _this.actions || _this.reducer || _this.selectors)
@@ -28,6 +30,10 @@ export function kea (_this) {
   const isSingleton = !_this.key
 
   let object = {}
+
+  if (!_this.path) {
+    _this.path = () => [firstReducerRoot(), '_kea', nonameCounter++]
+  }
 
   // pregenerate as many things as we can
   if (hasLogic) {
