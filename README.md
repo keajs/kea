@@ -7,9 +7,9 @@ A `kea` is two things:
 
 # Try it out
 
-Open the [demo app](http://example.kea.rocks/) and [view its source on GitHub](https://github.com/mariusandra/kea-example).
+Open the [demo app](https://kea.js.org/) and [view its source on GitHub](https://github.com/mariusandra/kea-example).
 
-In the demo app you will find several examples with source. Check it out!
+In the demo app you will find [**several examples with source**](https://kea.js.org/). Check it out!
 
 # The basics
 
