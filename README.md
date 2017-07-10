@@ -9,12 +9,11 @@ A `kea` is two things:
 
 Open the [demo app](http://example.kea.rocks/) and [view its source on GitHub](https://github.com/mariusandra/kea-example).
 
-# NEW! v0.19 - INLINE KEA
+In the demo app you will find several examples with source. Check it out!
 
-There is a new feature called "inline kea", which is released with the beta version `0.19-0`.
+# The basics
 
-With it you may add logic to your components by writing it like this:
-
+You create and connect kea logic stores to your components like this:
 
 ```jsx
 import { kea } from 'kea'
@@ -61,10 +60,6 @@ export default class Slider extends Component {
   }
 }
 ```
-
-Then when the logic grows too big, you may extract it from your components and give it a new home in `logic.js` files.
-
-Then use the `connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})` to connect to external logic classes, as described below.
 
 Inline kea also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
 
@@ -155,15 +150,70 @@ export default class Slider extends Component {
 }
 ```
 
-See [slider/index.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/homepage/slider/index.js) in the [example](https://github.com/mariusandra/kea-example/) for more!
+When the logic grows too big, you may extract it from your components and give it a new home in `logic.js` files.
 
-This feature is still in beta and has a few obvious issues (cache cleanup! performance tuning!), but it works! Stay tuned for more updates and please report any and all bugs you find with it.
+```jsx
+// logic.js
+export default kea({
+  path: () => ['scenes', 'homepage', 'index'],
+  actions: ({ constants }) => ({
+    updateName: name => ({ name })
+  })
+  // ...
+})
+```
 
-All the "old" code works as it should.
+```jsx
+// index.js
+import sceneLogic from './logic'
 
-# NEW! v0.19 - Connecting to redux
+@sceneLogic
+export default class HomepageScene extends Component {
+  render () {
+    const { name } = this.props
+    const { updateName } = this.actions
 
-Starting with `0.19` to connect `kea` to your application, all you need to do is to hook up `redux` and `redux-saga` as you normally would, and then just add `keaReducer` and `keaSaga`, like this:
+    // ...
+  }
+}
+```
+
+If you only wish to import some properties and actions from your logic stores, use  the `@connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})`, like so:
+
+```jsx
+// index.js
+import sceneLogic from './logic'
+import sceneSaga from './saga'
+
+@connect({
+  actions: [
+    sceneLogic, [
+      'updateName'
+    ]
+  ],
+  props: [
+    sceneLogic, [
+      'name',
+      'capitalizedName'
+    ]
+  ],
+  sagas: [
+    sceneSaga
+  ]
+})
+export default class HomepageScene extends Component {
+  render () {
+    const { name } = this.props
+    const { updateName } = this.actions
+
+    // ...
+  }
+}
+```
+
+# Connecting to your app
+
+Starting with `0.19`, all you need to do is to hook up `redux` and `redux-saga` as you normally would, and then just add `keaReducer` and `keaSaga`, like this:
 
 ```js
 import { keaSaga, keaReducer } from 'kea' // add this
@@ -184,148 +234,44 @@ const store = finalCreateStore(reducers)
 sagaMiddleware.run(keaSaga) // add this
 ```
 
-# Logic stores
+# Singleton and dynamic logic stores
 
-Logic stores consist of actions, reducers and selectors. They include prop types and look like this:
+If you specify the `key` key in `kea({})`, kea will create a dynamic logic store. Each component you connect it to, will have its own actions and reducers.
 
-```js
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+Omitting this `key` key will create singletons. You can then export these singletons and connect to them as described above.
 
-@initLogic
-export default class HomepageLogic extends Logic {
-  path = () => ['scenes', 'homepage', 'index']
+# Redux all the way!
 
-  actions = ({ constants }) => ({
-    updateName: (name) => ({ name }),
-    increaseAge: (amount = 1) => ({ amount }),
-    decreaseAge: (amount = 1) => ({ amount })
-  })
-
-  reducers = ({ actions, constants }) => ({
-    name: ['Chirpy', PropTypes.string, {
-      [actions.updateName]: (state, payload) => payload.name
-    }],
-
-    age: [3, PropTypes.number, { persist: true }, { // persist == save in LocalStorage
-      [actions.increaseAge]: (state, payload) => state + payload.amount,
-      [actions.decreaseAge]: (state, payload) => Math.max(state - payload.amount, 1)
-    }]
-  })
-
-  selectors = ({ selectors, constants }) => ({
-    capitalizedName: [
-      () => [selectors.name],
-      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' '),
-      PropTypes.string
-    ],
-
-    description: [
-      () => [selectors.capitalizedName, selectors.age],
-      (capitalizedName, age) => `Hello, I'm ${capitalizedName}, a ${age} years old bird!`,
-      PropTypes.string
-    ]
-  })
-}
-```
-
-*Note: all of this can be done without `@decorators`. [Here's how](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md).*
-
-Check out the [TodoMVC logic.js](https://github.com/mariusandra/kea-example/blob/master/app/scenes/todos/logic.js) for a longer example.
-
-Once imported, logic stores expose familiar concepts:
+When you run kea({}), you get in return an object that exposes all the standard redux constructs.
 
 ```js
+// homepage/logic.js
+export default kea({ ... })
+
+// homepage/index.js
 import homepageLogic from '~/scenes/homepage/logic'
 
-// you can start using it in your project right away!
-// ... as long as you have set the "path" to where it can be found in your reducer tree
 homepageLogic.path === ['scenes', 'homepage', 'index']
 homepageLogic.selector === (state) => state.scenes.homepage.index
 
 homepageLogic.actions === { updateName: (name) => { ... }, increaseAge: (amount) => { ... }, ... }
 homepageLogic.reducer === function (state, action) { ... }
 homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name, capitalizedName: ... }
-
-// or plug them into other kea components for maximum interoperability
 ```
 
-# Component
+# Sagas
 
-Let's `@connect` to a React component:
+Inline this inside `kea({})` or use the separate `createSaga({})` helper to create sagas:
 
 ```js
-import { connect } from 'kea/logic'
-
-import Slider from '~/scenes/homepage/slider'
+import { createSaga } from 'kea'
 
 import sceneLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-@connect({
-  actions: [
-    sceneLogic, [
-      'updateName'
-    ]
-  ],
-  props: [
-    sceneLogic, [
-      'name',
-      'capitalizedName'
-    ],
-    sliderLogic, [
-      'currentSlide',
-      'currentImage'
-    ]
-  ]
-})
-export default class HomepageScene extends Component {
-  // propTypes are added automatically. Add additional ones when passed manually
-  // static propTypes = {}
-
-  updateName = () => {
-    const { name } = this.props
-    const { updateName } = this.props.actions
-
-    const newName = window.prompt('Please enter the name', name)
-
-    if (newName) {
-      updateName(newName) // no need for dispatch
-    }
-  }
-
-  render () {
-    const { capitalizedName, currentSlide, currentImage } = this.props
-
-    return (
-      <div className='homepage-scene'>
-        <Slider />
-        <h1>
-          Hello, I am <em onClick={this.updateName}>{capitalizedName}</em> the Kea
-        </h1>
-        <p>
-          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url}>{currentImage.author}</a>
-        </p>
-      </div>
-    )
-  }
-}
-```
-
-*Note: all of this can be done without `@decorators`. [Here's how](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md).*
-# Side effects (API calls, etc)
-
-`kea/saga` provides a `Saga` class for beautiful orchestration of side effects via redux-saga.
-
-```js
-import Saga from 'kea/saga'
-
-import sceneLogic from '~/scenes/homepage/logic'
-import sliderLogic from '~/scenes/homepage/slider/logic'
-
-export default class HomepageSaga extends Saga {
+export default createSaga({
   // pull in actions from logic stores
-  actions = () => ([
+  actions: () => ([
     sceneLogic, [
       'updateName',
       'increaseAge',
@@ -334,19 +280,19 @@ export default class HomepageSaga extends Saga {
     sliderLogic, [
       'updateSlide'
     ]
-  ])
+  ]),
 
   // bind some actions to worker functions
-  takeEvery = ({ actions }) => ({
+  takeEvery: ({ actions }) => ({
     [actions.updateName]: this.nameLogger,
     [actions.increaseAge]: this.ageLogger,
     [actions.decreaseAge]: this.ageLogger
-  })
+  }),
   // also available: takeLatest
 
   // main loop of saga
   // - update the slide every 5 sec
-  run = function * () {
+  start: function * () {
     // to ease readability we always list the actions we use on top
     const { updateSlide } = this.actions
 
@@ -367,38 +313,29 @@ export default class HomepageSaga extends Saga {
 
       // re-run loop - wait again for 5 sec
     }
-  }
+  },
 
   // clean up if needed
-  cancelled = function * () {
+  stop: function * () {
     console.log('Closing saga')
-  }
+  },
 
   // on every updateName
-  nameLogger = function * (action) {
+  nameLogger: function * (action) {
     const { name } = action.payload
     console.log(`The name changed to: ${name}!`)
-  }
+  },
 
   // on every increaseAge, decreaseAge
-  ageLogger = function * (action) {
+  ageLogger: function * (action) {
     const age = yield sceneLogic.get('age')
     console.log(`The age changed to: ${age}!`)
   }
-}
+})
 ```
 
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga) or check out
-[another example](https://gist.github.com/mariusandra/e6091b393e153c9edf3ba451a9d91aeb)!
+Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga)/
 
-Hook them into `kea/scene` (explained below) or call from your existing code like this:
-
-```js
-const homepageSaga = new HomepageSaga().init()
-
-// from your existing saga:
-yield call(homepageSaga)
-```
 
 # Scenes
 
@@ -413,19 +350,13 @@ Scenes are defined in `scene.js` files like so:
 import { createScene } from 'kea/scene'
 
 import sceneComponent from '~/scenes/homepage/index'
-import sceneLogic from '~/scenes/homepage/logic'
 import sceneSaga from '~/scenes/homepage/saga'
 
-import sliderLogic from '~/scenes/homepage/slider/logic'
 import sliderSaga from '~/scenes/homepage/slider/saga'
 
 export default createScene({
   name: 'homepage',
   component: sceneComponent,
-  logic: [
-    sceneLogic,
-    sliderLogic
-  ],
   sagas: [
     sceneSaga,
     sliderSaga
@@ -439,7 +370,6 @@ You may then access the combined scene like so:
 import homepageScene from '~/scenes/homepage'
 
 homepageScene.saga === function * () { ... }                    // start the scene sagas in parallel
-homepageScene.combineReducers() === function (state, action) {} // calls redux's combineReducers
 ```
 
 or plug it into the kea-logic routing helpers.
