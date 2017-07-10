@@ -5,19 +5,9 @@ A `kea` is two things:
 1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand.
 2. An equally smart architecture for frontend webapps, built on top of React and Redux.
 
-# What's included?
-
-1. `kea/logic` - Redux Logic Stores. Think of it as an **ES6+ data-import system** built on top of Redux.
-
-2. `kea/saga` - ES6 classes for readable side effects.
-
-3. `kea/scene` - Logic + Sagas = Scenes. Includes routing and code splitting.
-
-4. `kea/cli` - Scaffolding. Easy project and code generation.
-
 # Try it out
 
-Open the [demo app](http://example.kea.rocks/), then [edit it live in Gomix](https://gomix.com/#!/project/kea-example) or [view its source on GitHub](https://github.com/mariusandra/kea-example).
+Open the [demo app](http://example.kea.rocks/) and [view its source on GitHub](https://github.com/mariusandra/kea-example).
 
 # NEW! v0.19 - INLINE KEA
 
