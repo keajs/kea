@@ -32,7 +32,8 @@ export function kea (_this) {
   let object = {}
 
   if (!_this.path) {
-    _this.path = () => [firstReducerRoot(), '_kea', nonameCounter++]
+    let inlinePath = [firstReducerRoot(), '_kea', `inline-${nonameCounter++}`]
+    _this.path = () => inlinePath
   }
 
   // pregenerate as many things as we can
