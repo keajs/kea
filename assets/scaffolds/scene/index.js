@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 
@@ -10,6 +10,7 @@ import { connect } from 'kea/logic'
 
 // logic
 import $$camelScene$$ from '~/scenes/$$dash-scene$$/logic'
+import sceneSaga from '~/scenes/$$dash-scene$$/saga'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = $$camelScene$$.constants
 
@@ -24,6 +25,9 @@ import $$camelScene$$ from '~/scenes/$$dash-scene$$/logic'
     $$camelScene$$, [
       // 'visibilityFilter'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class $$CapitalScene$$Scene extends Component {

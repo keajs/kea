@@ -1,4 +1,4 @@
-import Logic, { initLogic } from 'kea/logic'
+import { kea } from 'kea'
 import { PropTypes } from 'react'
 
 // const outerActions = selectActionsFromLogic([
@@ -7,34 +7,33 @@ import { PropTypes } from 'react'
 //   ]
 // ])
 
-@initLogic
-export default class $$CapitalComponent$$Logic extends Logic {
-  path = () => ['scenes', '$$camelScene$$', '$$camelComponent$$']
+export default kea({
+  path: () => ['scenes', '$$camelScene$$', '$$camelComponent$$'],
 
-  constants = () => [
+  constants: () => [
     // 'SHOW_ALL',
     // 'SHOW_ACTIVE',
     // 'SHOW_COMPLETED'
-  ]
+  ],
 
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     // showAll: true,
     // setVisibilityFilter: filter => ({ filter }),
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     // visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
     //   [actions.showAll]: () => constants.SHOW_ALL,
     //   [actions.setVisibilityFilter]: (_, payload) => payload.filter
     //   [outerActions.doSomething]: (state, payload) => payload.keep ? state : payload.new
     // }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     // todoCount: [
     //   () => [selectors.todos],
     //   (todos) => todos.length,
     //   PropTypes.number
     // ]
   })
-}
+})

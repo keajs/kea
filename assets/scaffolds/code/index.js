@@ -11,6 +11,7 @@ import { connect } from 'kea/logic'
 // logic
 import $$camelScene$$ from '~/scenes/$$dash-scene$$/logic'
 import $$camelComponent$$Logic from '~/scenes/$$dash-scene$$/$$path-component$$/logic'
+import $$camelComponent$$Saga from '~/scenes/$$dash-scene$$/$$path-component$$/saga'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = $$camelScene$$.constants
 
@@ -31,6 +32,9 @@ import $$camelComponent$$Logic from '~/scenes/$$dash-scene$$/$$path-component$$/
     $$camelComponent$$Logic, [
       //
     ]
+  ],
+  sagas: [
+    $$camelComponent$$Saga
   ]
 })
 export default class $$CapitalComponent$$ extends Component {

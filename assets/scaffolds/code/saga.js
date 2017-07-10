@@ -1,20 +1,20 @@
-import Saga from 'kea/saga'
+import { createSaga } from 'kea'
 // import { put } from 'redux-saga/effects'
 //
 // import $$camelComponent$$Logic from '~/scenes/$$dash-scene$$/$$path-component$$/logic'
 
-export default class $$CapitalComponent$$Saga extends Saga {
-  // actions = () => ([
+export default createSaga({
+  // actions: () => ([
   //   $$camelComponent$$Logic, [
   //     'doSomething'
   //   ]
-  // ])
+  // ]),
 
-  // takeEvery = ({ actions }) => ({
+  // takeEvery: ({ actions }) => ({
   //   [actions.doSomething]: this.doSomethingWorker
-  // })
+  // }),
 
-  // run = function * () {
+  // start: function * () {
   //    const { doSomething } = this.actions
   //
   //   console.log('Starting $$camelScene$$ $$camelComponent$$ saga')
@@ -23,15 +23,15 @@ export default class $$CapitalComponent$$Saga extends Saga {
   //     const propertyName = yield $$camelComponent$$Logic.get('propertyName')
   //     yield put(doSomething(propertyName + '!'))
   //   }
-  // }
+  // },
 
-  // cancelled = function * () {
+  // stop: function * () {
   //   console.log('Stopping $$camelScene$$ $$camelComponent$$ saga')
-  // }
+  // },
 
-  // doSomethingWorker = function * (action) {
+  // doSomethingWorker: function * (action) {
   //   const { variable } = action.payload
   //   const propertyName = yield $$camelComponent$$Logic.get('propertyName')
   //   console.log('doSomething action called with', variable)
   // }
-}
+})
