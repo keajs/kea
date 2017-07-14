@@ -8,6 +8,7 @@ export const NEW_SCENE = '@@kea/NEW_SCENE'
 let loadedWorkers = {}
 let loadedScenes = {} // all loaded scenes
 let currentScene = null
+let defaultReducerRoot = null
 
 // all reducers that are created
 let reducerTree = {}
@@ -17,6 +18,7 @@ export function clearStore () {
   loadedWorkers = {}
   loadedScenes = {}
   currentScene = null
+  defaultReducerRoot = null
   reducerTree = {}
   rootReducers = {}
 }
@@ -95,10 +97,14 @@ export function cancelSaga (counter) {
   }
 }
 
-export function keaReducer (pathStart = 'scenes') {
+export function keaReducer (pathStart = 'scenes', options = {}) {
   if (!reducerTree[pathStart]) {
     reducerTree[pathStart] = {}
     regenerateRootReducer(pathStart)
+  }
+
+  if (options && options.default) {
+    defaultReducerRoot = pathStart
   }
 
   return (state = {}, action) => {
@@ -111,7 +117,7 @@ export function keaMiddlware () {
 }
 
 export function firstReducerRoot () {
-  return Object.keys(reducerTree)[0]
+  return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
 export function addReducer (path, reducer, regenerate = false) {

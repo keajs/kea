@@ -5,6 +5,7 @@ import { keaReducer, keaSaga, clearStore } from '../scene/store'
 
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import { put } from 'redux-saga/effects'
 
 import { PropTypes } from 'react'
 
@@ -16,7 +17,12 @@ beforeEach(() => {
 test('can have a kea with only a saga', () => {
   let sagaRan = false
 
-  const firstLogic = kea({
+  // must run keaReducer at first so there is a point where to mount the keas
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaLogic = kea({
     start: function * () {
       expect(this.get).not.toBeDefined()
       expect(this.fetch).not.toBeDefined()
@@ -24,25 +30,22 @@ test('can have a kea with only a saga', () => {
     }
   })
 
-  expect(firstLogic._isKeaSingleton).toBe(true)
-  expect(firstLogic._hasKeaConnect).toBe(false)
-  expect(firstLogic._hasKeaLogic).toBe(false)
-  expect(firstLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._isKeaSingleton).toBe(true)
+  expect(sagaLogic._hasKeaConnect).toBe(false)
+  expect(sagaLogic._hasKeaLogic).toBe(false)
+  expect(sagaLogic._hasKeaSaga).toBe(true)
 
-  expect(firstLogic.saga).toBeDefined()
+  expect(sagaLogic.saga).toBeDefined()
 
   expect(sagaRan).toBe(false)
 
-  const reducers = combineReducers({
-    scenes: keaReducer('scenes')
-  })
   const sagaMiddleware = createSagaMiddleware()
   const finalCreateStore = compose(
     applyMiddleware(sagaMiddleware)
   )(createStore)
   finalCreateStore(reducers)
 
-  sagaMiddleware.run(firstLogic.saga)
+  sagaMiddleware.run(sagaLogic.saga)
 
   expect(sagaRan).toBe(true)
 })
@@ -50,7 +53,11 @@ test('can have a kea with only a saga', () => {
 test('can access defined actions', () => {
   let sagaRan = false
 
-  const firstLogic = kea({
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaLogic = kea({
     actions: () => ({
       doSomething: (input) => ({ input })
     }),
@@ -68,25 +75,22 @@ test('can access defined actions', () => {
     }
   })
 
-  expect(firstLogic._isKeaSingleton).toBe(true)
-  expect(firstLogic._hasKeaConnect).toBe(false)
-  expect(firstLogic._hasKeaLogic).toBe(true)
-  expect(firstLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._isKeaSingleton).toBe(true)
+  expect(sagaLogic._hasKeaConnect).toBe(false)
+  expect(sagaLogic._hasKeaLogic).toBe(true)
+  expect(sagaLogic._hasKeaSaga).toBe(true)
 
-  expect(firstLogic.saga).toBeDefined()
+  expect(sagaLogic.saga).toBeDefined()
 
   expect(sagaRan).toBe(false)
 
-  const reducers = combineReducers({
-    scenes: keaReducer('scenes')
-  })
   const sagaMiddleware = createSagaMiddleware()
   const finalCreateStore = compose(
     applyMiddleware(sagaMiddleware)
   )(createStore)
   finalCreateStore(reducers)
 
-  sagaMiddleware.run(firstLogic.saga)
+  sagaMiddleware.run(sagaLogic.saga)
 
   expect(sagaRan).toBe(true)
 })
@@ -96,7 +100,11 @@ test('takeEvery and takeLatest work', () => {
   let everyRan = false
   let latestRan = false
 
-  const firstLogic = kea({
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaLogic = kea({
     actions: () => ({
       doEvery: (input) => ({ input }),
       doLatest: (input) => ({ input })
@@ -125,18 +133,15 @@ test('takeEvery and takeLatest work', () => {
     }
   })
 
-  expect(firstLogic._isKeaSingleton).toBe(true)
-  expect(firstLogic._hasKeaConnect).toBe(false)
-  expect(firstLogic._hasKeaLogic).toBe(true)
-  expect(firstLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._isKeaSingleton).toBe(true)
+  expect(sagaLogic._hasKeaConnect).toBe(false)
+  expect(sagaLogic._hasKeaLogic).toBe(true)
+  expect(sagaLogic._hasKeaSaga).toBe(true)
 
-  expect(firstLogic.saga).toBeDefined()
+  expect(sagaLogic.saga).toBeDefined()
 
   expect(sagaRan).toBe(false)
 
-  const reducers = combineReducers({
-    scenes: keaReducer('scenes')
-  })
   const sagaMiddleware = createSagaMiddleware()
   const finalCreateStore = compose(
     applyMiddleware(sagaMiddleware)
@@ -145,14 +150,69 @@ test('takeEvery and takeLatest work', () => {
   const store = finalCreateStore(reducers)
 
   sagaMiddleware.run(keaSaga)
-  sagaMiddleware.run(firstLogic.saga)
+  sagaMiddleware.run(sagaLogic.saga)
 
-  store.dispatch(firstLogic.actions.doEvery('input-every'))
-  store.dispatch(firstLogic.actions.doLatest('input-latest'))
+  store.dispatch(sagaLogic.actions.doEvery('input-every'))
+  store.dispatch(sagaLogic.actions.doLatest('input-latest'))
 
   expect(sagaRan).toBe(true)
   expect(everyRan).toBe(true)
   expect(latestRan).toBe(true)
+})
+
+
+test('can access values on reducer', () => {
+  let sagaRan = false
+  let everyRan = false
+  let latestRan = false
+
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaLogic = kea({
+    actions: () => ({
+      setString: (string) => ({ string })
+    }),
+    reducers: ({ actions }) => ({
+      ourString: ['nothing', PropTypes.string, {
+        [actions.setString]: (state, payload) => payload.string
+      }]
+    }),
+    start: function * () {
+      const { setString } = this.actions
+
+      expect(this.get).toBeDefined()
+      expect(this.fetch).toBeDefined()
+
+      expect(yield this.get('ourString')).toBe('nothing')
+      yield put(setString('something'))
+      expect(yield this.get('ourString')).toBe('something')
+
+      sagaRan = true
+    }
+  })
+
+  expect(sagaLogic._isKeaSingleton).toBe(true)
+  expect(sagaLogic._hasKeaConnect).toBe(false)
+  expect(sagaLogic._hasKeaLogic).toBe(true)
+  expect(sagaLogic._hasKeaSaga).toBe(true)
+
+  expect(sagaLogic.saga).toBeDefined()
+
+  expect(sagaRan).toBe(false)
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+
+  const store = finalCreateStore(reducers)
+
+  sagaMiddleware.run(keaSaga)
+  sagaMiddleware.run(sagaLogic.saga)
+
+  expect(sagaRan).toBe(true)
 })
 
 // test fetch and with reducers
