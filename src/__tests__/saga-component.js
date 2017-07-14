@@ -63,7 +63,7 @@ test('the saga starts and stops with the component', () => {
 
   const ConnectedComponent = logicWithSaga(SampleComponent)
 
-  const wrapper = mount(
+  mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -76,8 +76,23 @@ test('the actions get a key', () => {
   const store = getStore()
 
   let sagaStarted = false
+  let takeEveryRan = false
+
+  const getActionsFromHere = kea({
+    actions: () => ({
+      something: true
+    })
+  })
 
   const logicWithSaga = kea({
+    connect: {
+      actions: [
+        getActionsFromHere, [
+          'something'
+        ]
+      ]
+    },
+
     key: (props) => props.id,
 
     path: (key) => ['scenes', 'sagaProps', key],
@@ -96,7 +111,7 @@ test('the actions get a key', () => {
       expect(this.key).toBe(12)
       expect(this.props.id).toBe(12)
       expect(this.path).toEqual(['scenes', 'sagaProps', 12])
-      expect(Object.keys(this.actions)).toEqual(['myAction'])
+      expect(Object.keys(this.actions)).toEqual(['something', 'myAction'])
 
       const { myAction } = this.actions
       expect(myAction('something')).toEqual({ type: myAction.toString(), payload: { key: 12, value: 'something' } })
@@ -107,6 +122,22 @@ test('the actions get a key', () => {
       expect(yield this.get('someData')).toEqual('something')
 
       sagaStarted = true
+    },
+
+    takeEvery: ({ actions, workers }) => ({
+      [actions.myAction]: workers.doStuff
+    }),
+
+    workers: {
+      * doStuff (action) {
+        const { value } = action.payload
+        expect(value).toBe('something')
+
+        // should already be in the store
+        expect(yield this.get('someData')).toBe('something')
+
+        takeEveryRan = true
+      }
     }
   })
 
@@ -114,13 +145,12 @@ test('the actions get a key', () => {
 
   const ConnectedComponent = logicWithSaga(SampleComponent)
 
-  const wrapper = mount(
+  mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
   expect(sagaStarted).toBe(true)
+  expect(takeEveryRan).toBe(true)
 })
-
-// TEST: takeEvery, takeLatest, actions with key, conencting
