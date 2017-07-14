@@ -51,7 +51,7 @@ export function kea (_this) {
     object.selector = (state) => pathSelector(object.path, state)
     object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
     object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(object.path, object.reducers)
-    object.selectors = createSelectors(object.path, Object.keys(object.reducers))
+    object.selectors = createSelectors(object.path, Object.keys(object.reducers || {}))
 
     const selectorResponse = _this.selectors ? _this.selectors(object) : {}
     Object.keys(selectorResponse).forEach(selectorKey => {
@@ -190,7 +190,7 @@ export function kea (_this) {
           let sagaActions = Object.assign({}, connectedActions)
 
           // inject key to the payload of inline actions
-          Object.keys(object.actions).forEach(actionKey => {
+          Object.keys(object.actions || {}).forEach(actionKey => {
             sagaActions[actionKey] = (...args) => {
               const createdAction = object.actions[actionKey](...args)
               return {
