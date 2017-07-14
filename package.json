@@ -47,6 +47,7 @@
   "peerDependencies": {
     "react": "*",
     "react-redux": "*",
+    "prop-types": "*",
     "redux": "3.x",
     "redux-saga": ">= 0.14",
     "reselect": "2.x"
@@ -73,9 +74,10 @@
     "jest": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
     "jsdom": "^11.1.0",
-    "react": "15.4.1",
+    "prop-types": "^15.5.10",
+    "react": "15.6.1",
     "react-addons-test-utils": "^15.6.0",
-    "react-dom": "15.4.1",
+    "react-dom": "15.6.1",
     "react-hot-loader": "1.3.1",
     "react-redux": "5.0.5",
     "redux": "3.7.1",

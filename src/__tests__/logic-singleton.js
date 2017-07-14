@@ -3,7 +3,7 @@ import { kea } from '../logic/kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, clearStore } from '../scene/store'
 
-import { PropTypes } from 'react'
+import PropTypes from 'prop-types'
 
 beforeEach(() => {
   clearActionCache()

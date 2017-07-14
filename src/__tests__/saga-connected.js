@@ -101,7 +101,6 @@ test('runs connected sagas', () => {
   expect(connectedSagaRan).toBe(true)
 })
 
-
 test('sagas get connected actions', () => {
   let sagaRan = false
   let connectedSagaRan = false

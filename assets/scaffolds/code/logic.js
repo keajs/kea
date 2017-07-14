@@ -1,5 +1,5 @@
 import { kea } from 'kea'
-import { PropTypes } from 'react'
+import PropTypes from 'prop-types'
 
 // const outerActions = selectActionsFromLogic([
 //   otherScene, [

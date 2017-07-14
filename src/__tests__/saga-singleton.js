@@ -7,7 +7,7 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { put } from 'redux-saga/effects'
 
-import { PropTypes } from 'react'
+import PropTypes from 'prop-types'
 
 beforeEach(() => {
   clearActionCache()
