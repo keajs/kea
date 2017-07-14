@@ -9,7 +9,7 @@ import shallowEqual from '../utils/shallow-equal'
 import { createSaga } from '../saga/create'
 
 import { createSelector } from 'reselect'
-import { select } from 'redux-saga/effects'
+import { select, call } from 'redux-saga/effects'
 import { connectAdvanced } from 'react-redux'
 
 let inlineCache = {}
@@ -24,7 +24,7 @@ const DEBUG = false
 let nonameCounter = 0
 
 export function kea (_this) {
-  const hasMapping = !!(_this.connect)
+  const hasConnect = !!(_this.connect)
   const hasLogic = !!(_this.path || _this.actions || _this.reducer || _this.selectors)
   const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest || (_this.connect && _this.connect.sagas))
   const isSingleton = !_this.key
@@ -37,12 +37,13 @@ export function kea (_this) {
   }
 
   // pregenerate as many things as we can
+  object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
+
   if (hasLogic) {
     // we don't know yet if it's going to be a singleton (no key) or inline (key)
     // however the actions and constants are common for all, so get a path without the dynamic
     // component and initialize them
     object.path = _this.path('').filter(p => p)
-    object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
     object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
     object.props = {}
   }
@@ -82,24 +83,68 @@ export function kea (_this) {
   }
 
   let propTypes = {}
-  let mapping = {}
+  let connect = {}
   let connectedActions = {}
   let connectedSelectors = {}
 
-  if (hasMapping) {
+  if (hasConnect) {
     // the { connect: { props, actions } } part
-    mapping = _this.connect || {}
+    connect = _this.connect || {}
 
     // get default proptypes and add connected ones
-    propTypes = Object.assign({}, mapping.props ? propTypesFromMapping(mapping) : {})
+    propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
 
     // connected actions and props/selectors
-    connectedActions = createActionTransforms(mapping.actions).actions
-    connectedSelectors = createPropTransforms(mapping.props).selectorFunctions
+    connectedActions = createActionTransforms(connect.actions).actions
+    connectedSelectors = createPropTransforms(connect.props).selectorFunctions
 
     if (isSingleton) {
       object.actions = Object.assign({}, connectedActions, object.actions)
       object.selectors = Object.assign({}, connectedSelectors, object.selectors)
+    }
+
+    // we have _this: { connect: { sagas: [] } }, add to _this: { sagas: [] }
+    if (connect.sagas) {
+      _this.sagas = _this.sagas ? _this.sagas.concat(connect.sagas) : connect.sagas
+    }
+  }
+
+  if (hasSaga && isSingleton) {
+    object.saga = function * () {
+      let sagas = _this.sagas || []
+
+      if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
+        if (!object._createdSaga) {
+          const _singletonSagaBase = {
+            start: _this.start,
+            stop: _this.stop,
+            takeEvery: _this.takeEvery,
+            takeLatest: _this.takeLatest,
+            workers: _this.workers ? Object.assign({}, _this.workers) : {},
+            key: object.key,
+            path: object.path,
+            get: object.selectors ? function * (key) {
+              return yield select(key ? object.selectors[key] : object.selector)
+            } : null,
+            fetch: object.selectors ? function * () {
+              let results = {}
+              const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
+              for (let i = 0; i < keys.length; i++) {
+                results[keys[i]] = yield this.get(keys[i])
+              }
+              return results
+            } : null
+          }
+
+          let sagaActions = Object.assign({}, connectedActions, object.actions)
+
+          object._createdSaga = createSaga(_singletonSagaBase, { actions: sagaActions })
+        }
+
+        sagas.push(object._createdSaga)
+      }
+
+      yield call(createCombinedSaga(sagas))
     }
   }
 
@@ -145,7 +190,7 @@ export function kea (_this) {
       }
     }
 
-    if (Klass && (hasLogic || hasMapping)) {
+    if (Klass && (hasLogic || hasConnect)) {
       // convert this.props.actions to this.actions in the component
       const originalComponentWillMount = Klass.prototype.componentWillMount
       Klass.prototype.componentWillMount = function () {
@@ -163,20 +208,16 @@ export function kea (_this) {
         }
 
         // this === component instance
-        this._sagaBase = {}
-        this._runningSaga = null
+        this._keaSagaBase = {}
+        this._keaRunningSaga = null
 
         const key = _this.key ? _this.key(this.props) : 'index'
         const path = _this.path(key)
 
         let sagas = _this.sagas || []
 
-        if (_this.connect && _this.connect.sagas) {
-          sagas = sagas.concat(_this.connect.sagas)
-        }
-
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-          this._sagaBase = {
+          this._keaSagaBase = {
             start: _this.start,
             stop: _this.stop,
             takeEvery: _this.takeEvery,
@@ -184,7 +225,19 @@ export function kea (_this) {
             workers: _this.workers ? Object.assign({}, _this.workers) : {},
             key: key,
             path: path,
-            props: this.props
+            props: this.props,
+            get: function * (key) {
+              const { selectors, selector } = cachedSelectors(path)
+              return yield select(key ? selectors[key] : selector)
+            },
+            fetch: function * () {
+              let results = {}
+              const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
+              for (let i = 0; i < keys.length; i++) {
+                results[keys[i]] = yield this._keaSagaBase.get(keys[i])
+              }
+              return results
+            }
           }
 
           let sagaActions = Object.assign({}, connectedActions)
@@ -204,29 +257,12 @@ export function kea (_this) {
             sagaActions[actionKey].toString = object.actions[actionKey].toString
           })
 
-          const saga = createSaga(this._sagaBase, { actions: sagaActions })
+          const saga = createSaga(this._keaSagaBase, { actions: sagaActions })
           sagas.push(saga)
         }
 
         if (sagas.length > 0) {
-          this._runningSaga = startSaga(createCombinedSaga(sagas))
-        }
-
-        this._sagaBase.get = function * (key) {
-          const { selectors, selector } = cachedSelectors(path)
-          return yield select(key ? selectors[key] : selector)
-        }
-
-        this._sagaBase.fetch = function * () {
-          let results = {}
-
-          const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-
-          for (let i = 0; i < keys.length; i++) {
-            results[keys[i]] = yield this._sagaBase.get(keys[i])
-          }
-
-          return results
+          this._keaRunningSaga = startSaga(createCombinedSaga(sagas))
         }
 
         originalComponentDidMount && originalComponentDidMount.bind(this)()
@@ -234,7 +270,7 @@ export function kea (_this) {
 
       const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
       Klass.prototype.componentWillReceiveProps = function (nextProps) {
-        this._sagaBase.props = nextProps
+        this._keaSagaBase.props = nextProps
 
         originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
       }
@@ -244,8 +280,8 @@ export function kea (_this) {
         if (DEBUG) {
           console.log('component will unmount')
         }
-        if (this._runningSaga) {
-          cancelSaga(this._runningSaga)
+        if (this._keaRunningSaga) {
+          cancelSaga(this._keaRunningSaga)
         }
 
         originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
@@ -263,7 +299,7 @@ export function kea (_this) {
 
         let nextProps = Object.assign({}, nextOwnProps)
 
-        if (hasMapping) {
+        if (hasConnect) {
           // connected props
           Object.keys(connectedSelectors).forEach(propKey => {
             nextProps[propKey] = connectedSelectors[propKey](nextState)
@@ -372,7 +408,7 @@ export function kea (_this) {
         if (!actions) {
           actions = {}
 
-          if (hasMapping) {
+          if (hasConnect) {
             // pass conneted actions as they are
             Object.keys(connectedActions).forEach(actionKey => {
               actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
@@ -424,9 +460,13 @@ export function kea (_this) {
   response.reducers = object.reducers
   response.selector = object.selector
   response.selectors = object.selectors
+  response.saga = object.saga
 
   response._isKeaFunction = true
   response._isKeaSingleton = isSingleton
+  response._hasKeaConnect = hasConnect
+  response._hasKeaLogic = hasLogic
+  response._hasKeaSaga = hasSaga
 
   if (object.path) {
     if (isSingleton) {
