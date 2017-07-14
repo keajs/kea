@@ -369,9 +369,20 @@ export function kea (_this) {
               selectors = createSelectors(path, Object.keys(localObject.reducers))
             } else {
               addReducer(path, localObject.reducer, true)
+
+              const realSelectors = createSelectors(path, Object.keys(localObject.reducers))
+
+              // if we don't know for sure that the reducer is in the current store object,
+              // then fallback to giving the default value
               selectors = {}
               Object.keys(localObject.reducers).forEach(key => {
-                selectors[key] = () => localObject.reducers[key].value
+                selectors[key] = (state) => {
+                  try {
+                    return realSelectors[key](state)
+                  } catch (error) {
+                    return localObject.reducers[key].value
+                  }
+                }
               })
             }
 
