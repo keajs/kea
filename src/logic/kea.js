@@ -115,6 +115,7 @@ export function kea (_this) {
 
       if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
         if (!object._createdSaga) {
+          const hasSelectors = !!(object.selectors && Object.keys(object.selectors).length > 0)
           const _singletonSagaBase = {
             start: _this.start,
             stop: _this.stop,
@@ -123,17 +124,17 @@ export function kea (_this) {
             workers: _this.workers ? Object.assign({}, _this.workers) : {},
             key: object.key,
             path: object.path,
-            get: object.selectors ? function * (key) {
+            get: hasSelectors ? function * (key) {
               return yield select(key ? object.selectors[key] : object.selector)
-            } : null,
-            fetch: object.selectors ? function * () {
+            } : undefined,
+            fetch: hasSelectors ? function * () {
               let results = {}
               const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
               for (let i = 0; i < keys.length; i++) {
                 results[keys[i]] = yield this.get(keys[i])
               }
               return results
-            } : null
+            } : undefined
           }
 
           let sagaActions = Object.assign({}, connectedActions, object.actions)
