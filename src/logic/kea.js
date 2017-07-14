@@ -111,7 +111,9 @@ export function kea (_this) {
 
   if (hasSaga && isSingleton) {
     object.saga = function * () {
-      let sagas = _this.sagas || []
+      let sagas = (_this.sagas || []).map(saga => {
+        return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
+      })
 
       if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
         if (!object._createdSaga) {
@@ -159,7 +161,7 @@ export function kea (_this) {
       return Object.assign(_this, object)
     }
 
-    if (Klass.propTypes) {
+    if (Klass && Klass.propTypes) {
       propTypes = Object.assign({}, propTypes, Klass.propTypes)
     }
 
@@ -215,7 +217,9 @@ export function kea (_this) {
         const key = _this.key ? _this.key(this.props) : 'index'
         const path = _this.path(key)
 
-        let sagas = _this.sagas || []
+        let sagas = (_this.sagas || []).map(saga => {
+          return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
+        })
 
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
           this._keaSagaBase = {
