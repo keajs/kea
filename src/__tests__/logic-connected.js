@@ -2,6 +2,7 @@
 import { kea } from '../logic/kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, clearStore } from '../scene/store'
+import { createStore, combineReducers } from 'redux'
 
 import PropTypes from 'prop-types'
 
@@ -122,4 +123,51 @@ test('connected props and actions get passed, reducers get added to the store', 
 
   const reducerState5 = scenesReducer({}, { type: 'discard' })
   expect(reducerState5).toEqual(reducerState4)
+})
+
+test('connected props can be used as selectors', () => {
+  const store = createStore(combineReducers({
+    scenes: keaReducer('scenes')
+  }))
+
+  const firstLogic = kea({
+    path: () => ['scenes', 'homepage', 'first'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  const secondLogic = kea({
+    path: () => ['scenes', 'homepage', 'second'],
+    connect: {
+      props: [
+        firstLogic, [
+          'name'
+        ]
+      ]
+    },
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  expect(secondLogic._isKeaFunction).toBe(true)
+  expect(secondLogic._isKeaSingleton).toBe(true)
+  expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
+  expect(Object.keys(secondLogic.actions)).toEqual([])
+  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+
+  store.dispatch(firstLogic.actions.updateName('derpy'))
+  expect(secondLogic.selectors.capitalizedName(store.getState())).toBe('Derpy')
 })

@@ -36,6 +36,33 @@ export function kea (_this) {
     _this.path = () => inlinePath
   }
 
+  let propTypes = {}
+  let connect = {}
+  let connectedActions = {}
+  let connectedSelectors = {}
+
+  if (hasConnect) {
+    // the { connect: { props, actions } } part
+    connect = _this.connect || {}
+
+    // get default proptypes and add connected ones
+    propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
+
+    // connected actions and props/selectors
+    connectedActions = createActionTransforms(connect.actions).actions
+    connectedSelectors = createPropTransforms(connect.props).selectorFunctions
+
+    if (isSingleton) {
+      object.actions = Object.assign({}, connectedActions)
+      object.selectors = Object.assign({}, connectedSelectors)
+    }
+
+    // we have _this: { connect: { sagas: [] } }, add to _this: { sagas: [] }
+    if (connect.sagas) {
+      _this.sagas = _this.sagas ? _this.sagas.concat(connect.sagas) : connect.sagas
+    }
+  }
+
   // pregenerate as many things as we can
   object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
 
@@ -44,7 +71,7 @@ export function kea (_this) {
     // however the actions and constants are common for all, so get a path without the dynamic
     // component and initialize them
     object.path = _this.path('').filter(p => p)
-    object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
+    object.actions = Object.assign({}, object.actions, _this.actions ? createActions(_this.actions(object), object.path) : {})
     object.props = {}
   }
 
@@ -52,7 +79,7 @@ export function kea (_this) {
     object.selector = (state) => pathSelector(object.path, state)
     object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
     object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(object.path, object.reducers)
-    object.selectors = createSelectors(object.path, Object.keys(object.reducers || {}))
+    object.selectors = Object.assign({}, object.selectors, createSelectors(object.path, Object.keys(object.reducers || {})))
 
     const selectorResponse = _this.selectors ? _this.selectors(object) : {}
     Object.keys(selectorResponse).forEach(selectorKey => {
@@ -79,33 +106,6 @@ export function kea (_this) {
       }
 
       return results
-    }
-  }
-
-  let propTypes = {}
-  let connect = {}
-  let connectedActions = {}
-  let connectedSelectors = {}
-
-  if (hasConnect) {
-    // the { connect: { props, actions } } part
-    connect = _this.connect || {}
-
-    // get default proptypes and add connected ones
-    propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
-
-    // connected actions and props/selectors
-    connectedActions = createActionTransforms(connect.actions).actions
-    connectedSelectors = createPropTransforms(connect.props).selectorFunctions
-
-    if (isSingleton) {
-      object.actions = Object.assign({}, connectedActions, object.actions)
-      object.selectors = Object.assign({}, connectedSelectors, object.selectors)
-    }
-
-    // we have _this: { connect: { sagas: [] } }, add to _this: { sagas: [] }
-    if (connect.sagas) {
-      _this.sagas = _this.sagas ? _this.sagas.concat(connect.sagas) : connect.sagas
     }
   }
 
