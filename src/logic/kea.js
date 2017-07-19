@@ -189,7 +189,7 @@ export function kea (_this) {
         path: _this.path,
         constants: object.constants,
         actions: object.actions,
-        find: (key) => cachedSelectors(_this.path(key))
+        select: (key) => cachedSelectors(_this.path(key))
       }
     }
 
