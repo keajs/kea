@@ -477,6 +477,8 @@ export function kea (_this) {
   response.selector = object.selector
   response.selectors = object.selectors
   response.saga = object.saga
+  response.get = object.get
+  response.fetch = object.fetch
 
   response._isKeaFunction = true
   response._isKeaSingleton = isSingleton
