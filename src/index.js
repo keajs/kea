@@ -1,6 +1,5 @@
 import { kea } from './logic'
-export { kea, createLogic } from './logic'
-export { createSaga } from './saga'
+export { kea, createAction } from './logic'
 export { keaReducer, keaSaga } from './scene'
 
 export const connect = (mapping) => kea({ connect: mapping })
