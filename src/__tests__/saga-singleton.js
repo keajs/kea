@@ -95,7 +95,7 @@ test('can access defined actions', () => {
   expect(sagaRan).toBe(true)
 })
 
-test('takeEvery and takeLatest work', () => {
+test('takeEvery and takeLatest work with workers', () => {
   let sagaRan = false
   let everyRan = false
   let latestRan = false
@@ -131,6 +131,67 @@ test('takeEvery and takeLatest work', () => {
         latestRan = true
       }
     }
+  })
+
+  expect(sagaLogic._isKeaSingleton).toBe(true)
+  expect(sagaLogic._hasKeaConnect).toBe(false)
+  expect(sagaLogic._hasKeaLogic).toBe(true)
+  expect(sagaLogic._hasKeaSaga).toBe(true)
+
+  expect(sagaLogic.saga).toBeDefined()
+
+  expect(sagaRan).toBe(false)
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+
+  const store = finalCreateStore(reducers)
+
+  sagaMiddleware.run(keaSaga)
+  sagaMiddleware.run(sagaLogic.saga)
+
+  store.dispatch(sagaLogic.actions.doEvery('input-every'))
+  store.dispatch(sagaLogic.actions.doLatest('input-latest'))
+
+  expect(sagaRan).toBe(true)
+  expect(everyRan).toBe(true)
+  expect(latestRan).toBe(true)
+})
+
+test('takeEvery and takeLatest work with inline functions', () => {
+  let sagaRan = false
+  let everyRan = false
+  let latestRan = false
+
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaLogic = kea({
+    actions: () => ({
+      doEvery: (input) => ({ input }),
+      doLatest: (input) => ({ input })
+    }),
+    start: function * () {
+      expect(this.get).toBeDefined()
+      expect(this.fetch).toBeDefined()
+      sagaRan = true
+    },
+    takeEvery: ({ actions, workers }) => ({
+      [actions.doEvery]: function * () {
+        expect(this.actions).toBeDefined()
+        expect(this.get).toBeDefined()
+        expect(this.fetch).toBeDefined()
+        everyRan = true
+      }
+    }),
+    takeLatest: ({ actions, workers }) => ({
+      [actions.doLatest]: function * () {
+        latestRan = true
+      }
+    })
   })
 
   expect(sagaLogic._isKeaSingleton).toBe(true)

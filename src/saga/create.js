@@ -43,10 +43,10 @@ export function createSaga (_this, object = {}) {
             let fn = list[keys[i]]
             if (Array.isArray(fn)) {
               for (let j = 0; j < fn.length; j++) {
-                yield ops[op](keys[i], fn[j])
+                yield ops[op](keys[i], fn[j].bind(_this))
               }
             } else {
-              yield ops[op](keys[i], fn)
+              yield ops[op](keys[i], fn.bind(_this))
             }
           }
         }
