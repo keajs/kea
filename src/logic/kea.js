@@ -305,6 +305,9 @@ export function kea (_this) {
         let nextProps = Object.assign({}, nextOwnProps)
 
         if (hasConnect) {
+          // TODO: this will fail if the redux tree is not initialized yet.
+          // see comment in logic-component.js
+
           // connected props
           Object.keys(connectedSelectors).forEach(propKey => {
             nextProps[propKey] = connectedSelectors[propKey](nextState)
