@@ -11,9 +11,11 @@ Open the [documentation](https://kea.js.org/) (AKA demo app) and [view its sourc
 
 In the documentation you will find [**several examples with source**](https://kea.js.org/). Check it out!
 
+No, really, [check out the docs](https://kea.js.org/)!
+
 # The basics
 
-You create and connect kea logic stores to your components like this:
+You create and connect kea **logic stores** to your components like this:
 
 ```jsx
 import { kea } from 'kea'
@@ -61,7 +63,7 @@ export default class Slider extends Component {
 }
 ```
 
-Inline kea also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
+Kea logic stores also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
 
 ```jsx
 import { kea } from 'kea'
@@ -178,7 +180,7 @@ export default class HomepageScene extends Component {
 }
 ```
 
-If you only wish to import some properties and actions from your logic stores, use  the `@connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})`, like so:
+If you only wish to import some properties and actions from your logic stores, use the `@connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})`, like so:
 
 ```jsx
 // index.js
@@ -219,14 +221,16 @@ Starting with `0.19`, all you need to do is to hook up `redux` and `redux-saga` 
 import { keaSaga, keaReducer } from 'kea' // add this
 
 const reducers = combineReducers({
-  routing: routerReducer,
-  scenes: keaReducer('scenes') // add this
+  scenes: keaReducer('scenes'), // add this
+  // other reducers
+  // e.g. routing: routerReducer,
 })
 
 const sagaMiddleware = createSagaMiddleware()
 const finalCreateStore = compose(
   applyMiddleware(sagaMiddleware),
-  applyMiddleware(routerMiddleware(browserHistory))
+  // other middleware
+  // e.g. applyMiddleware(routerMiddleware(browserHistory))
 )(createStore)
 
 const store = finalCreateStore(reducers)
@@ -257,19 +261,21 @@ homepageLogic.selector === (state) => state.scenes.homepage.index
 homepageLogic.actions === { updateName: (name) => { ... }, increaseAge: (amount) => { ... }, ... }
 homepageLogic.reducer === function (state, action) { ... }
 homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name, capitalizedName: ... }
+
+homepageLogic.saga === function * () { ... }
 ```
 
 # Sagas
 
-Inline this inside `kea({})` or use the separate `createSaga({})` helper to create sagas:
+You may also create sagas and connect other actions using `kea({})`:
 
 ```js
-import { createSaga } from 'kea'
+import { kea } from 'kea'
 
 import sceneLogic from '~/scenes/homepage/logic'
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-export default createSaga({
+export default kea({
   // pull in actions from logic stores
   actions: () => ([
     sceneLogic, [
@@ -283,10 +289,10 @@ export default createSaga({
   ]),
 
   // bind some actions to worker functions
-  takeEvery: ({ actions }) => ({
-    [actions.updateName]: this.nameLogger,
-    [actions.increaseAge]: this.ageLogger,
-    [actions.decreaseAge]: this.ageLogger
+  takeEvery: ({ actions, workers }) => ({
+    [actions.updateName]: workers.nameLogger,
+    [actions.increaseAge]: workers.ageLogger,
+    [actions.decreaseAge]: workers.ageLogger
   }),
   // also available: takeLatest
 
@@ -320,16 +326,18 @@ export default createSaga({
     console.log('Closing saga')
   },
 
-  // on every updateName
-  nameLogger: function * (action) {
-    const { name } = action.payload
-    console.log(`The name changed to: ${name}!`)
-  },
+  workers: {
+    // on every updateName
+    nameLogger: function * (action) {
+      const { name } = action.payload
+      console.log(`The name changed to: ${name}!`)
+    },
 
-  // on every increaseAge, decreaseAge
-  ageLogger: function * (action) {
-    const age = yield sceneLogic.get('age')
-    console.log(`The age changed to: ${age}!`)
+    // on every increaseAge, decreaseAge
+    ageLogger: function * (action) {
+      const age = yield sceneLogic.get('age')
+      console.log(`The age changed to: ${age}!`)
+    }
   }
 })
 ```
@@ -339,9 +347,9 @@ Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga
 
 # Scenes
 
-You can use all the logic store reducers and sagas individually in your existing application.
+You can use all of the above individually in your existing application.
 
-If, however, you favor convenience, you may combine them into scenes.
+If you wish, you may combine them into scenes.
 
 Scenes are defined in `scene.js` files like so:
 
@@ -369,10 +377,10 @@ You may then access the combined scene like so:
 ```js
 import homepageScene from '~/scenes/homepage'
 
-homepageScene.saga === function * () { ... }                    // start the scene sagas in parallel
+homepageScene.saga === function * () { ... }  // start all the scene sagas in parallel
 ```
 
-or plug it into the kea-logic routing helpers.
+or plug it into the kea routing helpers.
 
 # Routing
 
@@ -458,7 +466,7 @@ scenes/
 
 # Scaffolding
 
-Open the [demo app](http://example.kea.rocks/) and [browse its code](https://github.com/mariusandra/kea-example).
+Open the [docs](http://kea.js.org/) and [browse its code](https://github.com/mariusandra/kea-example).
 
 To run the same example app on your machine, just type these commands:
 
