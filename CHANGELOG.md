@@ -6,11 +6,19 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
 ## Uncommitted
-### 0.19-0
+
+## 0.19.9 - 2017-07-24
+This was a big release. A lot of code changed and we now have many deprecations which should be removed in the next releases to make the bundle smaller.
+
+Before upgrading to any newer version (0.20, etc), make sure your code works fine with 0.19.
+
+### Changed
 - Deprecated: `run` and `cancelled` replaced with `start` and `stop` in Saga classes
 - Added inline kea
 - New and easier way to hook up to `redux`
 - Use `this.actions` instead of `this.props.actions` in components
+- Deprecated the old Logic and Saga classes in favor of the unified `kea({})` version. No warnings yet.
+- Added tests for the `kea({})` version.
 
 ## 0.18.0 - 2017-05-20
 ### Changed
