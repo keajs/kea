@@ -26,16 +26,16 @@ Before upgrading to any newer version (0.20, etc), make sure your code works fin
 
 ## 0.17.1 - 2017-01-30
 ### Changed
-- [PR4](https://github.com/mariusandra/kea/pull/4). Add action.meta to reducer mapping.
-- [PR4](https://github.com/mariusandra/kea/pull/4). Upgrade takeEvery, takeLatest usage for redux-saga >= 0.14 compatibility.
+- [PR4](https://github.com/keajs/kea/pull/4). Add action.meta to reducer mapping.
+- [PR4](https://github.com/keajs/kea/pull/4). Upgrade takeEvery, takeLatest usage for redux-saga >= 0.14 compatibility.
 
 ## 0.17.0 - 2017-01-13
 ### Changed
-- [BREAKING] The propType is now the 3rd element in the selector array. [See here how to refactor.](https://github.com/mariusandra/kea-example/commit/5df64d6c2dc3674964cc987804a8535678078103#diff-44518ef03bc2b98deccc270f728518c3)
+- [BREAKING] The propType is now the 3rd element in the selector array. [See here how to refactor.](https://github.com/keajs/kea-example/commit/5df64d6c2dc3674964cc987804a8535678078103#diff-44518ef03bc2b98deccc270f728518c3)
 
 ## 0.16.0 - 2017-01-13
 ### Changed
-- Added `@connect` and `@initLogic` decorators. Reverse the steps [here](https://github.com/mariusandra/kea/blob/master/docs/no-decorators.md) to upgrade.
+- Added `@connect` and `@initLogic` decorators. Reverse the steps [here](https://github.com/keajs/kea/blob/master/docs/no-decorators.md) to upgrade.
 
 ## 0.15.4 - 2016-12-12
 ### Changed
@@ -49,7 +49,7 @@ Before upgrading to any newer version (0.20, etc), make sure your code works fin
 
 ## 0.14.1 - 2016-12-06
 ### Changed
-- Deprecated `addSelector` in favor of the new easier to read format. [See here](https://github.com/mariusandra/kea-example/commit/241d30faf8dd6d631d5d891ae3ebc3adc1c3fac3) for an example.
+- Deprecated `addSelector` in favor of the new easier to read format. [See here](https://github.com/keajs/kea-example/commit/241d30faf8dd6d631d5d891ae3ebc3adc1c3fac3) for an example.
 
 ## 0.13.0 - 2016-12-05
 ### Changed
@@ -65,7 +65,7 @@ Before upgrading to any newer version (0.20, etc), make sure your code works fin
 ## 0.11.1 - 2016-11-09
 ### Changed
 - [BREAKING] Removed dependency on redux-act
-- [BREAKING] Changed format for Logic actions. Now you don't need to run the redux-act createAction() anymore and no description is needed. See the example in README.md or [this commit](https://github.com/mariusandra/kea/commit/b2b9f9037af2d1ab5beba139fdb9b8cb210f98fa) for the new format.
+- [BREAKING] Changed format for Logic actions. Now you don't need to run the redux-act createAction() anymore and no description is needed. See the example in README.md or [this commit](https://github.com/keajs/kea/commit/b2b9f9037af2d1ab5beba139fdb9b8cb210f98fa) for the new format.
 - Removed deprecated createLogic() function
 - Exposed functions `createAction`, `createActions`, `createReducer`
 - Changed format of `type` to be more readable

@@ -8,12 +8,12 @@
   "jsnext:main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mariusandra/kea.git"
+    "url": "git+https://github.com/keajs/kea.git"
   },
   "bugs": {
-    "url": "https://github.com/mariusandra/kea/issues"
+    "url": "https://github.com/keajs/kea/issues"
   },
-  "homepage": "https://github.com/mariusandra/kea#readme",
+  "homepage": "https://github.com/keajs/kea#readme",
   "bin": {
     "kea": "lib/cli/kea.js",
     "kea-new": "lib/cli/kea-new.js",

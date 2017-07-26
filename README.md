@@ -7,7 +7,7 @@ A `kea` is two things:
 
 # Try it out
 
-Open the [documentation](https://kea.js.org/) (AKA demo app) and [view its source on GitHub](https://github.com/mariusandra/kea-example).
+Open the [documentation](https://kea.js.org/) (AKA demo app) and [view its source on GitHub](https://github.com/keajs/kea-example).
 
 In the documentation you will find [**several examples with source**](https://kea.js.org/). Check it out!
 
@@ -466,7 +466,7 @@ scenes/
 
 # Scaffolding
 
-Open the [docs](http://kea.js.org/) and [browse its code](https://github.com/mariusandra/kea-example).
+Open the [docs](http://kea.js.org/) and [browse its code](https://github.com/keajs/kea-example).
 
 To run the same example app on your machine, just type these commands:
 
