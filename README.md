@@ -279,16 +279,18 @@ import sliderLogic from '~/scenes/homepage/slider/logic'
 
 export default kea({
   // pull in actions from logic stores
-  actions: () => ([
-    sceneLogic, [
-      'updateName',
-      'increaseAge',
-      'decreaseAge'
-    ],
-    sliderLogic, [
-      'updateSlide'
+  connect: {
+    actions: [
+      sceneLogic, [
+        'updateName',
+        'increaseAge',
+        'decreaseAge'
+      ],
+      sliderLogic, [
+        'updateSlide'
+      ]
     ]
-  ]),
+  },
 
   // bind some actions to worker functions
   takeEvery: ({ actions, workers }) => ({
