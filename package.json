@@ -20,9 +20,10 @@
     "kea-generate": "lib/cli/kea-generate.js"
   },
   "scripts": {
-    "build": "./node_modules/.bin/babel src --out-dir lib",
-    "start": "./node_modules/.bin/babel -w src --out-dir lib",
+    "build": "babel src --out-dir lib",
+    "start": "babel -w src --out-dir lib",
     "test": "jest",
+    "lint": "eslint src/**",
     "prepublish": "npm run build"
   },
   "files": [
