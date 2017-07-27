@@ -5,7 +5,7 @@
 var program = require('commander')
 var packageJson = require('../../package.json')
 var changeCase = require('change-case')
-var fs = require('fs');
+var fs = require('fs')
 
 program
   .version(packageJson.version)
@@ -16,13 +16,13 @@ program
   .usage('<name>')
   .parse(process.argv)
 
-if(!program.args.length) {
+if (!program.args.length) {
   program.help()
 }
 
 const name = program.args[0]
 
-if (!name || !name.match(/^[a-z][a-z0-9\-\/]+$/)) {
+if (!name || !name.match(/^[a-z][a-z0-9\-/]+$/)) {
   console.error(`Error: name must be lowercase alphanumeric with optional dashes`)
   process.exit()
 }
@@ -66,7 +66,7 @@ if (files.length < 0) {
 }
 
 fs.mkdirSync(folderToGenerate)
-files.filter(f => f != '_notice.txt').forEach(fileName => {
+files.filter(f => f !== '_notice.txt').forEach(fileName => {
   const contents = fs.readFileSync(`${scaffoldFolder}/${fileName}`, 'utf8')
   fs.writeFileSync(`${folderToGenerate}/${fileName}`, replacePlaceholders(contents, nameParts))
 })
@@ -83,10 +83,10 @@ function replacePlaceholders (text, nameParts) {
   const componentString = nameParts.slice(1).join('-')
 
   return text.split('$$CapitalScene$$').join(changeCase.pascalCase(scene))
-             .split('$$dash-scene$$').join(changeCase.paramCase(scene))
-             .split('$$camelScene$$').join(changeCase.camelCase(scene))
-             .split('$$CapitalComponent$$').join(changeCase.pascalCase(componentString))
-             .split('$$camelComponent$$').join(changeCase.camelCase(componentString))
-             .split('$$path-component$$').join(componentPath)
-             .split('$$dash-component$$').join(componentString)
+    .split('$$dash-scene$$').join(changeCase.paramCase(scene))
+    .split('$$camelScene$$').join(changeCase.camelCase(scene))
+    .split('$$CapitalComponent$$').join(changeCase.pascalCase(componentString))
+    .split('$$camelComponent$$').join(changeCase.camelCase(componentString))
+    .split('$$path-component$$').join(componentPath)
+    .split('$$dash-component$$').join(componentString)
 }

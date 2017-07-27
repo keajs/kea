@@ -4,7 +4,7 @@
 
 var program = require('commander')
 var packageJson = require('../../package.json')
-var fs = require('fs');
+var fs = require('fs')
 
 program
   .version(packageJson.version)
@@ -12,15 +12,15 @@ program
   .option('-t, --template <name>', 'A template to use when creating the project')
   .parse(process.argv)
 
-if(!program.args.length) {
+if (!program.args.length) {
   program.help()
 }
 
-var templates = require('../../assets/templates.json');
+var templates = require('../../assets/templates.json')
 
 const projectName = program.args[0]
 
-if (!projectName.match(/^[a-z][a-z0-9_\-]+$/)) {
+if (!projectName.match(/^[a-z][a-z0-9_-]+$/)) {
   console.error(`The project must start with a letter and can only contain these symbols: a-z, 0-9, -, _`)
   process.exit()
 }
@@ -34,7 +34,7 @@ if (!repo) {
 }
 
 try {
-  fs.statSync('./'+projectName)
+  fs.statSync('./' + projectName)
   console.error(`File or folder "./${projectName}" already exists`)
   process.exit()
 } catch (e) {
@@ -45,7 +45,7 @@ let fullRepo = `https://github.com/${repo}`
 
 console.log(`Creating new project "${projectName}" with template "${template}" (${repo})`)
 
-var execSync = require('child_process').execSync;
+var execSync = require('child_process').execSync
 var cmd = `git clone --quiet --depth=1 --branch=master ${fullRepo} ./${projectName} && rm -rf ./${projectName}/.git`
 
 console.log(`--> Running: ${cmd}`)
@@ -67,7 +67,7 @@ fs.readFile(projectPackage, 'utf8', function (err, data) {
   json.author = 'Write your name here'
   json.version = '0.0.1'
 
-  fs.writeFile(projectPackage, JSON.stringify(json, null, 2), function() {
+  fs.writeFile(projectPackage, JSON.stringify(json, null, 2), function () {
     console.log('')
     console.log(`All set! Next steps:`)
     console.log(`  cd ${projectName}`)
@@ -76,4 +76,4 @@ fs.readFile(projectPackage, 'utf8', function (err, data) {
     console.log(`    yarn`)
     console.log(`  npm start`)
   })
-});
+})

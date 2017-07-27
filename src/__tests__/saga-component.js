@@ -66,7 +66,7 @@ test('the saga starts and stops with the component', () => {
   mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>,
+    </Provider>
   )
 
   expect(sagaStarted).toBe(true)
@@ -148,7 +148,7 @@ test('the actions get a key', () => {
   mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>,
+    </Provider>
   )
 
   expect(sagaStarted).toBe(true)

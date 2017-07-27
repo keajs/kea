@@ -61,8 +61,8 @@ export function combineReducerObjects (path, objects) {
       reducers[key] = object.reducer
     } else {
       reducers[key] = path && object.persist
-                        ? createPersistentReducer(object.reducer, object.value, path.join('.') + key)
-                        : createReducer(object.reducer, object.value)
+        ? createPersistentReducer(object.reducer, object.value, path.join('.') + key)
+        : createReducer(object.reducer, object.value)
     }
   })
 

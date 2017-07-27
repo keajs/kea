@@ -20,6 +20,6 @@ program
 program
   .parse(process.argv)
 
-if(!program.args.length) {
+if (!program.args.length) {
   program.help()
 }
