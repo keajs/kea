@@ -77,7 +77,7 @@ test('connects to react components', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>,
+    </Provider>
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -172,4 +172,3 @@ test('connects to react components', () => {
 //   expect(wrapper.find('.name').text()).toEqual('somename12')
 //   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
 // })
-

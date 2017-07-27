@@ -1,8 +1,6 @@
 {
-  "ecmaFeatures": {
-    "jsx": true,
-    "modules": true
-  },
+  "parser": "babel-eslint",
+  "extends": "standard",
   "plugins": [
     "react"
   ],
@@ -12,7 +10,5 @@
     "react/react-in-jsx-scope": 2,
     "no-labels": 0,
     "arrow-parens": 0
-  },
-  "extends": "standard",
-  "parser": "babel-eslint"
+  }
 }
