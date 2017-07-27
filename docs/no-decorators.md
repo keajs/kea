@@ -2,7 +2,7 @@
 
 ## Logic stores
 
-Insted of
+Instead of
 
 ```js
 import Logic, { initLogic } from 'kea/logic'
