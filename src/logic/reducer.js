@@ -15,6 +15,16 @@ function storageAvailable (type) {
 
 let storageCache = {}
 
+function warnIfUndefinedActionCreator (object, property) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (object.reducer.undefined !== undefined) {
+      console.warn(`A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
+    }
+  }
+
+  return object
+}
+
 // create reducer function from such an object { [action]: (state, payload) => state }
 export function createReducer (mapping, defaultValue) {
   return (state = defaultValue, action) => {
@@ -85,11 +95,11 @@ export function convertReducerArrays (reducers) {
     const s = reducers[keys[i]]
     if (Array.isArray(s)) {
       // s = [ value, type, options, reducer ]
-      reducers[keys[i]] = Object.assign({
+      reducers[keys[i]] = warnIfUndefinedActionCreator(Object.assign({
         value: s[0],
         type: s[1], // proptype
         reducer: s[3] || s[2]
-      }, s[3] ? s[2] : {})
+      }, s[3] ? s[2] : {}), keys[i])
     }
   }
 
