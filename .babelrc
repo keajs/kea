@@ -1,3 +1,4 @@
 {
-  "presets": ["es2015", "stage-0", "react"]
+  "presets": ["env", "react"],
+  "plugins": ["transform-object-rest-spread", "transform-class-properties"]
 }
