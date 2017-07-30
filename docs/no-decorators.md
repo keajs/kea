@@ -1,40 +1,15 @@
 # Using kea without decorators
 
-## Logic stores
-
-Instead of
-
-```js
-import Logic, { initLogic } from 'kea/logic'
-
-@initLogic
-export default class HomepageLogic extends Logic {
-  // ...
-}
-```
-
-use this
-
-```js
-import Logic, { initLogic } from 'kea/logic'
-
-class HomepageLogic extends Logic {
-  // ...
-}
-
-export default initLogic(HomepageLogic)
-```
-
 ## Components
 
 Instead of this:
 
 ```js
-import { connect } from 'kea/logic'
+import { kea } from 'kea'
 
-@connect({
-  actions: [],
-  props: []
+@kea({
+  actions: () => ({}),
+  reducers: () => ({}),
 })
 export default class HomepageScene extends Component {
   render () {
@@ -46,11 +21,11 @@ export default class HomepageScene extends Component {
 use this
 
 ```js
-import { connect } from 'kea/logic'
+import { kea } from 'kea'
 
-const mapping = {
-  actions: [],
-  props: []
+const keaOptions = {
+  actions: () => ({}),
+  reducers: () => ({}),
 }
 
 class HomepageScene extends Component {
@@ -59,5 +34,5 @@ class HomepageScene extends Component {
   }
 }
 
-export default connect(mapping)(HomepageScene)
+export default kea(keaOptions)(HomepageScene)
 ```
