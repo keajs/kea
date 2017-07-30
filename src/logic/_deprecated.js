@@ -1,6 +1,6 @@
 import { createCombinedSaga as ccs } from '../scene/saga'
 import { getRoutes as gr, combineScenesAndRoutes as csar } from '../scene/routes'
-import { NEW_SCENE, createRootSaga as crs, createKeaStore as cks } from '../scene/store'
+import { NEW_SCENE, createRootSaga as crs } from '../scene/store'
 import Scene from '../scene/scene'
 
 let gaveStructureWarning = false
@@ -75,16 +75,6 @@ export function createRootSaga (appSagas = null) {
     gaveCRSWarning = true
   }
   return crs(appSagas)
-}
-
-let gaveCreateKSWarning = false
-
-export function createKeaStore (finalCreateStore, appReducers = {}) {
-  if (!gaveCreateKSWarning) {
-    console.warn(`[KEA-LOGIC] createKeaStore moved from 'kea/logic' to 'kea/scene'.`)
-    gaveCreateKSWarning = true
-  }
-  return cks(finalCreateStore, appReducers)
 }
 
 export { NEW_SCENE }
