@@ -251,13 +251,7 @@ export function kea (_this) {
           Object.keys(object.actions || {}).forEach(actionKey => {
             sagaActions[actionKey] = (...args) => {
               const createdAction = object.actions[actionKey](...args)
-              return {
-                ...createdAction,
-                payload: {
-                  key,
-                  ...createdAction.payload
-                }
-              }
+              return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
             }
             sagaActions[actionKey].toString = object.actions[actionKey].toString
           })
@@ -439,13 +433,7 @@ export function kea (_this) {
             Object.keys(object.actions).forEach(actionKey => {
               actions[actionKey] = (...args) => {
                 const createdAction = object.actions[actionKey](...args)
-                return dispatch({
-                  ...createdAction,
-                  payload: {
-                    key,
-                    ...createdAction.payload
-                  }
-                })
+                return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
               }
             })
           }
