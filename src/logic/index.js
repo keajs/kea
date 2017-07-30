@@ -13,7 +13,7 @@ export { connectMapping, connect } from './connect'
 
 // deprecated
 export { getRoutes, combineScenesAndRoutes } from './_deprecated'
-export { NEW_SCENE, createRootSaga, createKeaStore } from './_deprecated'
+export { NEW_SCENE, createRootSaga } from './_deprecated'
 export { createCombinedSaga } from './_deprecated'
 export { createScene } from './_deprecated'
 export { createMapping } from './_deprecated'
