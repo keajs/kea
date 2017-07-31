@@ -7,6 +7,12 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.20.0 - 2017-07-31
+
+### Changed
+- Connected sagas are now automatically started, no need to pass them separately in { sagas: [] }
+- A saga will not be started if one with the same path is already running
+
 ## 0.19.9 - 2017-07-24
 This was a big release. A lot of code changed and we now have many deprecations which should be removed in the next releases to make the bundle smaller.
 
