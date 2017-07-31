@@ -1,12 +1,13 @@
-import { createPropTransforms, propTypesFromMapping } from './props'
-import { createActions, createActionTransforms } from './actions'
-import { combineReducerObjects, convertReducerArrays } from './reducer'
-import { convertConstants } from './create'
-import { pathSelector, createSelectors } from './selectors'
+import { createPropTransforms, propTypesFromMapping } from '../logic/props'
+import { createActions, createActionTransforms } from '../logic/actions'
+import { combineReducerObjects, convertReducerArrays } from '../logic/reducer'
+import { convertConstants } from '../logic/create'
+import { pathSelector, createSelectors } from '../logic/selectors'
+import { createSaga } from '../saga/create'
+import { getConnectedSagas } from '../saga/connected'
 import { firstReducerRoot, addReducer, startSaga, cancelSaga } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
 import shallowEqual from '../utils/shallow-equal'
-import { createSaga } from '../saga/create'
 
 import { createSelector } from 'reselect'
 import { select, call } from 'redux-saga/effects'
@@ -55,6 +56,13 @@ export function kea (_this) {
     if (isSingleton) {
       object.actions = Object.assign({}, connectedActions)
       object.selectors = Object.assign({}, connectedSelectors)
+    }
+
+    const connectedSagas = getConnectedSagas(connect)
+
+    // sagas we automatically connect from actions && props
+    if (connectedSagas.length > 0) {
+      _this.sagas = _this.sagas ? _this.sagas.concat(connectedSagas) : connectedSagas
     }
 
     // we have _this: { connect: { sagas: [] } }, add to _this: { sagas: [] }
@@ -147,7 +155,8 @@ export function kea (_this) {
         sagas.push(object._createdSaga)
       }
 
-      yield call(createCombinedSaga(sagas))
+      const sagaPath = object.path ? object.path.join('.') : _this.path('').filter(p => p).join('.')
+      yield call(createCombinedSaga(sagas, sagaPath))
     }
   }
 
@@ -261,7 +270,7 @@ export function kea (_this) {
         }
 
         if (sagas.length > 0) {
-          this._keaRunningSaga = startSaga(createCombinedSaga(sagas))
+          this._keaRunningSaga = startSaga(createCombinedSaga(sagas, path.join('.')))
         }
 
         originalComponentDidMount && originalComponentDidMount.bind(this)()

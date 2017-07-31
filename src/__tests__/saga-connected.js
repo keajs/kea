@@ -2,6 +2,7 @@
 import { kea } from '../logic/kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, keaSaga, clearStore } from '../scene/store'
+import { clearRunningSagas } from '../scene/saga'
 
 import { PropTypes } from 'prop-types'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
@@ -11,9 +12,10 @@ import { put, take } from 'redux-saga/effects'
 beforeEach(() => {
   clearActionCache()
   clearStore()
+  clearRunningSagas()
 })
 
-test('runs connected sagas', () => {
+test('can run sagas connected via { sagas: [] }', () => {
   let sagaRan = false
   let connectedSagaRan = false
   let ranLast
@@ -66,6 +68,8 @@ test('runs connected sagas', () => {
 
   // try a different way of conencting
 
+  clearRunningSagas()
+
   let otherConnectedRan = false
   sagaRan = false
   connectedSagaRan = false
@@ -88,6 +92,8 @@ test('runs connected sagas', () => {
   expect(otherConnectedRan).toBe(true)
 
   // connect without specifiying '.saga'
+
+  clearRunningSagas()
 
   sagaRan = false
   connectedSagaRan = false
@@ -168,7 +174,7 @@ test('sagas get connected actions', () => {
   expect(connectedSagaRan).toBe(true)
 })
 
-test('get from connected kea instances', () => {
+test('can get/fetch data from connected kea logic stores', () => {
   let sagaRan = false
   let connectedSagaRan = false
 
@@ -246,4 +252,102 @@ test('get from connected kea instances', () => {
 
   expect(sagaRan).toBe(true)
   expect(connectedSagaRan).toBe(true)
+})
+
+test('will autorun sagas if not manually connected', () => {
+  let sagaRan = false
+  let connectedSagaRan = false
+
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+  finalCreateStore(reducers)
+  sagaMiddleware.run(keaSaga)
+
+  const connectedSagaLogic = kea({
+    actions: () => ({
+      updateValue: true
+    }),
+    start: function * () {
+      connectedSagaRan = true
+    }
+  })
+
+  const sagaLogic = kea({
+    connect: {
+      actions: [
+        connectedSagaLogic, [
+          'updateValue'
+        ]
+      ]
+    },
+    actions: () => ({
+      myAction: true
+    }),
+    start: function * () {
+      sagaRan = true
+    }
+  })
+
+  sagaMiddleware.run(sagaLogic.saga)
+
+  expect(sagaRan).toBe(true)
+  expect(connectedSagaRan).toBe(true)
+})
+
+test('will not run sagas that are already running', () => {
+  let sagaRan = false
+  let connectedSagaRan = 0
+
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+  finalCreateStore(reducers)
+  sagaMiddleware.run(keaSaga)
+
+  const connectedSagaLogic = kea({
+    actions: () => ({
+      updateValue: true
+    }),
+    start: function * () {
+      connectedSagaRan += 1
+    }
+  })
+
+  const sagaLogic = kea({
+    connect: {
+      actions: [
+        connectedSagaLogic, [
+          'updateValue'
+        ]
+      ],
+      sagas: [
+        connectedSagaLogic
+      ]
+    },
+    sagas: [
+      connectedSagaLogic
+    ],
+    actions: () => ({
+      myAction: true
+    }),
+    start: function * () {
+      sagaRan = true
+    }
+  })
+
+  sagaMiddleware.run(sagaLogic.saga)
+
+  expect(sagaRan).toBe(true)
+  expect(connectedSagaRan).toBe(1)
 })
