@@ -26,7 +26,7 @@ let nonameCounter = 0
 
 export function kea (_this) {
   const hasConnect = !!(_this.connect)
-  const hasLogic = !!(_this.path || _this.actions || _this.reducer || _this.selectors)
+  const hasLogic = !!(_this.path || _this.actions || _this.reducers || _this.selectors)
   const hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest || (_this.connect && _this.connect.sagas))
   const isSingleton = !_this.key
 
