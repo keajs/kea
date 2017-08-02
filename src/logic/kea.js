@@ -313,7 +313,7 @@ export function kea (_this) {
 
           // connected props
           Object.keys(connectedSelectors).forEach(propKey => {
-            nextProps[propKey] = connectedSelectors[propKey](nextState)
+            nextProps[propKey] = connectedSelectors[propKey](nextState, nextOwnProps)
           })
         }
 
