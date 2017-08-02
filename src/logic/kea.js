@@ -416,7 +416,7 @@ export function kea (_this) {
           }
 
           Object.keys(selectors).forEach(selectorKey => {
-            nextProps[selectorKey] = selectors[selectorKey](nextState)
+            nextProps[selectorKey] = selectors[selectorKey](nextState, nextOwnProps)
           })
         }
 
