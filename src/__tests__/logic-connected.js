@@ -171,3 +171,42 @@ test('connected props can be used as selectors', () => {
   store.dispatch(firstLogic.actions.updateName('derpy'))
   expect(secondLogic.selectors.capitalizedName(store.getState())).toBe('Derpy')
 })
+
+test('can get everything with *', () => {
+  const store = createStore(combineReducers({
+    scenes: keaReducer('scenes')
+  }))
+
+  const firstLogic = kea({
+    path: () => ['scenes', 'homepage', 'first'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  const secondLogic = kea({
+    path: () => ['scenes', 'homepage', 'second'],
+    connect: {
+      props: [
+        firstLogic, [
+          'name',
+          '* as everything'
+        ]
+      ]
+    }
+  })
+
+  expect(secondLogic._isKeaFunction).toBe(true)
+  expect(secondLogic._isKeaSingleton).toBe(true)
+  expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
+  expect(Object.keys(secondLogic.actions)).toEqual([])
+  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['everything', 'name', 'root'])
+
+  store.dispatch(firstLogic.actions.updateName('derpy'))
+  expect(secondLogic.selectors.everything(store.getState())).toEqual({ name: 'derpy' })
+})
