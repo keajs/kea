@@ -300,6 +300,45 @@ test('will autorun sagas if not manually connected', () => {
   expect(connectedSagaRan).toBe(true)
 })
 
+test('will autorun sagas if not manually connected, even if no internal saga', () => {
+  let connectedSagaRan = false
+
+  const reducers = combineReducers({
+    scenes: keaReducer('scenes')
+  })
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+  finalCreateStore(reducers)
+  sagaMiddleware.run(keaSaga)
+
+  const connectedSagaLogic = kea({
+    actions: () => ({
+      updateValue: true
+    }),
+    start: function * () {
+      connectedSagaRan = true
+    }
+  })
+
+  const sagaLogic = kea({
+    connect: {
+      actions: [
+        connectedSagaLogic, [
+          'updateValue'
+        ]
+      ]
+    }
+  })
+
+  sagaMiddleware.run(sagaLogic.saga)
+
+  expect(sagaLogic._hasKeaSaga).toBe(true)
+  expect(connectedSagaRan).toBe(true)
+})
+
 test('will not run sagas that are already running', () => {
   let sagaRan = false
   let connectedSagaRan = 0
