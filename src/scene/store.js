@@ -124,7 +124,7 @@ export function addReducer (path, reducer, regenerate = false) {
   const pathStart = path[0]
 
   if (typeof reducerTree[pathStart] === 'undefined') {
-    console.error(`[KEA-LOGIC] Path starting with "${pathStart}" is not connected to the reducer tree!`, path)
+    console.error(`[KEA-LOGIC] Path starting with "${pathStart}" is not connected to the reducer tree! Make sure to call keaReducer() before any calls to kea() take place!`, path)
     return
   }
 
