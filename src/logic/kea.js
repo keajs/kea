@@ -232,7 +232,8 @@ export function kea (_this) {
         })
 
         if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-          this._keaSagaBase = {
+          const _component = this
+          _component._keaSagaBase = {
             start: _this.start,
             stop: _this.stop,
             takeEvery: _this.takeEvery,
@@ -249,7 +250,7 @@ export function kea (_this) {
               let results = {}
               const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
               for (let i = 0; i < keys.length; i++) {
-                results[keys[i]] = yield this._keaSagaBase.get(keys[i])
+                results[keys[i]] = yield _component._keaSagaBase.get(keys[i])
               }
               return results
             }
