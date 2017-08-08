@@ -5,7 +5,6 @@
   "author": "Marius Andra",
   "license": "MIT",
   "main": "lib/index.js",
-  "module": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/keajs/kea.git"
