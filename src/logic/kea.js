@@ -5,7 +5,7 @@ import { convertConstants } from '../logic/create'
 import { pathSelector, createSelectors } from '../logic/selectors'
 import { createSaga } from '../saga/create'
 import { getConnectedSagas } from '../saga/connected'
-import { firstReducerRoot, addReducer, startSaga, cancelSaga } from '../scene/store'
+import { firstReducerRoot, isSyncedWithStore, addReducer, startSaga, cancelSaga } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
 import shallowEqual from '../utils/shallow-equal'
 
@@ -305,6 +305,10 @@ export function kea (_this) {
     const selectorFactory = (dispatch, options) => {
       let lastProps = {}
       let result = null
+
+      if (!isSyncedWithStore()) {
+        dispatch({type: 'hydrate kea store'})
+      }
 
       return (nextState, nextOwnProps) => {
         let key

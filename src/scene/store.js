@@ -13,6 +13,7 @@ let defaultReducerRoot = null
 // all reducers that are created
 let reducerTree = {}
 let rootReducers = {}
+let syncedWithStore = {}
 
 export function clearStore () {
   loadedWorkers = {}
@@ -21,6 +22,7 @@ export function clearStore () {
   defaultReducerRoot = null
   reducerTree = {}
   rootReducers = {}
+  syncedWithStore = {}
 }
 
 export function createRootSaga (appSagas = null) {
@@ -128,6 +130,8 @@ export function addReducer (path, reducer, regenerate = false) {
     return
   }
 
+  syncedWithStore[pathStart] = false
+
   let pointer = reducerTree
 
   for (let i = 0; i < path.length; i++) {
@@ -160,7 +164,20 @@ export function addReducer (path, reducer, regenerate = false) {
 }
 
 export function regenerateRootReducer (pathStart) {
-  rootReducers[pathStart] = recursiveCreateReducer(reducerTree[pathStart])
+  const rootReducer = recursiveCreateReducer(reducerTree[pathStart])
+
+  rootReducers[pathStart] = (state, action) => {
+    syncedWithStore[pathStart] = true
+    return rootReducer(state, action)
+  }
+}
+
+export function isSyncedWithStore (pathStart = null) {
+  if (pathStart) {
+    return syncedWithStore[pathStart]
+  } else {
+    return Object.values(syncedWithStore).filter(k => !k).length === 0
+  }
 }
 
 export function recursiveCreateReducer (treeNode) {
