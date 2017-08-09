@@ -122,8 +122,8 @@ export function propTypesFromMapping (mapping, extra = null) {
 
           if (reducer && reducer.type) {
             propTypes[to] = reducer.type
-          } else {
-            console.error(`[KEA-LOGIC] prop type "${query}" missing for logic:`, logic)
+          } else if (from !== '*') {
+            console.error(`[KEA-LOGIC] prop type for "${from}" missing for logic:`, logic)
             console.trace()
           }
         })
