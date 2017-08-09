@@ -33,7 +33,11 @@ export function kea (_this) {
   let object = {}
 
   if (!_this.path) {
-    let inlinePath = [firstReducerRoot(), '_kea', `inline-${nonameCounter++}`]
+    const reducerRoot = firstReducerRoot()
+    if (!reducerRoot) {
+      console.error('[KEA] Could not find the root of the keaReducer! Make sure you call keaReducer() before any call to kea() is made. See: https://kea.js.org/api/reducer')
+    }
+    let inlinePath = [reducerRoot, '_kea', `inline-${nonameCounter++}`]
     _this.path = () => inlinePath
   }
 
