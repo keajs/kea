@@ -7,6 +7,13 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.21.0 - 2017-08-13
+### Changed
+- When creating actions like `actions: () => { doit: true }`, previously the payload of the action would equal `true`.
+Now the payload equals `{ value: true }`. This was made so that when we inject the `key` into the payload for actions
+that are defined on kea logic stores that are directly connected to the component, we would not run into errors.
+[See here](https://github.com/keajs/kea-website/commit/c44e82cfa2817a297d30814fbc608197ee61227f) for more.
+
 ## 0.20.1 - 2017-08-02
 ### Added
 - Added `props` as the second argument to input selectors when creating kea selectors

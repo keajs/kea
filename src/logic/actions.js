@@ -1,5 +1,9 @@
 import { addReducer } from '../scene/store'
 
+function isObject (item) {
+  return (typeof item === 'object' && !Array.isArray(item) && item !== null)
+}
+
 export function createActionTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectActionsFromLogic:', mapping)
@@ -73,7 +77,11 @@ export function createAction (type, payloadCreator) {
 
   const action = (...payloadArgs) => ({
     type: type,
-    payload: typeof payloadCreator === 'function' ? payloadCreator(...payloadArgs) : payloadCreator
+    payload: typeof payloadCreator === 'function'
+      ? payloadCreator(...payloadArgs)
+      : isObject(payloadCreator)
+        ? payloadCreator
+        : { value: payloadCreator }
   })
   action.toString = () => type
 
