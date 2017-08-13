@@ -43,7 +43,8 @@
   "dependencies": {
     "babel-runtime": "^6.25.0",
     "change-case": "^3.0.1",
-    "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e"
+    "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e",
+    "rimraf": "^2.6.1"
   },
   "peerDependencies": {
     "prop-types": "*",

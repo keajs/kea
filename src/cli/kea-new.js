@@ -5,6 +5,7 @@
 var program = require('commander')
 var packageJson = require('../../package.json')
 var fs = require('fs')
+var rimraf = require('rimraf')
 
 program
   .version(packageJson.version)
@@ -46,10 +47,9 @@ let fullRepo = `https://github.com/${repo}`
 console.log(`Creating new project "${projectName}" with template "${template}" (${repo})`)
 
 var execSync = require('child_process').execSync
-var cmd = `git clone --quiet --depth=1 --branch=master ${fullRepo} ./${projectName} && rm -rf ./${projectName}/.git`
 
+var cmd = `git clone --quiet --depth=1 --branch=master ${fullRepo} ./${projectName}`
 console.log(`--> Running: ${cmd}`)
-
 execSync(cmd)
 
 const projectPackage = `./${projectName}/package.json`
@@ -60,6 +60,10 @@ fs.readFile(projectPackage, 'utf8', function (err, data) {
     return console.log(err)
   }
   console.log('--> Clone succeeded')
+
+  console.log(`--> Removing ./${projectName}/.git`)
+  rimraf.sync(`./${projectName}/.git`)
+
   console.log('--> Updating package.json')
 
   const json = JSON.parse(data)
