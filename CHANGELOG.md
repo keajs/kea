@@ -7,6 +7,11 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.22.0 - 2017-08-13
+### Changed
+- Added [`babel-runtime`](https://babeljs.io/docs/plugins/transform-runtime/). This should reduce the issues users have been
+having with `create-react-app` and other situations where `regenerator` is not automatically loaded. Fixes #25.
+
 ## 0.21.0 - 2017-08-13
 ### Changed
 - When creating actions like `actions: () => { doit: true }`, previously the payload of the action would equal `true`.
