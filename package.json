@@ -41,6 +41,7 @@
     ]
   },
   "dependencies": {
+    "babel-runtime": "^6.25.0",
     "change-case": "^3.0.1",
     "commander": "tj/commander.js#c6236d9504b60d9a2e6aa7fc3ce17a12f48f4a3e"
   },
@@ -59,6 +60,7 @@
     "babel-jest": "^20.0.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "enzyme": "^2.9.1",
