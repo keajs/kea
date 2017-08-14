@@ -7,6 +7,12 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.23.0 - 2017-08-15
+### New and old deprecations
+- Removed all old deprecations except for the usage of `run` and `cancelled` in sagas. These still give warnings.
+- Added new deprecations for `Logic` and `Scene` classes and related code. Basically everything imported from `kea/logic` and `kea/scene` is no longer safe.
+- `Saga` classes and code imported from `kea/saga` are safe for now, but you should migrate it to the unform `kea({})` syntax sooner rather than later.
+
 ## 0.22.0 - 2017-08-13
 ### Changed
 - Added [`babel-runtime`](https://babeljs.io/docs/plugins/transform-runtime/). This should reduce the issues users have been
