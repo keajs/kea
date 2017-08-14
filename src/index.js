@@ -1,6 +1,6 @@
-import { kea } from './logic/kea'
+import { kea } from './kea'
 
-export { kea } from './logic/kea'
+export { kea } from './kea'
 export { createAction } from './logic/actions'
 export { keaReducer, keaSaga } from './scene/store'
 

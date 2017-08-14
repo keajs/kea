@@ -5,8 +5,7 @@ import { combineReducerObjects, convertReducerArrays } from './reducer'
 import { pathSelector, createSelectors } from './selectors'
 import { createActions } from './actions'
 
-let gaveAddSelectorWarning = false
-let gaveStructureWarning = false
+let deprecationWarning = false
 
 // convert ['A', 'B'] ==> { 'A': 'A', 'B': 'B' }
 export function convertConstants (c) {
@@ -21,6 +20,13 @@ export function convertConstants (c) {
 }
 
 export function createLogic (_this, object = {}) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!deprecationWarning) {
+      deprecationWarning = true
+      console.warn('[KEA/LOGIC] Logic classes and createLogic have been deprecated! Please upgrade to the new kea({}) format! See https://kea.js.org/')
+    }
+  }
+
   object.key = _this.key ? _this.key(object.props || {}) : undefined
   object.path = _this.path(object.key)
   object.selector = (state) => pathSelector(object.path, state)
@@ -28,14 +34,7 @@ export function createLogic (_this, object = {}) {
   object.actions = _this.actions ? createActions(_this.actions(object), object.path) : {}
 
   // reducers
-  if (_this.structure) {
-    // DEPRECATED
-    if (!gaveStructureWarning) {
-      console.warn(`[KEA-LOGIC] structure = () => ({}) is deprecated. Please rename it to reducers = () => ({}).`)
-      gaveStructureWarning = true
-    }
-    object.reducers = convertReducerArrays(_this.structure(object))
-  } else if (_this.reducers) {
+  if (_this.reducers) {
     object.reducers = convertReducerArrays(_this.reducers(object))
   } else {
     object.reducers = {}
@@ -47,7 +46,7 @@ export function createLogic (_this, object = {}) {
 
   // selectors
   // TODO: remove addSelector deprecation
-  let response = _this.selectors ? _this.selectors(Object.assign({}, object, { addSelector: _addSelector.bind(object) })) : {}
+  let response = _this.selectors ? _this.selectors(object) : {}
 
   if (typeof response === 'object') {
     const keys = Object.keys(response)
@@ -82,16 +81,4 @@ export function createLogic (_this, object = {}) {
   }
 
   return _this
-}
-
-// DEPRECATED
-// bound to object
-function _addSelector (name, type, args, func) {
-  if (!gaveAddSelectorWarning) {
-    console.warn(`[KEA-LOGIC] addSelector is deprecated. Please use the new compact Array format.`)
-    gaveAddSelectorWarning = true
-  }
-
-  this.reducers[name] = { type }
-  this.selectors[name] = createSelector(...args, func)
 }

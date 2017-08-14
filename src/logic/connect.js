@@ -2,7 +2,16 @@ import { createPropTransforms, propTypesFromMapping } from './props'
 import { createActionTransforms } from './actions'
 import { connect as reduxConnect } from 'react-redux'
 
+let deprecationWarning = false
+
 export function connectMapping (mapping) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!deprecationWarning) {
+      deprecationWarning = true
+      console.warn('[KEA/LOGIC] connectMapping been deprecated! Please upgrade to the new @kea({}) format! See https://kea.js.org/')
+    }
+  }
+
   const actionTransforms = createActionTransforms(mapping.actions)
   const propTransforms = createPropTransforms(mapping.props)
 
@@ -29,6 +38,13 @@ export function connectMapping (mapping) {
 }
 
 export function connect (mapping) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!deprecationWarning) {
+      deprecationWarning = true
+      console.warn('[KEA/LOGIC] connect from kea/logic been deprecated! Please upgrade to the new @kea({}) format! See https://kea.js.org/')
+    }
+  }
+
   return function (Klass) {
     if (mapping.props) {
       Klass.propTypes = Object.assign({}, propTypesFromMapping(mapping), Klass.propTypes || {})

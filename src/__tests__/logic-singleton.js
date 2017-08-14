@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea } from '../logic/kea'
+import { kea } from '../kea'
 import { clearActionCache } from '../logic/actions'
 import { keaReducer, clearStore } from '../scene/store'
 
