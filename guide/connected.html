@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,12 +282,88 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/guideConnected.bundle.js"></script><style type="text/css"></style></head>
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideConnected"); </script><style type="text/css"></style></head>
   <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a class="active" href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><div class="connected-scene"><div class="description"><h2>Example #5 - Connected logic</h2><p>Attaching actions, reducers and selectors to your components will get you pretty far.</p><p><!-- react-text: 72 -->However, there comes a time in every application's life when that's no longer enough. Perhaps you need to share code between components? Perhaps you want to separate concerns to make it more readable? Perhaps the logic has grown over 200 lines and really should be yanked out of <!-- /react-text --><code>index.js</code><!-- react-text: 74 -->?<!-- /react-text --></p><p><!-- react-text: 76 -->Whatever the reason, you're in luck! Kea was originally built just for this. The inline version that we've been using until now (<!-- /react-text --><code>@kea({})(Component)</code><!-- react-text: 78 -->) came much later.<!-- /react-text --></p><p><!-- react-text: 80 -->So how do you separate your <!-- /react-text --><strong>logic</strong><!-- react-text: 82 --> from your components?<!-- /react-text --></p><p>Let's look at a real world example: this guide itself.</p></div><div class="description"><h2>Separating concerns</h2><p>You might have noticed buttons that look like this:</p><p><button>Tell me more!</button></p><p>How do they work?</p><p>When I started writing the guide, I just put this code on top of every component:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a class="active" href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><div class="connected-scene"><div class="description"><h2>Example #5 - Connected logic</h2><p>Attaching actions, reducers and selectors to your components will get you pretty far.</p><p><!-- react-text: 72 -->However, there comes a time in every application&apos;s life when that&apos;s no longer enough. Perhaps you need to share code between components? Perhaps you want to separate concerns to make it more readable? Perhaps the logic has grown over 200 lines and really should be yanked out of <!-- /react-text --><code>index.js</code><!-- react-text: 74 -->?<!-- /react-text --></p><p><!-- react-text: 76 -->Whatever the reason, you&apos;re in luck! Kea was originally built just for this. The inline version that we&apos;ve been using until now (<!-- /react-text --><code>@kea({})(Component)</code><!-- react-text: 78 -->) came much later.<!-- /react-text --></p><p><!-- react-text: 80 -->So how do you separate your <!-- /react-text --><strong>logic</strong><!-- react-text: 82 --> from your components?<!-- /react-text --></p><p>Let&apos;s look at a real world example: this guide itself.</p></div><div class="description"><h2>Separating concerns</h2><p>You might have noticed buttons that look like this:</p><p><button>Tell me more!</button></p><p>How do they work?</p><p>When I started writing the guide, I just put this code on top of every component:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 @kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -390,10 +390,10 @@ aside.kea-sidebar nav ul li a:hover {
 
     <span class="hljs-keyword">return</span> (
       <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> toggleFeature('reducerDetails')}&gt;{'Tell me more!'}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> toggleFeature(&apos;reducerDetails&apos;)}&gt;{&apos;Tell me more!&apos;}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 
         {features.reducerDetails ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'extra-help'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;extra-help&apos;</span>&gt;</span>
             extra help comes here
           <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         ) : null}
@@ -401,9 +401,9 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre><p>The code is rather straightforward, perhaps just a little bit unfamiliar.</p><p><!-- react-text: 95 -->We have an object, <!-- /react-text --><code>features</code><!-- react-text: 97 -->, which contains booleans that can be toggled on and off. We return a new object every time the action <!-- /react-text --><code>toggleFeature(feature)</code><!-- react-text: 99 --> is called, flipping the boolean for the requested feature.<!-- /react-text --></p><p><!-- react-text: 101 -->While it worked fine, it became repetetive to copy this same code on top of every page in the guide. Code duplication is usually a <!-- /react-text --><button>code smell</button><!-- react-text: 103 --> and should be handled approriately.<!-- /react-text --></p><p>So how do we stop this madness?</p><p><!-- react-text: 106 -->First we must extract the logic to a separate file. Let's call it <!-- /react-text --><code>features-logic.js</code><!-- react-text: 108 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p>The code is rather straightforward, perhaps just a little bit unfamiliar.</p><p><!-- react-text: 95 -->We have an object, <!-- /react-text --><code>features</code><!-- react-text: 97 -->, which contains booleans that can be toggled on and off. We return a new object every time the action <!-- /react-text --><code>toggleFeature(feature)</code><!-- react-text: 99 --> is called, flipping the boolean for the requested feature.<!-- /react-text --></p><p><!-- react-text: 101 -->While it worked fine, it became repetetive to copy this same code on top of every page in the guide. Code duplication is usually a <!-- /react-text --><button>code smell</button><!-- react-text: 103 --> and should be handled approriately.<!-- /react-text --></p><p>So how do we stop this madness?</p><p><!-- react-text: 106 -->First we must extract the logic to a separate file. Let&apos;s call it <!-- /react-text --><code>features-logic.js</code><!-- react-text: 108 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -422,34 +422,34 @@ aside.kea-sidebar nav ul li a:hover {
   })
 })
 </code></pre><p><!-- react-text: 112 -->You skip the <!-- /react-text --><code>@</code><!-- react-text: 114 --> in front of <!-- /react-text --><code>@kea</code><!-- react-text: 116 -->, but everything else remains the same.<!-- /react-text --></p><p>Then we have a few ways to import it.</p><p>The simplest is to do a drop-in replacement:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 
-<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../features-logic'</span>
+<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../features-logic&apos;</span>
 
 @featuresLogic
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterExampleScene</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   <span class="hljs-comment">// no change here</span>
 }
-</code></pre><p>That's simple and works fine, but will only get you so far. There are a few things wrong with this approach:</p><p><!-- react-text: 123 -->First, it's not clear what you're importing. As <!-- /react-text --><a href="https://mariusandra.com/blog/2012/09/two-strategies-for-writing-better-code/">code is read far more times than it's written</a><!-- react-text: 125 -->, it's very very useful to be as explicit as possible. Your future self will thank you immensely! In this case you have no idea what extra props and actions your component will receive without having to open <!-- /react-text --><code>features-logic.js</code><!-- react-text: 127 --> and checking it out yourself.<!-- /react-text --></p><p>You also don't know what baggage you're getting. There might be hundreds of new actions and props, which your relatively simple component will receive. That will slow down the page, as a change in each of them will trigger re-rendering.</p><p><!-- react-text: 130 -->What if one of the props changes? For example the new intern replaces the action <!-- /react-text --><code>toggleFeature</code><!-- react-text: 132 --> with two new actions: <!-- /react-text --><code>setFeature</code><!-- react-text: 134 --> and <!-- /react-text --><code>clearFeature</code><!-- react-text: 136 -->. Without (manually or automatically) clicking the buttons, you won't know that the action is no longer there. Bummer.<!-- /react-text --></p><p>What's more, you can't chain calls like this and you can't add other actions that only this component will use.</p><p><!-- react-text: 139 -->So what's the solution? Answer: the <!-- /react-text --><code>@connect({ ... })</code><!-- react-text: 141 --> helper!<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p>That&apos;s simple and works fine, but will only get you so far. There are a few things wrong with this approach:</p><p><!-- react-text: 123 -->First, it&apos;s not clear what you&apos;re importing. As <!-- /react-text --><a href="https://mariusandra.com/blog/2012/09/two-strategies-for-writing-better-code/">code is read far more times than it&apos;s written</a><!-- react-text: 125 -->, it&apos;s very very useful to be as explicit as possible. Your future self will thank you immensely! In this case you have no idea what extra props and actions your component will receive without having to open <!-- /react-text --><code>features-logic.js</code><!-- react-text: 127 --> and checking it out yourself.<!-- /react-text --></p><p>You also don&apos;t know what baggage you&apos;re getting. There might be hundreds of new actions and props, which your relatively simple component will receive. That will slow down the page, as a change in each of them will trigger re-rendering.</p><p><!-- react-text: 130 -->What if one of the props changes? For example the new intern replaces the action <!-- /react-text --><code>toggleFeature</code><!-- react-text: 132 --> with two new actions: <!-- /react-text --><code>setFeature</code><!-- react-text: 134 --> and <!-- /react-text --><code>clearFeature</code><!-- react-text: 136 -->. Without (manually or automatically) clicking the buttons, you won&apos;t know that the action is no longer there. Bummer.<!-- /react-text --></p><p>What&apos;s more, you can&apos;t chain calls like this and you can&apos;t add other actions that only this component will use.</p><p><!-- react-text: 139 -->So what&apos;s the solution? Answer: the <!-- /react-text --><code>@connect({ ... })</code><!-- react-text: 141 --> helper!<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../features-logic'</span>
-<span class="hljs-keyword">import</span> someOtherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../some-other-logic'</span>
+<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../features-logic&apos;</span>
+<span class="hljs-keyword">import</span> someOtherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../some-other-logic&apos;</span>
 
 @connect({
   <span class="hljs-attr">actions</span>: [
     featuresLogic, [
-      <span class="hljs-string">'toggleFeature'</span>
+      <span class="hljs-string">&apos;toggleFeature&apos;</span>
     ]
   ],
   <span class="hljs-attr">props</span>: [
     featuresLogic, [
-      <span class="hljs-string">'features'</span>
+      <span class="hljs-string">&apos;features&apos;</span>
     ],
     someOtherLogic, [
-      <span class="hljs-string">'isMenuOpen'</span>,
-      <span class="hljs-string">'isPageLoading'</span>,
-      <span class="hljs-string">'highlightTheme'</span>
+      <span class="hljs-string">&apos;isMenuOpen&apos;</span>,
+      <span class="hljs-string">&apos;isPageLoading&apos;</span>,
+      <span class="hljs-string">&apos;highlightTheme&apos;</span>
     ]
   ]
 })
@@ -461,21 +461,21 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-comment">// ...</span>
   }
 }
-</code></pre><p>While the syntax may look alien at first, it's very comfortable to use and optimised for readability.</p><p><!-- react-text: 146 -->With <!-- /react-text --><code>connect</code><!-- react-text: 148 --> you may import as many props and actions from as many logic stores as you like. In case you make a typo (<!-- /react-text --><code>highlghtTheme</code><!-- react-text: 150 --> instead of <!-- /react-text --><code>highlightTheme</code><!-- react-text: 152 -->), you will get an error in the JS console and can fix it immediately. Just connect your logic and use it!<!-- /react-text --></p><p>What if you also want to add actions and reducers only this component will use?</p><p><!-- react-text: 155 -->No problem! Just replace <!-- /react-text --><code>@connect</code><!-- react-text: 157 --> with <!-- /react-text --><code>@kea({ connect: {}, /* other stuff */ })</code><!-- react-text: 159 --> like so:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p>While the syntax may look alien at first, it&apos;s very comfortable to use and optimised for readability.</p><p><!-- react-text: 146 -->With <!-- /react-text --><code>connect</code><!-- react-text: 148 --> you may import as many props and actions from as many logic stores as you like. In case you make a typo (<!-- /react-text --><code>highlghtTheme</code><!-- react-text: 150 --> instead of <!-- /react-text --><code>highlightTheme</code><!-- react-text: 152 -->), you will get an error in the JS console and can fix it immediately. Just connect your logic and use it!<!-- /react-text --></p><p>What if you also want to add actions and reducers only this component will use?</p><p><!-- react-text: 155 -->No problem! Just replace <!-- /react-text --><code>@connect</code><!-- react-text: 157 --> with <!-- /react-text --><code>@kea({ connect: {}, /* other stuff */ })</code><!-- react-text: 159 --> like so:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../features-logic'</span>
+<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../features-logic&apos;</span>
 
 @kea({
   <span class="hljs-attr">connect</span>: {
     <span class="hljs-attr">actions</span>: [
       featuresLogic, [
-        <span class="hljs-string">'toggleFeature'</span>
+        <span class="hljs-string">&apos;toggleFeature&apos;</span>
       ]
     ],
     <span class="hljs-attr">props</span>: [
       featuresLogic, [
-        <span class="hljs-string">'features'</span>
+        <span class="hljs-string">&apos;features&apos;</span>
       ]
     ]
   },
@@ -487,7 +487,7 @@ aside.kea-sidebar nav ul li a:hover {
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterExampleScene</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   <span class="hljs-comment">// no change here</span>
 }
-</code></pre><p>If this is not redux-heaven, I don't know what is!</p><h2>Next steps</h2><p><!-- react-text: 165 -->The last topic in this guide: <!-- /react-text --><a href="/guide/migration">How to migrate existing Redux applications?</a><!-- react-text: 167 --> or read the <!-- /react-text --><a href="/api/logic">API docs</a><!-- react-text: 169 -->.<!-- /react-text --></p></div></div><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
+</code></pre><p>If this is not redux-heaven, I don&apos;t know what is!</p><h2>Next steps</h2><p><!-- react-text: 165 -->The last topic in this guide: <!-- /react-text --><a href="/guide/migration">How to migrate existing Redux applications?</a><!-- react-text: 167 --> or read the <!-- /react-text --><a href="/api/logic">API docs</a><!-- react-text: 169 -->.<!-- /react-text --></p></div></div><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,23 +282,99 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/apiConnect.bundle.js"></script></head>
-  <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a class="active" href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><div class="api-scene"><h2><code>connect(options)</code></h2><p><!-- react-text: 71 -->Shorthand for <!-- /react-text --><code>kea({ connect: options })</code></p><h3>Usage</h3><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
 
-<span class="hljs-keyword">import</span> menuLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../menu/logic'</span>
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiConnect"); </script></head>
+  <body>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a class="active" href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><div class="api-scene"><h2><code>connect(options)</code></h2><p><!-- react-text: 71 -->Shorthand for <!-- /react-text --><code>kea({ connect: options })</code></p><h3>Usage</h3><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">import</span> menuLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../menu/logic&apos;</span>
 
 @connect({
   <span class="hljs-attr">actions</span>: [
     menuLogic, [
-      <span class="hljs-string">'openMenu'</span>,
-      <span class="hljs-string">'closeMenu'</span>
+      <span class="hljs-string">&apos;openMenu&apos;</span>,
+      <span class="hljs-string">&apos;closeMenu&apos;</span>
     ]
   ],
   <span class="hljs-attr">props</span>: [
     menuLogic, [
-      <span class="hljs-string">'isOpen as isMenuOpen'</span>
+      <span class="hljs-string">&apos;isOpen as isMenuOpen&apos;</span>
     ]
   ]
 

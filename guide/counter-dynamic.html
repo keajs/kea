@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,28 +282,104 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/guideCounterDynamic.bundle.js"></script><style type="text/css">.counter-dynamic-scene {
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideCounterDynamic"); </script><style type="text/css">.counter-dynamic-scene {
   // text-align: center;
 }
 </style><style type="text/css"></style></head>
   <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a class="active" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><div class="counter-dynamic-scene"><div class="description"><h2>Example #2 - Dynamic Counter</h2><p>This example demonstrates dynamically created actions and reducers.</p><p><!-- react-text: 72 -->As we saw in the <!-- /react-text --><a href="/guide/counter">previous example</a><!-- react-text: 74 -->, if you render multiple instances of the same connected component, they will share the state.<!-- /react-text --></p><p>The guide below shows how to create multiple instances of one component with separate states:</p><div class="demo"><div class="kea-counter"><!-- react-text: 78 -->Count: <!-- /react-text --><!-- react-text: 79 -->0<!-- /react-text --><br><!-- react-text: 81 -->Doublecount: <!-- /react-text --><!-- react-text: 82 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div><br><div class="kea-counter"><!-- react-text: 88 -->Count: <!-- /react-text --><!-- react-text: 89 -->0<!-- /react-text --><br><!-- react-text: 91 -->Doublecount: <!-- /react-text --><!-- react-text: 92 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><h2>1. Key and path</h2><p><!-- react-text: 98 -->The code for this example is almost the same as for the <!-- /react-text --><a href="/guide/counter">previous counter</a><!-- react-text: 100 -->.<!-- /react-text --></p><p>The big difference is that we must manually tell our component instances where to store their data:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a class="active" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><div class="counter-dynamic-scene"><div class="description"><h2>Example #2 - Dynamic Counter</h2><p>This example demonstrates dynamically created actions and reducers.</p><p><!-- react-text: 72 -->As we saw in the <!-- /react-text --><a href="/guide/counter">previous example</a><!-- react-text: 74 -->, if you render multiple instances of the same connected component, they will share the state.<!-- /react-text --></p><p>The guide below shows how to create multiple instances of one component with separate states:</p><div class="demo"><div class="kea-counter"><!-- react-text: 78 -->Count: <!-- /react-text --><!-- react-text: 79 -->0<!-- /react-text --><br><!-- react-text: 81 -->Doublecount: <!-- /react-text --><!-- react-text: 82 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div><br><div class="kea-counter"><!-- react-text: 88 -->Count: <!-- /react-text --><!-- react-text: 89 -->0<!-- /react-text --><br><!-- react-text: 91 -->Doublecount: <!-- /react-text --><!-- react-text: 92 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><h2>1. Key and path</h2><p><!-- react-text: 98 -->The code for this example is almost the same as for the <!-- /react-text --><a href="/guide/counter">previous counter</a><!-- react-text: 100 -->.<!-- /react-text --></p><p>The big difference is that we must manually tell our component instances where to store their data:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 @kea({
   <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
 
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'counterDynamic'</span>, <span class="hljs-string">'counter'</span>, key],
+  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;counterDynamic&apos;</span>, <span class="hljs-string">&apos;counter&apos;</span>, key],
 
   <span class="hljs-comment">// ...</span>
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   <span class="hljs-comment">// ...</span>
 }
-</code></pre><p><!-- react-text: 105 -->The <!-- /react-text --><code>key</code><!-- react-text: 107 --> function receives your component instance's <!-- /react-text --><code>props</code><!-- react-text: 109 --> as input and must return a key that's unique for the life of the component. Usually it's something like <!-- /react-text --><nobr><code>key = (props) =&gt; props.id</code></nobr><!-- react-text: 112 --> if your component is rendered as <!-- /react-text --><nobr><code>&lt;Component id='somethingUnique' /&gt;</code></nobr></p><p><!-- react-text: 116 -->The <!-- /react-text --><em>optional</em><!-- react-text: 118 --> <!-- /react-text --><code>path</code><!-- react-text: 120 --> function specifies where the data for your component will live in Redux. It takes just one argument, the <!-- /react-text --><code>key</code><!-- react-text: 122 --> from the previous step.<!-- /react-text --></p><p><!-- react-text: 124 -->Note! You may also use <!-- /react-text --><code>path</code><!-- react-text: 126 --> with non-dynamic components (like the <!-- /react-text --><a href="/guide/counter">previous example</a><!-- react-text: 128 -->) if you wish to specify where they will store their data.<!-- /react-text --></p><p><!-- react-text: 130 -->It makes your redux tree more readable and helps with debugging. In that case you have to skip the <!-- /react-text --><code>key</code><!-- react-text: 132 --> line.<!-- /react-text --></p><h2>2. Limiting the reducers</h2><p>There's one last thing you need to do.</p><p>While the reducers are unique for each component instance, the actions are shared.</p><p><!-- react-text: 137 -->No matter which instance of your component triggers the action, all the reducers will receive it. So if counter #1 dispatches the <!-- /react-text --><code>increment</code><!-- react-text: 139 --> action, counter #2 will also receive it.<!-- /react-text --></p><p>In order to prevent this, you must check for the key in your reducers, like so:</p><pre><code class="javascript hljs">@kea({
+</code></pre><p><!-- react-text: 105 -->The <!-- /react-text --><code>key</code><!-- react-text: 107 --> function receives your component instance&apos;s <!-- /react-text --><code>props</code><!-- react-text: 109 --> as input and must return a key that&apos;s unique for the life of the component. Usually it&apos;s something like <!-- /react-text --><nobr><code>key = (props) =&gt; props.id</code></nobr><!-- react-text: 112 --> if your component is rendered as <!-- /react-text --><nobr><code>&lt;Component id=&apos;somethingUnique&apos; /&gt;</code></nobr></p><p><!-- react-text: 116 -->The <!-- /react-text --><em>optional</em><!-- react-text: 118 --> <!-- /react-text --><code>path</code><!-- react-text: 120 --> function specifies where the data for your component will live in Redux. It takes just one argument, the <!-- /react-text --><code>key</code><!-- react-text: 122 --> from the previous step.<!-- /react-text --></p><p><!-- react-text: 124 -->Note! You may also use <!-- /react-text --><code>path</code><!-- react-text: 126 --> with non-dynamic components (like the <!-- /react-text --><a href="/guide/counter">previous example</a><!-- react-text: 128 -->) if you wish to specify where they will store their data.<!-- /react-text --></p><p><!-- react-text: 130 -->It makes your redux tree more readable and helps with debugging. In that case you have to skip the <!-- /react-text --><code>key</code><!-- react-text: 132 --> line.<!-- /react-text --></p><h2>2. Limiting the reducers</h2><p>There&apos;s one last thing you need to do.</p><p>While the reducers are unique for each component instance, the actions are shared.</p><p><!-- react-text: 137 -->No matter which instance of your component triggers the action, all the reducers will receive it. So if counter #1 dispatches the <!-- /react-text --><code>increment</code><!-- react-text: 139 --> action, counter #2 will also receive it.<!-- /react-text --></p><p>In order to prevent this, you must check for the key in your reducers, like so:</p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'counterDynamic'</span>, <span class="hljs-string">'counter'</span>, key],
+  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;counterDynamic&apos;</span>, <span class="hljs-string">&apos;counter&apos;</span>, key],
 
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount = <span class="hljs-number">1</span></span>) =&gt;</span> ({ amount }),
@@ -396,13 +396,13 @@ aside.kea-sidebar nav ul li a:hover {
   <span class="hljs-comment">// selectors: ...</span>
 })
 </code></pre><p>This way you can choose if your actions are processed by each instance of the component or by all instances simultaneously.</p></div><div class="description"><h2>Final Example</h2><p><!-- react-text: 147 -->While the following counters have separate data, they are still connected to the counters on top of this page, as they share the same <!-- /react-text --><code>id</code><!-- react-text: 149 -->s. You can mix and match!<!-- /react-text --></p><div class="demo"><div class="kea-counter"><!-- react-text: 152 -->Count: <!-- /react-text --><!-- react-text: 153 -->0<!-- /react-text --><br><!-- react-text: 155 -->Doublecount: <!-- /react-text --><!-- react-text: 156 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div><br><div class="kea-counter"><!-- react-text: 162 -->Count: <!-- /react-text --><!-- react-text: 163 -->0<!-- /react-text --><br><!-- react-text: 165 -->Doublecount: <!-- /react-text --><!-- react-text: 166 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><p><!-- react-text: 171 -->Next, check out the <!-- /react-text --><a href="/guide/sliders">sliders</a><!-- react-text: 173 --> demo to see how to add side effects to your code.<!-- /react-text --></p><h2>Full source</h2><pre><code class="javascript hljs"><span class="hljs-comment">// counter/index.js</span>
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 @kea({
   <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'counterDynamic'</span>, <span class="hljs-string">'counter'</span>, key],
+  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;counterDynamic&apos;</span>, <span class="hljs-string">&apos;counter&apos;</span>, key],
 
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
@@ -430,7 +430,7 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;kea-counter&apos;</span>&gt;</span>
         Count: {counter}
         <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
         Doublecount: {doubleCounter}

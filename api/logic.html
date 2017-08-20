@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,43 +282,119 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/apiLogic.bundle.js"></script></head>
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiLogic"); </script></head>
   <body>
     <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><div class="api-scene"><h2><code>kea(options)</code></h2><p><!-- react-text: 71 -->Create a new kea <!-- /react-text --><strong>logic store</strong><!-- react-text: 73 --> and connect it to redux.<!-- /react-text --></p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'./other-logic.js'</span>
+<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic.js&apos;</span>
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
   <span class="hljs-attr">connect</span>: {
     <span class="hljs-attr">actions</span>: [
       otherLogic, [
-        <span class="hljs-string">'firstAction'</span>,
-        <span class="hljs-string">'secondAction as renamedAction'</span>
+        <span class="hljs-string">&apos;firstAction&apos;</span>,
+        <span class="hljs-string">&apos;secondAction as renamedAction&apos;</span>
       ]
     ],
 
     <span class="hljs-attr">props</span>: [
       otherLogic, [
-        <span class="hljs-string">'firstProp'</span>,
-        <span class="hljs-string">'secondProp as renamedProp'</span>,
-        <span class="hljs-string">'* as allProps'</span>
+        <span class="hljs-string">&apos;firstProp&apos;</span>,
+        <span class="hljs-string">&apos;secondProp as renamedProp&apos;</span>,
+        <span class="hljs-string">&apos;* as allProps&apos;</span>
       ],
       <span class="hljs-comment">// select from any redux tree node</span>
       (state) =&gt; state.somethingThatResolvesToAnObject, [
-        <span class="hljs-string">'variable'</span>,
-        <span class="hljs-string">'otherVariable'</span>
+        <span class="hljs-string">&apos;variable&apos;</span>,
+        <span class="hljs-string">&apos;otherVariable&apos;</span>
       ]
     ]
   },
 
-  <span class="hljs-attr">path</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'index'</span>],
+  <span class="hljs-attr">path</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;index&apos;</span>],
 
-  <span class="hljs-attr">constants</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'STRING'</span>, <span class="hljs-string">'OTHER_STRING'</span>],
+  <span class="hljs-attr">constants</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-string">&apos;OTHER_STRING&apos;</span>],
 
   <span class="hljs-attr">actions</span>: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
-    <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">'payload value'</span>,
-    <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> },
+    <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">&apos;payload value&apos;</span>,
+    <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> },
     <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
@@ -413,7 +413,7 @@ aside.kea-sidebar nav ul li a:hover {
       [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
       [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
       [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-      <span class="hljs-string">"ANY_OTHER_ACTION_TYPE"</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">'do whatever you want'</span>
+      <span class="hljs-string">&quot;ANY_OTHER_ACTION_TYPE&quot;</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">&apos;do whatever you want&apos;</span>
     }],
 
     <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
@@ -477,21 +477,21 @@ aside.kea-sidebar nav ul li a:hover {
 })
 
 <span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'scenes/my-random-scene/logic'</span>
-</code></pre><h3>Options</h3><h4><!-- react-text: 80 -->path: <!-- /react-text --><code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application's Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'logicMountPoint'</span>]
+<span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;scenes/my-random-scene/logic&apos;</span>
+</code></pre><h3>Options</h3><h4><!-- react-text: 80 -->path: <!-- /react-text --><code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
 
 <span class="hljs-comment">// Output</span>
-myRandomSceneLogic.path == [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'logicMountPoint'</span>]
+myRandomSceneLogic.path == [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
 </code></pre><h4><!-- react-text: 86 -->constants: <!-- /react-text --><code>() =&gt; []</code></h4><p>Create constants that can be used in other parts of the logic store.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-constants: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'STRING'</span>, <span class="hljs-string">'OTHER_STRING'</span>]
+constants: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-string">&apos;OTHER_STRING&apos;</span>]
 
 <span class="hljs-comment">// Output</span>
-myRandomSceneLogic.constants == { <span class="hljs-attr">STRING</span>: <span class="hljs-string">'STRING'</span>, <span class="hljs-attr">OTHER_STRING</span>: <span class="hljs-string">'OTHER_STRING'</span> }
+myRandomSceneLogic.constants == { <span class="hljs-attr">STRING</span>: <span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-attr">OTHER_STRING</span>: <span class="hljs-string">&apos;OTHER_STRING&apos;</span> }
 </code></pre><h4><!-- react-text: 92 -->actions: <!-- /react-text --><code>({ path, constants }) =&gt; ({})</code></h4><p>Define action creators</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 actions: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
-  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">'payload value'</span>,
-  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> },
+  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">&apos;payload value&apos;</span>,
+  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> },
   <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
 
   <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
@@ -501,13 +501,13 @@ actions: <span class="hljs-function">(<span class="hljs-params">{ path, constant
 
 <span class="hljs-comment">// Output</span>
 myRandomSceneLogic.actions == {
-  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-string">'payload value'</span> } }),
-  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> } }),
-  <span class="hljs-attr">simpleAction</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span> } }),
+  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-string">&apos;payload value&apos;</span> } }),
+  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> } }),
+  <span class="hljs-attr">simpleAction</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span> } }),
 
-  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id } }),
-  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id, message } }),
-  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id, message } })
+  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id } }),
+  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } }),
+  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } })
 }
 </code></pre><h4><!-- react-text: 98 -->reducers: <!-- /react-text --><code>({ path, constants, actions }) =&gt; ({})</code></h4><p>Define the structure and logic of your reducers</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 reducers: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
@@ -521,7 +521,7 @@ reducers: <span class="hljs-function">(<span class="hljs-params">{ actions, path
     [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
     [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
     [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-    <span class="hljs-string">"ANY_OTHER_ACTION_TYPE"</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">'do whatever you want'</span>
+    <span class="hljs-string">&quot;ANY_OTHER_ACTION_TYPE&quot;</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">&apos;do whatever you want&apos;</span>
   }],
 
   <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
@@ -574,21 +574,21 @@ myRandomSceneLogic.selector == <span class="hljs-function">(<span class="hljs-pa
 connect: {
   <span class="hljs-attr">actions</span>: [
     otherLogic, [
-      <span class="hljs-string">'firstAction'</span>,
-      <span class="hljs-string">'secondAction as renamedAction'</span>
+      <span class="hljs-string">&apos;firstAction&apos;</span>,
+      <span class="hljs-string">&apos;secondAction as renamedAction&apos;</span>
     ]
   ],
 
   <span class="hljs-attr">props</span>: [
     otherLogic, [
-      <span class="hljs-string">'firstProp'</span>,
-      <span class="hljs-string">'secondProp as renamedProp'</span>,
-      <span class="hljs-string">'* as allProps'</span>
+      <span class="hljs-string">&apos;firstProp&apos;</span>,
+      <span class="hljs-string">&apos;secondProp as renamedProp&apos;</span>,
+      <span class="hljs-string">&apos;* as allProps&apos;</span>
     ],
     <span class="hljs-comment">// select from any redux tree node</span>
     (state) =&gt; state.somethingThatResolvesToAnObject, [
-      <span class="hljs-string">'variable'</span>,
-      <span class="hljs-string">'otherVariable'</span>
+      <span class="hljs-string">&apos;variable&apos;</span>,
+      <span class="hljs-string">&apos;otherVariable&apos;</span>
     ]
   ]
 }
@@ -695,7 +695,7 @@ myRandomSceneLogic.workers == {
     <span class="hljs-comment">// another worker</span>
   }.bind(myRandomSceneLogic)
 }
-</code></pre><h4><!-- react-text: 150 -->sagas: <!-- /react-text --><code>[]</code></h4><p>Array of sagas that get exported with this component's saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4><!-- react-text: 150 -->sagas: <!-- /react-text --><code>[]</code></h4><p>Array of sagas that get exported with this component&apos;s saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 sagas: [saga1, saga2]
 
 <span class="hljs-comment">// Output</span>

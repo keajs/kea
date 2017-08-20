@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,7 +282,83 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/guideSliders.bundle.js"></script><style type="text/css">.sliders-scene {
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideSliders"); </script><style type="text/css">.sliders-scene {
   text-align: center;
 }
 
@@ -406,12 +406,12 @@ aside.kea-sidebar nav ul li a:hover {
 }
 </style></head>
   <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><h2>1. The static component</h2><p>Based on the knowledge from the previous chapters, you should be able to build a static slider.</p><p>The code for it will look something like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><h2>1. The static component</h2><p>Based on the knowledge from the previous chapters, you should be able to build a static slider.</p><p>The code for it will look something like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">'./images'</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
-<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/range'</span> <span class="hljs-comment">// helper, range(3) === [0, 1, 2]</span>
+<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
+<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span> <span class="hljs-comment">// helper, range(3) === [0, 1, 2]</span>
 
 @kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -440,12 +440,12 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
 
     <span class="hljs-keyword">return</span> (
-      &lt;div className='kea-slider'&gt;
+      &lt;div className=&apos;kea-slider&apos;&gt;
         &lt;img src={currentImage.src} alt={title} title={title} /&gt;
-        &lt;div className='buttons'&gt;
+        &lt;div className=&apos;buttons&apos;&gt;
           {range(images.length).map(i =&gt; (
             &lt;span key={i}
-                  className={i === currentSlide ? 'selected' : ''}
+                  className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
                   onClick={() =&gt; updateSlide(i)} /&gt;
           ))}
         &lt;/div&gt;
@@ -453,8 +453,8 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre><p>Giving us the following result:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Click it! It works, but won't change the slides automatically.</p><h2>2. Just Add Sagas</h2><p><!-- react-text: 100 -->For that we need to write some <!-- /react-text --><a href="https://redux-saga.js.org/">sagas</a><!-- react-text: 102 -->.<!-- /react-text --></p><p><a href="https://redux-saga.js.org/">Sagas</a><!-- react-text: 105 --> provide a nice way to write code that has side effects. They might be unfamiliar at first, but when you get to know them, you'll wonder how you ever wrote your frontend code without them.<!-- /react-text --></p><p><button>I need to brush up on my Sagas</button></p><p><!-- react-text: 109 -->First we must import the <!-- /react-text --><code>redux-saga/effects</code><!-- react-text: 111 --> that we need. We'll also import a <!-- /react-text --><code>delay</code><!-- react-text: 113 --> effect that just sleeps for the given amount of milliseconds.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/delay'</span>
+</code></pre><p>Giving us the following result:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Click it! It works, but won&apos;t change the slides automatically.</p><h2>2. Just Add Sagas</h2><p><!-- react-text: 100 -->For that we need to write some <!-- /react-text --><a href="https://redux-saga.js.org/">sagas</a><!-- react-text: 102 -->.<!-- /react-text --></p><p><a href="https://redux-saga.js.org/">Sagas</a><!-- react-text: 105 --> provide a nice way to write code that has side effects. They might be unfamiliar at first, but when you get to know them, you&apos;ll wonder how you ever wrote your frontend code without them.<!-- /react-text --></p><p><button>I need to brush up on my Sagas</button></p><p><!-- react-text: 109 -->First we must import the <!-- /react-text --><code>redux-saga/effects</code><!-- react-text: 111 --> that we need. We&apos;ll also import a <!-- /react-text --><code>delay</code><!-- react-text: 113 --> effect that just sleeps for the given amount of milliseconds.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span>
 </code></pre><p><!-- react-text: 117 -->And then we create a <!-- /react-text --><code>start</code><!-- react-text: 119 --> generator function inside <!-- /react-text --><code>@kea({})</code><!-- react-text: 121 -->. This function is called every time your component is mounted.<!-- /react-text --></p><p><!-- react-text: 123 -->Inside this <!-- /react-text --><code>start</code><!-- react-text: 125 --> function we create a <!-- /react-text --><code>race</code><!-- react-text: 127 --> condition between two competing effects: a delay of 5 seconds and the action <!-- /react-text --><code>updateSlide</code><!-- react-text: 129 --> being triggered.<!-- /react-text --></p><p><!-- react-text: 131 -->The code pauses at the <!-- /react-text --><code>yield race()</code><!-- react-text: 133 --> call until one of the two conditions is met.<!-- /react-text --></p><p><!-- react-text: 135 -->In case the timeout won the race, we fetch the latest slide (<!-- /react-text --><code>yield this.get(..)</code><!-- react-text: 137 --> is a shorthand to use the selectors defined in <!-- /react-text --><code>@kea({})</code><!-- react-text: 139 -->)... and then we dispatch (<!-- /react-text --><code>yield put()</code><!-- react-text: 141 -->) the <!-- /react-text --><code>updateSlide</code><!-- react-text: 143 --> action with the next slide.<!-- /react-text --></p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
@@ -473,7 +473,7 @@ aside.kea-sidebar nav ul li a:hover {
       })
 
       <span class="hljs-keyword">if</span> (timeout) {
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'currentSlide'</span>)
+        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
         <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
       }
     }
@@ -482,24 +482,24 @@ aside.kea-sidebar nav ul li a:hover {
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaticSlider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   <span class="hljs-comment">// as it was</span>
 }
-</code></pre><p>All of this results in this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p><!-- react-text: 156 -->Now if you will always just have one slider on your screen, you're done. If you wish to have many slider instances, you will run into the same issue as with the dynamic counter example - both sliders will listen to and react to the <!-- /react-text --><code>updateSlide</code><!-- react-text: 158 --> actions unless you explicitly prohibit them.<!-- /react-text --></p><p><!-- react-text: 160 -->The code below demonstrates a way to prevent this from happening. It also shows how to listen to actions using the <!-- /react-text --><code>takeEvery</code><!-- react-text: 162 --> helper and the <!-- /react-text --><code>workers</code><!-- react-text: 164 --> object.<!-- /react-text --></p></div><div class="code"><h2>Full source</h2><p><!-- react-text: 168 -->Better documentation is coming one day. Until then, read the comments in the code and the <!-- /react-text --><a href="https://redux-saga.js.org/">redux-saga</a><!-- react-text: 170 --> documentation.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-comment">// slider/index.js</span>
-<span class="hljs-keyword">import</span> <span class="hljs-string">'./styles.scss'</span>
+</code></pre><p>All of this results in this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p><!-- react-text: 156 -->Now if you will always just have one slider on your screen, you&apos;re done. If you wish to have many slider instances, you will run into the same issue as with the dynamic counter example - both sliders will listen to and react to the <!-- /react-text --><code>updateSlide</code><!-- react-text: 158 --> actions unless you explicitly prohibit them.<!-- /react-text --></p><p><!-- react-text: 160 -->The code below demonstrates a way to prevent this from happening. It also shows how to listen to actions using the <!-- /react-text --><code>takeEvery</code><!-- react-text: 162 --> helper and the <!-- /react-text --><code>workers</code><!-- react-text: 164 --> object.<!-- /react-text --></p></div><div class="code"><h2>Full source</h2><p><!-- react-text: 168 -->Better documentation is coming one day. Until then, read the comments in the code and the <!-- /react-text --><a href="https://redux-saga.js.org/">redux-saga</a><!-- react-text: 170 --> documentation.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-comment">// slider/index.js</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&apos;./styles.scss&apos;</span>
 
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
+<span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/delay'</span>
-<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/range'</span>
+<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span>
+<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span>
 
-<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">'./images'</span>
+<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>
 
 @kea({
   <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
 
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'homepage'</span>, <span class="hljs-string">'slider'</span>, key],
+  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;slider&apos;</span>, key],
 
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
@@ -530,7 +530,7 @@ aside.kea-sidebar nav ul li a:hover {
   start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Starting homepage slider saga'</span>)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Starting homepage slider saga&apos;</span>)
     <span class="hljs-comment">// console.log(this, this.actions, this.props)</span>
 
     <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
@@ -544,10 +544,10 @@ aside.kea-sidebar nav ul li a:hover {
 
       <span class="hljs-keyword">if</span> (timeout) {
         <span class="hljs-comment">// use this.get(..) to select the latest data from redux</span>
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'currentSlide'</span>)
+        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
 
         <span class="hljs-comment">// actions are not automatically bound to dispatch, so</span>
-        <span class="hljs-comment">// you must use redux-saga's put() with them</span>
+        <span class="hljs-comment">// you must use redux-saga&apos;s put() with them</span>
         <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
       }
     }
@@ -555,7 +555,7 @@ aside.kea-sidebar nav ul li a:hover {
 
   <span class="hljs-comment">// this saga is run when the component is unmounted</span>
   stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Stopping homepage slider saga'</span>)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Stopping homepage slider saga&apos;</span>)
   },
 
   <span class="hljs-comment">// The redux-saga takeEvery function.</span>
@@ -565,12 +565,12 @@ aside.kea-sidebar nav ul li a:hover {
     [actions.updateSlide]: workers.updateSlide
   }),
 
-  <span class="hljs-comment">// it's recommended to group all the logic under the workers: {} object.</span>
+  <span class="hljs-comment">// it&apos;s recommended to group all the logic under the workers: {} object.</span>
   workers: {
     <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params">action</span>) </span>{
       <span class="hljs-comment">// check if it was this component that triggered the action</span>
       <span class="hljs-keyword">if</span> (action.payload.key === <span class="hljs-keyword">this</span>.key) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'slide update triggered'</span>, action.payload.key, <span class="hljs-keyword">this</span>.key, <span class="hljs-keyword">this</span>.props.id)
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;slide update triggered&apos;</span>, action.payload.key, <span class="hljs-keyword">this</span>.key, <span class="hljs-keyword">this</span>.props.id)
         <span class="hljs-comment">// console.log(action, this)</span>
       }
     }
@@ -584,12 +584,12 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
 
     <span class="hljs-keyword">return</span> (
-      &lt;div className='kea-slider'&gt;
+      &lt;div className=&apos;kea-slider&apos;&gt;
         &lt;img src={currentImage.src} alt={title} title={title} /&gt;
-        &lt;div className='buttons'&gt;
+        &lt;div className=&apos;buttons&apos;&gt;
           {range(images.length).map(i =&gt; (
             &lt;span key={i}
-                  className={i === currentSlide ? 'selected' : ''}
+                  className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
                   onClick={() =&gt; updateSlide(i)} /&gt;
           ))}
         &lt;/div&gt;
@@ -602,7 +602,7 @@ aside.kea-sidebar nav ul li a:hover {
 export default class SlidersScene extends Component {
   render () {
     return (
-      &lt;div className='slider-container'&gt;
+      &lt;div className=&apos;slider-container&apos;&gt;
         &lt;Slider id={1} initialSlide={0} /&gt;
         &lt;Slider id={2} initialSlide={1} /&gt;
       &lt;/div&gt;

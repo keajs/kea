@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,16 +282,92 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/apiComponent.bundle.js"></script></head>
-  <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a class="active" href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><div class="api-scene"><h2><code>kea(options)(Component)</code></h2><p>Wrap a kea logic store around a React component.</p><p><!-- react-text: 72 -->The React component will receive all of the logic store's selectors in <!-- /react-text --><code>this.props</code><!-- react-text: 74 --> and all actions under <!-- /react-text --><code>this.actions</code><!-- react-text: 76 -->.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
 
-<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'./other-logic'</span>
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiComponent"); </script></head>
+  <body>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a class="active" href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><div class="api-scene"><h2><code>kea(options)(Component)</code></h2><p>Wrap a kea logic store around a React component.</p><p><!-- react-text: 72 -->The React component will receive all of the logic store&apos;s selectors in <!-- /react-text --><code>this.props</code><!-- react-text: 74 --> and all actions under <!-- /react-text --><code>this.actions</code><!-- react-text: 76 -->.<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic&apos;</span>
 
 @kea({
   <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'something'</span>, key],
+  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;something&apos;</span>, key],
 
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">someAction</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id })
@@ -407,8 +407,8 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre><p>It's up to you if you wish to use decorators or not:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p>It&apos;s up to you if you wish to use decorators or not:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-comment">// with decorators</span>
 @kea({ <span class="hljs-comment">/* options */</span> })
@@ -433,27 +433,27 @@ aside.kea-sidebar nav ul li a:hover {
   <span class="hljs-attr">connect</span>: {
     <span class="hljs-attr">actions</span>: [
       otherLogic, [
-        <span class="hljs-string">'importedAction1'</span>
+        <span class="hljs-string">&apos;importedAction1&apos;</span>
       ]
     ],
     <span class="hljs-attr">props</span>: [
       otherLogic, [
-        <span class="hljs-string">'importedProp1'</span>
+        <span class="hljs-string">&apos;importedProp1&apos;</span>
       ]
     ]
   },
   <span class="hljs-comment">// ... other kea options</span>
 })(({
   prop1, prop2, importedProp1,
-  <span class="hljs-comment">// actions are always also passed in a prop called 'actions'</span>
+  <span class="hljs-comment">// actions are always also passed in a prop called &apos;actions&apos;</span>
   actions: { action1, action2, importedAction1 }
 }) =&gt; (
   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{action1}</span>&gt;</span>{prop1}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
 ))
-</code></pre><h3>Options</h3><p><!-- react-text: 95 -->Wrapped logic stores accept all the&nbsp;same options as regular logic stores. See the documentation for <!-- /react-text --><code><a href="/api/logic">kea(options)</a></code><!-- react-text: 98 --> for more details.<!-- /react-text --></p><p>These options are different:</p><h4><!-- react-text: 101 -->key: <!-- /react-text --><code>(props) =&gt; 'key'</code></h4><p><!-- react-text: 104 -->If you wish, you may define a <!-- /react-text --><code>key</code><!-- react-text: 106 --> that distinguishes instances of the component<!-- /react-text --></p><pre><code class="javascript hljs">key: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id
-</code></pre><h4><!-- react-text: 110 -->path: <!-- /react-text --><code>(key) =&gt; []</code></h4><p>The path takes the key as an argument if you wish to define the location in redux for the component instance</p><pre><code class="javascript hljs">path: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'homepage'</span>, <span class="hljs-string">'sliders'</span>, key]
+</code></pre><h3>Options</h3><p><!-- react-text: 95 -->Wrapped logic stores accept all the&#xA0;same options as regular logic stores. See the documentation for <!-- /react-text --><code><a href="/api/logic">kea(options)</a></code><!-- react-text: 98 --> for more details.<!-- /react-text --></p><p>These options are different:</p><h4><!-- react-text: 101 -->key: <!-- /react-text --><code>(props) =&gt; &apos;key&apos;</code></h4><p><!-- react-text: 104 -->If you wish, you may define a <!-- /react-text --><code>key</code><!-- react-text: 106 --> that distinguishes instances of the component<!-- /react-text --></p><pre><code class="javascript hljs">key: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id
+</code></pre><h4><!-- react-text: 110 -->path: <!-- /react-text --><code>(key) =&gt; []</code></h4><p>The path takes the key as an argument if you wish to define the location in redux for the component instance</p><pre><code class="javascript hljs">path: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;sliders&apos;</span>, key]
 </code></pre><h4><!-- react-text: 116 -->selectors: <!-- /react-text --><code>({ path, constants, actions, selectors }) =&gt; ({})</code></h4><p><!-- react-text: 119 -->The <!-- /react-text --><code>selectors</code><!-- react-text: 121 --> have an additional feature with wrapped logic stores. You can access the <!-- /react-text --><code>props</code><!-- react-text: 123 --> passed to your component like so:<!-- /react-text --></p><pre><code class="javascript hljs">selectors: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
   <span class="hljs-attr">combinedValue</span>: [
     <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [

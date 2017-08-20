@@ -162,82 +162,6 @@ h2, h3 {
 .api-scene {
   margin: 20px;
 }
-</style><style type="text/css">/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#nprogress .bar {
-		background: #359335;
-	}
-#nprogress .peg {
-		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
-	}
-#nprogress .spinner-icon {
-		border-top-color: #359335;
-		border-left-color: #359335;
-	}
 </style><style type="text/css">header.body-header nav {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -358,11 +282,87 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-</style><script type="text/javascript" charset="utf-8" async="" src="/guideGithub.bundle.js"></script></head>
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideGithub"); </script></head>
   <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a class="active" href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><div class="counter-singleton-scene"><div class="description"><h2>Example #4 - Github</h2><p>In this guide we are going to build a component that asks for an username and then fetches all the repositories for that user on Github.</p><p>The final result will look like this:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 253 -->Found <!-- /react-text --><!-- react-text: 254 -->7<!-- /react-text --><!-- react-text: 255 --> repositories for user <!-- /react-text --><!-- react-text: 256 -->keajs<!-- /react-text --><!-- react-text: 257 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 260 --> - <!-- /react-text --><!-- react-text: 261 -->799<!-- /react-text --><!-- react-text: 262 --> stars, <!-- /react-text --><!-- react-text: 263 -->18<!-- /react-text --><!-- react-text: 264 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 267 --> - <!-- /react-text --><!-- react-text: 268 -->5<!-- /react-text --><!-- react-text: 269 --> stars, <!-- /react-text --><!-- react-text: 270 -->0<!-- /react-text --><!-- react-text: 271 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 274 --> - <!-- /react-text --><!-- react-text: 275 -->2<!-- /react-text --><!-- react-text: 276 --> stars, <!-- /react-text --><!-- react-text: 277 -->1<!-- /react-text --><!-- react-text: 278 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 281 --> - <!-- /react-text --><!-- react-text: 282 -->2<!-- /react-text --><!-- react-text: 283 --> stars, <!-- /react-text --><!-- react-text: 284 -->0<!-- /react-text --><!-- react-text: 285 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 288 --> - <!-- /react-text --><!-- react-text: 289 -->2<!-- /react-text --><!-- react-text: 290 --> stars, <!-- /react-text --><!-- react-text: 291 -->1<!-- /react-text --><!-- react-text: 292 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 295 --> - <!-- /react-text --><!-- react-text: 296 -->0<!-- /react-text --><!-- react-text: 297 --> stars, <!-- /react-text --><!-- react-text: 298 -->0<!-- /react-text --><!-- react-text: 299 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 302 --> - <!-- /react-text --><!-- react-text: 303 -->0<!-- /react-text --><!-- react-text: 304 --> stars, <!-- /react-text --><!-- react-text: 305 -->0<!-- /react-text --><!-- react-text: 306 --> forks.<!-- /react-text --></div></div></div></div></div><div class="description"><h2>1. Input the username</h2><p>Now that you have seen the end result, let's build it, piece by piece.</p><p>The first thing we want to do is to have an input element to enter the username.</p><p>If you have followed the other parts of this guide, you should know how to get this part working.</p><p>Hopefully after some tinkering you will come up with something like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a class="active" href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><div class="counter-singleton-scene"><div class="description"><h2>Example #4 - Github</h2><p>In this guide we are going to build a component that asks for an username and then fetches all the repositories for that user on Github.</p><p>The final result will look like this:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 253 -->Found <!-- /react-text --><!-- react-text: 254 -->7<!-- /react-text --><!-- react-text: 255 --> repositories for user <!-- /react-text --><!-- react-text: 256 -->keajs<!-- /react-text --><!-- react-text: 257 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 260 --> - <!-- /react-text --><!-- react-text: 261 -->800<!-- /react-text --><!-- react-text: 262 --> stars, <!-- /react-text --><!-- react-text: 263 -->18<!-- /react-text --><!-- react-text: 264 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 267 --> - <!-- /react-text --><!-- react-text: 268 -->5<!-- /react-text --><!-- react-text: 269 --> stars, <!-- /react-text --><!-- react-text: 270 -->0<!-- /react-text --><!-- react-text: 271 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 274 --> - <!-- /react-text --><!-- react-text: 275 -->2<!-- /react-text --><!-- react-text: 276 --> stars, <!-- /react-text --><!-- react-text: 277 -->1<!-- /react-text --><!-- react-text: 278 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 281 --> - <!-- /react-text --><!-- react-text: 282 -->2<!-- /react-text --><!-- react-text: 283 --> stars, <!-- /react-text --><!-- react-text: 284 -->0<!-- /react-text --><!-- react-text: 285 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 288 --> - <!-- /react-text --><!-- react-text: 289 -->2<!-- /react-text --><!-- react-text: 290 --> stars, <!-- /react-text --><!-- react-text: 291 -->1<!-- /react-text --><!-- react-text: 292 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 295 --> - <!-- /react-text --><!-- react-text: 296 -->0<!-- /react-text --><!-- react-text: 297 --> stars, <!-- /react-text --><!-- react-text: 298 -->0<!-- /react-text --><!-- react-text: 299 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 302 --> - <!-- /react-text --><!-- react-text: 303 -->0<!-- /react-text --><!-- react-text: 304 --> stars, <!-- /react-text --><!-- react-text: 305 -->0<!-- /react-text --><!-- react-text: 306 --> forks.<!-- /react-text --></div></div></div></div></div><div class="description"><h2>1. Input the username</h2><p>Now that you have seen the end result, let&apos;s build it, piece by piece.</p><p>The first thing we want to do is to have an input element to enter the username.</p><p>If you have followed the other parts of this guide, you should know how to get this part working.</p><p>Hopefully after some tinkering you will come up with something like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 @kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -370,7 +370,7 @@ aside.kea-sidebar nav ul li a:hover {
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">username</span>: [<span class="hljs-string">'keajs'</span>, PropTypes.string, {
+    <span class="hljs-attr">username</span>: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
       [actions.setUsername]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.username
     }]
   })
@@ -381,11 +381,11 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'example-github-scene'</span>&gt;</span>
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span>
+                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
                  <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
         <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
@@ -395,7 +395,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</span></code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div><p><!-- react-text: 94 -->You could probably have gotten as far with react's <!-- /react-text --><code>setState</code><!-- react-text: 96 -->, but since we want to capture this event, we'll go straight for the kea solution.<!-- /react-text --></p></div><div class="description"><h2><!-- react-text: 99 -->2. Capture <!-- /react-text --><code>setUsername</code><!-- react-text: 101 --> and trigger an API call<!-- /react-text --></h2><p><!-- react-text: 103 -->The next step is to intercept Redux and listen for each instance of the <!-- /react-text --><code>setUsername</code><!-- react-text: 105 --> action being triggered.<!-- /react-text --></p><p><!-- react-text: 107 -->We do this with the <!-- /react-text --><code>takeLatest</code><!-- react-text: 109 --> option and a special worker function which does the API call.<!-- /react-text --></p><button>takeLatest vs takeEvery?</button><p>The code to hook them up would look something like this:</p><pre><code class="javascript hljs">@kea({
+</span></code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div><p><!-- react-text: 94 -->You could probably have gotten as far with react&apos;s <!-- /react-text --><code>setState</code><!-- react-text: 96 -->, but since we want to capture this event, we&apos;ll go straight for the kea solution.<!-- /react-text --></p></div><div class="description"><h2><!-- react-text: 99 -->2. Capture <!-- /react-text --><code>setUsername</code><!-- react-text: 101 --> and trigger an API call<!-- /react-text --></h2><p><!-- react-text: 103 -->The next step is to intercept Redux and listen for each instance of the <!-- /react-text --><code>setUsername</code><!-- react-text: 105 --> action being triggered.<!-- /react-text --></p><p><!-- react-text: 107 -->We do this with the <!-- /react-text --><code>takeLatest</code><!-- react-text: 109 --> option and a special worker function which does the API call.<!-- /react-text --></p><button>takeLatest vs takeEvery?</button><p>The code to hook them up would look something like this:</p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">actions</span>: ...,
   <span class="hljs-attr">reducers</span>: ...,
 
@@ -411,9 +411,9 @@ aside.kea-sidebar nav ul li a:hover {
     }
   }
 })
-</code></pre></div><div class="description"><h2>3. Trigger the actual call</h2><p>Now that we have a time and a place where we can make the API call, let's actually make it.</p><p><!-- react-text: 118 -->We will use the standard <!-- /react-text --><code>Fetch</code><!-- react-text: 120 --> API for it.<!-- /react-text --></p><p>The code for this, with an additional 100ms debounce, will look like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga'</span>
+</code></pre></div><div class="description"><h2>3. Trigger the actual call</h2><p>Now that we have a time and a place where we can make the API call, let&apos;s actually make it.</p><p><!-- react-text: 118 -->We will use the standard <!-- /react-text --><code>Fetch</code><!-- react-text: 120 --> API for it.<!-- /react-text --></p><p>The code for this, with an additional 100ms debounce, will look like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
 
-<span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">'https://api.github.com'</span>
+<span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
 @kea({
   <span class="hljs-comment">// ...</span>
@@ -433,13 +433,13 @@ aside.kea-sidebar nav ul li a:hover {
         <span class="hljs-comment">// what to do with them?</span>
       } <span class="hljs-keyword">else</span> {
         <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">yield</span> response.json()
-        <span class="hljs-comment">// there's an error in `json.message`</span>
+        <span class="hljs-comment">// there&apos;s an error in `json.message`</span>
         <span class="hljs-comment">// what to do with it?</span>
       }
     }
   }
 })
-</code></pre><p><!-- react-text: 125 -->Note the <!-- /react-text --><code>yield</code><!-- react-text: 127 --> statements that we use to synchronously resolve promises without any nested callbacks!<!-- /react-text --></p><p><!-- react-text: 129 -->There are more details on <!-- /react-text --><code>yield</code><!-- react-text: 131 --> and the code that you can use inside the workers in the <!-- /react-text --><a href="/guide/sliders">sliders guide</a><!-- react-text: 133 -->.<!-- /react-text --></p></div><div class="description"><h2>4. Store the response of the call</h2><p>Now that we get the repositories, where to put them?</p><p>The answer: in a few new reducers.</p><p>We're interested in 3 things:</p><ol><li><!-- react-text: 141 -->Whether we're currently fetching and data: <!-- /react-text --><code>isLoading</code></li><li><!-- react-text: 144 -->The repositories that we have fetched: <!-- /react-text --><code>repositories</code></li><li><!-- react-text: 147 -->Any error that might have occurred: <!-- /react-text --><code>error</code></li></ol><p>We can get all of this by just adding two new actions:</p><ol><li><!-- react-text: 152 -->One to set the repositories: <!-- /react-text --><code>setRepositories</code></li><li><!-- react-text: 155 -->One to set the error message: <!-- /react-text --><code>setFetchError</code></li></ol><p>Hooking them up gives the following result:</p><pre><code class="javascript hljs">@kea({
+</code></pre><p><!-- react-text: 125 -->Note the <!-- /react-text --><code>yield</code><!-- react-text: 127 --> statements that we use to synchronously resolve promises without any nested callbacks!<!-- /react-text --></p><p><!-- react-text: 129 -->There are more details on <!-- /react-text --><code>yield</code><!-- react-text: 131 --> and the code that you can use inside the workers in the <!-- /react-text --><a href="/guide/sliders">sliders guide</a><!-- react-text: 133 -->.<!-- /react-text --></p></div><div class="description"><h2>4. Store the response of the call</h2><p>Now that we get the repositories, where to put them?</p><p>The answer: in a few new reducers.</p><p>We&apos;re interested in 3 things:</p><ol><li><!-- react-text: 141 -->Whether we&apos;re currently fetching and data: <!-- /react-text --><code>isLoading</code></li><li><!-- react-text: 144 -->The repositories that we have fetched: <!-- /react-text --><code>repositories</code></li><li><!-- react-text: 147 -->Any error that might have occurred: <!-- /react-text --><code>error</code></li></ol><p>We can get all of this by just adding two new actions:</p><ol><li><!-- react-text: 152 -->One to set the repositories: <!-- /react-text --><code>setRepositories</code></li><li><!-- react-text: 155 -->One to set the error message: <!-- /react-text --><code>setFetchError</code></li></ol><p>Hooking them up gives the following result:</p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">setUsername</span>: <span class="hljs-function">(<span class="hljs-params">username</span>) =&gt;</span> ({ username }),
     <span class="hljs-attr">setRepositories</span>: <span class="hljs-function">(<span class="hljs-params">repositories</span>) =&gt;</span> ({ repositories }),
@@ -447,7 +447,7 @@ aside.kea-sidebar nav ul li a:hover {
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">username</span>: [<span class="hljs-string">'keajs'</span>, PropTypes.string, {
+    <span class="hljs-attr">username</span>: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
       [actions.setUsername]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.username
     }],
     <span class="hljs-attr">repositories</span>: [[], PropTypes.array, {
@@ -465,7 +465,7 @@ aside.kea-sidebar nav ul li a:hover {
     }]
   })
 })
-</code></pre><p>Now we just need to call the right actions from the worker:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { put } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span> <span class="hljs-comment">// new</span>
+</code></pre><p>Now we just need to call the right actions from the worker:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span> <span class="hljs-comment">// new</span>
 
 @kea({
   <span class="hljs-attr">workers</span>: {
@@ -494,11 +494,11 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'example-github-scene'</span>&gt;</span>
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span>
+                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
                  <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
         <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         {isLoading ? (
@@ -510,37 +510,37 @@ aside.kea-sidebar nav ul li a:hover {
             Found {repositories.length} repositories for user {username}!
             {repositories.map(repo =&gt; (
               <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">'_blank'</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-                {' - '}
+                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&apos;_blank&apos;</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+                {&apos; - &apos;}
                 {repo.stargazers_count} stars, {repo.forks} forks.
               <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
             ))}
           <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         ) : (
           <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-            {error ? `Error: ${error}` : 'No repositories found'}
+            {error ? `Error: ${error}` : &apos;No repositories found&apos;}
           <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         )}
       <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
     )
   }
 }
-</span></code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p><p>What's still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p></div><div class="description"><h2>6. Last steps</h2><p>No problem, we can fix that!</p><p><!-- react-text: 187 -->First, to load the repositories on page load, we have two options, both requiring the <!-- /react-text --><code>start</code><!-- react-text: 189 --> function that is run when the component is mounted.<!-- /react-text --></p><p><!-- react-text: 191 -->Option #1 is to call the <!-- /react-text --><code>fetchRepositories</code><!-- react-text: 193 --> worker directly using redux-saga's <!-- /react-text --><code>call</code><!-- react-text: 195 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { call } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
+</span></code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p><p>What&apos;s still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p></div><div class="description"><h2>6. Last steps</h2><p>No problem, we can fix that!</p><p><!-- react-text: 187 -->First, to load the repositories on page load, we have two options, both requiring the <!-- /react-text --><code>start</code><!-- react-text: 189 --> function that is run when the component is mounted.<!-- /react-text --></p><p><!-- react-text: 191 -->Option #1 is to call the <!-- /react-text --><code>fetchRepositories</code><!-- react-text: 193 --> worker directly using redux-saga&apos;s <!-- /react-text --><code>call</code><!-- react-text: 195 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
 @kea({
   <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'username'</span>)
+    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;username&apos;</span>)
     <span class="hljs-keyword">yield</span> call(<span class="hljs-keyword">this</span>.workers.fetchRepositories, { <span class="hljs-attr">payload</span>: { username } })
   }
 })
-</code></pre><p>This works, but it feels kind of hacky. We're pretending to be an action that triggers the worker.</p><p><!-- react-text: 200 -->The other option is to go through redux and execute the <!-- /react-text --><code>setUsername</code><!-- react-text: 202 --> action with the default username:<!-- /react-text --></p><pre><code class="javascript hljs">@kea({
+</code></pre><p>This works, but it feels kind of hacky. We&apos;re pretending to be an action that triggers the worker.</p><p><!-- react-text: 200 -->The other option is to go through redux and execute the <!-- /react-text --><code>setUsername</code><!-- react-text: 202 --> action with the default username:<!-- /react-text --></p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
-    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'username'</span>)
+    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;username&apos;</span>)
     <span class="hljs-keyword">yield</span> put(setUsername(username))
   }
 })
-</code></pre><p><!-- react-text: 206 -->It feels cleaner, but there's still something weird with calling <!-- /react-text --><code>setUsername</code><!-- react-text: 208 --> with the username that's already set.<!-- /react-text --></p><p>In the end, both approaches get the job done, and it's up to you to figure out which makes more sense depening on your situation.</p><p>The second problem had to do with sorting the results.</p><p><!-- react-text: 212 -->For that we can create a selector that takes the <!-- /react-text --><code>repositories</code><!-- react-text: 214 --> as input and outputs a sorted array:<!-- /react-text --></p><pre><code class="javascript hljs">@kea({
+</code></pre><p><!-- react-text: 206 -->It feels cleaner, but there&apos;s still something weird with calling <!-- /react-text --><code>setUsername</code><!-- react-text: 208 --> with the username that&apos;s already set.<!-- /react-text --></p><p>In the end, both approaches get the job done, and it&apos;s up to you to figure out which makes more sense depening on your situation.</p><p>The second problem had to do with sorting the results.</p><p><!-- react-text: 212 -->For that we can create a selector that takes the <!-- /react-text --><code>repositories</code><!-- react-text: 214 --> as input and outputs a sorted array:<!-- /react-text --></p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
     <span class="hljs-attr">sortedRepositories</span>: [
       <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.repositories],
@@ -551,14 +551,14 @@ aside.kea-sidebar nav ul li a:hover {
     ]
   })
 })
-</code></pre><p><!-- react-text: 218 -->Now all that's left to do is to replace <!-- /react-text --><code>repositories</code><!-- react-text: 220 --> with <!-- /react-text --><code>sortedRepositories</code><!-- react-text: 222 --> in your component.<!-- /react-text --></p><p><!-- react-text: 224 -->Because the selectors are made with <!-- /react-text --><code>reselect</code><!-- react-text: 226 --> under the hood, you can be sure that they will only be recalculated (resorted in this case) when the original input (repositories) change.<!-- /react-text --></p><p><!-- react-text: 228 -->That's much better than re-sorting them on every call to <!-- /react-text --><code>render()</code><!-- react-text: 230 -->.<!-- /react-text --></p></div><div class="description"><h2>7. Final result</h2><p>Adding the finishing touches gives us this final result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 307 -->Found <!-- /react-text --><!-- react-text: 308 -->7<!-- /react-text --><!-- react-text: 309 --> repositories for user <!-- /react-text --><!-- react-text: 310 -->keajs<!-- /react-text --><!-- react-text: 311 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 314 --> - <!-- /react-text --><!-- react-text: 315 -->799<!-- /react-text --><!-- react-text: 316 --> stars, <!-- /react-text --><!-- react-text: 317 -->18<!-- /react-text --><!-- react-text: 318 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 321 --> - <!-- /react-text --><!-- react-text: 322 -->5<!-- /react-text --><!-- react-text: 323 --> stars, <!-- /react-text --><!-- react-text: 324 -->0<!-- /react-text --><!-- react-text: 325 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 328 --> - <!-- /react-text --><!-- react-text: 329 -->2<!-- /react-text --><!-- react-text: 330 --> stars, <!-- /react-text --><!-- react-text: 331 -->1<!-- /react-text --><!-- react-text: 332 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 335 --> - <!-- /react-text --><!-- react-text: 336 -->2<!-- /react-text --><!-- react-text: 337 --> stars, <!-- /react-text --><!-- react-text: 338 -->0<!-- /react-text --><!-- react-text: 339 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 342 --> - <!-- /react-text --><!-- react-text: 343 -->2<!-- /react-text --><!-- react-text: 344 --> stars, <!-- /react-text --><!-- react-text: 345 -->1<!-- /react-text --><!-- react-text: 346 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 349 --> - <!-- /react-text --><!-- react-text: 350 -->0<!-- /react-text --><!-- react-text: 351 --> stars, <!-- /react-text --><!-- react-text: 352 -->0<!-- /react-text --><!-- react-text: 353 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 356 --> - <!-- /react-text --><!-- react-text: 357 -->0<!-- /react-text --><!-- react-text: 358 --> stars, <!-- /react-text --><!-- react-text: 359 -->0<!-- /react-text --><!-- react-text: 360 --> forks.<!-- /react-text --></div></div></div></div><p>With this code:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p><!-- react-text: 218 -->Now all that&apos;s left to do is to replace <!-- /react-text --><code>repositories</code><!-- react-text: 220 --> with <!-- /react-text --><code>sortedRepositories</code><!-- react-text: 222 --> in your component.<!-- /react-text --></p><p><!-- react-text: 224 -->Because the selectors are made with <!-- /react-text --><code>reselect</code><!-- react-text: 226 --> under the hood, you can be sure that they will only be recalculated (resorted in this case) when the original input (repositories) change.<!-- /react-text --></p><p><!-- react-text: 228 -->That&apos;s much better than re-sorting them on every call to <!-- /react-text --><code>render()</code><!-- react-text: 230 -->.<!-- /react-text --></p></div><div class="description"><h2>7. Final result</h2><p>Adding the finishing touches gives us this final result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 307 -->Found <!-- /react-text --><!-- react-text: 308 -->7<!-- /react-text --><!-- react-text: 309 --> repositories for user <!-- /react-text --><!-- react-text: 310 -->keajs<!-- /react-text --><!-- react-text: 311 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 314 --> - <!-- /react-text --><!-- react-text: 315 -->800<!-- /react-text --><!-- react-text: 316 --> stars, <!-- /react-text --><!-- react-text: 317 -->18<!-- /react-text --><!-- react-text: 318 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 321 --> - <!-- /react-text --><!-- react-text: 322 -->5<!-- /react-text --><!-- react-text: 323 --> stars, <!-- /react-text --><!-- react-text: 324 -->0<!-- /react-text --><!-- react-text: 325 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 328 --> - <!-- /react-text --><!-- react-text: 329 -->2<!-- /react-text --><!-- react-text: 330 --> stars, <!-- /react-text --><!-- react-text: 331 -->1<!-- /react-text --><!-- react-text: 332 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 335 --> - <!-- /react-text --><!-- react-text: 336 -->2<!-- /react-text --><!-- react-text: 337 --> stars, <!-- /react-text --><!-- react-text: 338 -->0<!-- /react-text --><!-- react-text: 339 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 342 --> - <!-- /react-text --><!-- react-text: 343 -->2<!-- /react-text --><!-- react-text: 344 --> stars, <!-- /react-text --><!-- react-text: 345 -->1<!-- /react-text --><!-- react-text: 346 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 349 --> - <!-- /react-text --><!-- react-text: 350 -->0<!-- /react-text --><!-- react-text: 351 --> stars, <!-- /react-text --><!-- react-text: 352 -->0<!-- /react-text --><!-- react-text: 353 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 356 --> - <!-- /react-text --><!-- react-text: 357 -->0<!-- /react-text --><!-- react-text: 358 --> stars, <!-- /react-text --><!-- react-text: 359 -->0<!-- /react-text --><!-- react-text: 360 --> forks.<!-- /react-text --></div></div></div></div><p>With this code:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> { put, call } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
-<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga'</span>
+<span class="hljs-keyword">import</span> { put, call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
 
-<span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">'https://api.github.com'</span>
+<span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
 @kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
@@ -568,7 +568,7 @@ aside.kea-sidebar nav ul li a:hover {
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">username</span>: [<span class="hljs-string">'keajs'</span>, PropTypes.string, {
+    <span class="hljs-attr">username</span>: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
       [actions.setUsername]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.username
     }],
     <span class="hljs-attr">repositories</span>: [[], PropTypes.array, {
@@ -597,7 +597,7 @@ aside.kea-sidebar nav ul li a:hover {
 
   <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
-    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'username'</span>)
+    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;username&apos;</span>)
     <span class="hljs-keyword">yield</span> put(setUsername(username))
   },
 
@@ -632,11 +632,11 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'example-github-scene'</span>&gt;</span>
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span>
+                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
                  <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
         <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         {isLoading ? (
@@ -648,21 +648,21 @@ aside.kea-sidebar nav ul li a:hover {
             Found {repositories.length} repositories for user {username}!
             {sortedRepositories.map(repo =&gt; (
               <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">'_blank'</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-                {' - '}{repo.stargazers_count} stars, {repo.forks} forks.
+                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&apos;_blank&apos;</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+                {&apos; - &apos;}{repo.stargazers_count} stars, {repo.forks} forks.
               <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
             ))}
           <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         ) : (
           <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-            {error ? `Error: ${error}` : 'No repositories found'}
+            {error ? `Error: ${error}` : &apos;No repositories found&apos;}
           <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
         )}
       <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
     )
   }
 }
-</span></code></pre><p>There's still one thing that's broken:</p><p><!-- react-text: 245 -->If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github's API provides a way to ask for the next 100 results (the <!-- /react-text --><a href="https://developer.github.com/v3/repos/#response"><code>Link</code><!-- react-text: 248 --> headers<!-- /react-text --></a><!-- react-text: 249 -->), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).<!-- /react-text --></p></div><div class="description"><!-- react-text: 251 -->Next page: <!-- /react-text --><a href="/guide/connected">Connected logic</a></div></div><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
+</span></code></pre><p>There&apos;s still one thing that&apos;s broken:</p><p><!-- react-text: 245 -->If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github&apos;s API provides a way to ask for the next 100 results (the <!-- /react-text --><a href="https://developer.github.com/v3/repos/#response"><code>Link</code><!-- react-text: 248 --> headers<!-- /react-text --></a><!-- react-text: 249 -->), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).<!-- /react-text --></p></div><div class="description"><!-- react-text: 251 -->Next page: <!-- /react-text --><a href="/guide/connected">Connected logic</a></div></div><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
