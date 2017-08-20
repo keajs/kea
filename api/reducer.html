@@ -396,9 +396,9 @@ aside.kea-sidebar nav ul li a:hover {
 <span class="hljs-keyword">const</span> store = createStore()
 
 ReactDOM.render(
-  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">{store}</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span></span>,
+  &lt;Provider store={store}&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;,
   <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&apos;root&apos;</span>)
 )
 </code></pre><p><!-- react-text: 96 -->In this case when you <!-- /react-text --><code>import App from &apos;app&apos;</code><!-- react-text: 98 -->, you&apos;re immediately running the <!-- /react-text --><code>kea()</code><!-- react-text: 100 --> calls. Even though you imported <!-- /react-text --><code>createStore</code><!-- react-text: 102 --> before <!-- /react-text --><code>App</code><!-- react-text: 104 --> and run it before rendering the app, the <!-- /react-text --><code>kea()</code><!-- react-text: 106 --> functions are run before <!-- /react-text --><code>keaReducer</code><!-- react-text: 108 -->.<!-- /react-text --></p><p><!-- react-text: 110 -->When running this code, you will run into errors such as: <!-- /react-text --><em>[KEA-LOGIC] Path starting with &quot;scenes&quot; is not connected to the reducer tree! (3) [&quot;scenes&quot;, &quot;counter&quot;, &quot;index&quot;]</em><!-- react-text: 112 -->.<!-- /react-text --></p><p><!-- react-text: 114 -->To fix this, you must bring <!-- /react-text --><code>keaReducer</code><!-- react-text: 116 --> up by one level, so it&apos;s evaluated when <!-- /react-text --><code>createStore</code><!-- react-text: 118 --> is imported, like so:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-comment">// store.js</span>

@@ -381,21 +381,21 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      &lt;div className=&apos;example-github-scene&apos;&gt;
+        &lt;div style={{marginBottom: 20}}&gt;
+          &lt;h1&gt;Search for a github user&lt;/h1&gt;
+          &lt;input value={username}
+                 type=&apos;text&apos;
+                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
           Repos will come here...
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        &lt;/div&gt;
+      &lt;/div&gt;
     )
   }
 }
-</span></code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div><p><!-- react-text: 94 -->You could probably have gotten as far with react&apos;s <!-- /react-text --><code>setState</code><!-- react-text: 96 -->, but since we want to capture this event, we&apos;ll go straight for the kea solution.<!-- /react-text --></p></div><div class="description"><h2><!-- react-text: 99 -->2. Capture <!-- /react-text --><code>setUsername</code><!-- react-text: 101 --> and trigger an API call<!-- /react-text --></h2><p><!-- react-text: 103 -->The next step is to intercept Redux and listen for each instance of the <!-- /react-text --><code>setUsername</code><!-- react-text: 105 --> action being triggered.<!-- /react-text --></p><p><!-- react-text: 107 -->We do this with the <!-- /react-text --><code>takeLatest</code><!-- react-text: 109 --> option and a special worker function which does the API call.<!-- /react-text --></p><button>takeLatest vs takeEvery?</button><p>The code to hook them up would look something like this:</p><pre><code class="javascript hljs">@kea({
+</code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div><p><!-- react-text: 94 -->You could probably have gotten as far with react&apos;s <!-- /react-text --><code>setState</code><!-- react-text: 96 -->, but since we want to capture this event, we&apos;ll go straight for the kea solution.<!-- /react-text --></p></div><div class="description"><h2><!-- react-text: 99 -->2. Capture <!-- /react-text --><code>setUsername</code><!-- react-text: 101 --> and trigger an API call<!-- /react-text --></h2><p><!-- react-text: 103 -->The next step is to intercept Redux and listen for each instance of the <!-- /react-text --><code>setUsername</code><!-- react-text: 105 --> action being triggered.<!-- /react-text --></p><p><!-- react-text: 107 -->We do this with the <!-- /react-text --><code>takeLatest</code><!-- react-text: 109 --> option and a special worker function which does the API call.<!-- /react-text --></p><button>takeLatest vs takeEvery?</button><p>The code to hook them up would look something like this:</p><pre><code class="javascript hljs">@kea({
   <span class="hljs-attr">actions</span>: ...,
   <span class="hljs-attr">reducers</span>: ...,
 
@@ -494,38 +494,38 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;div className=&apos;example-github-scene&apos;&gt;
+        &lt;div style={{marginBottom: 20}}&gt;
+          &lt;h1&gt;Search for a github user&lt;/h1&gt;
+          &lt;input value={username}
+                 type=&apos;text&apos;
+                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
+        &lt;/div&gt;
         {isLoading ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Loading...
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : repositories.length &gt; 0 ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Found {repositories.length} repositories for user {username}!
             {repositories.map(repo =&gt; (
-              <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&apos;_blank&apos;</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+              &lt;div key={repo.id}&gt;
+                &lt;a href={repo.html_url} target=&apos;_blank&apos;&gt;{repo.full_name}&lt;/a&gt;
                 {&apos; - &apos;}
                 {repo.stargazers_count} stars, {repo.forks} forks.
-              <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+              &lt;/div&gt;
             ))}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             {error ? `Error: ${error}` : &apos;No repositories found&apos;}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         )}
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;/div&gt;
     )
   }
 }
-</span></code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p><p>What&apos;s still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p></div><div class="description"><h2>6. Last steps</h2><p>No problem, we can fix that!</p><p><!-- react-text: 187 -->First, to load the repositories on page load, we have two options, both requiring the <!-- /react-text --><code>start</code><!-- react-text: 189 --> function that is run when the component is mounted.<!-- /react-text --></p><p><!-- react-text: 191 -->Option #1 is to call the <!-- /react-text --><code>fetchRepositories</code><!-- react-text: 193 --> worker directly using redux-saga&apos;s <!-- /react-text --><code>call</code><!-- react-text: 195 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+</code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p><p>What&apos;s still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p></div><div class="description"><h2>6. Last steps</h2><p>No problem, we can fix that!</p><p><!-- react-text: 187 -->First, to load the repositories on page load, we have two options, both requiring the <!-- /react-text --><code>start</code><!-- react-text: 189 --> function that is run when the component is mounted.<!-- /react-text --></p><p><!-- react-text: 191 -->Option #1 is to call the <!-- /react-text --><code>fetchRepositories</code><!-- react-text: 193 --> worker directly using redux-saga&apos;s <!-- /react-text --><code>call</code><!-- react-text: 195 -->:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
 @kea({
   <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
@@ -632,37 +632,37 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;div className=&apos;example-github-scene&apos;&gt;
+        &lt;div style={{marginBottom: 20}}&gt;
+          &lt;h1&gt;Search for a github user&lt;/h1&gt;
+          &lt;input value={username}
+                 type=&apos;text&apos;
+                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
+        &lt;/div&gt;
         {isLoading ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Loading...
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : repositories.length &gt; 0 ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Found {repositories.length} repositories for user {username}!
             {sortedRepositories.map(repo =&gt; (
-              <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&apos;_blank&apos;</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+              &lt;div key={repo.id}&gt;
+                &lt;a href={repo.html_url} target=&apos;_blank&apos;&gt;{repo.full_name}&lt;/a&gt;
                 {&apos; - &apos;}{repo.stargazers_count} stars, {repo.forks} forks.
-              <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+              &lt;/div&gt;
             ))}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             {error ? `Error: ${error}` : &apos;No repositories found&apos;}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         )}
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;/div&gt;
     )
   }
 }
-</span></code></pre><p>There&apos;s still one thing that&apos;s broken:</p><p><!-- react-text: 245 -->If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github&apos;s API provides a way to ask for the next 100 results (the <!-- /react-text --><a href="https://developer.github.com/v3/repos/#response"><code>Link</code><!-- react-text: 248 --> headers<!-- /react-text --></a><!-- react-text: 249 -->), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).<!-- /react-text --></p></div><div class="description"><!-- react-text: 251 -->Next page: <!-- /react-text --><a href="/guide/connected">Connected logic</a></div></div><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
+</code></pre><p>There&apos;s still one thing that&apos;s broken:</p><p><!-- react-text: 245 -->If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github&apos;s API provides a way to ask for the next 100 results (the <!-- /react-text --><a href="https://developer.github.com/v3/repos/#response"><code>Link</code><!-- react-text: 248 --> headers<!-- /react-text --></a><!-- react-text: 249 -->), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).<!-- /react-text --></p></div><div class="description"><!-- react-text: 251 -->Next page: <!-- /react-text --><a href="/guide/connected">Connected logic</a></div></div><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

@@ -400,10 +400,10 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { someAction } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Combined props and reducer in a selector: {combinedValue}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> someAction(12)}&gt;{myValue}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+      &lt;div&gt;
+        &lt;div&gt;Combined props and reducer in a selector: {combinedValue}&lt;/div&gt;
+        &lt;button onClick={() =&gt; someAction(12)}&gt;{myValue}&lt;/button&gt;
+      &lt;/div&gt;
     )
   }
 }
@@ -448,9 +448,9 @@ aside.kea-sidebar nav ul li a:hover {
   <span class="hljs-comment">// actions are always also passed in a prop called &apos;actions&apos;</span>
   actions: { action1, action2, importedAction1 }
 }) =&gt; (
-  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{action1}</span>&gt;</span>{prop1}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  &lt;div&gt;
+    &lt;button onClick={action1}&gt;{prop1}&lt;/button&gt;
+  &lt;/div&gt;
 ))
 </code></pre><h3>Options</h3><p><!-- react-text: 95 -->Wrapped logic stores accept all the&#xA0;same options as regular logic stores. See the documentation for <!-- /react-text --><code><a href="/api/logic">kea(options)</a></code><!-- react-text: 98 --> for more details.<!-- /react-text --></p><p>These options are different:</p><h4><!-- react-text: 101 -->key: <!-- /react-text --><code>(props) =&gt; &apos;key&apos;</code></h4><p><!-- react-text: 104 -->If you wish, you may define a <!-- /react-text --><code>key</code><!-- react-text: 106 --> that distinguishes instances of the component<!-- /react-text --></p><pre><code class="javascript hljs">key: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id
 </code></pre><h4><!-- react-text: 110 -->path: <!-- /react-text --><code>(key) =&gt; []</code></h4><p>The path takes the key as an argument if you wish to define the location in redux for the component instance</p><pre><code class="javascript hljs">path: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;sliders&apos;</span>, key]

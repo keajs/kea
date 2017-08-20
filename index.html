@@ -561,12 +561,12 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;kea-counter&apos;</span>&gt;</span>
-        Count: {counter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
-        Doublecount: {doubleCounter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+      &lt;div className=&apos;kea-counter&apos;&gt;
+        Count: {counter}&lt;br /&gt;
+        Doublecount: {doubleCounter}&lt;br /&gt;
+        &lt;button onClick={() =&gt; increment(1)}&gt;Increment&lt;/button&gt;
+        &lt;button onClick={() =&gt; decrement(1)}&gt;Decrement&lt;/button&gt;
+      &lt;/div&gt;
     )
   }
 }
@@ -718,37 +718,37 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
-                 <span class="hljs-attr">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;div className=&apos;example-github-scene&apos;&gt;
+        &lt;div style={{marginBottom: 20}}&gt;
+          &lt;h1&gt;Search for a github user&lt;/h1&gt;
+          &lt;input value={username}
+                 type=&apos;text&apos;
+                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
+        &lt;/div&gt;
         {isLoading ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Loading...
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : repositories.length &gt; 0 ? (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             Found {repositories.length} repositories for user {username}!
             {sortedRepositories.map(repo =&gt; (
-              <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&apos;_blank&apos;</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+              &lt;div key={repo.id}&gt;
+                &lt;a href={repo.html_url} target=&apos;_blank&apos;&gt;{repo.full_name}&lt;/a&gt;
                 {&apos; - &apos;}{repo.stargazers_count} stars, {repo.forks} forks.
-              <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+              &lt;/div&gt;
             ))}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         ) : (
-          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          &lt;div&gt;
             {error ? `Error: ${error}` : &apos;No repositories found&apos;}
-          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          &lt;/div&gt;
         )}
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      &lt;/div&gt;
     )
   }
 }
-</span></code></pre></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 167 -->Found <!-- /react-text --><!-- react-text: 168 -->7<!-- /react-text --><!-- react-text: 169 --> repositories for user <!-- /react-text --><!-- react-text: 170 -->keajs<!-- /react-text --><!-- react-text: 171 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 174 --> - <!-- /react-text --><!-- react-text: 175 -->800<!-- /react-text --><!-- react-text: 176 --> stars, <!-- /react-text --><!-- react-text: 177 -->18<!-- /react-text --><!-- react-text: 178 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 181 --> - <!-- /react-text --><!-- react-text: 182 -->5<!-- /react-text --><!-- react-text: 183 --> stars, <!-- /react-text --><!-- react-text: 184 -->0<!-- /react-text --><!-- react-text: 185 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 188 --> - <!-- /react-text --><!-- react-text: 189 -->2<!-- /react-text --><!-- react-text: 190 --> stars, <!-- /react-text --><!-- react-text: 191 -->1<!-- /react-text --><!-- react-text: 192 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 195 --> - <!-- /react-text --><!-- react-text: 196 -->2<!-- /react-text --><!-- react-text: 197 --> stars, <!-- /react-text --><!-- react-text: 198 -->0<!-- /react-text --><!-- react-text: 199 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 202 --> - <!-- /react-text --><!-- react-text: 203 -->2<!-- /react-text --><!-- react-text: 204 --> stars, <!-- /react-text --><!-- react-text: 205 -->1<!-- /react-text --><!-- react-text: 206 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 209 --> - <!-- /react-text --><!-- react-text: 210 -->0<!-- /react-text --><!-- react-text: 211 --> stars, <!-- /react-text --><!-- react-text: 212 -->0<!-- /react-text --><!-- react-text: 213 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 216 --> - <!-- /react-text --><!-- react-text: 217 -->0<!-- /react-text --><!-- react-text: 218 --> stars, <!-- /react-text --><!-- react-text: 219 -->0<!-- /react-text --><!-- react-text: 220 --> forks.<!-- /react-text --></div></div></div></div><br><!-- react-text: 135 -->Read the guide: <!-- /react-text --><a href="/guide/github">Github</a></div></div><h2>Debounced countdown</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+</code></pre></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 167 -->Found <!-- /react-text --><!-- react-text: 168 -->7<!-- /react-text --><!-- react-text: 169 --> repositories for user <!-- /react-text --><!-- react-text: 170 -->keajs<!-- /react-text --><!-- react-text: 171 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 174 --> - <!-- /react-text --><!-- react-text: 175 -->800<!-- /react-text --><!-- react-text: 176 --> stars, <!-- /react-text --><!-- react-text: 177 -->18<!-- /react-text --><!-- react-text: 178 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 181 --> - <!-- /react-text --><!-- react-text: 182 -->5<!-- /react-text --><!-- react-text: 183 --> stars, <!-- /react-text --><!-- react-text: 184 -->0<!-- /react-text --><!-- react-text: 185 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 188 --> - <!-- /react-text --><!-- react-text: 189 -->2<!-- /react-text --><!-- react-text: 190 --> stars, <!-- /react-text --><!-- react-text: 191 -->1<!-- /react-text --><!-- react-text: 192 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 195 --> - <!-- /react-text --><!-- react-text: 196 -->2<!-- /react-text --><!-- react-text: 197 --> stars, <!-- /react-text --><!-- react-text: 198 -->0<!-- /react-text --><!-- react-text: 199 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 202 --> - <!-- /react-text --><!-- react-text: 203 -->2<!-- /react-text --><!-- react-text: 204 --> stars, <!-- /react-text --><!-- react-text: 205 -->1<!-- /react-text --><!-- react-text: 206 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 209 --> - <!-- /react-text --><!-- react-text: 210 -->0<!-- /react-text --><!-- react-text: 211 --> stars, <!-- /react-text --><!-- react-text: 212 -->0<!-- /react-text --><!-- react-text: 213 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 216 --> - <!-- /react-text --><!-- react-text: 217 -->0<!-- /react-text --><!-- react-text: 218 --> stars, <!-- /react-text --><!-- react-text: 219 -->0<!-- /react-text --><!-- react-text: 220 --> forks.<!-- /react-text --></div></div></div></div><br><!-- react-text: 135 -->Read the guide: <!-- /react-text --><a href="/guide/github">Github</a></div></div><h2>Debounced countdown</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -796,15 +796,15 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { start } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;kea-counter&apos;</span>&gt;</span>
+      &lt;div className=&apos;kea-counter&apos;&gt;
         Count: {counter}
-        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        &lt;br /&gt;&lt;br /&gt;
         {finished
           ? &apos;We made it until the end! finish() action triggered&apos;
           : &apos;Click start to trigger the finish() action in a few seconds&apos;}
-        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> start()}&gt;Start<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        &lt;br /&gt;&lt;br /&gt;
+        &lt;button onClick={() =&gt; start()}&gt;Start&lt;/button&gt;
+      &lt;/div&gt;
     )
   }
 }
@@ -853,10 +853,10 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { toggleFeature } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{features.something ? &apos;Something enabled&apos; : &apos;Something disabled&apos;}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> toggleFeature(&apos;something&apos;)}&gt;Toggle something<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+      &lt;div&gt;
+        &lt;p&gt;{features.something ? &apos;Something enabled&apos; : &apos;Something disabled&apos;}&lt;/p&gt;
+        &lt;button onClick={() =&gt; toggleFeature(&apos;something&apos;)}&gt;Toggle something&lt;/button&gt;
+      &lt;/div&gt;
     )
   }
 }

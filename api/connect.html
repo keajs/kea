@@ -385,7 +385,7 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { openMenu, closeMenu } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{isMenuOpen</span> ? <span class="hljs-attr">closeMenu</span> <span class="hljs-attr">:</span> <span class="hljs-attr">openMenu</span>}&gt;</span>Toggle menu<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+      &lt;button onClick={isMenuOpen ? closeMenu : openMenu}&gt;Toggle menu&lt;/button&gt;
     )
   }
 }

@@ -369,61 +369,61 @@ yarn add react redux react-redux <span class="hljs-comment"># you probably have 
 npm install kea --save
 npm install reselect redux-saga --save     <span class="hljs-comment"># you will need these if not already installed</span>
 npm install react redux react-redux --save <span class="hljs-comment"># you probably have these</span>
-</code></pre><h4>1.2. Store</h4><p>Then configure the store:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { keaReducer, keaSaga } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span> <span class="hljs-comment">// add this</span>
+</code></pre><h4>1.2. Store</h4><p>Then configure the store:</p><pre><code class="javascript hljs bash">import { keaReducer, keaSaga } from <span class="hljs-string">&apos;kea&apos;</span> // add this
 
-<span class="hljs-keyword">const</span> reducers = combineReducers({
-  <span class="hljs-attr">scenes</span>: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>), <span class="hljs-comment">// add this</span>
+const reducers = combineReducers({
+  scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>), // add this
   routing: routerReducer
-  <span class="hljs-comment">// ... other reducers you might have</span>
+  // ... other reducers you might have
 })
 
-<span class="hljs-keyword">const</span> sagaMiddleware = createSagaMiddleware()
-<span class="hljs-keyword">const</span> finalCreateStore = compose(
+const sagaMiddleware = createSagaMiddleware()
+const finalCreateStore = compose(
   applyMiddleware(sagaMiddleware),
   applyMiddleware(routerMiddleware(browserHistory))
 )(createStore)
 
-<span class="hljs-keyword">const</span> store = finalCreateStore(reducers)
+const store = finalCreateStore(reducers)
 
-sagaMiddleware.run(keaSaga) <span class="hljs-comment">// add this</span>
+sagaMiddleware.run(keaSaga) // add this
 </code></pre><p><!-- react-text: 105 -->NB! Make sure the store is loaded before any <!-- /react-text --><code>kea()</code><!-- react-text: 107 --> calls. In practice this usually means you should import your store before your components in your app&apos;s entrypoint.<!-- /react-text --></p><h4>1.3. Optional: Enable decorators</h4><!-- react-text: 109 -->Kea makes use of an experimental support for decorators to make your code nicer to read. If you wish to use this feature, follow the guide here: <!-- /react-text --><a href="https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy">babel-plugin-transform-decorators-legacy</a><!-- react-text: 111 -->.<!-- /react-text --><h3><!-- react-text: 113 -->2. Adding to apps made with <!-- /react-text --><code>create-redux-app</code></h3><h4>2.1. Create your app</h4><p><!-- react-text: 117 -->Follow the <!-- /react-text --><a href="https://github.com/facebookincubator/create-react-app">create-react-app guide</a><!-- react-text: 119 --> to create an app<!-- /react-text --></p><pre><code class="bash hljs">create-react-app my-app
 <span class="hljs-built_in">cd</span> my-app
 yarn start
 </code></pre><h4>2.2. Install kea, redux, redux-saga and reselect</h4><pre><code class="bash hljs">yarn add kea redux react-redux redux-saga reselect
-</code></pre><h4>2.3. Configure your store</h4><p><!-- react-text: 127 -->Create a file called <!-- /react-text --><code>src/store.js</code><!-- react-text: 129 --> and enter the following code<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { createStore, applyMiddleware, combineReducers, compose } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux&apos;</span>
-<span class="hljs-keyword">import</span> createSagaMiddleware <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
-<span class="hljs-keyword">import</span> { keaSaga, keaReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+</code></pre><h4>2.3. Configure your store</h4><p><!-- react-text: 127 -->Create a file called <!-- /react-text --><code>src/store.js</code><!-- react-text: 129 --> and enter the following code<!-- /react-text --></p><pre><code class="javascript hljs bash">import { createStore, applyMiddleware, combineReducers, compose } from <span class="hljs-string">&apos;redux&apos;</span>
+import createSagaMiddleware from <span class="hljs-string">&apos;redux-saga&apos;</span>
+import { keaSaga, keaReducer } from <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">const</span> reducers = combineReducers({
-  <span class="hljs-attr">scenes</span>: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
-  <span class="hljs-comment">// other app reducers here</span>
+const reducers = combineReducers({
+  scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
+  // other app reducers here
 })
 
-<span class="hljs-keyword">const</span> sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware()
 
-<span class="hljs-keyword">const</span> finalCreateStore = compose(
+const finalCreateStore = compose(
   applyMiddleware(sagaMiddleware),
-  <span class="hljs-comment">// more middlewares here</span>
+  // more middlewares here
 )(createStore)
 
-<span class="hljs-keyword">const</span> store = finalCreateStore(reducers)
+const store = finalCreateStore(reducers)
 
 sagaMiddleware.run(keaSaga)
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store
-</code></pre><h4>2.4. Update your app&apos;s entrypoint to use redux</h4><p><!-- react-text: 134 -->You need to add the following lines to your <!-- /react-text --><code>src/index.js</code><!-- react-text: 136 --> to make your app work with redux and redux-saga:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>;
-<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-dom&apos;</span>;
-<span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span> <span class="hljs-comment">// add this</span>
-<span class="hljs-keyword">import</span> <span class="hljs-string">&apos;./index.css&apos;</span>;
-<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./store&apos;</span>; <span class="hljs-comment">// add this (before import App !!!)</span>
-<span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./App&apos;</span>;
-<span class="hljs-keyword">import</span> registerServiceWorker <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./registerServiceWorker&apos;</span>;
+<span class="hljs-built_in">export</span> default store
+</code></pre><h4>2.4. Update your app&apos;s entrypoint to use redux</h4><p><!-- react-text: 134 -->You need to add the following lines to your <!-- /react-text --><code>src/index.js</code><!-- react-text: 136 --> to make your app work with redux and redux-saga:<!-- /react-text --></p><pre><code class="javascript hljs bash">import React from <span class="hljs-string">&apos;react&apos;</span>;
+import ReactDOM from <span class="hljs-string">&apos;react-dom&apos;</span>;
+import { Provider } from <span class="hljs-string">&apos;react-redux&apos;</span> // add this
+import <span class="hljs-string">&apos;./index.css&apos;</span>;
+import store from <span class="hljs-string">&apos;./store&apos;</span>; // add this (before import App !!!)
+import App from <span class="hljs-string">&apos;./App&apos;</span>;
+import registerServiceWorker from <span class="hljs-string">&apos;./registerServiceWorker&apos;</span>;
 
-ReactDOM.render( <span class="hljs-comment">// update this</span>
+ReactDOM.render( // update this
   &lt;Provider store={store}&gt;
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span></span>,
-  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&apos;root&apos;</span>)
+    &lt;App /&gt;
+  &lt;/Provider&gt;,
+  document.getElementById(<span class="hljs-string">&apos;root&apos;</span>)
 );
 
 registerServiceWorker();

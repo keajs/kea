@@ -430,14 +430,14 @@ aside.kea-sidebar nav ul li a:hover {
     <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
 
     <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&apos;kea-counter&apos;</span>&gt;</span>
+      &lt;div className=&apos;kea-counter&apos;&gt;
         Count: {counter}
-        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        &lt;br /&gt;
         Doublecount: {doubleCounter}
-        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        &lt;br /&gt;
+        &lt;button onClick={() =&gt; increment(1)}&gt;Increment&lt;/button&gt;
+        &lt;button onClick={() =&gt; decrement(1)}&gt;Decrement&lt;/button&gt;
+      &lt;/div&gt;
     )
   }
 }
