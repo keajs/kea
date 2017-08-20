@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
+<html class=" "><head>
     <title>Kea</title>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon">
     <meta property="og:image" content="https://kea.js.org/img/logo.png">
     <meta name="twitter:image:src" content="https://kea.js.org/img/logo.png">
     <script>
@@ -18,9 +16,852 @@
         ga('send', 'pageview');
       }
     </script>
-  </head>
+  <style type="text/css">/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment, .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string, .hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title, .hljs-section, .hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag, .hljs-name, .hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp, .hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol, .hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in, .hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+body {
+	background: #ffffff;
+	margin: 0;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+a {
+	color: green;
+}
+
+code {
+	background: #f8f8f8;
+	padding: 2px;
+}
+
+.code {
+	text-align: left;
+	margin: 20px;
+}
+
+.description {
+	text-align: left;
+	margin: 20px;
+	line-height: 22px;
+}
+
+.example {
+	margin: 20px;
+}
+
+h1, h2 {
+	font-weight: 400;
+}
+
+h1, h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+}
+
+h2, h3 {
+	margin-top: 40px;
+}
+
+.demo {
+	background: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.extra-help {
+	background: #ffffdd;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hljs {
+	line-height: 16px;
+}
+
+.api-scene {
+  margin: 20px;
+}
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><style type="text/css">header.body-header nav {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+    header.body-header nav a {
+      text-decoration: none;
+      color: #333333;
+      text-transform: uppercase;
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px
+    }
+
+    header.body-header nav a.active {
+    font-weight: bold;
+    color: #388e3c;
+    border-bottom: 2px solid #388e3c;
+    height: 48px;
+}
+
+    header.body-header nav a:hover {
+    color: #388e3c;
+}
+
+    header.body-header nav a.right {
+    margin-left: auto;
+}
+
+    header.body-header nav a.logo {
+    padding: 5px;
+}
+main section.with-sidebar {
+    border-top: 1px solid #e0e0e0;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
+    display: flex;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    min-height: calc(100vh - 50px - 1px);
+  }
+main section.with-sidebar aside.kea-sidebar {
+      display: block;
+      width: 240px;
+      border-right: 1px solid #e0e0e0;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+main section.with-sidebar .content.with-sidebar {
+      display: block;
+      -webkit-box-flex: 2;
+          -ms-flex-positive: 2;
+              flex-grow: 2;
+      max-width: calc(100% - 240px);
+    }
+main section.with-sidebar .content.darker {
+      background: #eee;
+    }
+@media (max-width: 767px) {
+
+    main section.with-sidebar {
+        display: block;
+    }
+
+    main section.with-sidebar aside.kea-sidebar {
+        width: 100%;
+        border-right: none;
+    }
+
+    main section.with-sidebar .content.with-sidebar {
+        max-width: 100%;
+        padding-top: 20px;
+    }
+}
+aside.kea-sidebar nav .section-title {
+      font-weight: strong;
+      display: block;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+aside.kea-sidebar nav ul {
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+aside.kea-sidebar nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+aside.kea-sidebar nav ul li a {
+          color: #333;
+          text-decoration: none
+        }
+aside.kea-sidebar nav ul li a.active {
+    color: #388e3c;
+    text-decoration: underline;
+}
+aside.kea-sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+</style><script type="text/javascript" charset="utf-8" async="" src="/homepage.bundle.js"></script><style type="text/css">.homepage-scene {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+  .homepage-scene h1 em {
+    border-bottom: 1px dashed #888;
+    cursor: pointer;
+  }
+
+  .homepage-scene .slider-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .homepage-scene h2 {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  .homepage-scene .split {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+  }
+
+  .homepage-scene .split .description {
+      -webkit-box-flex: 1;
+          -ms-flex: 1 auto;
+              flex: 1 auto;
+      margin-left: 0;
+    }
+
+  .homepage-scene .split .description .demo {
+        margin: 0;
+      }
+
+  .homepage-scene .split .code {
+      width: 650px;
+      min-width: 650px;
+    }
+
+  .homepage-scene .split .code pre {
+        margin: 0;
+      }
+
+@media (max-width: 959px) {
+
+  .homepage-scene .split {
+    display: block;
+  }
+
+  .homepage-scene .split .description {
+        margin-left: 20px;
+  }
+
+  .homepage-scene .split .code {
+        width: auto;
+        min-width: auto;
+  }
+}
+
+.homepage-scene .landing {
+    background: #388e3c;
+    padding: 120px 40px 120px 40px;
+    color: #fff;
+}
+
+.homepage-scene .landing a {
+      color: #fff;
+    }
+
+.homepage-scene .landing .intro {
+      margin: 0 auto;
+      max-width: 700px;
+      min-height: 150px;
+    }
+
+.homepage-scene .landing .intro img {
+        float: left;
+        margin-right: 20px;
+        height: 150px;
+        width: 150px;
+      }
+
+.homepage-scene .landing .intro .text {
+        margin-left: 170px;
+      }
+
+.homepage-scene .landing .intro .text h1 {
+          margin-top: 0;
+          padding-top: 10px;
+          padding-bottom: 0;
+          margin-bottom: 0;
+          font-weight: 400;
+          font-size: 44px;
+          border: 0;
+        }
+
+.homepage-scene .landing .intro .text strong {
+          display: block;
+          font-weight: 300;
+          font-size: 24px;
+          margin-bottom: 10px;
+          margin-top: 10px;
+        }
+
+.homepage-scene .landing .intro .text div.links {
+          line-height: 30px;
+        }
+
+@media (max-width: 520px) {
+
+  .homepage-scene .landing {
+    padding: 80px 20px 80px 20px;
+  }
+
+  .homepage-scene .landing .intro {
+        text-align: center;
+  }
+        .homepage-scene .landing .intro img {
+          float: none;
+          margin-right: 0;
+        }
+        .homepage-scene .landing .intro .text {
+          margin-left: 0;
+        }
+}
+</style><style type="text/css">.kea-slider {
+  display: block;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  position: relative;
+}
+
+  .kea-slider img {
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .kea-slider .buttons {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+    line-height: 10px;
+    height: 10px;
+  }
+
+  .kea-slider .buttons span {
+      background: #fff;
+      cursor: pointer;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      margin: 0 5px
+    }
+
+  .kea-slider .buttons span.selected {
+  background: #08FF04;
+}
+</style><style type="text/css">.kea-counter {
+  margin: 0;
+}
+</style></head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="active" href="/">Home</a><a class="" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class=""><div class="content without-sidebar"><div><div class="homepage-scene"><div class="landing"><div class="intro"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMTAuMDAwMDAwKSI+CiAgICAgICAgICAgIDxlbGxpcHNlIGlkPSJPdmFsIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMTEiIGZpbGw9IiNGRkZGRkYiIGN4PSI5OSIgY3k9IjkwIiByeD0iOTAiIHJ5PSI5MCI+PC9lbGxpcHNlPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDMxLjAwMDAwMCkiIGZpbGw9IiMwMDAwMDAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTE0OS4yOTI2NDEsMjcuMzg3NTQ3IEMxNDcuOTA0OTkyLDIzLjIzNzU5OTIgMTQ1LjI3NTkzNCwyMS44NDk5NTAzIDE0NS4yNzU5MzQsMjEuODQ5OTUwMyBDMTQ1LjI3MjY4NCwyMS44NDk5NTAzIDE0NC43MjM0NzQsMjMuNTc4ODI0NCAxNDMuNDA3MzIsMjQuMzc1MDE2NCBDMTQyLjA5MTE2NiwyNS4xNzEyMDg0IDE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDAuNDYzMDM0LDI0Ljg5NDk3ODUgQzE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDMuNjkwMDQ5LDM5LjY0ODkwNCAxNDIuNjE3NjI3LDQ3LjkwOTgwMjMgQzE0MS41NDUyMDYsNTYuMTY3NDUwOSAxMzguMjE0MTk4LDYxLjk1MjAyOTYgMTM2LjQ0MzA3Nyw2Ni4xOTk0NzAzIEMxMzQuNjc1MjA2LDcwLjQ0NjkxMDkgMTI5LjgwNzA2LDc4Ljc2NjMwNSAxMjUuMTE3NjUyLDg0LjA3MzE2ODUgQzEyMC40MjQ5OTQsODkuMzg2NTMxNSAxMDYuMjYyNTI1LDEwMy4wOTA3ODMgMTAwLjE3MjQ2OSwxMDcuMDA2NzQ4IEM5NC4wODI0MTI0LDExMC45MTk0NjMgOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDkwLjM4NzQzMTUsMTExLjQxMzQyNyBDOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDk2LjM2MDQ5NjQsMTE2LjQ4OTU1OCA5OS4yNjI1MzUxLDExOC4xNTM0MzYgQzEwMi4xNjQ1NzQsMTE5LjgxNzMxNSAxMDMuOTk3NDQsMTE5Ljk4NjMwMyAxMDUuODc1ODAzLDExOS45NDQwNTYgQzEwNy43NTA5MTcsMTE5LjkwNTA1OSAxMDkuNTU0NTM2LDExOS40NTk4NDEgMTEwLjcxNDcwMSwxMTguNzQ0ODkzIEMxMTEuODc0ODY3LDExOC4wMzMxOTUgMTE0LjI4OTQ0MSwxMTcuODUxMjA4IDExNS4xODMxMjYsMTE5LjEwNTYxNyBDMTE2LjA3NjgxLDEyMC4zNTM1MjYgMTE2LjM0MzI5MSwxMjEuODcxMTY2IDExNi4zNDMyOTEsMTIxLjg3MTE2NiBDMTE2LjM0MzI5MSwxMjEuODcxMTY2IDEyMS44Mzg2NDEsMTIyLjA0OTkwMyAxMjMuNTM1MDE3LDEyMy4zNDY1NTggQzEyNS4yMzEzOTQsMTI0LjY0MzIxNCAxMjUuMTQzNjUsMTI3LjYzNjI0NiAxMjUuMTQzNjUsMTI3LjYzNjI0NiBDMTI1LjE0MzY1LDEyNy42MzYyNDYgMTI0LjE5MTQ2OSwxMjQuODA1NzAyIDEyMi41OTU4MzYsMTI0LjgwNTcwMiBDMTIwLjk5Njk1MiwxMjQuODA1NzAyIDEyMi4zMDk4NTcsMTI2LjU4OTgyMiAxMTkuNjgwNzk4LDEyNi40OTg4MjkgQzExNy4wNDg0OSwxMjYuNDA0NTg1IDEwOS43NjU3NywxMjQuNTY4NDY5IDEwMy42MTA3MTgsMTI0LjAwNjI2IEM5Ny40NTU2NjY3LDEyMy40NDQwNTEgOTAuOTY5MTM5MSwxMjQuMTk0NzQ2IDg4LjE1MTU5NDMsMTI0LjU2ODQ2OSBDODUuMzMwNzk5NywxMjQuOTQ1NDQyIDgxLjU3NDA3MzQsMTI1LjkzMzM3IDgwLjA2NjE4MzIsMTI1LjEzMzkyOCBDNzguNTY0NzkyNSwxMjQuMzM0NDg2IDc4LjQyNTA1MjcsMTIzLjExNTgyNSA3OC40MjUwNTI3LDEyMy4xMTU4MjUgQzc4LjQyNTA1MjcsMTIzLjExNTgyNSA3Ny44NTk1OTM5LDEyMy4xNjEzMjIgNzYuNzgwNjcyNSwxMjQuMDU1MDA3IEM3NS42OTg1MDEzLDEyNC45NDU0NDIgNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc1LjQ2MTI2ODYsMTI2LjE3MDYwMyBDNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc0LjU3MDgzMzQsMTIzLjc3MjI3NyA3Ni4zMDk0NTY4LDEyMi41OTU4NjMgQzc4LjA0ODA4MDIsMTIxLjQxOTQ0OSA3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuMTI3MDAxNiwxMjEuNjU2NjgxIEM3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuNzM3OTU3MSwxMjAuNjcyMDAzIDgxLjM4MjMzNzMsMTIwLjg2MDQ4OSBDODMuMDI5OTY3MywxMjEuMDQ1NzI2IDkxLjY3NDMzNzcsMTIwLjY3MjAwMyA5Mi41NjgwMjI2LDEyMC42NzIwMDMgQzkzLjQ2MTcwNzYsMTIwLjY3MjAwMyA5NC42ODM2MTg2LDEyMC40MzgwMiA5My40MTI5NjExLDExOS4zMDcxMDIgQzkyLjE0NTU1MzQsMTE4LjE3OTQzNSA4NS43MDc3NzIzLDExMi4wNzMxMjkgODUuNzA3NzcyMywxMTIuMDczMTI5IEM4NS43MDQ1MjI1LDExMi4wNzMxMjkgNzcuNjM1MzYwMiwxMTMuMTA5ODA0IDcwLjg2Mjg1MzUsMTEyLjg1MzA3MiBDNjQuMDkwMzQ2NywxMTIuNTkzMDkxIDU0LjA5MDgyNSwxMTIuMDE0NjM0IDU0LjA5MDgyNSwxMTIuMDE0NjM0IEM1NC4wOTA4MjUsMTEyLjAxNDYzNCAxNS42NTkxMjQsMTQ0LjE1NDc5MyA4LjQzMTY1MDM5LDE0OS45MTk4NzMgQzEuMjAwOTI3MDEsMTU1LjY4ODIwMyAtMC43NzE2NzkzMjYsMTU0LjczOTI3MiAwLjI1MTk5NjExOSwxNTAuNzk3MzA5IEMxLjI3MjQyMTgsMTQ2Ljg1NTM0NiAxMC44Mzk3MjUsMTM0LjM2OTc1NSAxMC44Mzk3MjUsMTM0LjM2OTc1NSBDMTAuODM2NDc1MiwxMzQuMzY5NzU1IDkuNzQ0NTU0NzcsMTMyLjU0MzM4OCAxMC45ODU5NjQ0LDEyOS4yNjExMjcgQzEyLjIyNzM3MzksMTI1Ljk3MjM2NyAxNC40MTc3MTQ0LDEyMS4yOTkyMDcgMTQuNDE3NzE0NCwxMjEuMjk5MjA3IEMxNC40MTQ0NjQ3LDEyMS4yOTkyMDcgMTAuOTUzNDY2NywxMjUuNjQ3MzkxIDkuODg3NTQ0MzUsMTI2Ljk5NjA0MiBDOC44MjE2MjE5OCwxMjguMzQ3OTQ0IDcuNjA5NDYwMjcsMTI4Ljk5MTM5NyA4LjM5MjY1MzIzLDEyNS44NjE4NzUgQzkuMTc5MDk1OTUsMTIyLjczMjM1MyAxNi44MjkwMzg4LDEwNy41NDk0NTkgMjguODUzMTYzMSw5MS4zODgzODU3IEM0MC44NzQwMzc2LDc1LjIzMDU2MjUgNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDUzLjE1NDg5MzEsNjYuMTc5OTcxNyBDNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDY1LjAxNjUyOTMsNTEuNDg3NzkxNyA3Mi44MDI5NjIyLDQ0Ljk2ODc2NjUgQzgwLjU5MjY0NDgsMzguNDQ5NzQxMyA4OC42NDg4MDgxLDMyLjgzNDE1MDMgOTAuNTUzMTY5NCwzMS4zODQ3NTU5IEM5Mi40NTQyODA5LDI5LjkzODYxMTIgOTMuNzIxNjg4NiwyOC4xMjg0OTMgOTQuODEwMzU5MywyNS42ODE0MjEyIEM5NS44OTU3ODAzLDIzLjIzNzU5OTIgMTAzLjY4MjIxMyw5LjExMDg3ODA5IDEwOS44NDA1MTUsMy44NTkyNjA1NyBDMTE1Ljk5ODgxNiwtMS4zOTU2MDY3MSAxMjcuMjA0LC0wLjIwMjk0MzU3NCAxMzEuMTc1MjExLDEuMTkxMjA0ODkgQzEzNS4xNDMxNzIsMi41OTE4NTI4OCAxMzkuMTY5NjI5LDUuNTAwMzkxMDUgMTQwLjY3NzUxOSw3LjIzMjUxNDg5IEMxNDIuMTg4NjU5LDguOTY0NjM4NzQgMTQyLjE4ODY1OSwxMC4zNjUyODY3IDE0Mi4xODg2NTksMTAuMzY1Mjg2NyBDMTQyLjE4NTQwOSwxMC4zNjUyODY3IDE0Ny4yMTYwNDMsMTIuMjA3OTAyNSAxNDkuOTU4ODQzLDE1Ljc4NTg5MTkgQzE1Mi42OTUxNDQsMTkuMzYzODgxNCAxNTUuMDQ0NzIyLDI2Ljc5NjA5MDEgMTQ5Ljk0OTA5NCwzNS4yMTI5NzcgQzE0OS45NDkwOTQsMzUuMjEyOTc3IDE1MC42NzM3OTEsMzEuNTQwNzQ0NSAxNDkuMjkyNjQxLDI3LjM4NzU0NyBaIiBpZD0iRmlsbC0zMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbC0yIiBzdHJva2U9IiNGRkZGRkYiIGN4PSIxMzEiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=" alt=""><div class="text"><h1>Kea</h1><strong><!-- react-text: 40 -->High level abstraction between <!-- /react-text --><nobr>React and Redux</nobr></strong><div class="links"><a href="/guide/installation">Get started</a><!-- react-text: 44 -->&nbsp;&nbsp;&nbsp;&nbsp;<!-- /react-text --><a href="https://www.github.com/keajs/kea">Fork on GitHub</a><!-- react-text: 46 -->&nbsp;&nbsp;&nbsp;&nbsp;<!-- /react-text --><iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe></div></div></div></div><h2>What is Kea?</h2><div class="description"><p><!-- react-text: 51 -->Kea is a state management library for React. It <!-- /react-text --><em>empowers</em><!-- react-text: 53 --> Redux, making it as easy to use as <!-- /react-text --><code>setState</code><!-- react-text: 55 --> while retaining composability and improving code clarity.<!-- /react-text --></p><ul><li><strong>100% Redux</strong><!-- react-text: 59 -->: Built on top of <!-- /react-text --><a href="http://redux.js.org/">redux</a><!-- react-text: 61 -->, <!-- /react-text --><a href="https://redux-saga.js.org/">redux-saga</a><!-- react-text: 63 --> and <!-- /react-text --><a href="https://github.com/reactjs/reselect">reselect</a><!-- react-text: 65 -->.<!-- /react-text --></li><li><strong>No boilerplate</strong><!-- react-text: 68 -->: Forget <!-- /react-text --><code>mapStateToProps</code><!-- react-text: 70 --> and redundant constants. Only write code that matters!<!-- /react-text --></li><li><strong>No new concepts</strong><!-- react-text: 73 -->: Use actions, reducers, selectors and sagas. Gradually migrate <!-- /react-text --><a href="/guide/migration">existing Redux applications</a><!-- react-text: 75 -->.<!-- /react-text --></li><li><strong>Interoperability</strong><!-- react-text: 78 -->: Seamlessly <!-- /react-text --><a href="/guide/connected">connect</a><!-- react-text: 80 --> different parts of your application.<!-- /react-text --></li></ul><p><!-- react-text: 82 -->Compare it to other state management libraries: <!-- /react-text --><a href="https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02">Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.</a></p><p><a href="/guide/installation">Read the guide</a><!-- react-text: 86 --> or check out the examples below:<!-- /react-text --></p></div><h2>Simple counter</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
+      (counter) =&gt; counter * <span class="hljs-number">2</span>,
+      PropTypes.number
+    ]
+  })
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre></div><div class="description"><div class="demo"><div class="kea-counter"><!-- react-text: 95 -->Count: <!-- /react-text --><!-- react-text: 96 -->0<!-- /react-text --><br><!-- react-text: 98 -->Doublecount: <!-- /react-text --><!-- react-text: 99 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><br><!-- react-text: 104 -->Read the guide: <!-- /react-text --><a href="/guide/counter">Counter</a></div></div><h2>Slider</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
+
+<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/delay'</span> <span class="hljs-comment">// promise-based timeout helper</span>
+<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/range'</span> <span class="hljs-comment">// range(3) === [0, 1, 2]</span>
+
+<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">'./images'</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentImage</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
+      (currentSlide) =&gt; images[currentSlide],
+      PropTypes.object
+    ]
+  }),
+
+  <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
+        <span class="hljs-attr">change</span>: take(updateSlide.toString()),
+        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+      })
+
+      <span class="hljs-keyword">if</span> (timeout) {
+        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'currentSlide'</span>)
+        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
+      }
+    }
+  }
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { currentSlide, currentImage } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
+
+    <span class="hljs-keyword">return</span> (
+      &lt;div className='kea-slider'&gt;
+        &lt;img src={currentImage.src} alt={title} title={title} /&gt;
+        &lt;div className='buttons'&gt;
+          {range(images.length).map(i =&gt; (
+            &lt;span key={i}
+                  className={i === currentSlide ? 'selected' : ''}
+                  onClick={() =&gt; updateSlide(i)} /&gt;
+          ))}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+}
+</code></pre></div><div class="description"><div class="demo"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div><br><!-- react-text: 120 -->Read the guide: <!-- /react-text --><a href="/guide/sliders">Sliders</a></div></div><h2>Github</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">import</span> { put, call } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
+<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga'</span>
+
+<span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">'https://api.github.com'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">setUsername</span>: <span class="hljs-function">(<span class="hljs-params">username</span>) =&gt;</span> ({ username }),
+    <span class="hljs-attr">setRepositories</span>: <span class="hljs-function">(<span class="hljs-params">repositories</span>) =&gt;</span> ({ repositories }),
+    <span class="hljs-attr">setFetchError</span>: <span class="hljs-function">(<span class="hljs-params">message</span>) =&gt;</span> ({ message })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">username</span>: [<span class="hljs-string">'keajs'</span>, PropTypes.string, {
+      [actions.setUsername]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.username
+    }],
+    <span class="hljs-attr">repositories</span>: [[], PropTypes.array, {
+      [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [],
+      [actions.setRepositories]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.repositories
+    }],
+    <span class="hljs-attr">isLoading</span>: [<span class="hljs-literal">true</span>, PropTypes.bool, {
+      [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
+      [actions.setRepositories]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
+      [actions.setFetchError]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
+    }],
+    <span class="hljs-attr">error</span>: [<span class="hljs-literal">null</span>, PropTypes.string, {
+      [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">null</span>,
+      [actions.setFetchError]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.message
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">sortedRepositories</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.repositories],
+      (repositories) =&gt; repositories.sort(
+                          <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> b.stargazers_count - a.stargazers_count),
+      PropTypes.array
+    ]
+  }),
+
+  <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
+    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'username'</span>)
+    <span class="hljs-keyword">yield</span> put(setUsername(username))
+  },
+
+  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+    [actions.setUsername]: workers.fetchRepositories
+  }),
+
+  <span class="hljs-attr">workers</span>: {
+    * fetchRepositories (action) {
+      <span class="hljs-keyword">const</span> { setRepositories, setFetchError } = <span class="hljs-keyword">this</span>.actions
+      <span class="hljs-keyword">const</span> { username } = action.payload
+
+      <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">100</span>) <span class="hljs-comment">// debounce for 100ms</span>
+
+      <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${API_URL}</span>/users/<span class="hljs-subst">${username}</span>/repos?per_page=250`</span>
+      <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">yield</span> <span class="hljs-built_in">window</span>.fetch(url)
+
+      <span class="hljs-keyword">if</span> (response.status === <span class="hljs-number">200</span>) {
+        <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">yield</span> response.json()
+        <span class="hljs-keyword">yield</span> put(setRepositories(json))
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">yield</span> response.json()
+        <span class="hljs-keyword">yield</span> put(setFetchError(json.message))
+      }
+    }
+  }
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExampleGithubScene</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { username, isLoading, repositories,
+            sortedRepositories, error } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'example-github-scene'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{marginBottom:</span> <span class="hljs-attr">20</span>}}&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Search for a github user<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{username}</span>
+                 <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span>
+                 <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> setUsername(e.target.value)} /&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        {isLoading ? (
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            Loading...
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        ) : repositories.length &gt; 0 ? (
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            Found {repositories.length} repositories for user {username}!
+            {sortedRepositories.map(repo =&gt; (
+              <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{repo.id}</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{repo.html_url}</span> <span class="hljs-attr">target</span>=<span class="hljs-string">'_blank'</span>&gt;</span>{repo.full_name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+                {' - '}{repo.stargazers_count} stars, {repo.forks} forks.
+              <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            ))}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        ) : (
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            {error ? `Error: ${error}` : 'No repositories found'}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        )}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+  }
+}
+</span></code></pre></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div><!-- react-text: 167 -->Found <!-- /react-text --><!-- react-text: 168 -->7<!-- /react-text --><!-- react-text: 169 --> repositories for user <!-- /react-text --><!-- react-text: 170 -->keajs<!-- /react-text --><!-- react-text: 171 -->!<!-- /react-text --><div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a><!-- react-text: 174 --> - <!-- /react-text --><!-- react-text: 175 -->799<!-- /react-text --><!-- react-text: 176 --> stars, <!-- /react-text --><!-- react-text: 177 -->18<!-- /react-text --><!-- react-text: 178 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a><!-- react-text: 181 --> - <!-- /react-text --><!-- react-text: 182 -->5<!-- /react-text --><!-- react-text: 183 --> stars, <!-- /react-text --><!-- react-text: 184 -->0<!-- /react-text --><!-- react-text: 185 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a><!-- react-text: 188 --> - <!-- /react-text --><!-- react-text: 189 -->2<!-- /react-text --><!-- react-text: 190 --> stars, <!-- /react-text --><!-- react-text: 191 -->1<!-- /react-text --><!-- react-text: 192 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a><!-- react-text: 195 --> - <!-- /react-text --><!-- react-text: 196 -->2<!-- /react-text --><!-- react-text: 197 --> stars, <!-- /react-text --><!-- react-text: 198 -->0<!-- /react-text --><!-- react-text: 199 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a><!-- react-text: 202 --> - <!-- /react-text --><!-- react-text: 203 -->2<!-- /react-text --><!-- react-text: 204 --> stars, <!-- /react-text --><!-- react-text: 205 -->1<!-- /react-text --><!-- react-text: 206 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a><!-- react-text: 209 --> - <!-- /react-text --><!-- react-text: 210 -->0<!-- /react-text --><!-- react-text: 211 --> stars, <!-- /react-text --><!-- react-text: 212 -->0<!-- /react-text --><!-- react-text: 213 --> forks.<!-- /react-text --></div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a><!-- react-text: 216 --> - <!-- /react-text --><!-- react-text: 217 -->0<!-- /react-text --><!-- react-text: 218 --> stars, <!-- /react-text --><!-- react-text: 219 -->0<!-- /react-text --><!-- react-text: 220 --> forks.<!-- /react-text --></div></div></div></div><br><!-- react-text: 135 -->Read the guide: <!-- /react-text --><a href="/guide/github">Github</a></div></div><h2>Debounced countdown</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">'~/utils/delay'</span>
+<span class="hljs-keyword">import</span> { put, cancelled } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-saga/effects'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">start</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">finish</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">setCounter</span>: <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> ({ counter })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key, props }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.setCounter]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.counter
+    }],
+    <span class="hljs-attr">finished</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+      [actions.start]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
+      [actions.finish]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>
+    }]
+  }),
+
+  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+    [actions.start]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">const</span> { setCounter, finish } = <span class="hljs-keyword">this</span>.actions
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">50</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+          <span class="hljs-keyword">yield</span> put(setCounter(i))
+          <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">50</span>)
+        }
+        <span class="hljs-keyword">yield</span> put(finish())
+      } <span class="hljs-keyword">finally</span> {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">yield</span> cancelled()) {
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Countdown was cancelled!'</span>)
+        }
+      }
+    }
+  })
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter, finished } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { start } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        {finished
+          ? 'We made it until the end! finish() action triggered'
+          : 'Click start to trigger the finish() action in a few seconds'}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> start()}&gt;Start<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre></div><div class="description"><div class="demo"><div class="kea-counter"><!-- react-text: 145 -->Count: <!-- /react-text --><!-- react-text: 146 -->0<!-- /react-text --><br><br><!-- react-text: 149 -->Click start to trigger the finish() action in a few seconds<!-- /react-text --><br><br><button>Start</button></div></div><br></div></div><h2>Connected logic stores</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">toggleFeature</span>: <span class="hljs-function">(<span class="hljs-params">feature</span>) =&gt;</span> ({ feature })
+  }),
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">features</span>: [{}, PropTypes.object, {
+      [actions.toggleFeature]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> { feature } = payload
+        <span class="hljs-keyword">return</span> {
+          ...state,
+          [feature]: !state[feature]
+        }
+      }
+    }]
+  })
+})
+
+<span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'../features-logic'</span>
+
+@connect({
+  <span class="hljs-attr">actions</span>: [
+    featuresLogic, [
+      <span class="hljs-string">'toggleFeature'</span>
+    ]
+  ],
+  <span class="hljs-attr">props</span>: [
+    featuresLogic, [
+      <span class="hljs-string">'features'</span>
+    ]
+  ]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectedToggle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { features } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { toggleFeature } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{features.something ? 'Something enabled' : 'Something disabled'}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> toggleFeature('something')}&gt;Toggle something<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br><!-- react-text: 165 -->Read the guide: <!-- /react-text --><a href="/guide/connected">Connected</a></div></div></div><!-- react-empty: 13 --><!-- react-empty: 14 --><!-- react-empty: 15 --><!-- react-empty: 16 --><!-- react-empty: 17 --><!-- react-empty: 18 --><!-- react-empty: 19 --><!-- react-empty: 20 --><!-- react-empty: 21 --><!-- react-empty: 22 --><!-- react-empty: 23 --><!-- react-empty: 24 --><!-- react-empty: 25 --><!-- react-empty: 26 --><!-- react-empty: 27 --><!-- react-empty: 28 --><!-- react-empty: 29 --><!-- react-empty: 30 --><!-- react-empty: 31 --><!-- react-empty: 32 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
-  </body>
-</html>
+  
+
+</body></html>

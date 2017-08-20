@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
+<html class=" "><head>
     <title>Kea</title>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon">
     <meta property="og:image" content="https://kea.js.org/img/logo.png">
     <meta name="twitter:image:src" content="https://kea.js.org/img/logo.png">
     <script>
@@ -18,9 +16,697 @@
         ga('send', 'pageview');
       }
     </script>
-  </head>
+  <style type="text/css">/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment, .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string, .hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title, .hljs-section, .hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag, .hljs-name, .hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp, .hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol, .hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in, .hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+body {
+	background: #ffffff;
+	margin: 0;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+a {
+	color: green;
+}
+
+code {
+	background: #f8f8f8;
+	padding: 2px;
+}
+
+.code {
+	text-align: left;
+	margin: 20px;
+}
+
+.description {
+	text-align: left;
+	margin: 20px;
+	line-height: 22px;
+}
+
+.example {
+	margin: 20px;
+}
+
+h1, h2 {
+	font-weight: 400;
+}
+
+h1, h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+}
+
+h2, h3 {
+	margin-top: 40px;
+}
+
+.demo {
+	background: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.extra-help {
+	background: #ffffdd;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hljs {
+	line-height: 16px;
+}
+
+.api-scene {
+  margin: 20px;
+}
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><style type="text/css">header.body-header nav {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+    header.body-header nav a {
+      text-decoration: none;
+      color: #333333;
+      text-transform: uppercase;
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px
+    }
+
+    header.body-header nav a.active {
+    font-weight: bold;
+    color: #388e3c;
+    border-bottom: 2px solid #388e3c;
+    height: 48px;
+}
+
+    header.body-header nav a:hover {
+    color: #388e3c;
+}
+
+    header.body-header nav a.right {
+    margin-left: auto;
+}
+
+    header.body-header nav a.logo {
+    padding: 5px;
+}
+main section.with-sidebar {
+    border-top: 1px solid #e0e0e0;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
+    display: flex;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    min-height: calc(100vh - 50px - 1px);
+  }
+main section.with-sidebar aside.kea-sidebar {
+      display: block;
+      width: 240px;
+      border-right: 1px solid #e0e0e0;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+main section.with-sidebar .content.with-sidebar {
+      display: block;
+      -webkit-box-flex: 2;
+          -ms-flex-positive: 2;
+              flex-grow: 2;
+      max-width: calc(100% - 240px);
+    }
+main section.with-sidebar .content.darker {
+      background: #eee;
+    }
+@media (max-width: 767px) {
+
+    main section.with-sidebar {
+        display: block;
+    }
+
+    main section.with-sidebar aside.kea-sidebar {
+        width: 100%;
+        border-right: none;
+    }
+
+    main section.with-sidebar .content.with-sidebar {
+        max-width: 100%;
+        padding-top: 20px;
+    }
+}
+aside.kea-sidebar nav .section-title {
+      font-weight: strong;
+      display: block;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+aside.kea-sidebar nav ul {
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+aside.kea-sidebar nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+aside.kea-sidebar nav ul li a {
+          color: #333;
+          text-decoration: none
+        }
+aside.kea-sidebar nav ul li a.active {
+    color: #388e3c;
+    text-decoration: underline;
+}
+aside.kea-sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+</style><script type="text/javascript" charset="utf-8" async="" src="/apiLogic.bundle.js"></script></head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><div class="api-scene"><h2><code>kea(options)</code></h2><p><!-- react-text: 71 -->Create a new kea <!-- /react-text --><strong>logic store</strong><!-- react-text: 73 --> and connect it to redux.<!-- /react-text --></p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'./other-logic.js'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
+  <span class="hljs-attr">connect</span>: {
+    <span class="hljs-attr">actions</span>: [
+      otherLogic, [
+        <span class="hljs-string">'firstAction'</span>,
+        <span class="hljs-string">'secondAction as renamedAction'</span>
+      ]
+    ],
+
+    <span class="hljs-attr">props</span>: [
+      otherLogic, [
+        <span class="hljs-string">'firstProp'</span>,
+        <span class="hljs-string">'secondProp as renamedProp'</span>,
+        <span class="hljs-string">'* as allProps'</span>
+      ],
+      <span class="hljs-comment">// select from any redux tree node</span>
+      (state) =&gt; state.somethingThatResolvesToAnObject, [
+        <span class="hljs-string">'variable'</span>,
+        <span class="hljs-string">'otherVariable'</span>
+      ]
+    ]
+  },
+
+  <span class="hljs-attr">path</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'index'</span>],
+
+  <span class="hljs-attr">constants</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'STRING'</span>, <span class="hljs-string">'OTHER_STRING'</span>],
+
+  <span class="hljs-attr">actions</span>: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
+    <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">'payload value'</span>,
+    <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> },
+    <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
+    <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ id, message }),
+    <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ id, message })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
+    <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* optional options: { persist: true }, */</span> {
+      <span class="hljs-comment">// operations</span>
+      [actions.simpleAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.value <span class="hljs-comment">// return the new state,</span>
+      [actions.complexAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
+        <span class="hljs-comment">// do more things in the block</span>
+        <span class="hljs-keyword">return</span> state + payload.value
+      },
+      [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
+      [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
+      [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
+      <span class="hljs-string">"ANY_OTHER_ACTION_TYPE"</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">'do whatever you want'</span>
+    }],
+
+    <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
+      [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> constants.STRING,
+      [actions.someOtherAction]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ path, constants, actions, selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">selectorName</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.inputSelector1, selectors.inputSelector2],
+      (input1, input2) =&gt; createOutput(input),
+      returnPropType
+    ],
+
+    <span class="hljs-attr">computedValue</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.reducerKey, selectors.constantDefault],
+      (reducerKey, constantDefault) =&gt; {
+        <span class="hljs-keyword">return</span> complicatedOperation(reducerKey, constantDefault)
+      },
+      PropTypes.object
+    ]
+  }),
+
+  <span class="hljs-comment">// saga functions</span>
+
+  start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// saga started or component mounted</span>
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
+  },
+
+  <span class="hljs-attr">stop</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// saga cancelled or component unmounted</span>
+  },
+
+  <span class="hljs-attr">takeEvery</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+    [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-comment">// inline worker</span>
+    },
+    [actions.actionWithDynamicPayload]: workers.dynamicWorker
+  }),
+
+  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+    [actions.actionWithStaticPayload]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-comment">// inline worker</span>
+    },
+    [actions.actionWithManyParameters]: workers.dynamicWorker
+  }),
+
+  <span class="hljs-attr">workers</span>: {
+    * dynamicWorker (action) {
+      <span class="hljs-keyword">const</span> { id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
+      <span class="hljs-comment">// reference with workers.dynamicWorker</span>
+    },
+    <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-comment">// another way to define a worker</span>
+    }
+  },
+
+  <span class="hljs-attr">sagas</span>: [saga1, saga2]
+})
+
+<span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">'scenes/my-random-scene/logic'</span>
+</code></pre><h3>Options</h3><h4><!-- react-text: 80 -->path: <!-- /react-text --><code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application's Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'logicMountPoint'</span>]
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.path == [<span class="hljs-string">'scenes'</span>, <span class="hljs-string">'myRandomScene'</span>, <span class="hljs-string">'logicMountPoint'</span>]
+</code></pre><h4><!-- react-text: 86 -->constants: <!-- /react-text --><code>() =&gt; []</code></h4><p>Create constants that can be used in other parts of the logic store.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+constants: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">'STRING'</span>, <span class="hljs-string">'OTHER_STRING'</span>]
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.constants == { <span class="hljs-attr">STRING</span>: <span class="hljs-string">'STRING'</span>, <span class="hljs-attr">OTHER_STRING</span>: <span class="hljs-string">'OTHER_STRING'</span> }
+</code></pre><h4><!-- react-text: 92 -->actions: <!-- /react-text --><code>({ path, constants }) =&gt; ({})</code></h4><p>Define action creators</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+actions: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
+  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">'payload value'</span>,
+  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> },
+  <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
+
+  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
+  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ id, message }),
+  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ id, message })
+})
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.actions == {
+  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-string">'payload value'</span> } }),
+  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">'that'</span> } }),
+  <span class="hljs-attr">simpleAction</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span> } }),
+
+  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id } }),
+  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id, message } }),
+  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">payload</span>: { id, message } })
+}
+</code></pre><h4><!-- react-text: 98 -->reducers: <!-- /react-text --><code>({ path, constants, actions }) =&gt; ({})</code></h4><p>Define the structure and logic of your reducers</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+reducers: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
+  <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* optional options: { persist: true }, */</span> {
+    <span class="hljs-comment">// operations</span>
+    [actions.simpleAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload <span class="hljs-comment">// return the new state,</span>
+    [actions.complexAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
+      <span class="hljs-comment">// do more things in the block</span>
+      <span class="hljs-keyword">return</span> state + payload
+    },
+    [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
+    [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
+    [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
+    <span class="hljs-string">"ANY_OTHER_ACTION_TYPE"</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">'do whatever you want'</span>
+  }],
+
+  <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
+    [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> constants.STRING,
+    [actions.someOtherAction]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value
+  }]
+})
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.reducers == {
+  <span class="hljs-attr">reducerKey</span>: <span class="hljs-function">(<span class="hljs-params">initialState = defaultValue, action</span>) =&gt;</span> <span class="hljs-comment">/* ... */</span>,
+  <span class="hljs-attr">constantDefault</span>: <span class="hljs-function">(<span class="hljs-params">initialState = constants.OTHER_STRING, action</span>) =&gt;</span> <span class="hljs-comment">/* ... */</span>,
+}
+myRandomSceneLogic.reducer == combineReducers(reducers)
+</code></pre><h4><!-- react-text: 104 -->selectors: <!-- /react-text --><code>({ path, constants, actions, selectors }) =&gt; ({})</code></h4><p>Define selectors, which are only recomputed when their input changes</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+selectors: <span class="hljs-function">(<span class="hljs-params">{ path, constants, actions, selectors }</span>) =&gt;</span> ({
+  <span class="hljs-attr">selectorName</span>: [
+    <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.inputSelector1, selectors.inputSelector2],
+    (input1, input2) =&gt; createOutput(input),
+    returnPropType
+  ],
+
+  <span class="hljs-attr">computedValue</span>: [
+    <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.reducerKey, selectors.constantDefault],
+    (reducerKey, constantDefault) =&gt; {
+      <span class="hljs-keyword">return</span> complicatedOperation(reducerKey, constantDefault)
+    },
+    PropTypes.object
+  ]
+})
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.selectors == {
+  <span class="hljs-comment">// all reducer keys first,</span>
+  reducerKey: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.scenes.myRandomScene.index.reducerKey,
+  <span class="hljs-attr">constantDefault</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.scenes.myRandomScene.index.constantDefault,
+
+  <span class="hljs-comment">// other defined selectors</span>
+  selectorName: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> memoizedSelectorForSelectorName(state),
+  <span class="hljs-attr">computedValue</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> memoizedSelectorForComputedValue(state)
+}
+
+myRandomSceneLogic.selector == <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> ({
+  <span class="hljs-attr">reducerKey</span>: state.scenes.myRandomScene.index.reducerKey,
+  <span class="hljs-attr">constantDefault</span>: state.scenes.myRandomScene.index.constantDefault,
+  <span class="hljs-attr">selectorName</span>: memoizedSelectorForSelectorName(state),
+  <span class="hljs-attr">computedValue</span>: memoizedSelectorForComputedValue(state)
+})
+</code></pre><h4><!-- react-text: 110 -->connect: <!-- /react-text --><code>{}</code></h4><p>Fetch actions and selectors/props from other logic stores.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+connect: {
+  <span class="hljs-attr">actions</span>: [
+    otherLogic, [
+      <span class="hljs-string">'firstAction'</span>,
+      <span class="hljs-string">'secondAction as renamedAction'</span>
+    ]
+  ],
+
+  <span class="hljs-attr">props</span>: [
+    otherLogic, [
+      <span class="hljs-string">'firstProp'</span>,
+      <span class="hljs-string">'secondProp as renamedProp'</span>,
+      <span class="hljs-string">'* as allProps'</span>
+    ],
+    <span class="hljs-comment">// select from any redux tree node</span>
+    (state) =&gt; state.somethingThatResolvesToAnObject, [
+      <span class="hljs-string">'variable'</span>,
+      <span class="hljs-string">'otherVariable'</span>
+    ]
+  ]
+}
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.actions == {
+  <span class="hljs-attr">firstAction</span>: otherLogic.actions.firstAction,
+  <span class="hljs-attr">renamedAction</span>: otherLogic.actions.secondAction
+}
+
+myRandomSceneLogic.selectors == {
+  <span class="hljs-attr">firstProp</span>: otherLogic.selectors.firstProp,
+  <span class="hljs-attr">renamedProp</span>: otherLogic.selectors.secondProp,
+  <span class="hljs-attr">allProps</span>: otherLogic.selector,
+  <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
+  <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
+}
+</code></pre><h4><!-- react-text: 116 -->start: <!-- /react-text --><code><!-- react-text: 118 -->function * () <!-- /react-text --><!-- react-text: 119 -->{}<!-- /react-text --></code></h4><p>Saga that is started whenever the saga exported from this component starts</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// saga started or component mounted</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
+}
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// saga started or component mounted</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
+  <span class="hljs-comment">// =&gt; { actions, workers, path, key, get: function * (), fetch: function * () }</span>
+}
+</code></pre><h4><!-- react-text: 124 -->stop: <!-- /react-text --><code><!-- react-text: 126 -->function * () <!-- /react-text --><!-- react-text: 127 -->{}<!-- /react-text --></code></h4><p>Saga that is started whenever the saga exported from this component is cancelled</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// saga cancelled or component unmounted</span>
+}
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// start()</span>
+  } <span class="hljs-keyword">finally</span> {
+    <span class="hljs-keyword">if</span> (cancelled()) {
+      <span class="hljs-comment">// saga cancelled or component unmounted</span>
+    }
+  }
+}
+</code></pre><h4><!-- react-text: 132 -->takeEvery: <!-- /react-text --><code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+takeEvery: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+  [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// inline worker</span>
+  },
+  [actions.actionWithDynamicPayload]: workers.dynamicWorker
+})
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// pseudocode</span>
+  <span class="hljs-keyword">yield</span> fork(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">yield</span> [
+      takeEvery(actions.simpleAction.toString(), <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-comment">// inline worker</span>
+      }.bind(<span class="hljs-keyword">this</span>)),
+      takeEvery(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(<span class="hljs-keyword">this</span>))
+    ]
+  })
+}
+</code></pre><h4><!-- react-text: 138 -->takeLatest: <!-- /react-text --><code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+takeLatest: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+  [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// inline worker</span>
+  },
+  [actions.actionWithDynamicPayload]: workers.dynamicWorker
+})
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// pseudocode</span>
+  <span class="hljs-keyword">yield</span> fork(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">yield</span> [
+      takeLatest(actions.simpleAction.toString(), <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-comment">// inline worker</span>
+      }.bind(<span class="hljs-keyword">this</span>)),
+      takeLatest(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(<span class="hljs-keyword">this</span>))
+    ]
+  })
+}
+</code></pre><h4><!-- react-text: 144 -->workers: <!-- /react-text --><code>{}</code></h4><p>An object of workers which you may reference in other sagas.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+workers: {
+  * dynamicWorker (action) {
+    <span class="hljs-keyword">const</span> { id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
+    <span class="hljs-comment">// reference with workers.dynamicWorker</span>
+  },
+  <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// another worker</span>
+  }
+}
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.workers == {
+  <span class="hljs-attr">dynamicWorker</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action</span>) *
+    <span class="hljs-title">const</span> </span>{ id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
+    <span class="hljs-comment">// reference with workers.dynamicWorker</span>
+  }.bind(myRandomSceneLogic),
+
+  <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) * </span>{
+    <span class="hljs-comment">// another worker</span>
+  }.bind(myRandomSceneLogic)
+}
+</code></pre><h4><!-- react-text: 150 -->sagas: <!-- /react-text --><code>[]</code></h4><p>Array of sagas that get exported with this component's saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+sagas: [saga1, saga2]
+
+<span class="hljs-comment">// Output</span>
+myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> fork(saga1)
+  <span class="hljs-keyword">yield</span> fork(saga2)
+
+  <span class="hljs-comment">// start() ...</span>
+}
+</code></pre></div><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
-  </body>
-</html>
+  
+
+</body></html>

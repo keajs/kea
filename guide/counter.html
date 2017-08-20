@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
+<html class=" "><head>
     <title>Kea</title>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon">
     <meta property="og:image" content="https://kea.js.org/img/logo.png">
     <meta name="twitter:image:src" content="https://kea.js.org/img/logo.png">
     <script>
@@ -18,9 +16,563 @@
         ga('send', 'pageview');
       }
     </script>
-  </head>
+  <style type="text/css">/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment, .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string, .hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title, .hljs-section, .hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag, .hljs-name, .hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp, .hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol, .hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in, .hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+body {
+	background: #ffffff;
+	margin: 0;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+a {
+	color: green;
+}
+
+code {
+	background: #f8f8f8;
+	padding: 2px;
+}
+
+.code {
+	text-align: left;
+	margin: 20px;
+}
+
+.description {
+	text-align: left;
+	margin: 20px;
+	line-height: 22px;
+}
+
+.example {
+	margin: 20px;
+}
+
+h1, h2 {
+	font-weight: 400;
+}
+
+h1, h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+}
+
+h2, h3 {
+	margin-top: 40px;
+}
+
+.demo {
+	background: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.extra-help {
+	background: #ffffdd;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hljs {
+	line-height: 16px;
+}
+
+.api-scene {
+  margin: 20px;
+}
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><style type="text/css">header.body-header nav {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+    header.body-header nav a {
+      text-decoration: none;
+      color: #333333;
+      text-transform: uppercase;
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px
+    }
+
+    header.body-header nav a.active {
+    font-weight: bold;
+    color: #388e3c;
+    border-bottom: 2px solid #388e3c;
+    height: 48px;
+}
+
+    header.body-header nav a:hover {
+    color: #388e3c;
+}
+
+    header.body-header nav a.right {
+    margin-left: auto;
+}
+
+    header.body-header nav a.logo {
+    padding: 5px;
+}
+main section.with-sidebar {
+    border-top: 1px solid #e0e0e0;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
+    display: flex;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    min-height: calc(100vh - 50px - 1px);
+  }
+main section.with-sidebar aside.kea-sidebar {
+      display: block;
+      width: 240px;
+      border-right: 1px solid #e0e0e0;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+main section.with-sidebar .content.with-sidebar {
+      display: block;
+      -webkit-box-flex: 2;
+          -ms-flex-positive: 2;
+              flex-grow: 2;
+      max-width: calc(100% - 240px);
+    }
+main section.with-sidebar .content.darker {
+      background: #eee;
+    }
+@media (max-width: 767px) {
+
+    main section.with-sidebar {
+        display: block;
+    }
+
+    main section.with-sidebar aside.kea-sidebar {
+        width: 100%;
+        border-right: none;
+    }
+
+    main section.with-sidebar .content.with-sidebar {
+        max-width: 100%;
+        padding-top: 20px;
+    }
+}
+aside.kea-sidebar nav .section-title {
+      font-weight: strong;
+      display: block;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+aside.kea-sidebar nav ul {
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+aside.kea-sidebar nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+aside.kea-sidebar nav ul li a {
+          color: #333;
+          text-decoration: none
+        }
+aside.kea-sidebar nav ul li a.active {
+    color: #388e3c;
+    text-decoration: underline;
+}
+aside.kea-sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+</style><script type="text/javascript" charset="utf-8" async="" src="/guideCounter.bundle.js"></script><style type="text/css">.counter-singleton-scene {
+  // text-align: center;
+}
+</style><style type="text/css">.kea-counter {
+  margin: 0;
+}
+</style></head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a class="active" href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><div class="counter-singleton-scene"><div class="description"><h2>Example #1 - Counter</h2><p>Let's start with the most basic of all examples: creating a counter that we can increment and decrement with the push of a button!</p><p>The final result should look something like this:</p><div class="demo"><div class="kea-counter"><!-- react-text: 74 -->Count: <!-- /react-text --><!-- react-text: 75 -->0<!-- /react-text --><br><!-- react-text: 77 -->Doublecount: <!-- /react-text --><!-- react-text: 78 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><p>Click the buttons to make sure it works! And then let's begin!</p></div><div class="description"><h2>1. Connecting @kea</h2><p><!-- react-text: 86 -->Everything starts with importing <!-- /react-text --><code>{ kea }</code><!-- react-text: 88 --> into your application:<!-- /react-text --></p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+</code></pre><p>... and connecting it to your React component:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> code goes here</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> make these work</span>
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">const</span> doubleCounter = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">const</span> increment = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {}
+    <span class="hljs-keyword">const</span> decrement = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {}
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre><button>What is this @kea({})?</button></div><div class="description"><h2>2. Actions, reducers, selectors, oh my!</h2><p><!-- react-text: 98 -->Kea is built as a wrapper <!-- /react-text --><strong>on top of</strong><!-- react-text: 100 --> <!-- /react-text --><a href="http://redux.js.org/">redux</a><!-- react-text: 102 -->, <!-- /react-text --><a href="https://github.com/reactjs/reselect">reselect</a><!-- react-text: 104 --> and <!-- /react-text --><a href="https://redux-saga.js.org/">redux-saga</a><!-- react-text: 106 -->.<!-- /react-text --></p><p><!-- react-text: 108 -->We strongly recommend you understand the <!-- /react-text --><a href="http://redux.js.org/">basics of Redux</a><!-- react-text: 110 --> before continuing, as kea liberally borrows concepts from it.<!-- /react-text --></p><h3>2.1. Actions</h3><p>The first thing we do is define our actions:</p><pre><code class="javascript hljs"><span class="hljs-comment">// counter/index.js</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> add things here</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> make these work</span>
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre><p>An action in kea is simply a function that takes some arguments and returns a payload. In this case the functions take one argument (amount - the amount to increment with) and return an object with it as the only key/value.</p><p><button>What is happening in the background?</button></p><h3>2.2. Reducers</h3><p>Now that we can dispatch actions, we need to define reducers. This is where your data lives.</p><p><!-- react-text: 121 -->Reducers have an initial <!-- /react-text --><code>state</code><!-- react-text: 123 --> and define actions which change this state. They may also include an optional <!-- /react-text --><code>propType</code><!-- react-text: 125 -->.<!-- /react-text --></p><p>The latest state of all of the reducers will be passed to your component as props.</p><p>Here's an example:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  }),
+
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> more code here?</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> is there a better way? we need to recompute this every time we render!</span>
+    <span class="hljs-keyword">const</span> doubleCounter = counter * <span class="hljs-number">2</span>
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre><p><!-- react-text: 131 -->The most important thing to remember about reducers is that they must consist of <!-- /react-text --><a href="http://www.nicoespeon.com/en/2015/01/pure-functions-javascript/">pure functions</a><!-- react-text: 133 -->.<!-- /react-text --></p><p>This means that your reducer must:</p><ol><li>always return the same output for the same input</li><li>never change the input! (e.g. when adding something to an array, create and return a new array)</li><li>never have any other side effects, such as network requests (we'll get to them later in this guide)</li></ol><p><!-- react-text: 140 -->If you understand how reducers work <!-- /react-text --><a href="http://redux.js.org/docs/basics/Reducers.html">in redux</a><!-- react-text: 142 -->, you should feel right at home here.<!-- /react-text --></p><p><button>Tell me more!</button></p><h3>2.3. Selectors</h3><p><!-- react-text: 147 -->The final piece of the puzzle is <!-- /react-text --><code>selectors</code><!-- react-text: 149 -->.<!-- /react-text --></p><p><!-- react-text: 151 -->Selectors (via <!-- /react-text --><a href="https://github.com/reactjs/reselect">reselect</a><!-- react-text: 153 -->) take as input other selectors and return some output. Selectors are cached and are only updated if their input changes. You should use them to run complex logic that is too costly to run in <!-- /react-text --><code>render()</code><!-- react-text: 155 --> every time.<!-- /react-text --></p><p>Adding selectors gives us this final piece of code:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
+      (counter) =&gt; counter * <span class="hljs-number">2</span>,
+      PropTypes.number
+    ]
+  })
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre><p>The selectors are defined like this:</p><pre><code class="javascript hljs">selectors: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+  <span class="hljs-comment">// add as many as you want</span>
+  nameOfSelector: [
+    <span class="hljs-comment">// input selectors</span>
+    () =&gt; [selectors.firstOtherSelector, selectors.secondOtherSelector],
+    <span class="hljs-comment">// calculate the result</span>
+    (firstOther, secondOther) =&gt; firstOther + secondOther,
+    <span class="hljs-comment">// type of the result</span>
+    PropTypes.number
+  ]
+})
+</code></pre><p><!-- react-text: 163 -->Note that kea automatically creates selectors for all the reducers that you have defined, so you can use <!-- /react-text --><code>selectors.reducerName</code><!-- react-text: 165 --> immediately as input.<!-- /react-text --></p></div><div class="description"><h2>Final Example</h2><p><!-- react-text: 169 -->Adding all of this together and rendering two  <!-- /react-text --><code>&lt;Counter /&gt;</code><!-- react-text: 171 -->s gives us the following result:<!-- /react-text --></p><div class="demo"><div class="kea-counter"><!-- react-text: 174 -->Count: <!-- /react-text --><!-- react-text: 175 -->0<!-- /react-text --><br><!-- react-text: 177 -->Doublecount: <!-- /react-text --><!-- react-text: 178 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div><br><div class="kea-counter"><!-- react-text: 184 -->Count: <!-- /react-text --><!-- react-text: 185 -->0<!-- /react-text --><br><!-- react-text: 187 -->Doublecount: <!-- /react-text --><!-- react-text: 188 -->0<!-- /react-text --><br><button>Increment</button><button>Decrement</button></div></div><p>You might notice that something odd is happening: Incrementing one counter automatically increments the other. Is there something we can do about this?</p><p><!-- react-text: 194 -->Yes. That's what the next example is all about: <!-- /react-text --><a href="/guide/counter-dynamic">Dynamic counters</a></p><h2>Full source</h2><pre><code class="javascript hljs"><span class="hljs-comment">// counter/index.js</span>
+<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">'kea'</span>
+
+@kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
+      (counter) =&gt; counter * <span class="hljs-number">2</span>,
+      PropTypes.number
+    ]
+  })
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'kea-counter'</span>&gt;</span>
+        Count: {counter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        Doublecount: {doubleCounter}
+        <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> increment(1)}&gt;Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> decrement(1)}&gt;Decrement<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+
+<span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterSingletonScene</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+}
+</code></pre><p><!-- react-text: 200 -->Next page: <!-- /react-text --><a href="/guide/counter-dynamic">Dynamic counters</a></p></div></div><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><!-- react-empty: 57 --><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
-  </body>
-</html>
+  
+
+</body></html>

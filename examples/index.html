@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
+<html class=" "><head>
     <title>Kea</title>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon">
     <meta property="og:image" content="https://kea.js.org/img/logo.png">
     <meta name="twitter:image:src" content="https://kea.js.org/img/logo.png">
     <script>
@@ -18,9 +16,738 @@
         ga('send', 'pageview');
       }
     </script>
-  </head>
+  <style type="text/css">/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment, .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string, .hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title, .hljs-section, .hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag, .hljs-name, .hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp, .hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol, .hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in, .hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+body {
+	background: #ffffff;
+	margin: 0;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+a {
+	color: green;
+}
+
+code {
+	background: #f8f8f8;
+	padding: 2px;
+}
+
+.code {
+	text-align: left;
+	margin: 20px;
+}
+
+.description {
+	text-align: left;
+	margin: 20px;
+	line-height: 22px;
+}
+
+.example {
+	margin: 20px;
+}
+
+h1, h2 {
+	font-weight: 400;
+}
+
+h1, h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+}
+
+h2, h3 {
+	margin-top: 40px;
+}
+
+.demo {
+	background: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.extra-help {
+	background: #ffffdd;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hljs {
+	line-height: 16px;
+}
+
+.api-scene {
+  margin: 20px;
+}
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><style type="text/css">header.body-header nav {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+    header.body-header nav a {
+      text-decoration: none;
+      color: #333333;
+      text-transform: uppercase;
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px
+    }
+
+    header.body-header nav a.active {
+    font-weight: bold;
+    color: #388e3c;
+    border-bottom: 2px solid #388e3c;
+    height: 48px;
+}
+
+    header.body-header nav a:hover {
+    color: #388e3c;
+}
+
+    header.body-header nav a.right {
+    margin-left: auto;
+}
+
+    header.body-header nav a.logo {
+    padding: 5px;
+}
+main section.with-sidebar {
+    border-top: 1px solid #e0e0e0;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
+    display: flex;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    min-height: calc(100vh - 50px - 1px);
+  }
+main section.with-sidebar aside.kea-sidebar {
+      display: block;
+      width: 240px;
+      border-right: 1px solid #e0e0e0;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+main section.with-sidebar .content.with-sidebar {
+      display: block;
+      -webkit-box-flex: 2;
+          -ms-flex-positive: 2;
+              flex-grow: 2;
+      max-width: calc(100% - 240px);
+    }
+main section.with-sidebar .content.darker {
+      background: #eee;
+    }
+@media (max-width: 767px) {
+
+    main section.with-sidebar {
+        display: block;
+    }
+
+    main section.with-sidebar aside.kea-sidebar {
+        width: 100%;
+        border-right: none;
+    }
+
+    main section.with-sidebar .content.with-sidebar {
+        max-width: 100%;
+        padding-top: 20px;
+    }
+}
+aside.kea-sidebar nav .section-title {
+      font-weight: strong;
+      display: block;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+aside.kea-sidebar nav ul {
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+aside.kea-sidebar nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+aside.kea-sidebar nav ul li a {
+          color: #333;
+          text-decoration: none
+        }
+aside.kea-sidebar nav ul li a.active {
+    color: #388e3c;
+    text-decoration: underline;
+}
+aside.kea-sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+</style><script type="text/javascript" charset="utf-8" async="" src="/examplesTodos.bundle.js"></script><style type="text/css">.todo-scene {
+	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	line-height: 1.4em;
+	color: #4d4d4d;
+	min-width: 230px;
+	max-width: 550px;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	font-weight: 300;
+
+	/*
+		Hack to remove background from Mobile Safari.
+		Can't use it globally since it destroys checkboxes in Firefox
+	*/
+}
+
+	.todo-scene button {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		font-size: 100%;
+		vertical-align: baseline;
+		font-family: inherit;
+		font-weight: inherit;
+		color: inherit;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		     appearance: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-font-smoothing: antialiased;
+		font-smoothing: antialiased;
+	}
+
+	.todo-scene button, .todo-scene input[type="checkbox"] {
+		outline: none;
+	}
+
+	.todo-scene .hidden {
+		display: none;
+	}
+
+	.todo-scene .todoapp {
+		background: #fff;
+		margin: 130px 0 40px 0;
+		position: relative;
+		-webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+		            0 25px 50px 0 rgba(0, 0, 0, 0.1);
+		        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+		            0 25px 50px 0 rgba(0, 0, 0, 0.1);
+	}
+
+	.todo-scene .todoapp input::-webkit-input-placeholder {
+		font-style: italic;
+		font-weight: 300;
+		color: #e6e6e6;
+	}
+
+	.todo-scene .todoapp input::-moz-placeholder {
+		font-style: italic;
+		font-weight: 300;
+		color: #e6e6e6;
+	}
+
+	.todo-scene .todoapp input::input-placeholder {
+		font-style: italic;
+		font-weight: 300;
+		color: #e6e6e6;
+	}
+
+	.todo-scene .todoapp h1 {
+		position: absolute;
+		top: -155px;
+		width: 100%;
+		font-size: 100px;
+		font-weight: 100;
+		text-align: center;
+		color: rgba(175, 47, 47, 0.15);
+		-webkit-text-rendering: optimizeLegibility;
+		-moz-text-rendering: optimizeLegibility;
+		text-rendering: optimizeLegibility;
+		border: 0;
+		padding-bottom: 0;
+	}
+
+	.todo-scene .new-todo, .todo-scene .edit {
+		position: relative;
+		margin: 0;
+		width: 100%;
+		font-size: 24px;
+		font-family: inherit;
+		font-weight: inherit;
+		line-height: 1.4em;
+		border: 0;
+		outline: none;
+		color: inherit;
+		padding: 6px;
+		border: 1px solid #999;
+		-webkit-box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+		        box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+		-webkit-font-smoothing: antialiased;
+		-moz-font-smoothing: antialiased;
+		font-smoothing: antialiased;
+	}
+
+	.todo-scene .new-todo {
+		padding: 16px 16px 16px 60px;
+		border: none;
+		background: rgba(0, 0, 0, 0.003);
+		-webkit-box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+		        box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+	}
+
+	.todo-scene .main {
+		position: relative;
+		z-index: 2;
+		border-top: 1px solid #e6e6e6;
+	}
+
+	.todo-scene label[for='toggle-all'] {
+		display: none;
+	}
+
+	.todo-scene .toggle-all {
+		position: absolute;
+		top: -55px;
+		left: -12px;
+		width: 60px;
+		height: 34px;
+		text-align: center;
+		border: none; /* Mobile Safari */
+	}
+
+	.todo-scene .toggle-all:before {
+		content: '\276F';
+		font-size: 22px;
+		color: #e6e6e6;
+		padding: 10px 27px 10px 27px;
+	}
+
+	.todo-scene .toggle-all:checked:before {
+		color: #737373;
+	}
+
+	.todo-scene .todo-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.todo-scene .todo-list li {
+		position: relative;
+		font-size: 24px;
+		border-bottom: 1px solid #ededed;
+	}
+
+	.todo-scene .todo-list li:last-child {
+		border-bottom: none;
+	}
+
+	.todo-scene .todo-list li.editing {
+		border-bottom: none;
+		padding: 0;
+	}
+
+	.todo-scene .todo-list li.editing .edit {
+		display: block;
+		width: 506px;
+		padding: 13px 17px 12px 17px;
+		margin: 0 0 0 43px;
+	}
+
+	.todo-scene .todo-list li.editing .view {
+		display: none;
+	}
+
+	.todo-scene .todo-list li .toggle {
+		text-align: center;
+		width: 40px;
+		/* auto, since non-WebKit browsers doesn't support input styling */
+		height: auto;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin: auto 0;
+		border: none; /* Mobile Safari */
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		     appearance: none;
+	}
+
+	.todo-scene .todo-list li .toggle:after {
+		content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
+	}
+
+	.todo-scene .todo-list li .toggle:checked:after {
+		content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
+	}
+
+	.todo-scene .todo-list li label {
+		white-space: pre-line;
+		word-break: break-all;
+		padding: 15px 60px 15px 15px;
+		margin-left: 45px;
+		display: block;
+		line-height: 1.2;
+		-webkit-transition: color 0.4s;
+		transition: color 0.4s;
+	}
+
+	.todo-scene .todo-list li.completed label {
+		color: #d9d9d9;
+		text-decoration: line-through;
+	}
+
+	.todo-scene .todo-list li .destroy {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 10px;
+		bottom: 0;
+		width: 40px;
+		height: 40px;
+		margin: auto 0;
+		font-size: 30px;
+		color: #cc9a9a;
+		margin-bottom: 11px;
+		-webkit-transition: color 0.2s ease-out;
+		transition: color 0.2s ease-out;
+	}
+
+	.todo-scene .todo-list li .destroy:hover {
+		color: #af5b5e;
+	}
+
+	.todo-scene .todo-list li .destroy:after {
+		content: '\D7';
+	}
+
+	.todo-scene .todo-list li:hover .destroy {
+		display: block;
+	}
+
+	.todo-scene .todo-list li .edit {
+		display: none;
+	}
+
+	.todo-scene .todo-list li.editing:last-child {
+		margin-bottom: -1px;
+	}
+
+	.todo-scene .footer {
+		color: #777;
+		padding: 10px 15px;
+		height: 20px;
+		text-align: center;
+		border-top: 1px solid #e6e6e6;
+	}
+
+	.todo-scene .footer:before {
+		content: '';
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: 50px;
+		overflow: hidden;
+		-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+		            0 8px 0 -3px #f6f6f6,
+		            0 9px 1px -3px rgba(0, 0, 0, 0.2),
+		            0 16px 0 -6px #f6f6f6,
+		            0 17px 2px -6px rgba(0, 0, 0, 0.2);
+		        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+		            0 8px 0 -3px #f6f6f6,
+		            0 9px 1px -3px rgba(0, 0, 0, 0.2),
+		            0 16px 0 -6px #f6f6f6,
+		            0 17px 2px -6px rgba(0, 0, 0, 0.2);
+	}
+
+	.todo-scene .todo-count {
+		float: left;
+		text-align: left;
+	}
+
+	.todo-scene .todo-count strong {
+		font-weight: 300;
+	}
+
+	.todo-scene .filters {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		position: absolute;
+		right: 0;
+		left: 0;
+	}
+
+	.todo-scene .filters li {
+		display: inline;
+	}
+
+	.todo-scene .filters li a {
+		color: inherit;
+		margin: 3px;
+		padding: 3px 7px;
+		text-decoration: none;
+		border: 1px solid transparent;
+		border-radius: 3px;
+	}
+
+	.todo-scene .filters li a.selected, .todo-scene .filters li a:hover {
+		border-color: rgba(175, 47, 47, 0.1);
+	}
+
+	.todo-scene .filters li a.selected {
+		border-color: rgba(175, 47, 47, 0.2);
+	}
+
+	.todo-scene .clear-completed, .todo-scene html .clear-completed:active {
+		float: right;
+		position: relative;
+		line-height: 20px;
+		text-decoration: none;
+		cursor: pointer;
+		position: relative;
+	}
+
+	.todo-scene .clear-completed:hover {
+		text-decoration: underline;
+	}
+
+	.todo-scene .info {
+		margin: 65px auto 0;
+		color: #bfbfbf;
+		font-size: 10px;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+		text-align: center;
+	}
+
+	.todo-scene .info p {
+		line-height: 1;
+	}
+
+	.todo-scene .info a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 400;
+	}
+
+	.todo-scene .info a:hover {
+		text-decoration: underline;
+	}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+
+	.todo-scene .toggle-all, .todo-scene .todo-list li .toggle {
+			background: none;
+	}
+
+	.todo-scene .todo-list li .toggle {
+			height: 40px;
+	}
+
+	.todo-scene .toggle-all {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			     appearance: none;
+	}
+}
+
+@media (max-width: 430px) {
+
+	.todo-scene .footer {
+			height: 50px;
+	}
+
+	.todo-scene .filters {
+			bottom: 10px;
+	}
+}
+</style></head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="" href="/guide">Docs</a><a class="active" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Examples</strong><ul><li><a href="/examples/todos" class="active">TodoMVC</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/tree/master/app/scenes/examples/todos" target="_blank">source</a></small></li><li><a href="/examples/github">Github</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/blob/master/app/scenes/examples/github/index.js" target="_blank">source</a></small></li></ul></div></nav></aside><div class="content with-sidebar darker"><div><!-- react-empty: 25 --><!-- react-empty: 26 --><!-- react-empty: 27 --><!-- react-empty: 28 --><!-- react-empty: 29 --><!-- react-empty: 30 --><!-- react-empty: 31 --><!-- react-empty: 32 --><!-- react-empty: 33 --><!-- react-empty: 34 --><!-- react-empty: 35 --><!-- react-empty: 36 --><!-- react-empty: 37 --><!-- react-empty: 38 --><!-- react-empty: 39 --><!-- react-empty: 40 --><!-- react-empty: 41 --><!-- react-empty: 46 --><div class="todo-scene"><section class="todoapp"><header class="header"><h1>todos</h1><input class="new-todo" placeholder="What needs to be done?"></header></section><footer class="info"><p>Double-click to edit a todo</p><p><!-- react-text: 56 -->Created by <!-- /react-text --><a href="https://github.com/mariusandra">mariusandra</a></p></footer></div><!-- react-empty: 44 --><!-- react-empty: 45 --></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
-  </body>
-</html>
+  
+
+</body></html>
