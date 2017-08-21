@@ -360,7 +360,7 @@ aside.kea-sidebar nav ul li a:hover {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiLogic"); </script></head>
   <body>
-    <div id="root"><div data-reactroot=""><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><!-- react-empty: 46 --><!-- react-empty: 47 --><!-- react-empty: 48 --><!-- react-empty: 49 --><!-- react-empty: 50 --><!-- react-empty: 51 --><!-- react-empty: 52 --><!-- react-empty: 53 --><!-- react-empty: 54 --><!-- react-empty: 55 --><!-- react-empty: 56 --><div class="api-scene"><h2><code>kea(options)</code></h2><p><!-- react-text: 71 -->Create a new kea <!-- /react-text --><strong>logic store</strong><!-- react-text: 73 --> and connect it to redux.<!-- /react-text --></p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/counter">Counter</a></li><li><a href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a href="/guide/sliders">Sliders</a></li><li><a href="/guide/github">Github API</a></li><li><a href="/guide/connected">Connected Logic</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" href="/api/logic">kea(options)</a></li><li><a href="/api/component">kea(options)(Component)</a></li><li><a href="/api/connect">connect(options)</a></li><li><a href="/api/reducer">keaReducer</a></li><li><a href="/api/saga">keaSaga</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic.js&apos;</span>
@@ -478,17 +478,17 @@ aside.kea-sidebar nav ul li a:hover {
 
 <span class="hljs-comment">// index.js</span>
 <span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;scenes/my-random-scene/logic&apos;</span>
-</code></pre><h3>Options</h3><h4><!-- react-text: 80 -->path: <!-- /react-text --><code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h3>Options</h3><h4>path: <code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
 
 <span class="hljs-comment">// Output</span>
 myRandomSceneLogic.path == [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
-</code></pre><h4><!-- react-text: 86 -->constants: <!-- /react-text --><code>() =&gt; []</code></h4><p>Create constants that can be used in other parts of the logic store.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>constants: <code>() =&gt; []</code></h4><p>Create constants that can be used in other parts of the logic store.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 constants: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-string">&apos;OTHER_STRING&apos;</span>]
 
 <span class="hljs-comment">// Output</span>
 myRandomSceneLogic.constants == { <span class="hljs-attr">STRING</span>: <span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-attr">OTHER_STRING</span>: <span class="hljs-string">&apos;OTHER_STRING&apos;</span> }
-</code></pre><h4><!-- react-text: 92 -->actions: <!-- /react-text --><code>({ path, constants }) =&gt; ({})</code></h4><p>Define action creators</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>actions: <code>({ path, constants }) =&gt; ({})</code></h4><p>Define action creators</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 actions: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
   <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">&apos;payload value&apos;</span>,
   <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> },
@@ -509,7 +509,7 @@ myRandomSceneLogic.actions == {
   <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } }),
   <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } })
 }
-</code></pre><h4><!-- react-text: 98 -->reducers: <!-- /react-text --><code>({ path, constants, actions }) =&gt; ({})</code></h4><p>Define the structure and logic of your reducers</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>reducers: <code>({ path, constants, actions }) =&gt; ({})</code></h4><p>Define the structure and logic of your reducers</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 reducers: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
   <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* optional options: { persist: true }, */</span> {
     <span class="hljs-comment">// operations</span>
@@ -536,7 +536,7 @@ myRandomSceneLogic.reducers == {
   <span class="hljs-attr">constantDefault</span>: <span class="hljs-function">(<span class="hljs-params">initialState = constants.OTHER_STRING, action</span>) =&gt;</span> <span class="hljs-comment">/* ... */</span>,
 }
 myRandomSceneLogic.reducer == combineReducers(reducers)
-</code></pre><h4><!-- react-text: 104 -->selectors: <!-- /react-text --><code>({ path, constants, actions, selectors }) =&gt; ({})</code></h4><p>Define selectors, which are only recomputed when their input changes</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>selectors: <code>({ path, constants, actions, selectors }) =&gt; ({})</code></h4><p>Define selectors, which are only recomputed when their input changes</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 selectors: <span class="hljs-function">(<span class="hljs-params">{ path, constants, actions, selectors }</span>) =&gt;</span> ({
   <span class="hljs-attr">selectorName</span>: [
     <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.inputSelector1, selectors.inputSelector2],
@@ -570,7 +570,7 @@ myRandomSceneLogic.selector == <span class="hljs-function">(<span class="hljs-pa
   <span class="hljs-attr">selectorName</span>: memoizedSelectorForSelectorName(state),
   <span class="hljs-attr">computedValue</span>: memoizedSelectorForComputedValue(state)
 })
-</code></pre><h4><!-- react-text: 110 -->connect: <!-- /react-text --><code>{}</code></h4><p>Fetch actions and selectors/props from other logic stores.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>connect: <code>{}</code></h4><p>Fetch actions and selectors/props from other logic stores.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 connect: {
   <span class="hljs-attr">actions</span>: [
     otherLogic, [
@@ -606,7 +606,7 @@ myRandomSceneLogic.selectors == {
   <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
   <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
 }
-</code></pre><h4><!-- react-text: 116 -->start: <!-- /react-text --><code><!-- react-text: 118 -->function * () <!-- /react-text --><!-- react-text: 119 -->{}<!-- /react-text --></code></h4><p>Saga that is started whenever the saga exported from this component starts</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>start: <code>function * () {}</code></h4><p>Saga that is started whenever the saga exported from this component starts</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
   <span class="hljs-comment">// saga started or component mounted</span>
   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
@@ -618,7 +618,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
   <span class="hljs-comment">// =&gt; { actions, workers, path, key, get: function * (), fetch: function * () }</span>
 }
-</code></pre><h4><!-- react-text: 124 -->stop: <!-- /react-text --><code><!-- react-text: 126 -->function * () <!-- /react-text --><!-- react-text: 127 -->{}<!-- /react-text --></code></h4><p>Saga that is started whenever the saga exported from this component is cancelled</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>stop: <code>function * () {}</code></h4><p>Saga that is started whenever the saga exported from this component is cancelled</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
   <span class="hljs-comment">// saga cancelled or component unmounted</span>
 }
@@ -633,7 +633,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
     }
   }
 }
-</code></pre><h4><!-- react-text: 132 -->takeEvery: <!-- /react-text --><code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>takeEvery: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 takeEvery: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
   [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-comment">// inline worker</span>
@@ -653,7 +653,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
     ]
   })
 }
-</code></pre><h4><!-- react-text: 138 -->takeLatest: <!-- /react-text --><code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>takeLatest: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 takeLatest: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
   [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-comment">// inline worker</span>
@@ -673,7 +673,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
     ]
   })
 }
-</code></pre><h4><!-- react-text: 144 -->workers: <!-- /react-text --><code>{}</code></h4><p>An object of workers which you may reference in other sagas.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>workers: <code>{}</code></h4><p>An object of workers which you may reference in other sagas.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 workers: {
   * dynamicWorker (action) {
     <span class="hljs-keyword">const</span> { id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
@@ -695,7 +695,7 @@ myRandomSceneLogic.workers == {
     <span class="hljs-comment">// another worker</span>
   }.bind(myRandomSceneLogic)
 }
-</code></pre><h4><!-- react-text: 150 -->sagas: <!-- /react-text --><code>[]</code></h4><p>Array of sagas that get exported with this component&apos;s saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>sagas: <code>[]</code></h4><p>Array of sagas that get exported with this component&apos;s saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 sagas: [saga1, saga2]
 
 <span class="hljs-comment">// Output</span>
@@ -705,7 +705,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
 
   <span class="hljs-comment">// start() ...</span>
 }
-</code></pre></div><!-- react-empty: 58 --><!-- react-empty: 59 --><!-- react-empty: 60 --><!-- react-empty: 61 --><!-- react-empty: 62 --><!-- react-empty: 63 --><!-- react-empty: 64 --><!-- react-empty: 65 --><!-- react-empty: 66 --></div></div></section></main></div></div>
+</code></pre></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
