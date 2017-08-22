@@ -24,6 +24,95 @@ const DEBUG = false
 
 let nonameCounter = 0
 
+function isStateless (Component) {
+  return !Component.prototype.render
+}
+
+function injectSagasIntoClass (Klass, _this, connectedActions, object) {
+  const originalComponentDidMount = Klass.prototype.componentDidMount
+  Klass.prototype.componentDidMount = function () {
+    if (DEBUG) {
+      console.log('component did mount')
+    }
+
+    // this === component instance
+    this._keaSagaBase = {}
+    this._keaRunningSaga = null
+
+    const key = _this.key ? _this.key(this.props) : 'index'
+    const path = _this.path(key)
+
+    let sagas = (_this.sagas || []).map(saga => {
+      return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
+    })
+
+    if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
+      const _component = this
+      _component._keaSagaBase = {
+        start: _this.start,
+        stop: _this.stop,
+        takeEvery: _this.takeEvery,
+        takeLatest: _this.takeLatest,
+        workers: _this.workers ? Object.assign({}, _this.workers) : {},
+        key: key,
+        path: path,
+        props: this.props,
+        get: function * (key) {
+          const { selectors, selector } = cachedSelectors(path)
+          return yield select(key ? selectors[key] : selector)
+        },
+        fetch: function * () {
+          let results = {}
+          const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
+          for (let i = 0; i < keys.length; i++) {
+            results[keys[i]] = yield _component._keaSagaBase.get(keys[i])
+          }
+          return results
+        }
+      }
+
+      let sagaActions = Object.assign({}, connectedActions)
+
+      // inject key to the payload of inline actions
+      Object.keys(object.actions || {}).forEach(actionKey => {
+        sagaActions[actionKey] = (...args) => {
+          const createdAction = object.actions[actionKey](...args)
+          return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
+        }
+        sagaActions[actionKey].toString = object.actions[actionKey].toString
+      })
+
+      const saga = createSaga(this._keaSagaBase, { actions: sagaActions })
+      sagas.push(saga)
+    }
+
+    if (sagas.length > 0) {
+      this._keaRunningSaga = startSaga(createCombinedSaga(sagas, path.join('.')))
+    }
+
+    originalComponentDidMount && originalComponentDidMount.bind(this)()
+  }
+
+  const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
+  Klass.prototype.componentWillReceiveProps = function (nextProps) {
+    this._keaSagaBase.props = nextProps
+
+    originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
+  }
+
+  const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
+  Klass.prototype.componentWillUnmount = function () {
+    if (DEBUG) {
+      console.log('component will unmount')
+    }
+    if (this._keaRunningSaga) {
+      cancelSaga(this._keaRunningSaga)
+    }
+
+    originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
+  }
+}
+
 export function kea (_this) {
   const hasConnect = !!(_this.connect)
   const hasLogic = !!(_this.path || _this.actions || _this.reducers || _this.selectors)
@@ -216,90 +305,11 @@ export function kea (_this) {
       }
     }
 
-    // check for sagas
-    if (Klass && hasSaga) {
-      const originalComponentDidMount = Klass.prototype.componentDidMount
-      Klass.prototype.componentDidMount = function () {
-        if (DEBUG) {
-          console.log('component did mount')
-        }
-
-        // this === component instance
-        this._keaSagaBase = {}
-        this._keaRunningSaga = null
-
-        const key = _this.key ? _this.key(this.props) : 'index'
-        const path = _this.path(key)
-
-        let sagas = (_this.sagas || []).map(saga => {
-          return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
-        })
-
-        if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-          const _component = this
-          _component._keaSagaBase = {
-            start: _this.start,
-            stop: _this.stop,
-            takeEvery: _this.takeEvery,
-            takeLatest: _this.takeLatest,
-            workers: _this.workers ? Object.assign({}, _this.workers) : {},
-            key: key,
-            path: path,
-            props: this.props,
-            get: function * (key) {
-              const { selectors, selector } = cachedSelectors(path)
-              return yield select(key ? selectors[key] : selector)
-            },
-            fetch: function * () {
-              let results = {}
-              const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-              for (let i = 0; i < keys.length; i++) {
-                results[keys[i]] = yield _component._keaSagaBase.get(keys[i])
-              }
-              return results
-            }
-          }
-
-          let sagaActions = Object.assign({}, connectedActions)
-
-          // inject key to the payload of inline actions
-          Object.keys(object.actions || {}).forEach(actionKey => {
-            sagaActions[actionKey] = (...args) => {
-              const createdAction = object.actions[actionKey](...args)
-              return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
-            }
-            sagaActions[actionKey].toString = object.actions[actionKey].toString
-          })
-
-          const saga = createSaga(this._keaSagaBase, { actions: sagaActions })
-          sagas.push(saga)
-        }
-
-        if (sagas.length > 0) {
-          this._keaRunningSaga = startSaga(createCombinedSaga(sagas, path.join('.')))
-        }
-
-        originalComponentDidMount && originalComponentDidMount.bind(this)()
-      }
-
-      const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
-      Klass.prototype.componentWillReceiveProps = function (nextProps) {
-        this._keaSagaBase.props = nextProps
-
-        originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
-      }
-
-      const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
-      Klass.prototype.componentWillUnmount = function () {
-        if (DEBUG) {
-          console.log('component will unmount')
-        }
-        if (this._keaRunningSaga) {
-          cancelSaga(this._keaRunningSaga)
-        }
-
-        originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
-      }
+    // If we're wrapping a functional React component, skip adding sagas.
+    // This requires lifecycle methods like componentWillMount, etc, which functional components don't have.
+    // We'll instead add sagas to Redux's Connected class.
+    if (Klass && hasSaga && !isStateless(Klass)) {
+      injectSagasIntoClass(Klass, _this, connectedActions, object)
     }
 
     const selectorFactory = (dispatch, options) => {
@@ -476,7 +486,14 @@ export function kea (_this) {
       }
     }
 
-    return connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
+    const KonnektedKlass = connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
+
+    // If we were wrapping a functional React component, add the saga code to the connected component.
+    if (Klass && hasSaga && isStateless(Klass)) {
+      injectSagasIntoClass(KonnektedKlass, _this, connectedActions, object)
+    }
+
+    return KonnektedKlass
   }
 
   response.path = object.path
