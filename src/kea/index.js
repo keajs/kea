@@ -286,6 +286,10 @@ export function kea (_this) {
       })
     }
 
+    if (Klass) {
+      Klass.propTypes = Object.assign({}, propTypes, Klass.propTypes || {})
+    }
+
     if (Klass && hasLogic) {
       // add kea metadata to component
       Klass.kea = {
