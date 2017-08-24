@@ -62,7 +62,7 @@ test('selectors have access to the component\'s props', () => {
       book: [
         () => [booksLogic.selectors.books, (_, props) => props.bookId],
         (books, bookId) => books[bookId],
-        PropTypes.object
+        PropTypes.string
       ]
     })
   })
