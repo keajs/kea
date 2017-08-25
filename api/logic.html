@@ -606,7 +606,7 @@ myRandomSceneLogic.selectors == {
   <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
   <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
 }
-</code></pre><h4>start: <code>function * () {}</code></h4><p>Saga that is started whenever the component is connected or the saga exported from this component starts</p><p>Note: sagas are started with your component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen inside <code>start</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>start: <code>function * () {}</code></h4><p>Saga that is started whenever the component is connected or the saga exported from this component starts</p><p>Note: sagas are started before your <u>wrapped component&apos;s</u> <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen inside <code>start</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
   <span class="hljs-comment">// saga started or component mounted</span>
   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
@@ -618,7 +618,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
   <span class="hljs-comment">// =&gt; { actions, workers, path, key, get: function * (), fetch: function * () }</span>
 }
-</code></pre><h4>stop: <code>function * () {}</code></h4><p>Saga that is started whenever the component is disconnected or the saga exported from this component is cancelled</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>stop: <code>function * () {}</code></h4><p>Saga that is started whenever the component is disconnected or the saga exported from this component is cancelled</p><p>This function is called right before your <u>wrapped component&apos;s</u> <code>componentWillUnmount</code> lifecycle method.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
   <span class="hljs-comment">// saga cancelled or component unmounted</span>
 }
@@ -633,7 +633,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
     }
   }
 }
-</code></pre><h4>takeEvery: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><p>Note: sagas are started with your component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeEvery</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>takeEvery: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeEvery</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 takeEvery: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
   [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-comment">// inline worker</span>
@@ -653,7 +653,7 @@ myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword
     ]
   })
 }
-</code></pre><h4>takeLatest: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><p>Note: sagas are started with your component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeLatest</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h4>takeLatest: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeLatest</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 takeLatest: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
   [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
     <span class="hljs-comment">// inline worker</span>
