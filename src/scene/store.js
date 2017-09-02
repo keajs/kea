@@ -17,6 +17,8 @@ let reducerTree = {}
 let rootReducers = {}
 let syncedWithStore = {}
 
+const defaultState = {}
+
 export function clearStore () {
   loadedWorkers = {}
   loadedScenes = {}
@@ -111,7 +113,7 @@ export function keaReducer (pathStart = 'scenes', options = {}) {
     defaultReducerRoot = pathStart
   }
 
-  return (state = {}, action) => {
+  return (state = defaultState, action) => {
     return rootReducers[pathStart] ? rootReducers[pathStart](state, action) : state
   }
 }
