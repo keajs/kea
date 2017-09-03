@@ -591,7 +591,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br>Doublecount: 0<br><button>Increment</button><button>Decrement</button></div></div><br>Read the guide: <a href="/guide/counter">Counter</a></div></div><h2>Slider</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br>Doublecount: 0<br><button>Increment</button><button>Decrement</button></div></div><br>Read the guide: <a href="/guide/counter">Counter</a></div></div><h2>Slider</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -658,7 +658,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre></div><div class="description"><div class="demo"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div><br>Read the guide: <a href="/guide/sliders">Sliders</a></div></div><h2>Github</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+</code></pre></div></div><div class="description"><div class="demo"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div><br>Read the guide: <a href="/guide/sliders">Sliders</a></div></div><h2>Github</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -732,7 +732,7 @@ aside.kea-sidebar nav ul li a:hover {
     }
   }
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExampleGithubScene</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Github</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   render () {
     <span class="hljs-keyword">const</span> { username, isLoading, repositories,
             sortedRepositories, error } = <span class="hljs-keyword">this</span>.props
@@ -769,7 +769,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 7 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 875 stars, 18 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 2 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 2 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github</a></div></div><h2>Debounced countdown</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+</code></pre></div></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 7 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 875 stars, 18 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 2 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 2 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github</a></div></div><h2>Debounced countdown</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -811,7 +811,7 @@ aside.kea-sidebar nav ul li a:hover {
     }
   })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Countdown</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
   render () {
     <span class="hljs-keyword">const</span> { counter, finished } = <span class="hljs-keyword">this</span>.props
     <span class="hljs-keyword">const</span> { start } = <span class="hljs-keyword">this</span>.actions
@@ -829,7 +829,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br><br>Click start to trigger the finish() action in a few seconds<br><br><button>Start</button></div></div><br></div></div><h2>Connected logic stores</h2><div class="split"><div class="code"><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
+</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br><br>Click start to trigger the finish() action in a few seconds<br><br><button>Start</button></div></div><br></div></div><h2>Connected logic stores</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -881,7 +881,7 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br>Read the guide: <a href="/guide/connected">Connected</a></div></div></div></div></div></section></main></div></div>
+</code></pre></div></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br>Read the guide: <a href="/guide/connected">Connected</a></div></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
