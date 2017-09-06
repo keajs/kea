@@ -33,15 +33,9 @@ function getStore () {
   return store
 }
 
-class SampleComponent extends Component {
-  render () {
-    return (
-      <div>
-        bla bla ble
-      </div>
-    )
-  }
-}
+const SampleComponent1 = () => <div>bla bla bla</div>
+const SampleComponent2 = () => <div>bla bla bla</div>
+const SampleComponent3 = () => <div>bla bla bla</div>
 
 test('the saga starts and stops with the component', () => {
   const store = getStore()
@@ -57,21 +51,24 @@ test('the saga starts and stops with the component', () => {
 
   expect(sagaStarted).toBe(false)
 
-  const ConnectedComponent = logicWithSaga(SampleComponent)
+  const ConnectedComponent = logicWithSaga(SampleComponent1)
 
-  mount(
+  const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>
   )
 
   expect(sagaStarted).toBe(true)
+
+  wrapper.unmount()
 })
 
 test('the actions get a key', () => {
   const store = getStore()
 
   let sagaStarted = false
+  let sagaStopped = false
   let takeEveryRan = false
 
   const getActionsFromHere = kea({
@@ -120,6 +117,10 @@ test('the actions get a key', () => {
       sagaStarted = true
     },
 
+    * stop () {
+      sagaStopped = true
+    },
+
     takeEvery: ({ actions, workers }) => ({
       [actions.myAction]: workers.doStuff
     }),
@@ -139,14 +140,93 @@ test('the actions get a key', () => {
 
   expect(sagaStarted).toBe(false)
 
-  const ConnectedComponent = logicWithSaga(SampleComponent)
+  const ConnectedComponent = logicWithSaga(SampleComponent2)
 
-  mount(
+  const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
+    </Provider>
+  )
+  expect(sagaStarted).toBe(true)
+  expect(takeEveryRan).toBe(true)
+
+  wrapper.unmount()
+
+  expect(sagaStopped).toBe(true)
+})
+
+test('can get() connected values', () => {
+  const store = getStore()
+
+  let sagaStarted = false
+  let takeEveryRan = false
+
+  const firstLogic = kea({
+    actions: () => ({
+      myAction: true
+    }),
+    reducers: ({ actions }) => ({
+      connectedValue: [12, PropTypes.number, {
+        [actions.myAction]: () => 42
+      }]
+    })
+  })
+
+  const otherLogicWithSaga = kea({
+    connect: {
+      actions: [
+        firstLogic, [
+          'myAction'
+        ]
+      ],
+      props: [
+        firstLogic, [
+          'connectedValue'
+        ]
+      ]
+    },
+
+    path: (key) => ['scenes', 'sagaProps2'],
+
+    * start () {
+      expect(this.path).toEqual(['scenes', 'sagaProps2'])
+      expect(Object.keys(this.actions)).toEqual(['myAction'])
+
+      const { myAction } = this.actions
+      expect(yield firstLogic.get('connectedValue')).toEqual(12)
+      expect(yield this.get('connectedValue')).toEqual(12)
+      yield put(myAction())
+
+      expect(yield firstLogic.get('connectedValue')).toEqual(42)
+      expect(yield this.get('connectedValue')).toEqual(42)
+
+      sagaStarted = true
+    },
+
+    takeEvery: ({ actions, workers }) => ({
+      [actions.myAction]: workers.doStuff
+    }),
+
+    workers: {
+      * doStuff (action) {
+        expect(yield this.get('connectedValue')).toBe(42)
+        takeEveryRan = true
+      }
+    }
+  })
+
+  expect(sagaStarted).toBe(false)
+
+  const ConnectedComponent = otherLogicWithSaga(SampleComponent3)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent />
     </Provider>
   )
 
   expect(sagaStarted).toBe(true)
   expect(takeEveryRan).toBe(true)
+
+  wrapper.unmount()
 })
