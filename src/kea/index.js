@@ -31,6 +31,11 @@ function isStateless (Component) {
 const hydrationAction = 'hydrate kea store'
 
 function injectSagasIntoClass (Klass, _this, connectedActions, object) {
+  if (Klass._injectedKeaSaga) {
+    console.error('[KEA] Error! Already injected kea saga into component', Klass)
+  }
+  Klass._injectedKeaSaga = true
+
   const originalComponentDidMount = Klass.prototype.componentDidMount
   Klass.prototype.componentDidMount = function () {
     if (DEBUG) {
