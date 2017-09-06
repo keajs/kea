@@ -57,13 +57,14 @@ test('the saga starts and stops with the component', () => {
 
   const ConnectedComponent = logicWithSaga(SampleComponent)
 
-  mount(
+  const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>
   )
 
   expect(sagaStarted).toBe(true)
+  wrapper.unmount()
 })
 
 test('the actions get a key', () => {
@@ -139,7 +140,7 @@ test('the actions get a key', () => {
 
   const ConnectedComponent = logicWithSaga(SampleComponent)
 
-  mount(
+  const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>
@@ -147,4 +148,6 @@ test('the actions get a key', () => {
 
   expect(sagaStarted).toBe(true)
   expect(takeEveryRan).toBe(true)
+
+  wrapper.unmount()
 })

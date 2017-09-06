@@ -80,4 +80,6 @@ test('selectors have access to the component\'s props', () => {
 
   expect(wrapper.find('#book-1').text()).toEqual('book1')
   expect(wrapper.find('#book-2').text()).toEqual('book2')
+
+  wrapper.unmount()
 })

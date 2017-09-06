@@ -97,6 +97,8 @@ test('singletons connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+
+  wrapper.unmount()
 })
 
 test('dynamic connect to react components', () => {
@@ -153,6 +155,8 @@ test('dynamic connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename12')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
+
+  wrapper.unmount()
 })
 
 test('connected props can be used as selectors', () => {
@@ -224,4 +228,6 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+
+  wrapper.unmount()
 })
