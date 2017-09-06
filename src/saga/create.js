@@ -1,4 +1,4 @@
-import { call, cancelled, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, cancelled, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { selectActionsFromLogic } from '../logic/actions'
 
 let _gaveRunWarning = false
@@ -62,6 +62,12 @@ export function createSaga (_this, object = {}) {
       }
       if (_this.start) {
         yield call(_this.start)
+      }
+
+      if (_this.stop || _this.cancelled) {
+        while (true) {
+          yield take('wait until worker cancellation')
+        }
       }
     } finally {
       // call the cancelled function if cancelled
