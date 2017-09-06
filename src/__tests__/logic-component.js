@@ -155,71 +155,73 @@ test('dynamic connect to react components', () => {
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
 })
 
-// TODO: this does not work yet!
+test('connected props can be used as selectors', () => {
+  const store = getStore()
 
-// test('connected props can be used as selectors', () => {
-//   const store = getStore()
+  const firstLogic = kea({
+    path: () => ['scenes', 'homepage', 'first'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
 
-//   const firstLogic = kea({
-//     path: () => ['scenes', 'homepage', 'first'],
-//     actions: ({ constants }) => ({
-//       updateName: name => ({ name })
-//     }),
-//     reducers: ({ actions, constants }) => ({
-//       name: ['chirpy', PropTypes.string, {
-//         [actions.updateName]: (state, payload) => payload.name
-//       }]
-//     })
-//   })
+  const secondLogic = kea({
+    path: () => ['scenes', 'homepage', 'second'],
+    connect: {
+      props: [
+        firstLogic, [
+          'name'
+        ]
+      ],
+      actions: [
+        firstLogic, [
+          'updateName'
+        ]
+      ]
+    },
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
 
-//   const secondLogic = kea({
-//     path: () => ['scenes', 'homepage', 'second'],
-//     connect: {
-//       props: [
-//         firstLogic, [
-//           'name'
-//         ]
-//       ]
-//     },
-//     selectors: ({ constants, selectors }) => ({
-//       capitalizedName: [
-//         () => [selectors.name],
-//         (name) => {
-//           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-//         },
-//         PropTypes.string
-//       ]
-//     })
-//   })
+  const ConnectedComponent = secondLogic(SampleComponent)
 
-//   const ConnectedComponent = secondLogic(SampleComponent)
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent id={12} />
+    </Provider>
+  )
 
-//   const wrapper = mount(
-//     <Provider store={store}>
-//       <ConnectedComponent id={12} />
-//     </Provider>,
-//   )
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('chirpy')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-//   expect(wrapper.find('.id').text()).toEqual('12')
-//   expect(wrapper.find('.name').text()).toEqual('chirpy')
-//   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+  expect(store.getState()).toEqual({scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
 
-//   // This doesn't work yet. The store is only regenerated when an action is sent
-//   // expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'chirpy' } } } })
+  const sampleComponent = wrapper.find('SampleComponent').node
 
-//   const sampleComponent = wrapper.find('SampleComponent').node
+  expect(sampleComponent.actions).toBeDefined()
+  expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
 
-//   expect(sampleComponent.actions).toBeDefined()
-//   expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
+  const { updateName } = sampleComponent.actions
+  updateName('somename')
 
-//   const { updateName } = sampleComponent.actions
-//   updateName('somename')
+  expect(store.getState()).toEqual({scenes: {homepage: {first: {name: 'somename'}, second: {}}}})
 
-//   expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'somename12' } } } })
+  wrapper.render()
 
-//   wrapper.render()
-
-//   expect(wrapper.find('.id').text()).toEqual('12')
-//   expect(wrapper.find('.name').text()).toEqual('somename12')
-//   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
-// })
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('somename')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+})

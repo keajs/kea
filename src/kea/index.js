@@ -398,7 +398,7 @@ export function kea (_this) {
 
             // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
             if (reducerCreated) {
-              selectors = createSelectors(path, Object.keys(localObject.reducers))
+              selectors = Object.assign({}, connectedSelectors || {}, createSelectors(path, Object.keys(localObject.reducers)))
             } else {
               addReducer(path, localObject.reducer, true)
               if (!isSyncedWithStore()) {
@@ -409,7 +409,7 @@ export function kea (_this) {
 
               // if we don't know for sure that the reducer is in the current store object,
               // then fallback to giving the default value
-              selectors = {}
+              selectors = Object.assign({}, connectedSelectors || {})
               Object.keys(localObject.reducers).forEach(key => {
                 selectors[key] = (state) => {
                   try {
