@@ -28,6 +28,8 @@ function isStateless (Component) {
   return !Component.prototype.render
 }
 
+const hydrationAction = 'hydrate kea store'
+
 function injectSagasIntoClass (Klass, _this, connectedActions, object) {
   const originalComponentDidMount = Klass.prototype.componentDidMount
   Klass.prototype.componentDidMount = function () {
@@ -321,7 +323,7 @@ export function kea (_this) {
       let result = null
 
       if (!isSyncedWithStore()) {
-        dispatch({type: 'hydrate kea store'})
+        dispatch({type: hydrationAction})
       }
 
       return (nextState, nextOwnProps) => {
@@ -399,6 +401,9 @@ export function kea (_this) {
               selectors = createSelectors(path, Object.keys(localObject.reducers))
             } else {
               addReducer(path, localObject.reducer, true)
+              if (!isSyncedWithStore()) {
+                dispatch({type: hydrationAction})
+              }
 
               const realSelectors = createSelectors(path, Object.keys(localObject.reducers))
 

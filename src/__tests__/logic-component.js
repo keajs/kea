@@ -44,7 +44,62 @@ function getStore () {
   return store
 }
 
-test('connects to react components', () => {
+test('singletons connect to react components', () => {
+  const store = getStore()
+
+  const singletonLogic = kea({
+    path: () => ['scenes', 'something'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  const ConnectedComponent = singletonLogic(SampleComponent)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent id={12} />
+    </Provider>
+  )
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('chirpy')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+
+  expect(store.getState()).toEqual({ scenes: { something: { name: 'chirpy' } } })
+
+  const sampleComponent = wrapper.find('SampleComponent').node
+
+  expect(sampleComponent.actions).toBeDefined()
+  expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
+
+  const { updateName } = sampleComponent.actions
+  updateName('somename')
+
+  expect(store.getState()).toEqual({ scenes: { something: { name: 'somename' } } })
+
+  wrapper.render()
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('somename')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+})
+
+test('dynamic connect to react components', () => {
   const store = getStore()
 
   const dynamicLogic = kea({
@@ -81,8 +136,7 @@ test('connects to react components', () => {
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-  // This doesn't work yet. The store is only regenerated when an action is sent
-  // expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'chirpy' } } } })
+  expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'chirpy' } } } })
 
   const sampleComponent = wrapper.find('SampleComponent').node
 
