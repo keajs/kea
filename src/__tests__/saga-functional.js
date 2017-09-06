@@ -1,7 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea } from '../kea'
-import { clearActionCache } from '../logic/actions'
-import { keaSaga, keaReducer, clearStore } from '../scene/store'
+import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -13,13 +11,11 @@ import createSagaMiddleware from 'redux-saga'
 import { put } from 'redux-saga/effects'
 
 beforeEach(() => {
-  clearActionCache()
-  clearStore()
+  resetKeaCache()
 })
 
 function getStore () {
-  clearActionCache()
-  clearStore()
+  resetKeaCache()
 
   const reducers = combineReducers({
     scenes: keaReducer('scenes')

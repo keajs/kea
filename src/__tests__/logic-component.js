@@ -1,7 +1,5 @@
 /* global test, expect */
-import { kea } from '../kea'
-import { clearActionCache } from '../logic/actions'
-import { keaSaga, keaReducer, clearStore } from '../scene/store'
+import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -28,8 +26,7 @@ class SampleComponent extends Component {
 }
 
 function getStore () {
-  clearActionCache()
-  clearStore()
+  resetKeaCache()
 
   const reducers = combineReducers({
     scenes: keaReducer('scenes')

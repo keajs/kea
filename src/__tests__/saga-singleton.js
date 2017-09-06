@@ -1,7 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea } from '../kea'
-import { clearActionCache } from '../logic/actions'
-import { keaReducer, keaSaga, clearStore } from '../scene/store'
+import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
 
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
@@ -10,8 +8,7 @@ import { put } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  clearActionCache()
-  clearStore()
+  resetKeaCache()
 })
 
 test('can have a kea with only a saga', () => {

@@ -1,7 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea } from '../kea'
-import { clearActionCache } from '../logic/actions'
-import { keaReducer, keaSaga, clearStore } from '../scene/store'
+import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
 import { clearRunningSagas } from '../scene/saga'
 
 import { PropTypes } from 'prop-types'
@@ -10,9 +8,7 @@ import createSagaMiddleware from 'redux-saga'
 import { put, take } from 'redux-saga/effects'
 
 beforeEach(() => {
-  clearActionCache()
-  clearStore()
-  clearRunningSagas()
+  resetKeaCache()
 })
 
 test('can run sagas connected via { sagas: [] }', () => {

@@ -1,13 +1,10 @@
 /* global test, expect, beforeEach */
-import { kea } from '../kea'
-import { clearActionCache } from '../logic/actions'
-import { keaReducer, clearStore } from '../scene/store'
+import { kea, resetKeaCache, keaReducer } from '../index'
 
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  clearActionCache()
-  clearStore()
+  resetKeaCache()
 })
 
 test('singleton logic has all the right properties', () => {
