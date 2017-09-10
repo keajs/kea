@@ -7,6 +7,17 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.23.5 - 2017-09-06
+### Changed & Fixed in the 0.23 series before 0.24
+- Remove the warning if the path is not yet conencted to Redux (needed for tests)
+- Rehydrate the store also for inline kea initializations (when the component has a `key`)
+- Fix unmounting of sagas (cancelled was not called after start stopped)
+- Add connected selectors to selectors in wrapped components
+- Fix re-creation of empty `kea({})` `root` selectors for shallow comparison
+- Inject proptypes to components
+- Add functions to reset the store cache for tests
+- Make sagas work with functional components
+
 ## 0.23.0 - 2017-08-15
 ### New and old deprecations
 - Removed all old deprecations except for the usage of `run` and `cancelled` in sagas. These still give warnings.
