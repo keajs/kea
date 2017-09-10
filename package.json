@@ -5,6 +5,9 @@
   "author": "Marius Andra",
   "license": "MIT",
   "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "esnext": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/keajs/kea.git"
@@ -14,13 +17,16 @@
   },
   "homepage": "https://github.com/keajs/kea#readme",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "start": "babel -w src --out-dir lib",
+    "build": "npm run lint && npm run build:cjs && npm run build:es",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
+    "build:es": "babel src --out-dir es",
+    "start": "babel -w src --out-dir es",
     "test": "jest",
     "lint": "eslint src/**",
     "prepublish": "npm run build"
   },
   "files": [
+    "es",
     "lib",
     "src",
     "logic.js",

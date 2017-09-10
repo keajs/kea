@@ -1,4 +1,10 @@
 {
-  "presets": ["env", "react"],
-  "plugins": ["transform-object-rest-spread", "transform-class-properties", "transform-runtime"]
+  "presets": [["env", { "loose": true, "modules": false }], "react"],
+  "plugins": ["transform-object-rest-spread", "transform-class-properties", "transform-runtime"],
+  "env": {
+    "cjs": {
+      "presets": [["env", { "loose": true }], "react"],
+      "plugins": ["transform-object-rest-spread", "transform-class-properties", "transform-runtime"]
+    }
+  }
 }
