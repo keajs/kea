@@ -7,6 +7,12 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.24.1 - 2017-09-10
+### Changed
+- Moved CLI tools (the `kea` command line utility) to separate [`kea-cli`](https://github.com/keajs/kea-cli) package
+- Added `"module"` field to `package.json` with a version that uses ESnext imports instead of `require` calls. Should decrease bundle size by ~10kb on Webpack 2+, rollup and other module bundlers that use this
+- Added a [`"esnext"`](http://2ality.com/2017/06/pkg-esnext.html) field for people to opt in to the untranspiled source.
+
 ## 0.23.5 - 2017-09-06
 ### Changed & Fixed in the 0.23 series before 0.24
 - Remove the warning if the path is not yet conencted to Redux (needed for tests)
