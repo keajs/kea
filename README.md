@@ -353,7 +353,7 @@ Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga
 To get started with a new kea project, just type these commands:
 
 ```
-npm install kea -g
+npm install kea-cli -g
 kea new my-project
 cd my-project
 npm install # or yarn
