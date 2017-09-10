@@ -451,7 +451,7 @@ registerServiceWorker();
 </code></pre><h4>2.5. Optional: Enable decorators</h4><p>To support calls such as <code>@kea({})</code> before your React components, you must enable an experimental ES feature called <a href="https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy">decorators</a>.</p><p>You may either do it by ejecting your webpack configuration and following the steps of 1.3. If you wish to avoid that, you have to find some other way. The easiest option is to replace <code>react-scripts</code> with <a href="https://github.com/kitze/custom-react-scripts"><code>custom-react-scripts</code></a>.</p><p>To do this, first run these commands:</p><pre><code class="bash hljs">yarn add custom-react-scripts
 yarn remove react-scripts
 </code></pre><p>Then create a file called <code>.env</code> in the root of your project and add this:</p><pre><code class="bash hljs">REACT_APP_DECORATORS=<span class="hljs-literal">true</span>
-</code></pre><p>Now you will be able to use decorators in your code</p><h3>3. Starting a new kea app from scratch</h3><pre><code class="bash hljs">npm install -g kea
+</code></pre><p>Now you will be able to use decorators in your code</p><h3>3. Starting a new kea app from scratch</h3><pre><code class="bash hljs">npm install -g kea-cli
 kea new my-project
 <span class="hljs-built_in">cd</span> my-project
 yarn       <span class="hljs-comment"># ... or npm install</span>
