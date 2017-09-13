@@ -18,9 +18,9 @@
   "homepage": "https://github.com/keajs/kea#readme",
   "scripts": {
     "build": "npm run lint && npm run build:cjs && npm run build:es",
-    "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
-    "build:es": "babel src --out-dir es",
-    "start": "babel -w src --out-dir es",
+    "build:cjs": "babel src --out-dir lib",
+    "build:es": "BABEL_ENV=es babel src --out-dir es",
+    "start": "BABEL_ENV=es babel -w src --out-dir es",
     "test": "jest",
     "lint": "eslint src/**",
     "prepublish": "npm run build"
@@ -35,6 +35,7 @@
   ],
   "jest": {
     "testPathIgnorePatterns": [
+      "<rootDir>/es/",
       "<rootDir>/lib/",
       "<rootDir>/node_modules/",
       "<rootDir>/src/__tests__/helper/"
