@@ -1,13 +1,13 @@
 /* global test, expect */
-import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
+import { kea } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { mount } from 'enzyme'
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { Provider } from 'react-redux'
-import createSagaMiddleware from 'redux-saga'
+
+import getStore from './helper/get-store'
 
 class SampleComponent extends Component {
   render () {
@@ -23,25 +23,6 @@ class SampleComponent extends Component {
       </div>
     )
   }
-}
-
-function getStore () {
-  resetKeaCache()
-
-  const reducers = combineReducers({
-    scenes: keaReducer('scenes')
-  })
-
-  const sagaMiddleware = createSagaMiddleware()
-  const finalCreateStore = compose(
-    applyMiddleware(sagaMiddleware)
-  )(createStore)
-
-  const store = finalCreateStore(reducers)
-
-  sagaMiddleware.run(keaSaga)
-
-  return store
 }
 
 test('singletons connect to react components', () => {
