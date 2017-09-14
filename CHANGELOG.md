@@ -6,6 +6,8 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
 ## Uncommitted
+### Removed deprecations (starting from 0.25 - unreleased)
+- Removed `Logic` and `Scene` classes and other old deprecated code.
 
 ## 0.24.1 - 2017-09-10
 ### Changed

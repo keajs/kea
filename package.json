@@ -30,8 +30,7 @@
     "lib",
     "src",
     "logic.js",
-    "saga.js",
-    "scene.js"
+    "saga.js"
   ],
   "jest": {
     "testPathIgnorePatterns": [
