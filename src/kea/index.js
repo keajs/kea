@@ -3,10 +3,7 @@ import { createActions, createActionTransforms } from '../logic/actions'
 import { combineReducerObjects, convertReducerArrays } from '../logic/reducer'
 import { convertConstants } from '../logic/create'
 import { pathSelector, createSelectors } from '../logic/selectors'
-import { createSaga } from '../saga/create'
-import { getConnectedSagas } from '../saga/connected'
-import { firstReducerRoot, isSyncedWithStore, addReducer } from '../scene/store'
-import { createCombinedSaga } from '../scene/saga'
+
 import shallowEqual from '../utils/shallow-equal'
 
 import { createSelector } from 'reselect'
@@ -14,7 +11,13 @@ import { select, call } from 'redux-saga/effects'
 import { connectAdvanced } from 'react-redux'
 
 import { setCache, getCache } from './cache'
-import injectSagasIntoClass from './inject-saga'
+
+import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
+
+import createSaga from './saga/create-saga'
+import getConnectedSagas from './saga/get-connected'
+import injectSagasIntoClass from './saga/inject-to-component'
+import createCombinedSaga from './saga/create-combined'
 
 const DEBUG = false
 

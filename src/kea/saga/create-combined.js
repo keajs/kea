@@ -1,10 +1,10 @@
 import { take, fork, cancel, cancelled } from 'redux-saga/effects'
 
-import { getCache, setCache } from '../kea/cache'
+import { getCache, setCache } from '../cache'
 
 const DEBUG = false
 
-export function createCombinedSaga (sagas, sagaPath = undefined) {
+export default function createCombinedSaga (sagas, sagaPath = undefined) {
   return function * () {
     if (DEBUG) {
       console.log(`Starting ${sagaPath}`)

@@ -1,12 +1,12 @@
 import { call, cancelled, take, takeEvery, takeLatest } from 'redux-saga/effects'
-import { selectActionsFromLogic } from '../logic/actions'
+import { selectActionsFromLogic } from '../../logic/actions'
 
 let _gaveRunWarning = false
 let _gaveCancelledWarning = false
 
 // this = object with keys { takeEvery, takeLatest, start, stop }
 // object = what is merged into _this after actions are created
-export function createSaga (_this, object = {}) {
+export default function createSaga (_this, object = {}) {
   // bind all functions to _this
   const keys = Object.keys(_this)
   for (let i = 0; i < keys.length; i++) {

@@ -1,9 +1,10 @@
-import { createSaga } from '../saga/create'
-import { startSaga, cancelSaga } from '../scene/store'
-import { createCombinedSaga } from '../scene/saga'
 import { select } from 'redux-saga/effects'
 
-import { getCache } from './cache'
+import { startSaga, cancelSaga } from './index'
+
+import createSaga from './create-saga'
+import createCombinedSaga from './create-combined'
+import { getCache } from '../cache'
 
 const DEBUG = false
 

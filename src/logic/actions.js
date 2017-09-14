@@ -1,4 +1,4 @@
-import { addReducer } from '../scene/store'
+import { addReducer } from '../kea/reducer'
 
 function isObject (item) {
   return (typeof item === 'object' && !Array.isArray(item) && item !== null)

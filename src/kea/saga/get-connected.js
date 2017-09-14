@@ -1,4 +1,4 @@
-export function getConnectedSagas (mapping) {
+export default function getConnectedSagas (mapping) {
   let sagas = []
   let uniqueSagaKeys = {}
 

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { createStructuredSelector } from 'reselect'
 
 import { safePathSelector } from './selectors'
-import { addReducer } from '../scene/store'
+import { addReducer } from '../kea/reducer'
 
 export function createPropTransforms (mapping = []) {
   if (mapping.length % 2 === 1) {

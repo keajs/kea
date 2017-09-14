@@ -1,5 +1,6 @@
-import { createSaga } from './create'
-export { createSaga } from './create'
+import createSaga from '../kea/saga/create-saga'
+
+export { createSaga }
 
 class Saga {
   constructor () {

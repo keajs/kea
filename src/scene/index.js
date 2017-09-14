@@ -1,6 +1,6 @@
 // logic
-export { createCombinedSaga } from './saga'
-export { getRoutes, combineScenesAndRoutes } from './routes'
-export { NEW_SCENE, createRootSaga, keaReducer, keaMiddleware, addKeaScene, addReducer, keaSaga } from './store'
+import createCombinedSaga from '../kea/saga/create-combined'
+export { createCombinedSaga }
+export { keaReducer, addReducer } from '../kea/reducer'
 
-export { Scene, createScene } from './_deprecated'
+export { NEW_SCENE, Scene, createScene, addKeaScene, getRoutes, combineScenesAndRoutes, createRootSaga } from './_deprecated'
