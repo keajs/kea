@@ -3,7 +3,7 @@ import { createCombinedSaga } from './saga'
 
 let deprecationWarning = false
 
-class Scene {
+export class Scene {
   constructor ({ name, logic, sagas, component }) {
     if (process.env.NODE_ENV !== 'production') {
       if (!deprecationWarning) {
@@ -33,4 +33,6 @@ class Scene {
 
 Scene._isKeaSceneClass = true
 
-export default Scene
+export function createScene (args) {
+  return new Scene(args)
+}
