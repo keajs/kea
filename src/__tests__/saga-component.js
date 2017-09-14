@@ -19,7 +19,7 @@ const SampleComponent2 = () => <div>bla bla bla</div>
 const SampleComponent3 = () => <div>bla bla bla</div>
 
 test('the saga starts and stops with the component', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   let sagaStarted = false
 
@@ -46,7 +46,7 @@ test('the saga starts and stops with the component', () => {
 })
 
 test('the actions get a key', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   let sagaStarted = false
   let sagaStopped = false
@@ -137,7 +137,7 @@ test('the actions get a key', () => {
 })
 
 test('can get() connected values', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   let sagaStarted = false
   let takeEveryRan = false

@@ -26,7 +26,7 @@ class SampleComponent extends Component {
 }
 
 test('singletons connect to react components', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
@@ -83,7 +83,7 @@ test('singletons connect to react components', () => {
 })
 
 test('dynamic connect to react components', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   const dynamicLogic = kea({
     key: (props) => props.id,
@@ -141,7 +141,7 @@ test('dynamic connect to react components', () => {
 })
 
 test('connected props can be used as selectors', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],

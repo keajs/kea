@@ -5,7 +5,7 @@ import { convertConstants } from '../logic/create'
 import { pathSelector, createSelectors } from '../logic/selectors'
 import { createSaga } from '../saga/create'
 import { getConnectedSagas } from '../saga/connected'
-import { firstReducerRoot, isSyncedWithStore, addReducer, startSaga, cancelSaga } from '../scene/store'
+import { firstReducerRoot, isSyncedWithStore, addReducer } from '../scene/store'
 import { createCombinedSaga } from '../scene/saga'
 import shallowEqual from '../utils/shallow-equal'
 
@@ -13,12 +13,8 @@ import { createSelector } from 'reselect'
 import { select, call } from 'redux-saga/effects'
 import { connectAdvanced } from 'react-redux'
 
-let inlineCache = {}
-let actionCache = {}
-
-export function cachedSelectors (path) {
-  return inlineCache[path.join('.')] || {}
-}
+import { setCache, getCache } from './cache'
+import injectSagasIntoClass from './inject-saga'
 
 const DEBUG = false
 
@@ -28,97 +24,7 @@ function isStateless (Component) {
   return !Component.prototype.render
 }
 
-const hydrationAction = 'hydrate kea store'
-
-function injectSagasIntoClass (Klass, _this, connectedActions, object) {
-  if (Klass._injectedKeaSaga) {
-    console.error('[KEA] Error! Already injected kea saga into component', Klass)
-  }
-  Klass._injectedKeaSaga = true
-
-  const originalComponentDidMount = Klass.prototype.componentDidMount
-  Klass.prototype.componentDidMount = function () {
-    if (DEBUG) {
-      console.log('component did mount')
-    }
-
-    // this === component instance
-    this._keaSagaBase = {}
-    this._keaRunningSaga = null
-
-    const key = _this.key ? _this.key(this.props) : 'index'
-    const path = _this.path(key)
-
-    let sagas = (_this.sagas || []).map(saga => {
-      return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
-    })
-
-    if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-      const _component = this
-      _component._keaSagaBase = {
-        start: _this.start,
-        stop: _this.stop,
-        takeEvery: _this.takeEvery,
-        takeLatest: _this.takeLatest,
-        workers: _this.workers ? Object.assign({}, _this.workers) : {},
-        key: key,
-        path: path,
-        props: this.props,
-        get: function * (key) {
-          const { selectors, selector } = cachedSelectors(path)
-          return yield select(key ? selectors[key] : selector)
-        },
-        fetch: function * () {
-          let results = {}
-          const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-          for (let i = 0; i < keys.length; i++) {
-            results[keys[i]] = yield _component._keaSagaBase.get(keys[i])
-          }
-          return results
-        }
-      }
-
-      let sagaActions = Object.assign({}, connectedActions)
-
-      // inject key to the payload of inline actions
-      Object.keys(object.actions || {}).forEach(actionKey => {
-        sagaActions[actionKey] = (...args) => {
-          const createdAction = object.actions[actionKey](...args)
-          return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
-        }
-        sagaActions[actionKey].toString = object.actions[actionKey].toString
-      })
-
-      const saga = createSaga(this._keaSagaBase, { actions: sagaActions })
-      sagas.push(saga)
-    }
-
-    if (sagas.length > 0) {
-      this._keaRunningSaga = startSaga(createCombinedSaga(sagas, path.join('.')))
-    }
-
-    originalComponentDidMount && originalComponentDidMount.bind(this)()
-  }
-
-  const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
-  Klass.prototype.componentWillReceiveProps = function (nextProps) {
-    this._keaSagaBase.props = nextProps
-
-    originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
-  }
-
-  const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
-  Klass.prototype.componentWillUnmount = function () {
-    if (DEBUG) {
-      console.log('component will unmount')
-    }
-    if (this._keaRunningSaga) {
-      cancelSaga(this._keaRunningSaga)
-    }
-
-    originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
-  }
-}
+const hydrationAction = '@@kea/hydrate store'
 
 export function kea (_this) {
   const hasConnect = !!(_this.connect)
@@ -303,7 +209,7 @@ export function kea (_this) {
         path: _this.path,
         constants: object.constants,
         actions: object.actions,
-        select: (key) => cachedSelectors(_this.path(key))
+        select: (key) => getCache(_this.path(key), 'selectors')
       }
     }
 
@@ -370,7 +276,7 @@ export function kea (_this) {
           // if we need to add it, create "dummy" selectors for the default values until then
 
           // is the reducer created? if we have "true" in the cache, it's definitely created
-          let reducerCreated = inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated
+          let reducerCreated = !!getCache(joinedPath, 'reducerCreated')
 
           // if it's not let's double check. maybe it is now?
           if (!reducerCreated) {
@@ -383,12 +289,12 @@ export function kea (_this) {
           }
 
           // we have the selectors cached! with the current reducerCreated state!
-          if (inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated === reducerCreated) {
+          if (!!getCache(joinedPath, reducerCreated) === reducerCreated) {
             if (DEBUG) {
               console.log('cache hit!')
             }
-            selector = inlineCache[joinedPath].selector
-            selectors = inlineCache[joinedPath].selectors
+            selector = getCache(joinedPath, 'selector')
+            selectors = getCache(joinedPath, 'selectors')
 
           // either we have nothing cached or the cache is invalid. regenerate the selectors!
           } else {
@@ -438,11 +344,11 @@ export function kea (_this) {
             })
 
             // store in the cache
-            inlineCache[joinedPath] = {
+            setCache(joinedPath, {
               reducerCreated,
               selector,
               selectors
-            }
+            })
           }
 
           if (DEBUG) {
@@ -459,7 +365,7 @@ export function kea (_this) {
         }
 
         // TODO: cache these even if no path present
-        let actions = joinedPath ? actionCache[joinedPath] : null
+        let actions = joinedPath ? getCache(joinedPath, 'actions') : null
 
         if (!actions) {
           actions = {}
@@ -486,7 +392,7 @@ export function kea (_this) {
           }
 
           if (joinedPath) {
-            actionCache[joinedPath] = actions
+            setCache(joinedPath, { actions })
           }
         }
 

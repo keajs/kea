@@ -21,7 +21,7 @@ class BookDetail extends Component {
 }
 
 test('selectors have access to the component\'s props', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   const books = {
     1: 'book1',

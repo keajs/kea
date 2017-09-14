@@ -26,7 +26,7 @@ class SampleComponent extends Component {
 }
 
 test('snapshots must match', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],

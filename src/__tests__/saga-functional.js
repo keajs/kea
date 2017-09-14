@@ -23,7 +23,7 @@ function SampleComponent () {
 }
 
 test('the saga starts and stops with the component', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   let sagaStarted = false
 
@@ -49,7 +49,7 @@ test('the saga starts and stops with the component', () => {
 })
 
 test('the actions get a key', () => {
-  const store = getStore()
+  const { store } = getStore()
 
   let sagaStarted = false
   let takeEveryRan = false

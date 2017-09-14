@@ -1,24 +1,23 @@
 /* global test, expect, beforeEach */
 import { kea, resetKeaCache, keaSaga, keaReducer } from '../index'
-import { clearRunningSagas } from '../scene/saga'
 
 import { PropTypes } from 'prop-types'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { put, take } from 'redux-saga/effects'
 
+import getStore from './helper/get-store'
+
 beforeEach(() => {
   resetKeaCache()
 })
 
 test('can run sagas connected via { sagas: [] }', () => {
+  const { sagaMiddleware } = getStore()
+
   let sagaRan = false
   let connectedSagaRan = false
   let ranLast
-
-  const reducers = combineReducers({
-    scenes: keaReducer('scenes')
-  })
 
   const connectedSagaLogic = kea({
     path: () => ['scenes', 'saga', 'connected'],
@@ -46,29 +45,27 @@ test('can run sagas connected via { sagas: [] }', () => {
 
   expect(sagaLogic.saga).toBeDefined()
 
-  expect(sagaRan).toBe(false)
-
-  const sagaMiddleware = createSagaMiddleware()
-  const finalCreateStore = compose(
-    applyMiddleware(sagaMiddleware)
-  )(createStore)
-
-  finalCreateStore(reducers)
-
-  sagaMiddleware.run(keaSaga)
   sagaMiddleware.run(sagaLogic.saga)
 
   expect(sagaRan).toBe(true)
   expect(connectedSagaRan).toBe(true)
   expect(ranLast).toBe('base')
+})
 
-  // try a different way of conencting
-
-  clearRunningSagas()
+test('connect when passing the entire logic to sagas: []', () => {
+  const { sagaMiddleware } = getStore()
 
   let otherConnectedRan = false
-  sagaRan = false
-  connectedSagaRan = false
+  let sagaRan = false
+  let connectedSagaRan = false
+
+  const connectedSagaLogic = kea({
+    path: () => ['scenes', 'saga', 'connected'],
+    start: function * () {
+      expect(this.path).toEqual(['scenes', 'saga', 'connected'])
+      connectedSagaRan = true
+    }
+  })
 
   const sagaLogic2 = kea({
     connect: {
@@ -81,24 +78,35 @@ test('can run sagas connected via { sagas: [] }', () => {
       sagaRan = true
     }
   })
+
   sagaMiddleware.run(sagaLogic2.saga)
 
   expect(sagaRan).toBe(true)
   expect(connectedSagaRan).toBe(true)
   expect(otherConnectedRan).toBe(true)
+})
 
-  // connect without specifiying '.saga'
+test('connect without specifiying .saga', () => {
+  const { sagaMiddleware } = getStore()
 
-  clearRunningSagas()
+  let sagaRan = false
+  let connectedSagaRan = false
 
-  sagaRan = false
-  connectedSagaRan = false
+  const connectedSagaLogic = kea({
+    path: () => ['scenes', 'saga', 'connected'],
+    start: function * () {
+      expect(this.path).toEqual(['scenes', 'saga', 'connected'])
+      connectedSagaRan = true
+    }
+  })
+
   const sagaLogic3 = kea({
     sagas: [connectedSagaLogic],
     start: function * () {
       sagaRan = true
     }
   })
+
   sagaMiddleware.run(sagaLogic3.saga)
 
   expect(sagaRan).toBe(true)

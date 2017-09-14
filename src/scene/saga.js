@@ -1,25 +1,21 @@
 import { take, fork, cancel, cancelled } from 'redux-saga/effects'
 
+import { getCache, setCache } from '../kea/cache'
+
 const DEBUG = false
-
-let runningSagas = {}
-
-export function clearRunningSagas () {
-  runningSagas = {}
-}
 
 export function createCombinedSaga (sagas, sagaPath = undefined) {
   return function * () {
     if (DEBUG) {
       console.log(`Starting ${sagaPath}`)
     }
-    if (sagaPath && runningSagas[sagaPath]) {
+    if (sagaPath && getCache(sagaPath, 'sagaRunning')) {
       if (DEBUG) {
         console.log(`Already running ${sagaPath}`)
       }
       return
     } else {
-      runningSagas[sagaPath] = true
+      setCache(sagaPath, { sagaRunning: true })
     }
 
     let workers = []
@@ -38,7 +34,7 @@ export function createCombinedSaga (sagas, sagaPath = undefined) {
           yield cancel(workers[i])
         }
       }
-      delete runningSagas[sagaPath]
+      setCache(sagaPath, { sagaRunning: false })
       if (DEBUG) {
         console.log(`Stopped ${sagaPath}`)
       }

@@ -18,5 +18,5 @@ export default function getStore () {
 
   sagaMiddleware.run(keaSaga)
 
-  return store
+  return { store, sagaMiddleware }
 }
