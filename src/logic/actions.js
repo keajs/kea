@@ -64,15 +64,15 @@ export function selectActionsFromLogic (mapping = []) {
   return createActionTransforms(mapping).actions
 }
 
-let alreadyCreated = {}
+let actionCache = {}
 
 export function clearActionCache () {
-  alreadyCreated = {}
+  actionCache = {}
 }
 
 export function createAction (type, payloadCreator) {
-  if (alreadyCreated[type]) {
-    console.error(`[KEA-LOGIC] Already created action "${type}"`)
+  if (actionCache[type]) {
+    return actionCache[type]
   }
 
   const action = (...payloadArgs) => ({
@@ -85,7 +85,7 @@ export function createAction (type, payloadCreator) {
   })
   action.toString = () => type
 
-  alreadyCreated[type] = true
+  actionCache[type] = action
 
   return action
 }
