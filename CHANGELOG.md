@@ -7,6 +7,10 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.24.2 - 2017-09-17
+### Changed
+- Leverage action cache to enable parameterized kea logic. See #43 for more details. By @rheng
+
 ## 0.24.1 - 2017-09-10
 ### Changed
 - Moved CLI tools (the `kea` command line utility) to separate [`kea-cli`](https://github.com/keajs/kea-cli) package
