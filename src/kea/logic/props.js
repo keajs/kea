@@ -2,26 +2,24 @@ import PropTypes from 'prop-types'
 
 import { safePathSelector } from './selectors'
 import { addReducer } from './reducer'
+import { deconstructMapping } from './mapping'
 
-export function selectPropsFromLogic (mapping = []) {
-  if (mapping.length % 2 === 1) {
-    console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping)
-    console.trace()
+export function selectPropsFromLogic (propsMapping = []) {
+  const propsArray = deconstructMapping(propsMapping)
+
+  if (!propsArray) {
     return
   }
 
   let hash = {}
 
-  for (let i = 0; i < mapping.length; i += 2) {
-    let logic = mapping[i]
-    const props = mapping[i + 1]
-
+  propsArray.forEach(([logic, from, to]) => {
     // we were given a function (state) => state.something as logic input
     let isFunction = (typeof logic === 'function') && !logic._isKeaFunction
 
     // path selector array
     if (Array.isArray(logic)) {
-      logic = state => safePathSelector(mapping[i], state)
+      logic = state => safePathSelector(logic, state)
       isFunction = true
     }
 
@@ -34,26 +32,17 @@ export function selectPropsFromLogic (mapping = []) {
 
     const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
 
-    props.forEach(query => {
-      let from = query
-      let to = query
-
-      if (query.includes(' as ')) {
-        [from, to] = query.split(' as ')
-      }
-
-      if (from === '*') {
-        hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
-      } else if (isFunction) {
-        hash[to] = (state) => (logic(state) || {})[from]
-      } else if (typeof selectors[from] !== 'undefined') {
-        hash[to] = selectors[from]
-      } else {
-        console.error(`[KEA-LOGIC] selector "${query}" missing for logic:`, logic)
-        console.trace()
-      }
-    })
-  }
+    if (from === '*') {
+      hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
+    } else if (isFunction) {
+      hash[to] = (state) => (logic(state) || {})[from]
+    } else if (typeof selectors[from] !== 'undefined') {
+      hash[to] = selectors[from]
+    } else {
+      console.error(`[KEA-LOGIC] selector "${from}" missing for logic:`, logic)
+      console.trace()
+    }
+  })
 
   return hash
 }
@@ -62,15 +51,13 @@ export function propTypesFromMapping (mapping, extra = null) {
   let propTypes = Object.assign({}, mapping.propTypes || mapping.passedProps || {})
 
   if (mapping.props) {
-    if (mapping.props.length % 2 === 1) {
-      console.error('[KEA-LOGIC] uneven props mapping given to propTypesFromLogic:', mapping)
-      console.trace()
+    const propsArray = deconstructMapping(mapping.props)
+
+    if (!propsArray) {
       return
     }
-    for (let i = 0; i < mapping.props.length; i += 2) {
-      let logic = mapping.props[i]
-      const props = mapping.props[i + 1]
 
+    propsArray.forEach(([logic, from, to]) => {
       if (logic._isKeaSingleton) {
         if (!logic._keaReducerConnected) {
           addReducer(logic.path, logic.reducer, true)
@@ -79,40 +66,28 @@ export function propTypesFromMapping (mapping, extra = null) {
       }
 
       if (logic && logic.reducers) {
-        props.forEach(query => {
-          let from = query
-          let to = query
+        const reducer = logic.reducers[from]
 
-          if (query.includes(' as ')) {
-            [from, to] = query.split(' as ')
-          }
-
-          const reducer = logic.reducers[from]
-
-          if (reducer && reducer.type) {
-            propTypes[to] = reducer.type
-          } else if (from !== '*') {
-            console.error(`[KEA-LOGIC] prop type for "${from}" missing for logic:`, logic)
-            console.trace()
-          }
-        })
+        if (reducer && reducer.type) {
+          propTypes[to] = reducer.type
+        } else if (from !== '*') {
+          console.error(`[KEA-LOGIC] prop type for "${from}" missing for logic:`, logic)
+          console.trace()
+        }
       }
-    }
+    })
   }
 
   if (mapping.actions) {
-    if (mapping.actions.length % 2 === 1) {
-      console.error('[KEA-LOGIC] uneven actions mapping given to propTypesFromLogic:', mapping)
-      console.trace()
+    const actionsArray = deconstructMapping(mapping.actions)
+
+    if (!actionsArray) {
       return
     }
 
-    let actions = {}
+    propTypes.actions = {}
 
-    for (let i = 0; i < mapping.actions.length; i += 2) {
-      let logic = mapping.actions[i]
-      const actionsArray = mapping.actions[i + 1]
-
+    actionsArray.forEach(([logic, from, to]) => {
       if (logic._isKeaSingleton) {
         if (!logic._keaReducerConnected) {
           addReducer(logic.path, logic.reducer, true)
@@ -122,24 +97,15 @@ export function propTypesFromMapping (mapping, extra = null) {
 
       const actions = logic && logic.actions ? logic.actions : logic
 
-      actionsArray.forEach(query => {
-        let from = query
-        let to = query
+      if (actions[from]) {
+        propTypes.actions[to] = PropTypes.func
+      } else {
+        console.error(`[KEA-LOGIC] action "${from}" missing for logic:`, logic)
+        console.trace()
+      }
+    })
 
-        if (query.includes(' as ')) {
-          [from, to] = query.split(' as ')
-        }
-
-        if (actions[from]) {
-          propTypes[to] = PropTypes.func
-        } else {
-          console.error(`[KEA-LOGIC] action "${query}" missing for logic:`, logic)
-          console.trace()
-        }
-      })
-    }
-
-    propTypes.actions = PropTypes.shape(actions)
+    propTypes.actions = PropTypes.shape(propTypes.actions)
   }
 
   if (extra) {
