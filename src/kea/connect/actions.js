@@ -1,5 +1,5 @@
 import { addReducer } from '../reducer'
-import { deconstructMapping } from '../logic/mapping'
+import { deconstructMapping } from './mapping'
 
 export function selectActionsFromLogic (mapping = []) {
   const actionsArray = deconstructMapping(mapping)
