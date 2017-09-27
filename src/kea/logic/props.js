@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
-import { createStructuredSelector } from 'reselect'
 
 import { safePathSelector } from './selectors'
 import { addReducer } from './reducer'
 
-export function createPropTransforms (mapping = []) {
+export function selectPropsFromLogic (mapping = []) {
   if (mapping.length % 2 === 1) {
     console.error('[KEA-LOGIC] uneven mapping given to selectPropsFromLogic:', mapping)
     console.trace()
@@ -12,7 +11,6 @@ export function createPropTransforms (mapping = []) {
   }
 
   let hash = {}
-  let transforms = {}
 
   for (let i = 0; i < mapping.length; i += 2) {
     let logic = mapping[i]
@@ -44,18 +42,6 @@ export function createPropTransforms (mapping = []) {
         [from, to] = query.split(' as ')
       }
 
-      const matches = from.match(/^(.*)\[(.*)\]$/)
-
-      if (matches) {
-        if (from === to) {
-          to = matches[1]
-        }
-        from = matches[1]
-        transforms[to] = (value, props) => {
-          return value[props[matches[2]]]
-        }
-      }
-
       if (from === '*') {
         hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
       } else if (isFunction) {
@@ -69,15 +55,7 @@ export function createPropTransforms (mapping = []) {
     })
   }
 
-  return {
-    selectorFunctions: hash,
-    selectors: createStructuredSelector(hash),
-    transforms: transforms
-  }
-}
-
-export function selectPropsFromLogic (mapping = []) {
-  return createPropTransforms(mapping).selectors
+  return hash
 }
 
 export function propTypesFromMapping (mapping, extra = null) {
@@ -107,15 +85,6 @@ export function propTypesFromMapping (mapping, extra = null) {
 
           if (query.includes(' as ')) {
             [from, to] = query.split(' as ')
-          }
-
-          const matches = from.match(/^(.*)\[(.*)]$/)
-
-          if (matches) {
-            if (from === to) {
-              to = matches[1]
-            }
-            from = matches[1]
           }
 
           const reducer = logic.reducers[from]
@@ -159,15 +128,6 @@ export function propTypesFromMapping (mapping, extra = null) {
 
         if (query.includes(' as ')) {
           [from, to] = query.split(' as ')
-        }
-
-        const matches = from.match(/^(.*)\((.*)\)$/)
-
-        if (matches) {
-          if (from === to) {
-            to = matches[1]
-          }
-          from = matches[1]
         }
 
         if (actions[from]) {

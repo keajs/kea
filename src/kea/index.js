@@ -1,7 +1,8 @@
-import { createPropTransforms, propTypesFromMapping } from './logic/props'
-import { createActions, createActionTransforms } from './logic/actions'
+import { selectPropsFromLogic, propTypesFromMapping } from './logic/props'
 import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
 import { pathSelector, createSelectors } from './logic/selectors'
+import { createActions } from './actions/create'
+import { selectActionsFromLogic } from './actions/select'
 
 import convertConstants from '../utils/convert-constants'
 import shallowEqual from '../utils/shallow-equal'
@@ -59,8 +60,8 @@ export function kea (_this) {
     propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
 
     // connected actions and props/selectors
-    connectedActions = createActionTransforms(connect.actions).actions
-    connectedSelectors = createPropTransforms(connect.props).selectorFunctions
+    connectedActions = selectActionsFromLogic(connect.actions)
+    connectedSelectors = selectPropsFromLogic(connect.props)
 
     if (isSingleton) {
       object.actions = Object.assign({}, connectedActions)
