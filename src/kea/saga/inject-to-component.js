@@ -8,7 +8,9 @@ import { getCache } from '../cache'
 
 const DEBUG = false
 
-export default function injectSagasIntoClass (Klass, _this, connectedActions, object) {
+export default function injectSagasIntoClass (Klass, input, output) {
+  const connectedActions = output.connected ? output.connected.actions : {}
+
   if (Klass._injectedKeaSaga) {
     console.error('[KEA] Error! Already injected kea saga into component', Klass)
   }
@@ -24,21 +26,21 @@ export default function injectSagasIntoClass (Klass, _this, connectedActions, ob
     this._keaSagaBase = {}
     this._keaRunningSaga = null
 
-    const key = _this.key ? _this.key(this.props) : 'index'
-    const path = _this.path(key)
+    const key = input.key ? input.key(this.props) : 'index'
+    const path = input.path(key)
 
-    let sagas = (_this.sagas || []).map(saga => {
-      return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
+    let sagas = (input.sagas || []).map(saga => {
+      return saga && saga._keaPlugins && saga._keaPlugins.saga && saga.saga ? saga.saga : saga
     })
 
-    if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
+    if (input.start || input.stop || input.takeEvery || input.takeLatest) {
       const _component = this
       _component._keaSagaBase = {
-        start: _this.start,
-        stop: _this.stop,
-        takeEvery: _this.takeEvery,
-        takeLatest: _this.takeLatest,
-        workers: _this.workers ? Object.assign({}, _this.workers) : {},
+        start: input.start,
+        stop: input.stop,
+        takeEvery: input.takeEvery,
+        takeLatest: input.takeLatest,
+        workers: input.workers ? Object.assign({}, input.workers) : {},
         key: key,
         path: path,
         props: this.props,
@@ -59,12 +61,12 @@ export default function injectSagasIntoClass (Klass, _this, connectedActions, ob
       let sagaActions = Object.assign({}, connectedActions)
 
       // inject key to the payload of inline actions
-      Object.keys(object.actions || {}).forEach(actionKey => {
+      Object.keys(output.actions || {}).forEach(actionKey => {
         sagaActions[actionKey] = (...args) => {
-          const createdAction = object.actions[actionKey](...args)
+          const createdAction = output.actions[actionKey](...args)
           return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
         }
-        sagaActions[actionKey].toString = object.actions[actionKey].toString
+        sagaActions[actionKey].toString = output.actions[actionKey].toString
       })
 
       const saga = createSaga(this._keaSagaBase, { actions: sagaActions })

@@ -41,7 +41,7 @@ test('can run sagas connected via { sagas: [] }', () => {
   expect(sagaLogic._isKeaSingleton).toBe(true)
   expect(sagaLogic._hasKeaConnect).toBe(false)
   expect(sagaLogic._hasKeaLogic).toBe(true)
-  expect(sagaLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._keaPlugins.saga).toBe(true)
 
   expect(sagaLogic.saga).toBeDefined()
 
@@ -158,7 +158,7 @@ test('sagas get connected actions', () => {
   expect(sagaLogic._isKeaSingleton).toBe(true)
   expect(sagaLogic._hasKeaConnect).toBe(true)
   expect(sagaLogic._hasKeaLogic).toBe(true)
-  expect(sagaLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._keaPlugins.saga).toBe(true)
 
   expect(sagaLogic.saga).toBeDefined()
 
@@ -339,7 +339,7 @@ test('will autorun sagas if not manually connected, even if no internal saga', (
 
   sagaMiddleware.run(sagaLogic.saga)
 
-  expect(sagaLogic._hasKeaSaga).toBe(true)
+  expect(sagaLogic._keaPlugins.saga).toBe(true)
   expect(connectedSagaRan).toBe(true)
 })
 
