@@ -1,4 +1,3 @@
-import { addReducer } from '../reducer'
 import { deconstructMapping } from './mapping'
 
 export function selectActionsFromLogic (mapping = []) {
@@ -11,13 +10,6 @@ export function selectActionsFromLogic (mapping = []) {
   let hash = {}
 
   actionsArray.forEach(([logic, from, to]) => {
-    if (logic._isKeaSingleton) {
-      if (!logic._keaReducerConnected) {
-        addReducer(logic.path, logic.reducer, true)
-        logic._keaReducerConnected = true
-      }
-    }
-
     const actions = logic && logic.actions ? logic.actions : logic
 
     if (typeof actions[from] === 'function') {

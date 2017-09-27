@@ -1,4 +1,3 @@
-import { addReducer } from '../reducer'
 import { deconstructMapping } from './mapping'
 
 export function selectPropsFromLogic (propsMapping = []) {
@@ -12,15 +11,7 @@ export function selectPropsFromLogic (propsMapping = []) {
 
   propsArray.forEach(([logic, from, to]) => {
     // we were given a function (state) => state.something as logic input
-    let isFunction = (typeof logic === 'function') && !logic._isKeaFunction
-
-    if (logic._isKeaSingleton) {
-      if (!logic._keaReducerConnected) {
-        addReducer(logic.path, logic.reducer, true)
-        logic._keaReducerConnected = true
-      }
-    }
-
+    const isFunction = (typeof logic === 'function') && !logic._isKeaFunction
     const selectors = isFunction ? null : (logic.selectors ? logic.selectors : logic)
 
     if (from === '*') {

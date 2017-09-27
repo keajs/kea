@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 
-import { addReducer } from '../reducer'
 import { deconstructMapping } from './mapping'
 
 export function propTypesFromMapping (mapping, extra = null) {
@@ -14,13 +13,6 @@ export function propTypesFromMapping (mapping, extra = null) {
     }
 
     propsArray.forEach(([logic, from, to]) => {
-      if (logic._isKeaSingleton) {
-        if (!logic._keaReducerConnected) {
-          addReducer(logic.path, logic.reducer, true)
-          logic._keaReducerConnected = true
-        }
-      }
-
       if (logic && logic.reducers) {
         const reducer = logic.reducers[from]
 
@@ -44,13 +36,6 @@ export function propTypesFromMapping (mapping, extra = null) {
     propTypes.actions = {}
 
     actionsArray.forEach(([logic, from, to]) => {
-      if (logic._isKeaSingleton) {
-        if (!logic._keaReducerConnected) {
-          addReducer(logic.path, logic.reducer, true)
-          logic._keaReducerConnected = true
-        }
-      }
-
       const actions = logic && logic.actions ? logic.actions : logic
 
       if (actions[from]) {
