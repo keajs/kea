@@ -1,6 +1,6 @@
 import { select } from 'redux-saga/effects'
 
-import { startSaga, cancelSaga } from './index'
+import { startSaga, cancelSaga } from './saga'
 
 import createSaga from './create-saga'
 import createCombinedSaga from './create-combined'
