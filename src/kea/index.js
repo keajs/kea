@@ -1,7 +1,7 @@
-import { createPropTransforms, propTypesFromMapping } from '../logic/props'
-import { createActions, createActionTransforms } from '../logic/actions'
-import { combineReducerObjects, convertReducerArrays } from '../logic/reducer'
-import { pathSelector, createSelectors } from '../logic/selectors'
+import { createPropTransforms, propTypesFromMapping } from './logic/props'
+import { createActions, createActionTransforms } from './logic/actions'
+import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
+import { pathSelector, createSelectors } from './logic/selectors'
 
 import convertConstants from '../utils/convert-constants'
 import shallowEqual from '../utils/shallow-equal'

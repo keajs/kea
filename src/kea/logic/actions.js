@@ -1,4 +1,4 @@
-import { addReducer } from '../kea/reducer'
+import { addReducer } from '../reducer'
 
 function isObject (item) {
   return (typeof item === 'object' && !Array.isArray(item) && item !== null)

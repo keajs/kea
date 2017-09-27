@@ -1,5 +1,5 @@
 import { call, cancelled, take, takeEvery, takeLatest } from 'redux-saga/effects'
-import { selectActionsFromLogic } from '../../logic/actions'
+import { selectActionsFromLogic } from '../logic/actions'
 
 let _gaveRunWarning = false
 let _gaveCancelledWarning = false
