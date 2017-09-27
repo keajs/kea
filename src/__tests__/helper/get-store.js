@@ -1,6 +1,5 @@
-import { resetKeaCache, keaSaga, keaReducer } from '../../index'
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
-import createSagaMiddleware from 'redux-saga'
+import { resetKeaCache, keaReducer } from '../../index'
+import { createStore, combineReducers } from 'redux'
 
 export default function getStore () {
   resetKeaCache()
@@ -9,14 +8,7 @@ export default function getStore () {
     scenes: keaReducer('scenes')
   })
 
-  const sagaMiddleware = createSagaMiddleware()
-  const finalCreateStore = compose(
-    applyMiddleware(sagaMiddleware)
-  )(createStore)
+  const store = createStore(reducers)
 
-  const store = finalCreateStore(reducers)
-
-  sagaMiddleware.run(keaSaga)
-
-  return { store, sagaMiddleware }
+  return { store }
 }

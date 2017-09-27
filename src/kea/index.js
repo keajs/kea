@@ -17,8 +17,6 @@ import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
 
 import { installedPlugins } from './plugins'
 
-import './saga/install-plugin'
-
 const DEBUG = false
 
 let nonameCounter = 0

@@ -5,7 +5,6 @@ import { clearActionCache } from './kea/actions/create'
 
 export { kea } from './kea'
 export { keaReducer } from './kea/reducer'
-export { keaSaga } from './kea/saga'
 export { createAction } from './kea/actions/create'
 
 export const connect = (mapping) => kea({ connect: mapping })
