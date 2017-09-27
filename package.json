@@ -36,7 +36,6 @@
     "es",
     "lib",
     "src",
-    "logic.js",
     "saga.js"
   ],
   "jest": {
