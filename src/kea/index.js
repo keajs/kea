@@ -85,6 +85,10 @@ export function kea (input) {
     output.path = input.path('').filter(p => p)
     output.actions = Object.assign({}, output.actions, input.actions ? createActions(input.actions(output), output.path) : {})
     output.props = {}
+
+    installedPlugins.forEach(plugin => {
+      plugin.afterCreateActions && plugin.afterCreateActions(output.activePlugins[plugin.name], input, output)
+    })
   }
 
   if (hasLogic && isSingleton) {
