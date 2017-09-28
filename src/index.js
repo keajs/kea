@@ -7,6 +7,10 @@ export { kea } from './kea'
 export { keaReducer } from './kea/reducer'
 export { createAction } from './kea/actions/create'
 
+// for plugins
+export { getCache, setCache } from './kea/cache'
+export { activatePlugin } from './kea/plugins'
+
 export const connect = (mapping) => kea({ connect: mapping })
 
 export function resetKeaCache () {
