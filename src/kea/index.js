@@ -338,9 +338,14 @@ export function kea (input) {
             Object.keys(output.actions).forEach(actionKey => {
               if (key) {
                 actions[actionKey] = (...args) => {
-                  // this fails with thunks
                   const createdAction = output.actions[actionKey](...args)
-                  return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+
+                  // an object! add the key and dispatch
+                  if (typeof createdAction === 'object') {
+                    return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+                  } else { // a function? a string? return it!
+                    return dispatch(createdAction)
+                  }
                 }
               } else {
                 actions[actionKey] = (...args) => dispatch(output.actions[actionKey](...args))
