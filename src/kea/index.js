@@ -209,7 +209,7 @@ export function kea (input) {
         }
 
         if (hasLogic) {
-          key = input.key ? input.key(nextOwnProps) : 'index'
+          key = input.key ? input.key(nextOwnProps) : null
 
           if (typeof key === 'undefined') {
             console.error(`"key" can't be undefined in path: ${input.path('undefined').join('.')}`)
@@ -336,9 +336,14 @@ export function kea (input) {
           if (hasLogic) {
             // inject key to the payload of inline actions
             Object.keys(output.actions).forEach(actionKey => {
-              actions[actionKey] = (...args) => {
-                const createdAction = output.actions[actionKey](...args)
-                return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+              if (key) {
+                actions[actionKey] = (...args) => {
+                  // this fails with thunks
+                  const createdAction = output.actions[actionKey](...args)
+                  return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+                }
+              } else {
+                actions[actionKey] = (...args) => dispatch(output.actions[actionKey](...args))
               }
             })
           }
