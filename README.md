@@ -349,7 +349,7 @@ export default kea({
 })
 ```
 
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga)/
+Read the documentation for [`redux-saga`](https://github.com/redux-saga/redux-saga)
 
 # Scaffolding (work in progress)
 
