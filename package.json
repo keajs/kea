@@ -1,6 +1,6 @@
 {
   "name": "kea",
-  "version": "0.24.2",
+  "version": "0.25.0",
   "description": "Smart front-end architecture",
   "author": "Marius Andra",
   "license": "MIT",
@@ -20,7 +20,7 @@
     {
       "path": "lib/index.js",
       "limit": "15 KB"
-     }
+    }
   ],
   "scripts": {
     "build": "npm run lint && npm run build:cjs && npm run build:es",
