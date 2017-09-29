@@ -381,7 +381,7 @@ aside.kea-sidebar nav ul li a:hover {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiLogic"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a></li><li><a aria-current="false" href="/guide/github">Github API</a></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" aria-current="true" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/saga">keaSaga</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" aria-current="true" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic.js&apos;</span>
@@ -626,105 +626,6 @@ myRandomSceneLogic.selectors == {
   <span class="hljs-attr">allProps</span>: otherLogic.selector,
   <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
   <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
-}
-</code></pre><h4>start: <code>function * () {}</code></h4><p>Saga that is started whenever the component is connected or the saga exported from this component starts</p><p>Note: sagas are started before your <u>wrapped component&apos;s</u> <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen inside <code>start</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// saga started or component mounted</span>
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
-}
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// saga started or component mounted</span>
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
-  <span class="hljs-comment">// =&gt; { actions, workers, path, key, get: function * (), fetch: function * () }</span>
-}
-</code></pre><h4>stop: <code>function * () {}</code></h4><p>Saga that is started whenever the component is disconnected or the saga exported from this component is cancelled</p><p>This function is called right before your <u>wrapped component&apos;s</u> <code>componentWillUnmount</code> lifecycle method.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// saga cancelled or component unmounted</span>
-}
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">try</span> {
-    <span class="hljs-comment">// start()</span>
-  } <span class="hljs-keyword">finally</span> {
-    <span class="hljs-keyword">if</span> (cancelled()) {
-      <span class="hljs-comment">// saga cancelled or component unmounted</span>
-    }
-  }
-}
-</code></pre><h4>takeEvery: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeEvery</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-takeEvery: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-  [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// inline worker</span>
-  },
-  [actions.actionWithDynamicPayload]: workers.dynamicWorker
-})
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// pseudocode</span>
-  <span class="hljs-keyword">yield</span> fork(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">yield</span> [
-      takeEvery(actions.simpleAction.toString(), <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-comment">// inline worker</span>
-      }.bind(<span class="hljs-keyword">this</span>)),
-      takeEvery(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(<span class="hljs-keyword">this</span>))
-    ]
-  })
-}
-</code></pre><h4>takeLatest: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeLatest</code>.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-takeLatest: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-  [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// inline worker</span>
-  },
-  [actions.actionWithDynamicPayload]: workers.dynamicWorker
-})
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// pseudocode</span>
-  <span class="hljs-keyword">yield</span> fork(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">yield</span> [
-      takeLatest(actions.simpleAction.toString(), <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-comment">// inline worker</span>
-      }.bind(<span class="hljs-keyword">this</span>)),
-      takeLatest(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(<span class="hljs-keyword">this</span>))
-    ]
-  })
-}
-</code></pre><h4>workers: <code>{}</code></h4><p>An object of workers which you may reference in other sagas.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-workers: {
-  * dynamicWorker (action) {
-    <span class="hljs-keyword">const</span> { id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
-    <span class="hljs-comment">// reference with workers.dynamicWorker</span>
-  },
-  <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// another worker</span>
-  }
-}
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.workers == {
-  <span class="hljs-attr">dynamicWorker</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action</span>) *
-    <span class="hljs-title">const</span> </span>{ id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
-    <span class="hljs-comment">// reference with workers.dynamicWorker</span>
-  }.bind(myRandomSceneLogic),
-
-  <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) * </span>{
-    <span class="hljs-comment">// another worker</span>
-  }.bind(myRandomSceneLogic)
-}
-</code></pre><h4>sagas: <code>[]</code></h4><p>Array of sagas that get exported with this component&apos;s saga</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-sagas: [saga1, saga2]
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.saga == <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> fork(saga1)
-  <span class="hljs-keyword">yield</span> fork(saga2)
-
-  <span class="hljs-comment">// start() ...</span>
 }
 </code></pre></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>

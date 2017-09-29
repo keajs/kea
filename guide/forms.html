@@ -402,233 +402,239 @@ aside.kea-sidebar nav ul li a:hover {
   }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a></li><li><a aria-current="false" href="/guide/github">Github API</a></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a class="active" aria-current="true" href="/guide/forms">Forms</a></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/saga">keaSaga</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Example #6 - Forms</h2><p>Before Kea I used to dread forms in React. They would always require a lot of work to set up properly.</p><p>I could either use <code>setState</code> for the simplest one-component forms... or a <a href="https://github.com/erikras/redux-form/issues/2315">bulky library</a> like <a href="https://redux-form.com/">redux-form</a> for a connected Redux-based form. Neither of those is a great option... and writing a pure-redux-form requires way too much boilerplate.</p><p>With Kea, forms are finally easy! Even the code to setup a form from scratch is quick to write, as you shall soon see.</p></div><div class="description"><h2>What shall we do?</h2><p>In this chapter we will first build a simple form that looks like this:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><em>Go ahead, play with it!</em></p><p>... and then abstract the remaining boilerplate into a form builder.</p></div><div class="description"><h2>Defining the features we need</h2><p>If you played with the demo above, you&apos;ll see what we need to build the following features:</p><ul><li>Default values</li><li>Custom validation rules</li><li>Show errors only after we have pressed &quot;submit&quot;</li><li>Disable the submit button when submitting</li><li>Async processing of the request</li></ul><p>Let&apos;s build it piece by piece, starting with the data model.</p></div><div class="description"><h2>Actions and reducers</h2><p>So what do we need to keep track of in order to build this form?</p><p>At the very minimum, we&apos;ll need the following reducers:</p><ul><li>An object <code>values</code>, which contains the form data (<code>name</code>, <code>email</code> and <code>message</code>)</li><li>A boolean <code>isSubmitting</code>, which knows if we&apos;re actively submitting the form or not</li><li>A boolean <code>showErrors</code> to know if we will show errors or not</li></ul><p>These three reducers are enough to give us everything, except for validation rules and errors. We&apos;ll skip those for now.</p><p>What about the actions we can perform on the form? The minimum set is as follows:</p><ul><li><code>setValue</code> to update the value of one field (or <code>setValues</code> to update many simultaneously)</li><li><code>submit</code>, to try to submit the form</li><li><code>submitSuccess</code>, if the form was successfully submitted</li><li><code>submitFailure</code>, if there was an error, e.g. a validation mismatch</li></ul><p>Putting them together and adding <code>defaults</code> and <code>propTypes</code> gives us the following code:</p><pre><code class="javascript hljs"><span class="hljs-comment">// form.js</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a class="active" aria-current="true" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Example #6 - Forms</h2><p>Before Kea I used to dread forms in React. They would always require a lot of work to set up properly.</p><p>I could either use <code>setState</code> for the simplest one-component forms... or a <a href="https://github.com/erikras/redux-form/issues/2315">bulky library</a> like <a href="https://redux-form.com/">redux-form</a> for a connected Redux-based form. Neither of those is a great option... and writing a pure-redux-form requires way too much boilerplate.</p><p>With Kea, forms are finally easy! Even the code to setup a form from scratch is quick to write, as you shall soon see.</p></div><div class="description"><h2>What shall we do?</h2><p>In this chapter we will first build a simple form that looks like this:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><em>Go ahead, play with it!</em></p><p>... and then abstract the remaining boilerplate into a form builder.</p></div><div class="description"><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
+yarn add kea-saga redux-saga
 
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-comment"># if using npm</span>
+npm install kea-saga redux-saga --save
+</code></pre><p>Then import <code>kea-saga</code> somewhere in your app&apos;s entrypoint or <code>store.js</code>, before any calls to <code>kea()</code> and <code>getStore()</code> are made:</p><pre><code class="javascript hljs bash">import <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p><a href="/effects/saga">Read here for more</a></p></div></div><div class="description"><h2>1. Defining the features we need</h2><p>If you played with the demo above, you&apos;ll see what we need to build the following features:</p><ul><li>Default values</li><li>Custom validation rules</li><li>Show errors only after we have pressed &quot;submit&quot;</li><li>Disable the submit button when submitting</li><li>Async processing of the request</li></ul><p>Let&apos;s build it piece by piece, starting with the data model.</p></div><div class="description"><h2>2. Actions and reducers</h2><p>So what do we need to keep track of in order to build this form?</p><p>At the very minimum, we&apos;ll need the following reducers:</p><ul><li>An object <code>values</code>, which contains the form data (<code>name</code>, <code>email</code> and <code>message</code>)</li><li>A boolean <code>isSubmitting</code>, which knows if we&apos;re actively submitting the form or not</li><li>A boolean <code>showErrors</code> to know if we will show errors or not</li></ul><p>These three reducers are enough to give us everything, except for validation rules and errors. We&apos;ll skip those for now.</p><p>What about the actions we can perform on the form? The minimum set is as follows:</p><ul><li><code>setValue</code> to update the value of one field (or <code>setValues</code> to update many simultaneously)</li><li><code>submit</code>, to try to submit the form</li><li><code>submitSuccess</code>, if the form was successfully submitted</li><li><code>submitFailure</code>, if there was an error, e.g. a validation mismatch</li></ul><p>Putting them together and adding <code>defaults</code> and <code>propTypes</code> gives us the following code:</p><pre><code class="javascript hljs bash">// form.js
 
-<span class="hljs-keyword">const</span> defaults = {
-  <span class="hljs-attr">name</span>: <span class="hljs-string">&apos;John Doe&apos;</span>,
-  <span class="hljs-attr">email</span>: <span class="hljs-string">&apos;&apos;</span>,
-  <span class="hljs-attr">message</span>: <span class="hljs-string">&apos;&apos;</span>
+import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+
+const defaults = {
+  name: <span class="hljs-string">&apos;John Doe&apos;</span>,
+  email: <span class="hljs-string">&apos;&apos;</span>,
+  message: <span class="hljs-string">&apos;&apos;</span>
 }
 
-<span class="hljs-keyword">const</span> propTypes = {
-  <span class="hljs-attr">name</span>: PropTypes.string,
-  <span class="hljs-attr">email</span>: PropTypes.string,
-  <span class="hljs-attr">message</span>: PropTypes.string
+const propTypes = {
+  name: PropTypes.string,
+  email: PropTypes.string,
+  message: PropTypes.string
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">setValue</span>: <span class="hljs-function">(<span class="hljs-params">key, value</span>) =&gt;</span> ({ key, value }),
-    <span class="hljs-attr">setValues</span>: <span class="hljs-function">(<span class="hljs-params">values</span>) =&gt;</span> ({ values }),
+<span class="hljs-built_in">export</span> default kea({
+  actions: () =&gt; ({
+    setValue: (key, value) =&gt; ({ key, value }),
+    setValues: (values) =&gt; ({ values }),
 
-    <span class="hljs-attr">submit</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">submitSuccess</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">submitFailure</span>: <span class="hljs-literal">true</span>
+    submit: <span class="hljs-literal">true</span>,
+    submitSuccess: <span class="hljs-literal">true</span>,
+    submitFailure: <span class="hljs-literal">true</span>
   }),
 
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">values</span>: [defaults, PropTypes.shape(propTypes), {
-      [actions.setValue]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign({}, state, { [payload.key]: payload.value })
+  reducers: ({ actions }) =&gt; ({
+    values: [defaults, PropTypes.shape(propTypes), {
+      [actions.setValue]: (state, payload) =&gt; {
+        <span class="hljs-built_in">return</span> Object.assign({}, state, { [payload.key]: payload.value })
       },
-      [actions.setValues]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign({}, state, payload.values)
+      [actions.setValues]: (state, payload) =&gt; {
+        <span class="hljs-built_in">return</span> Object.assign({}, state, payload.values)
       },
-      [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> defaults
+      [actions.submitSuccess]: () =&gt; defaults
     }],
 
-    <span class="hljs-attr">isSubmitting</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-      [actions.submit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-      [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-      [actions.submitFailure]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
+    isSubmitting: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+      [actions.submit]: () =&gt; <span class="hljs-literal">true</span>,
+      [actions.submitSuccess]: () =&gt; <span class="hljs-literal">false</span>,
+      [actions.submitFailure]: () =&gt; <span class="hljs-literal">false</span>
     }],
 
-    <span class="hljs-attr">showErrors</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-      [actions.submit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-      [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
+    showErrors: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+      [actions.submit]: () =&gt; <span class="hljs-literal">true</span>,
+      [actions.submitSuccess]: () =&gt; <span class="hljs-literal">false</span>
     }]
   }),
 
-  <span class="hljs-comment">// ...</span>
+  // ...
 })
 
-</code></pre><p>Seems clear enough? :)</p></div><div class="description"><h2>The component</h2><p>We could continue extending the logic by adding error handling, validations and actual submission logic, but since it&apos;s nice to see something tangible, let&apos;s first build the component itself!</p><p>A very crude version will look something like this:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
+</code></pre><p>Seems clear enough? :)</p></div><div class="description"><h2>3. The component</h2><p>We could continue extending the logic by adding error handling, validations and actual submission logic, but since it&apos;s nice to see something tangible, let&apos;s first build the component itself!</p><p>A very crude version will look something like this:</p><pre><code class="javascript hljs bash">// index.js
 
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
+import { connect } from <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> form <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./form&apos;</span>
+import form from <span class="hljs-string">&apos;./form&apos;</span>
 
 @connect({
-  <span class="hljs-attr">actions</span>: [
+  actions: [
     form, [
       <span class="hljs-string">&apos;setValue&apos;</span>,
       <span class="hljs-string">&apos;submit&apos;</span>
     ]
   ],
-  <span class="hljs-attr">props</span>: [
+  props: [
     form, [
       <span class="hljs-string">&apos;values&apos;</span>,
       <span class="hljs-string">&apos;isSubmitting&apos;</span>
     ]
   ]
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FormComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { isSubmitting, values } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { submit, setValue } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-built_in">export</span> default class FormComponent extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { isSubmitting, values } = this.props
+    const { submit, setValue } = this.actions
 
-    <span class="hljs-keyword">const</span> { name, email, message } = values
+    const { name, email, message } = values
 
-    <span class="hljs-keyword">return</span> (
+    <span class="hljs-built_in">return</span> (
       &lt;div&gt;
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;Name&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={name} onChange={e =&gt; setValue(&apos;name&apos;, e.target.value)} /&gt;
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={name} onChange={e =&gt; setValue(<span class="hljs-string">&apos;name&apos;</span>, e.target.value)} /&gt;
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;E-mail&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={email} onChange={e =&gt; setValue(&apos;email&apos;, e.target.value)} /&gt;
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={email} onChange={e =&gt; setValue(<span class="hljs-string">&apos;email&apos;</span>, e.target.value)} /&gt;
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
-          &lt;label className=&apos;block&apos;&gt;Message&lt;/label&gt;
-          &lt;textarea value={message} onChange={e =&gt; setValue(&apos;message&apos;, e.target.value)} /&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
+          &lt;label className=<span class="hljs-string">&apos;block&apos;</span>&gt;Message&lt;/label&gt;
+          &lt;textarea value={message} onChange={e =&gt; setValue(<span class="hljs-string">&apos;message&apos;</span>, e.target.value)} /&gt;
         &lt;/div&gt;
 
         &lt;button disabled={isSubmitting} onClick={submit}&gt;
-          {isSubmitting ? &apos;Submitting...&apos; : &apos;Submit!&apos;}
+          {isSubmitting ? <span class="hljs-string">&apos;Submitting...&apos;</span> : <span class="hljs-string">&apos;Submit!&apos;</span>}
         &lt;/button&gt;
       &lt;/div&gt;
     )
   }
 }
-</code></pre><p>This code works! In fact, try it below:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>The only problem: once you hit &quot;submit&quot;, it will forever be stuck in the <code>isSubmitting</code> state.</p><p>We need to add some logic to make it actually do something.</p></div><div class="description"><h2>Submitting the form</h2><p>We will use the <code>takeLatest</code> helper to listen to the submit action and respond with either a <code>submitSuccess</code> or <code>submitFailure</code> action:</p><pre><code class="javascript hljs"><span class="hljs-comment">// form.js</span>
+</code></pre><p>This code works! In fact, try it below:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>The only problem: once you hit &quot;submit&quot;, it will forever be stuck in the <code>isSubmitting</code> state.</p><p>We need to add some logic to make it actually do something.</p></div><div class="description"><h2>4. Submitting the form</h2><p>We will use the <code>takeLatest</code> helper to listen to the submit action and respond with either a <code>submitSuccess</code> or <code>submitFailure</code> action:</p><pre><code class="javascript hljs bash">// form.js
 
-<span class="hljs-keyword">import</span> { put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
+import { put } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-comment">// actions, reducers, ...</span>
+<span class="hljs-built_in">export</span> default kea({
+  // actions, reducers, ...
 
-  takeLatest: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.submit]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">const</span> { submitSuccess, submitFailure } = <span class="hljs-keyword">this</span>.actions
+  takeLatest: ({ actions, workers }) =&gt; ({
+    [actions.submit]: <span class="hljs-keyword">function</span> * () {
+      const { submitSuccess, submitFailure } = this.actions
 
-      <span class="hljs-comment">// get the form data...</span>
-      <span class="hljs-keyword">const</span> values = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;values&apos;</span>)
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Submitting form with values:&apos;</span>, values)
+      // get the form data...
+      const values = yield this.get(<span class="hljs-string">&apos;values&apos;</span>)
+      console.log(<span class="hljs-string">&apos;Submitting form with values:&apos;</span>, values)
 
-      <span class="hljs-comment">// simulate a 1sec async request.</span>
-      <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">1000</span>)
+      // simulate a 1sec async request.
+      yield delay(1000)
 
-      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) { <span class="hljs-comment">// if the request was successful</span>
-        <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&apos;Success&apos;</span>)
-        <span class="hljs-keyword">yield</span> put(submitSuccess())
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) { // <span class="hljs-keyword">if</span> the request was successful
+        window.alert(<span class="hljs-string">&apos;Success&apos;</span>)
+        yield put(submitSuccess())
       } <span class="hljs-keyword">else</span> {
-        <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&apos;Error&apos;</span>)
-        <span class="hljs-keyword">yield</span> put(submitFailure())
+        window.alert(<span class="hljs-string">&apos;Error&apos;</span>)
+        yield put(submitFailure())
       }
     }
   })
 })
 
-</code></pre><p>Adding this code results in the following form:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>Go ahead, write some data and try submitting it!</p><p>If you replace the <code>yield delay(1000)</code> part with an actual API call, this will be a fully functional form.</p><p>Only one thing left to do...</p></div><div class="description"><h2>Errors and validation</h2><p>We want to prevent an empty form from being submitted!</p><p>The easiest solution is to create a selector <code>errors</code> that depends on <code>values</code>. This selector checks the content of each field and returns an object describing which fields have errors.</p><p>We&apos;ll also create another selector <code>hasErrors</code>, which gives a simple yes/no answer to the question &quot;does this form have errors?&quot;.</p><p>Finally, we&apos;ll check the value of <code>hasErrors</code> in the <code>submit</code> worker, and dispatch a <code>submitFailure</code> action in case the form doesn&apos;t pass the validation.</p><p>Something like this:</p><pre><code class="javascript hljs"><span class="hljs-comment">// form.js</span>
+</code></pre><p>Adding this code results in the following form:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>Go ahead, write some data and try submitting it!</p><p>If you replace the <code>yield delay(1000)</code> part with an actual API call, this will be a fully functional form.</p><p>Only one thing left to do...</p></div><div class="description"><h2>5. Errors and validation</h2><p>We want to prevent an empty form from being submitted!</p><p>The easiest solution is to create a selector <code>errors</code> that depends on <code>values</code>. This selector checks the content of each field and returns an object describing which fields have errors.</p><p>We&apos;ll also create another selector <code>hasErrors</code>, which gives a simple yes/no answer to the question &quot;does this form have errors?&quot;.</p><p>Finally, we&apos;ll check the value of <code>hasErrors</code> in the <code>submit</code> worker, and dispatch a <code>submitFailure</code> action in case the form doesn&apos;t pass the validation.</p><p>Something like this:</p><pre><code class="javascript hljs bash">// form.js
 
-<span class="hljs-comment">// ...</span>
+// ...
 
-<span class="hljs-keyword">const</span> isEmailValid = <span class="hljs-function">(<span class="hljs-params">email</span>) =&gt;</span> /[a-z0<span class="hljs-number">-9</span>!#$%&amp;<span class="hljs-string">&apos;*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;&apos;</span>*+<span class="hljs-regexp">/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/</span>.test(email)
+const isEmailValid = (email) =&gt; /[a-z0-9!<span class="hljs-comment">#$%&amp;&apos;*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;&apos;*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email)</span>
 
-<span class="hljs-keyword">const</span> missingText = <span class="hljs-string">&apos;This field is required&apos;</span>
-<span class="hljs-keyword">const</span> invalidEmail = <span class="hljs-string">&apos;Invalid e-mail&apos;</span>
+const missingText = <span class="hljs-string">&apos;This field is required&apos;</span>
+const invalidEmail = <span class="hljs-string">&apos;Invalid e-mail&apos;</span>
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-comment">// actions, reducers, takeLatest, ...</span>
+<span class="hljs-built_in">export</span> default kea({
+  // actions, reducers, takeLatest, ...
 
-  selectors: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">errors</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.values],
+  selectors: ({ selectors }) =&gt; ({
+    errors: [
+      () =&gt; [selectors.values],
       (values) =&gt; ({
-        <span class="hljs-attr">name</span>: !values.name ? missingText : <span class="hljs-literal">null</span>,
-        <span class="hljs-attr">email</span>: !values.email ? missingText : (!isEmailValid(values.email) ? invalidEmail : <span class="hljs-literal">null</span>),
-        <span class="hljs-attr">message</span>: !values.message ? missingText : <span class="hljs-literal">null</span>
+        name: !values.name ? missingText : null,
+        email: !values.email ? missingText : (!isEmailValid(values.email) ? invalidEmail : null),
+        message: !values.message ? missingText : null
       }),
       PropTypes.object
     ],
 
-    <span class="hljs-attr">hasErrors</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.errors],
-      (errors) =&gt; <span class="hljs-built_in">Object</span>.values(errors).filter(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> k).length &gt; <span class="hljs-number">0</span>,
+    hasErrors: [
+      () =&gt; [selectors.errors],
+      (errors) =&gt; Object.values(errors).filter(k =&gt; k).length &gt; 0,
       PropTypes.bool
     ]
   }),
 
-  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.submit]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">const</span> { submitSuccess, submitFailure } = <span class="hljs-keyword">this</span>.actions
+  takeLatest: ({ actions, workers }) =&gt; ({
+    [actions.submit]: <span class="hljs-keyword">function</span> * () {
+      const { submitSuccess, submitFailure } = this.actions
 
-      <span class="hljs-keyword">const</span> hasErrors = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;hasErrors&apos;</span>)
+      const hasErrors = yield this.get(<span class="hljs-string">&apos;hasErrors&apos;</span>)
 
       <span class="hljs-keyword">if</span> (hasErrors) {
-        <span class="hljs-keyword">yield</span> put(submitFailure())
-        <span class="hljs-keyword">return</span>
+        yield put(submitFailure())
+        <span class="hljs-built_in">return</span>
       }
 
-      <span class="hljs-comment">// ... the rest of the submit worker</span>
+      // ... the rest of the submit worker
     }
   })
 })
-</code></pre><p>In order to display the errors, we will also update our component as follows:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
+</code></pre><p>In order to display the errors, we will also update our component as follows:</p><pre><code class="javascript hljs bash">// index.js
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Form</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { isSubmitting, errors, values } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { submit, setValue } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-built_in">export</span> default class Form extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { isSubmitting, errors, values } = this.props
+    const { submit, setValue } = this.actions
 
-    <span class="hljs-keyword">const</span> { name, email, message } = values
+    const { name, email, message } = values
 
-    <span class="hljs-keyword">return</span> (
+    <span class="hljs-built_in">return</span> (
       &lt;div&gt;
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;Name&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={name} onChange={e =&gt; setValue(&apos;name&apos;, e.target.value)} /&gt;
-          {errors.name ? &lt;div className=&apos;form-error&apos;&gt;{errors.name}&lt;/div&gt; : null}
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={name} onChange={e =&gt; setValue(<span class="hljs-string">&apos;name&apos;</span>, e.target.value)} /&gt;
+          {errors.name ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.name}&lt;/div&gt; : null}
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;E-mail&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={email} onChange={e =&gt; setValue(&apos;email&apos;, e.target.value)} /&gt;
-          {errors.email ? &lt;div className=&apos;form-error&apos;&gt;{errors.email}&lt;/div&gt; : null}
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={email} onChange={e =&gt; setValue(<span class="hljs-string">&apos;email&apos;</span>, e.target.value)} /&gt;
+          {errors.email ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.email}&lt;/div&gt; : null}
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
-          &lt;label className=&apos;block&apos;&gt;Message&lt;/label&gt;
-          &lt;textarea value={message} onChange={e =&gt; setValue(&apos;message&apos;, e.target.value)} /&gt;
-          {errors.message ? &lt;div className=&apos;form-error&apos;&gt;{errors.message}&lt;/div&gt; : null}
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
+          &lt;label className=<span class="hljs-string">&apos;block&apos;</span>&gt;Message&lt;/label&gt;
+          &lt;textarea value={message} onChange={e =&gt; setValue(<span class="hljs-string">&apos;message&apos;</span>, e.target.value)} /&gt;
+          {errors.message ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.message}&lt;/div&gt; : null}
         &lt;/div&gt;
 
         &lt;button disabled={isSubmitting} onClick={submit}&gt;
-          {isSubmitting ? &apos;Submitting...&apos; : &apos;Submit!&apos;}
+          {isSubmitting ? <span class="hljs-string">&apos;Submitting...&apos;</span> : <span class="hljs-string">&apos;Submit!&apos;</span>}
         &lt;/button&gt;
       &lt;/div&gt;
     )
   }
 }
-</code></pre><p>Plugging in the changes results in the following form:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""><div class="form-error">This field is required</div></div><div class="form-field"><label class="block">Message</label><textarea></textarea><div class="form-error">This field is required</div></div><button>Submit!</button></div></div><p>Almost perfect! The only thing: we don&apos;t want to show the <span style="color: red;">red</span> errors <em>before</em> the user submits the form.</p><p>Remember the <code>showErrors</code> reducer from before? Now is its time to shine!</p><p>We have two choices with it. We can either use it in our <code>render</code> function like so:</p><pre><code class="javascript hljs"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Form</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { isSubmitting, errors, values, showErrors } = <span class="hljs-keyword">this</span>.props
+</code></pre><p>Plugging in the changes results in the following form:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""><div class="form-error">This field is required</div></div><div class="form-field"><label class="block">Message</label><textarea></textarea><div class="form-error">This field is required</div></div><button>Submit!</button></div></div><p>Almost perfect! The only thing: we don&apos;t want to show the <span style="color: red;">red</span> errors <em>before</em> the user submits the form.</p><p>Remember the <code>showErrors</code> reducer from before? Now is its time to shine!</p><p>We have two choices with it. We can either use it in our <code>render</code> function like so:</p><pre><code class="javascript hljs bash"><span class="hljs-built_in">export</span> default class Form extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { isSubmitting, errors, values, showErrors } = this.props
 
-    <span class="hljs-keyword">return</span> (
+    <span class="hljs-built_in">return</span> (
       &lt;div&gt;
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           ...
           {showErrors &amp;&amp; errors.name
-            ? &lt;div className=&apos;form-error&apos;&gt;{errors.name}&lt;/div&gt;
+            ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.name}&lt;/div&gt;
             : null}
         &lt;/div&gt;
         ...
@@ -636,205 +642,205 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre><p>... or we can simply return an empty hash for the <code>errors</code> selector until <code>showErrors</code> becomes true.</p><p>I prefer the second approach as it moves the form logic away from the <code>render</code> function.</p><p>In order to do this, we&apos;ll rename the previous selector <code>errors</code> into <code>allErrors</code> and make an new selector <code>errors</code>, that depends on both <code>allErrors</code> and <code>showErrors</code>. We&apos;ll also make <code>hasErrors</code> depend on the renamed <code>allErrors</code>:</p><pre><code class="javascript hljs"><span class="hljs-comment">// form.js</span>
+</code></pre><p>... or we can simply return an empty hash for the <code>errors</code> selector until <code>showErrors</code> becomes true.</p><p>I prefer the second approach as it moves the form logic away from the <code>render</code> function.</p><p>In order to do this, we&apos;ll rename the previous selector <code>errors</code> into <code>allErrors</code> and make an new selector <code>errors</code>, that depends on both <code>allErrors</code> and <code>showErrors</code>. We&apos;ll also make <code>hasErrors</code> depend on the renamed <code>allErrors</code>:</p><pre><code class="javascript hljs bash">// form.js
 
-<span class="hljs-comment">// ...</span>
+// ...
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-comment">// actions, reducers, takeLatest, ...</span>
+<span class="hljs-built_in">export</span> default kea({
+  // actions, reducers, takeLatest, ...
 
-  selectors: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">allErrors</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.values],
+  selectors: ({ selectors }) =&gt; ({
+    allErrors: [
+      () =&gt; [selectors.values],
       (values) =&gt; ({
-        <span class="hljs-attr">name</span>: !values.name ? missingText : <span class="hljs-literal">null</span>,
-        <span class="hljs-attr">email</span>: !values.email ? missingText : (!isEmailValid(values.email) ? invalidEmail : <span class="hljs-literal">null</span>),
-        <span class="hljs-attr">message</span>: !values.message ? missingText : <span class="hljs-literal">null</span>
+        name: !values.name ? missingText : null,
+        email: !values.email ? missingText : (!isEmailValid(values.email) ? invalidEmail : null),
+        message: !values.message ? missingText : null
       }),
       PropTypes.object
     ],
 
-    <span class="hljs-attr">hasErrors</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.allErrors],
-      (allErrors) =&gt; <span class="hljs-built_in">Object</span>.values(allErrors).filter(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> k).length &gt; <span class="hljs-number">0</span>,
+    hasErrors: [
+      () =&gt; [selectors.allErrors],
+      (allErrors) =&gt; Object.values(allErrors).filter(k =&gt; k).length &gt; 0,
       PropTypes.bool
     ],
 
-    <span class="hljs-attr">errors</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.allErrors, selectors.showErrors],
+    errors: [
+      () =&gt; [selectors.allErrors, selectors.showErrors],
       (errors, showErrors) =&gt; showErrors ? errors : {},
       PropTypes.object
     ]
   })
 })
-</code></pre><p>And that&apos;s it! With a few actons, reducers and selectors, totalling about 75 lines of code, you have a fully functional and extremely extendable form library at your disposal!</p><p>This is the final result:</p><p><em>Note that it shares data with the form on top of the page.</em></p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><button>Show the full source</button></p></div><div class="description"><h2>Abstracting <code>createForm</code></h2><p>As you saw, it&apos;s really easy to create forms with Kea. And you&apos;re no longer dependant on heavy (~50KB) form libraries!</p><p>That said, what if you need a second form on your page? Should you copy paste all this code around?</p><p>No!</p><p>There&apos;s not a lot of boilerplate with our form solution, but even what is there can be eliminated.</p><p>Let&apos;s build a form builder!</p><p>The principle here is simple. We&apos;ll create a function, <code>createForm</code>, that takes as an input all the form-specific data and returns a <code>kea({})</code> logic store. Something like this:</p><pre><code class="javascript hljs"><span class="hljs-comment">// create-form.js</span>
+</code></pre><p>And that&apos;s it! With a few actons, reducers and selectors, totalling about 75 lines of code, you have a fully functional and extremely extendable form library at your disposal!</p><p>This is the final result:</p><p><em>Note that it shares data with the form on top of the page.</em></p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><button>Show the full source</button></p></div><div class="description"><h2>6. Abstracting <code>createForm</code></h2><p>As you saw, it&apos;s really easy to create forms with Kea. And you&apos;re no longer dependant on heavy (~50KB) form libraries!</p><p>That said, what if you need a second form on your page? Should you copy paste all this code around?</p><p>No!</p><p>There&apos;s not a lot of boilerplate with our form solution, but even what is there can be eliminated.</p><p>Let&apos;s build a form builder!</p><p>The principle here is simple. We&apos;ll create a function, <code>createForm</code>, that takes as an input all the form-specific data and returns a <code>kea({})</code> logic store. Something like this:</p><pre><code class="javascript hljs bash">// create-form.js
 
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createForm</span> (<span class="hljs-params">options</span>) </span>{
-  <span class="hljs-comment">// parse and clean up `options`</span>
+<span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> createForm (options) {
+  // parse and clean up `options`
 
-  <span class="hljs-keyword">return</span> kea({
-    <span class="hljs-comment">// actions, reducers, etc that are built from `options`</span>
+  <span class="hljs-built_in">return</span> kea({
+    // actions, reducers, etc that are built from `options`
   })
 }
-</code></pre><p>So what is all of the form-specific data? What kind of an API do we want the <code>createForm</code> function to have?</p><p>Well, here&apos;s one option:</p><pre><code class="javascript hljs"><span class="hljs-comment">// form.js</span>
+</code></pre><p>So what is all of the form-specific data? What kind of an API do we want the <code>createForm</code> function to have?</p><p>Well, here&apos;s one option:</p><pre><code class="javascript hljs bash">// form.js
 
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
 
-<span class="hljs-keyword">import</span> createForm <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./create-form&apos;</span>
+import createForm from <span class="hljs-string">&apos;./create-form&apos;</span>
 
-<span class="hljs-keyword">const</span> isEmailValid = <span class="hljs-function">(<span class="hljs-params">email</span>) =&gt;</span> /[a-z0<span class="hljs-number">-9</span>!#$%&amp;<span class="hljs-string">&apos;*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;&apos;</span>*+<span class="hljs-regexp">/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/</span>.test(email)
-<span class="hljs-keyword">const</span> missingText = <span class="hljs-string">&apos;This field is required&apos;</span>
+const isEmailValid = (email) =&gt; /[a-z0-9!<span class="hljs-comment">#$%&amp;&apos;*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;&apos;*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email)</span>
+const missingText = <span class="hljs-string">&apos;This field is required&apos;</span>
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> createForm({
-  <span class="hljs-attr">propTypes</span>: {
-    <span class="hljs-attr">name</span>: PropTypes.string,
-    <span class="hljs-attr">email</span>: PropTypes.string,
-    <span class="hljs-attr">message</span>: PropTypes.string
+<span class="hljs-built_in">export</span> default createForm({
+  propTypes: {
+    name: PropTypes.string,
+    email: PropTypes.string,
+    message: PropTypes.string
   },
 
-  <span class="hljs-attr">defaults</span>: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&apos;John Doe&apos;</span>,
-    <span class="hljs-attr">email</span>: <span class="hljs-string">&apos;&apos;</span>,
-    <span class="hljs-attr">message</span>: <span class="hljs-string">&apos;&apos;</span>
+  defaults: {
+    name: <span class="hljs-string">&apos;John Doe&apos;</span>,
+    email: <span class="hljs-string">&apos;&apos;</span>,
+    message: <span class="hljs-string">&apos;&apos;</span>
   },
 
-  <span class="hljs-attr">validate</span>: <span class="hljs-function">(<span class="hljs-params">values</span>) =&gt;</span> ({
-    <span class="hljs-attr">name</span>: !values.name ? missingText : <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">email</span>: !values.email ? missingText : (!isEmailValid(values.email) ? <span class="hljs-string">&apos;Invalid e-mail&apos;</span> : <span class="hljs-literal">null</span>),
-    <span class="hljs-attr">message</span>: !values.message ? missingText : <span class="hljs-literal">null</span>
+  validate: (values) =&gt; ({
+    name: !values.name ? missingText : null,
+    email: !values.email ? missingText : (!isEmailValid(values.email) ? <span class="hljs-string">&apos;Invalid e-mail&apos;</span> : null),
+    message: !values.message ? missingText : null
   }),
 
-  <span class="hljs-attr">submit</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// simulate a 1sec submission</span>
-    <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">1000</span>)
+  submit: <span class="hljs-keyword">function</span> * () {
+    // simulate a 1sec submission
+    yield delay(1000)
 
-    <span class="hljs-comment">// either return the response:</span>
-    <span class="hljs-comment">// -&gt; return { results: [] }</span>
+    // either <span class="hljs-built_in">return</span> the response:
+    // -&gt; <span class="hljs-built_in">return</span> { results: [] }
 
-    <span class="hljs-comment">// or throw an exception:</span>
-    <span class="hljs-comment">// -&gt; throw &apos;Everything is broken!&apos;</span>
+    // or throw an exception:
+    // -&gt; throw <span class="hljs-string">&apos;Everything is broken!&apos;</span>
   },
 
-  <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params">response</span>) </span>{
-    <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&apos;submit successful!&apos;</span>, response)
+  success: <span class="hljs-keyword">function</span> * (response) {
+    window.alert(<span class="hljs-string">&apos;submit successful!&apos;</span>, response)
   },
 
-  <span class="hljs-attr">failure</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params">error</span>) </span>{
-    <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&apos;submit error!&apos;</span>, error.message)
+  failure: <span class="hljs-keyword">function</span> * (error) {
+    window.alert(<span class="hljs-string">&apos;submit error!&apos;</span>, error.message)
   }
 })
-</code></pre><p>That&apos;s about as lean as it gets!</p><p>And what about this <code>createForm</code>?</p><p>Turns out it requires very minimal changes from the code above. Here it is in all its glory. See if you can spot what changed:</p><pre><code class="javascript hljs"><span class="hljs-comment">// create-form.js</span>
+</code></pre><p>That&apos;s about as lean as it gets!</p><p>And what about this <code>createForm</code>?</p><p>Turns out it requires very minimal changes from the code above. Here it is in all its glory. See if you can spot what changed:</p><pre><code class="javascript hljs bash">// create-form.js
 
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">import</span> { put, call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+import { put, call } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
-<span class="hljs-keyword">const</span> noop = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({})
+const noop = () =&gt; ({})
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createForm</span> (<span class="hljs-params">options</span>) </span>{
-  <span class="hljs-keyword">const</span> propType = options.propTypes ? PropTypes.shape(options.propTypes) : PropTypes.object
-  <span class="hljs-keyword">const</span> defaults = options.defaults || {}
-  <span class="hljs-keyword">const</span> validate = options.validate || noop
+<span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> createForm (options) {
+  const propType = options.propTypes ? PropTypes.shape(options.propTypes) : PropTypes.object
+  const defaults = options.defaults || {}
+  const validate = options.validate || noop
 
-  <span class="hljs-keyword">const</span> submit = options.submit || noop
-  <span class="hljs-keyword">const</span> success = options.success || noop
-  <span class="hljs-keyword">const</span> failure = options.failure || noop
+  const submit = options.submit || noop
+  const success = options.success || noop
+  const failure = options.failure || noop
 
-  <span class="hljs-keyword">return</span> kea({
-    <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-      <span class="hljs-attr">setValue</span>: <span class="hljs-function">(<span class="hljs-params">key, value</span>) =&gt;</span> ({ key, value }),
-      <span class="hljs-attr">setValues</span>: <span class="hljs-function">(<span class="hljs-params">values</span>) =&gt;</span> ({ values }),
+  <span class="hljs-built_in">return</span> kea({
+    actions: () =&gt; ({
+      setValue: (key, value) =&gt; ({ key, value }),
+      setValues: (values) =&gt; ({ values }),
 
-      <span class="hljs-attr">submit</span>: <span class="hljs-literal">true</span>,
-      <span class="hljs-attr">submitSuccess</span>: <span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> ({ response }),
-      <span class="hljs-attr">submitFailure</span>: <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> ({ error })
+      submit: <span class="hljs-literal">true</span>,
+      submitSuccess: (response) =&gt; ({ response }),
+      submitFailure: (error) =&gt; ({ error })
     }),
 
-    <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-      <span class="hljs-attr">values</span>: [defaults, propType, {
-        [actions.setValue]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-          <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign({}, state, { [payload.key]: payload.value })
+    reducers: ({ actions }) =&gt; ({
+      values: [defaults, propType, {
+        [actions.setValue]: (state, payload) =&gt; {
+          <span class="hljs-built_in">return</span> Object.assign({}, state, { [payload.key]: payload.value })
         },
-        [actions.setValues]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-          <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign({}, state, payload.values)
+        [actions.setValues]: (state, payload) =&gt; {
+          <span class="hljs-built_in">return</span> Object.assign({}, state, payload.values)
         },
-        [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> defaults
+        [actions.submitSuccess]: () =&gt; defaults
       }],
 
-      <span class="hljs-attr">isSubmitting</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-        [actions.submit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-        [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-        [actions.submitFailure]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
+      isSubmitting: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+        [actions.submit]: () =&gt; <span class="hljs-literal">true</span>,
+        [actions.submitSuccess]: () =&gt; <span class="hljs-literal">false</span>,
+        [actions.submitFailure]: () =&gt; <span class="hljs-literal">false</span>
       }],
 
-      <span class="hljs-attr">showErrors</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-        [actions.submit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-        [actions.submitSuccess]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
+      showErrors: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+        [actions.submit]: () =&gt; <span class="hljs-literal">true</span>,
+        [actions.submitSuccess]: () =&gt; <span class="hljs-literal">false</span>
       }]
     }),
 
-    <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-      <span class="hljs-attr">allErrors</span>: [
-        <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.values],
+    selectors: ({ selectors }) =&gt; ({
+      allErrors: [
+        () =&gt; [selectors.values],
         validate,
         PropTypes.object
       ],
 
-      <span class="hljs-attr">hasErrors</span>: [
-        <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.allErrors],
-        (allErrors) =&gt; <span class="hljs-built_in">Object</span>.values(allErrors).filter(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> k).length &gt; <span class="hljs-number">0</span>,
+      hasErrors: [
+        () =&gt; [selectors.allErrors],
+        (allErrors) =&gt; Object.values(allErrors).filter(k =&gt; k).length &gt; 0,
         PropTypes.bool
       ],
 
-      <span class="hljs-attr">errors</span>: [
-        <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.allErrors, selectors.showErrors],
+      errors: [
+        () =&gt; [selectors.allErrors, selectors.showErrors],
         (errors, showErrors) =&gt; showErrors ? errors : {},
         PropTypes.object
       ]
     }),
 
-    <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-      [actions.submit]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">const</span> { submitSuccess, submitFailure } = <span class="hljs-keyword">this</span>.actions
+    takeLatest: ({ actions, workers }) =&gt; ({
+      [actions.submit]: <span class="hljs-keyword">function</span> * () {
+        const { submitSuccess, submitFailure } = this.actions
 
-        <span class="hljs-keyword">const</span> hasErrors = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;hasErrors&apos;</span>)
+        const hasErrors = yield this.get(<span class="hljs-string">&apos;hasErrors&apos;</span>)
 
         <span class="hljs-keyword">if</span> (hasErrors) {
-          <span class="hljs-keyword">yield</span> put(submitFailure())
-          <span class="hljs-keyword">return</span>
+          yield put(submitFailure())
+          <span class="hljs-built_in">return</span>
         }
 
-        <span class="hljs-keyword">try</span> {
-          <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">yield</span> call(submit.bind(<span class="hljs-keyword">this</span>))
-          <span class="hljs-keyword">yield</span> call(success.bind(<span class="hljs-keyword">this</span>), response)
-          <span class="hljs-keyword">yield</span> put(submitSuccess(response))
-        } <span class="hljs-keyword">catch</span> (error) {
-          <span class="hljs-keyword">yield</span> call(failure.bind(<span class="hljs-keyword">this</span>), error)
-          <span class="hljs-keyword">yield</span> put(submitFailure(error))
+        try {
+          const response = yield call(submit.bind(this))
+          yield call(success.bind(this), response)
+          yield put(submitSuccess(response))
+        } catch (error) {
+          yield call(failure.bind(this), error)
+          yield put(submitFailure(error))
         }
       }
     })
   })
 }
-</code></pre><p>Since the result of calling <code>createForm</code> is just a regular kea logic store, you may connect to it in any way you please. In fact, the code for the component itself is identical to what you saw above.</p><p>Here it is again for completion:</p><pre><code class="javascript hljs"><span class="hljs-comment">// index.js</span>
+</code></pre><p>Since the result of calling <code>createForm</code> is just a regular kea logic store, you may connect to it in any way you please. In fact, the code for the component itself is identical to what you saw above.</p><p>Here it is again for completion:</p><pre><code class="javascript hljs bash">// index.js
 
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
+import { connect } from <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> form <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./form&apos;</span>
+import form from <span class="hljs-string">&apos;./form&apos;</span>
 
 @connect({
-  <span class="hljs-attr">actions</span>: [
+  actions: [
     form, [
       <span class="hljs-string">&apos;setValue&apos;</span>,
       <span class="hljs-string">&apos;submit&apos;</span>
     ]
   ],
-  <span class="hljs-attr">props</span>: [
+  props: [
     form, [
       <span class="hljs-string">&apos;values&apos;</span>,
       <span class="hljs-string">&apos;isSubmitting&apos;</span>,
@@ -842,35 +848,35 @@ aside.kea-sidebar nav ul li a:hover {
     ]
   ]
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CreatedForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { isSubmitting, errors, values } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { submit, setValue } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-built_in">export</span> default class CreatedForm extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { isSubmitting, errors, values } = this.props
+    const { submit, setValue } = this.actions
 
-    <span class="hljs-keyword">const</span> { name, email, message } = values
+    const { name, email, message } = values
 
-    <span class="hljs-keyword">return</span> (
+    <span class="hljs-built_in">return</span> (
       &lt;div&gt;
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;Name&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={name} onChange={e =&gt; setValue(&apos;name&apos;, e.target.value)} /&gt;
-          {errors.name ? &lt;div className=&apos;form-error&apos;&gt;{errors.name}&lt;/div&gt; : null}
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={name} onChange={e =&gt; setValue(<span class="hljs-string">&apos;name&apos;</span>, e.target.value)} /&gt;
+          {errors.name ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.name}&lt;/div&gt; : null}
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
           &lt;label&gt;E-mail&lt;/label&gt;
-          &lt;input type=&apos;text&apos; value={email} onChange={e =&gt; setValue(&apos;email&apos;, e.target.value)} /&gt;
-          {errors.email ? &lt;div className=&apos;form-error&apos;&gt;{errors.email}&lt;/div&gt; : null}
+          &lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span> value={email} onChange={e =&gt; setValue(<span class="hljs-string">&apos;email&apos;</span>, e.target.value)} /&gt;
+          {errors.email ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.email}&lt;/div&gt; : null}
         &lt;/div&gt;
 
-        &lt;div className=&apos;form-field&apos;&gt;
-          &lt;label className=&apos;block&apos;&gt;Message&lt;/label&gt;
-          &lt;textarea value={message} onChange={e =&gt; setValue(&apos;message&apos;, e.target.value)} /&gt;
-          {errors.message ? &lt;div className=&apos;form-error&apos;&gt;{errors.message}&lt;/div&gt; : null}
+        &lt;div className=<span class="hljs-string">&apos;form-field&apos;</span>&gt;
+          &lt;label className=<span class="hljs-string">&apos;block&apos;</span>&gt;Message&lt;/label&gt;
+          &lt;textarea value={message} onChange={e =&gt; setValue(<span class="hljs-string">&apos;message&apos;</span>, e.target.value)} /&gt;
+          {errors.message ? &lt;div className=<span class="hljs-string">&apos;form-error&apos;</span>&gt;{errors.message}&lt;/div&gt; : null}
         &lt;/div&gt;
 
         &lt;button disabled={isSubmitting} onClick={submit}&gt;
-          {isSubmitting ? &apos;Submitting...&apos; : &apos;Submit!&apos;}
+          {isSubmitting ? <span class="hljs-string">&apos;Submitting...&apos;</span> : <span class="hljs-string">&apos;Submit!&apos;</span>}
         &lt;/button&gt;
       &lt;/div&gt;
     )

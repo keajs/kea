@@ -427,46 +427,52 @@ aside.kea-sidebar nav ul li a:hover {
 }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" aria-current="true" href="/guide/sliders">Sliders</a></li><li><a aria-current="false" href="/guide/github">Github API</a></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/saga">keaSaga</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><h2>1. The static component</h2><p>Based on the knowledge from the previous chapters, you should be able to build a static slider.</p><p>The code for it will look something like this:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" aria-current="true" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
+yarn add kea-saga redux-saga
 
-<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
-<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span> <span class="hljs-comment">// helper, range(3) === [0, 1, 2]</span>
+<span class="hljs-comment"># if using npm</span>
+npm install kea-saga redux-saga --save
+</code></pre><p>Then import <code>kea-saga</code> somewhere in your app&apos;s entrypoint or <code>store.js</code>, before any calls to <code>kea()</code> and <code>getStore()</code> are made:</p><pre><code class="javascript hljs bash">import <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p><a href="/effects/saga">Read here for more</a></p></div><h2>1. The static component</h2><p>Based on the knowledge from the previous chapters, you should be able to build a static slider.</p><p>The code for it will look something like this:</p><pre><code class="javascript hljs bash">import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+
+import images from <span class="hljs-string">&apos;./images&apos;</span>     // array of objects [{ src, author }, ...]
+import range from <span class="hljs-string">&apos;~/utils/range&apos;</span> // helper, range(3) === [0, 1, 2]
 
 @kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+  actions: () =&gt; ({
+    updateSlide: index =&gt; ({ index })
   }),
 
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
+  reducers: ({ actions }) =&gt; ({
+    currentSlide: [0, PropTypes.number, {
+      [actions.updateSlide]: (state, payload) =&gt; payload.index % images.length
     }]
   }),
 
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentImage</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
+  selectors: ({ selectors }) =&gt; ({
+    currentImage: [
+      () =&gt; [selectors.currentSlide],
       (currentSlide) =&gt; images[currentSlide],
       PropTypes.object
     ]
   })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { currentSlide, currentImage } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-built_in">export</span> default class Slider extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { currentSlide, currentImage } = this.props
+    const { updateSlide } = this.actions
 
-    <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
+    const title = `Image copyright by <span class="hljs-variable">${currentImage.author}</span>`
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;kea-slider&apos;&gt;
+    <span class="hljs-built_in">return</span> (
+      &lt;div className=<span class="hljs-string">&apos;kea-slider&apos;</span>&gt;
         &lt;img src={currentImage.src} alt={title} title={title} /&gt;
-        &lt;div className=&apos;buttons&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;buttons&apos;</span>&gt;
           {range(images.length).map(i =&gt; (
             &lt;span key={i}
-                  className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
+                  className={i === currentSlide ? <span class="hljs-string">&apos;selected&apos;</span> : <span class="hljs-string">&apos;&apos;</span>}
                   onClick={() =&gt; updateSlide(i)} /&gt;
           ))}
         &lt;/div&gt;
@@ -474,143 +480,143 @@ aside.kea-sidebar nav ul li a:hover {
     )
   }
 }
-</code></pre><p>Giving us the following result:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Click it! It works, but won&apos;t change the slides automatically.</p><h2>2. Just Add Sagas</h2><p>For that we need to write some <a href="https://redux-saga.js.org/">sagas</a>.</p><p><a href="https://redux-saga.js.org/">Sagas</a> provide a nice way to write code that has side effects. They might be unfamiliar at first, but when you get to know them, you&apos;ll wonder how you ever wrote your frontend code without them.</p><p><button>I need to brush up on my Sagas</button></p><p>First we must import the <code>redux-saga/effects</code> that we need. We&apos;ll also import a <code>delay</code> effect that just sleeps for the given amount of milliseconds.</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span>
-</code></pre><p>And then we create a <code>start</code> generator function inside <code>@kea({})</code>. This function is called every time your component is mounted.</p><p>Inside this <code>start</code> function we create a <code>race</code> condition between two competing effects: a delay of 5 seconds and the action <code>updateSlide</code> being triggered.</p><p>The code pauses at the <code>yield race()</code> call until one of the two conditions is met.</p><p>In case the timeout won the race, we fetch the latest slide (<code>yield this.get(..)</code> is a shorthand to use the selectors defined in <code>@kea({})</code>)... and then we dispatch (<code>yield put()</code>) the <code>updateSlide</code> action with the next slide.</p><pre><code class="javascript hljs">@kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+</code></pre><p>Giving us the following result:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Click it! It works, but won&apos;t change the slides automatically.</p><h2>2. Just Add Sagas</h2><p>For that we need to write some <a href="https://redux-saga.js.org/">sagas</a>.</p><p><a href="https://redux-saga.js.org/">Sagas</a> provide a nice way to write code that has side effects. They might be unfamiliar at first, but when you get to know them, you&apos;ll wonder how you ever wrote your frontend code without them.</p><p><button>I need to brush up on my Sagas</button></p><p>First we must import the <code>redux-saga/effects</code> that we need. We&apos;ll also import a <code>delay</code> effect that just sleeps for the given amount of milliseconds.</p><pre><code class="javascript hljs bash">import { take, race, put } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+import delay from <span class="hljs-string">&apos;~/utils/delay&apos;</span>
+</code></pre><p>And then we create a <code>start</code> generator function inside <code>@kea({})</code>. This function is called every time your component is mounted.</p><p>Inside this <code>start</code> function we create a <code>race</code> condition between two competing effects: a delay of 5 seconds and the action <code>updateSlide</code> being triggered.</p><p>The code pauses at the <code>yield race()</code> call until one of the two conditions is met.</p><p>In case the timeout won the race, we fetch the latest slide (<code>yield this.get(..)</code> is a shorthand to use the selectors defined in <code>@kea({})</code>)... and then we dispatch (<code>yield put()</code>) the <code>updateSlide</code> action with the next slide.</p><pre><code class="javascript hljs bash">@kea({
+  actions: () =&gt; ({
+    updateSlide: index =&gt; ({ index })
   }),
 
-  <span class="hljs-comment">// ...</span>
+  // ...
 
-  <span class="hljs-comment">// run this saga when the component is mounted</span>
-  start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+  // run this saga when the component is mounted
+  start: <span class="hljs-keyword">function</span> * () {
+    const { updateSlide } = this.actions
 
     <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
-      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
-        <span class="hljs-attr">change</span>: take(updateSlide.toString()),
-        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+      const { timeout } = yield race({
+        change: take(updateSlide.toString()),
+        timeout: delay(5000)
       })
 
       <span class="hljs-keyword">if</span> (timeout) {
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
-        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
+        const currentSlide = yield this.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
+        yield put(updateSlide(currentSlide + 1))
       }
     }
   }
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaticSlider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  <span class="hljs-comment">// as it was</span>
+<span class="hljs-built_in">export</span> default class StaticSlider extends Component {
+  // as it was
 }
-</code></pre><p>All of this results in this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Now if you will always just have one slider on your screen, you&apos;re done. If you wish to have many slider instances, you will run into the same issue as with the dynamic counter example - both sliders will listen to and react to the <code>updateSlide</code> actions unless you explicitly prohibit them.</p><p>The code below demonstrates a way to prevent this from happening. It also shows how to listen to actions using the <code>takeEvery</code> helper and the <code>workers</code> object.</p></div><div class="code"><h2>Full source</h2><p>Better documentation is coming one day. Until then, read the comments in the code and the <a href="https://redux-saga.js.org/">redux-saga</a> documentation.</p><pre><code class="javascript hljs"><span class="hljs-comment">// slider/index.js</span>
-<span class="hljs-keyword">import</span> <span class="hljs-string">&apos;./styles.scss&apos;</span>
+</code></pre><p>All of this results in this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Now if you will always just have one slider on your screen, you&apos;re done. If you wish to have many slider instances, you will run into the same issue as with the dynamic counter example - both sliders will listen to and react to the <code>updateSlide</code> actions unless you explicitly prohibit them.</p><p>The code below demonstrates a way to prevent this from happening. It also shows how to listen to actions using the <code>takeEvery</code> helper and the <code>workers</code> object.</p></div><div class="code"><h2>Full source</h2><p>Better documentation is coming one day. Until then, read the comments in the code and the <a href="https://redux-saga.js.org/">redux-saga</a> documentation.</p><pre><code class="javascript hljs bash">// slider/index.js
+import <span class="hljs-string">&apos;./styles.scss&apos;</span>
 
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
+import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+import { take, race, put } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span>
-<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span>
+import delay from <span class="hljs-string">&apos;~/utils/delay&apos;</span>
+import range from <span class="hljs-string">&apos;~/utils/range&apos;</span>
 
-<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>
+import images from <span class="hljs-string">&apos;./images&apos;</span>
 
 @kea({
-  <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
+  key: (props) =&gt; props.id,
 
-  <span class="hljs-attr">path</span>: <span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;slider&apos;</span>, key],
+  path: (key) =&gt; [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;slider&apos;</span>, key],
 
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+  actions: () =&gt; ({
+    updateSlide: index =&gt; ({ index })
   }),
 
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key, props }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentSlide</span>: [props.initialSlide || <span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-        <span class="hljs-keyword">return</span> payload.key === key ? payload.index % images.length : state
+  reducers: ({ actions, key, props }) =&gt; ({
+    currentSlide: [props.initialSlide || 0, PropTypes.number, {
+      [actions.updateSlide]: (state, payload) =&gt; {
+        <span class="hljs-built_in">return</span> payload.key === key ? payload.index % images.length : state
       }
     }]
   }),
 
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentImage</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
+  selectors: ({ selectors }) =&gt; ({
+    currentImage: [
+      () =&gt; [selectors.currentSlide],
       (currentSlide) =&gt; images[currentSlide],
       PropTypes.object
     ]
   }),
 
-  <span class="hljs-comment">// This saga is run when the component is mounted.</span>
-  <span class="hljs-comment">// The function is a regular redux-saga worker that has access to:</span>
-  <span class="hljs-comment">// 1) this.actions, 2) this.key and 3) this.props</span>
-  <span class="hljs-comment">//</span>
-  <span class="hljs-comment">// Read the redux-saga documentation to understand the different</span>
-  <span class="hljs-comment">// functions like: race(), put(), take(), etc</span>
-  start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+  // This saga is run when the component is mounted.
+  // The <span class="hljs-keyword">function</span> is a regular redux-saga worker that has access to:
+  // 1) this.actions, 2) this.key and 3) this.props
+  //
+  // Read the redux-saga documentation to understand the different
+  // <span class="hljs-built_in">functions</span> like: race(), put(), take(), etc
+  start: <span class="hljs-keyword">function</span> * () {
+    const { updateSlide } = this.actions
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Starting homepage slider saga&apos;</span>)
-    <span class="hljs-comment">// console.log(this, this.actions, this.props)</span>
+    console.log(<span class="hljs-string">&apos;Starting homepage slider saga&apos;</span>)
+    // console.log(this, this.actions, this.props)
 
     <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
-      <span class="hljs-comment">// wait until the updateSlide() action is triggered or a 5sec timeout occurs</span>
-      <span class="hljs-comment">// to ignore actions from other slider instances we must also match the key</span>
-      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
-        <span class="hljs-attr">change</span>: take(<span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> action.type === updateSlide.toString() &amp;&amp;
-                               action.payload.key === <span class="hljs-keyword">this</span>.key),
-        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+      // <span class="hljs-built_in">wait</span> until the updateSlide() action is triggered or a 5sec timeout occurs
+      // to ignore actions from other slider instances we must also match the key
+      const { timeout } = yield race({
+        change: take(action =&gt; action.type === updateSlide.toString() &amp;&amp;
+                               action.payload.key === this.key),
+        timeout: delay(5000)
       })
 
       <span class="hljs-keyword">if</span> (timeout) {
-        <span class="hljs-comment">// use this.get(..) to select the latest data from redux</span>
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
+        // use this.get(..) to select the latest data from redux
+        const currentSlide = yield this.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
 
-        <span class="hljs-comment">// actions are not automatically bound to dispatch, so</span>
-        <span class="hljs-comment">// you must use redux-saga&apos;s put() with them</span>
-        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
+        // actions are not automatically bound to dispatch, so
+        // you must use redux-saga<span class="hljs-string">&apos;s put() with them
+        yield put(updateSlide(currentSlide + 1))
       }
     }
   },
 
-  <span class="hljs-comment">// this saga is run when the component is unmounted</span>
-  stop: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Stopping homepage slider saga&apos;</span>)
+  // this saga is run when the component is unmounted
+  stop: function * () {
+    console.log(&apos;</span>Stopping homepage slider saga<span class="hljs-string">&apos;)
   },
 
-  <span class="hljs-comment">// The redux-saga takeEvery function.</span>
-  <span class="hljs-comment">// It waits for actions and runs the relevant functions.</span>
-  <span class="hljs-comment">// Also available: takeLatest</span>
-  takeEvery: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
+  // The redux-saga takeEvery function.
+  // It waits for actions and runs the relevant functions.
+  // Also available: takeLatest
+  takeEvery: ({ actions, workers }) =&gt; ({
     [actions.updateSlide]: workers.updateSlide
   }),
 
-  <span class="hljs-comment">// it&apos;s recommended to group all the logic under the workers: {} object.</span>
+  // it&apos;</span>s recommended to group all the logic under the workers: {} object.
   workers: {
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params">action</span>) </span>{
-      <span class="hljs-comment">// check if it was this component that triggered the action</span>
-      <span class="hljs-keyword">if</span> (action.payload.key === <span class="hljs-keyword">this</span>.key) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;slide update triggered&apos;</span>, action.payload.key, <span class="hljs-keyword">this</span>.key, <span class="hljs-keyword">this</span>.props.id)
-        <span class="hljs-comment">// console.log(action, this)</span>
+    updateSlide: <span class="hljs-keyword">function</span> * (action) {
+      // check <span class="hljs-keyword">if</span> it was this component that triggered the action
+      <span class="hljs-keyword">if</span> (action.payload.key === this.key) {
+        console.log(<span class="hljs-string">&apos;slide update triggered&apos;</span>, action.payload.key, this.key, this.props.id)
+        // console.log(action, this)
       }
     }
   }
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { currentSlide, currentImage } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-built_in">export</span> default class Slider extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    const { currentSlide, currentImage } = this.props
+    const { updateSlide } = this.actions
 
-    <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
+    const title = `Image copyright by <span class="hljs-variable">${currentImage.author}</span>`
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;kea-slider&apos;&gt;
+    <span class="hljs-built_in">return</span> (
+      &lt;div className=<span class="hljs-string">&apos;kea-slider&apos;</span>&gt;
         &lt;img src={currentImage.src} alt={title} title={title} /&gt;
-        &lt;div className=&apos;buttons&apos;&gt;
+        &lt;div className=<span class="hljs-string">&apos;buttons&apos;</span>&gt;
           {range(images.length).map(i =&gt; (
             &lt;span key={i}
-                  className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
+                  className={i === currentSlide ? <span class="hljs-string">&apos;selected&apos;</span> : <span class="hljs-string">&apos;&apos;</span>}
                   onClick={() =&gt; updateSlide(i)} /&gt;
           ))}
         &lt;/div&gt;
@@ -620,10 +626,10 @@ aside.kea-sidebar nav ul li a:hover {
 }
 
 // index.js
-export default class SlidersScene extends Component {
-  render () {
-    return (
-      &lt;div className=&apos;slider-container&apos;&gt;
+<span class="hljs-built_in">export</span> default class SlidersScene extends Component {
+  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
+    <span class="hljs-built_in">return</span> (
+      &lt;div className=<span class="hljs-string">&apos;slider-container&apos;</span>&gt;
         &lt;Slider id={1} initialSlide={0} /&gt;
         &lt;Slider id={2} initialSlide={1} /&gt;
       &lt;/div&gt;

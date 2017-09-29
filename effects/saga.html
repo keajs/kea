@@ -1,0 +1,550 @@
+<html class=" "><head>
+    <title>Kea</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://kea.js.org/img/logo.svg" type="image/x-icon">
+    <meta property="og:image" content="https://kea.js.org/img/logo.png">
+    <meta name="twitter:image:src" content="https://kea.js.org/img/logo.png">
+    <script>
+      if (window.location.host === 'kea.js.org') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-103436947-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+  <style type="text/css">/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment, .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable, .hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string, .hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title, .hljs-section, .hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag, .hljs-name, .hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp, .hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol, .hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in, .hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+body {
+	background: #ffffff;
+	margin: 0;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+a {
+	color: green;
+}
+
+code {
+	background: #f8f8f8;
+	padding: 2px;
+}
+
+.code {
+	text-align: left;
+	margin: 20px;
+}
+
+.description {
+	text-align: left;
+	margin: 20px;
+	line-height: 22px;
+}
+
+.example {
+	margin: 20px;
+}
+
+h1, h2 {
+	font-weight: 400;
+}
+
+h1, h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+}
+
+h2, h3 {
+	margin-top: 40px;
+}
+
+.demo {
+	background: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.extra-help {
+	background: #ffffdd;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hljs {
+	line-height: 16px;
+}
+
+.api-scene {
+  margin: 20px;
+}
+
+.code-style-bar {
+	background: #388e3c;
+	height: 24px;
+}
+
+.code-style-bar button {
+		color: white;
+		background: none;
+		border: 1px solid #fff;
+		cursor: pointer;
+		height: 22px;
+		margin-top: 1px;
+		margin-left: 1px;
+		outline: none
+	}
+
+.code-style-bar button.active {
+  color: #222;
+  background: white;
+}
+</style><style type="text/css">header.body-header nav {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+    header.body-header nav a {
+      text-decoration: none;
+      color: #333333;
+      text-transform: uppercase;
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px
+    }
+
+    header.body-header nav a.active {
+    font-weight: bold;
+    color: #388e3c;
+    border-bottom: 2px solid #388e3c;
+    height: 48px;
+}
+
+    header.body-header nav a:hover {
+    color: #388e3c;
+}
+
+    header.body-header nav a.right {
+    margin-left: auto;
+}
+
+    header.body-header nav a.logo {
+    padding: 5px;
+}
+main section.with-sidebar {
+    border-top: 1px solid #e0e0e0;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
+    display: flex;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    min-height: calc(100vh - 50px - 1px);
+  }
+main section.with-sidebar aside.kea-sidebar {
+      display: block;
+      width: 240px;
+      border-right: 1px solid #e0e0e0;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+main section.with-sidebar .content.with-sidebar {
+      display: block;
+      -webkit-box-flex: 2;
+          -ms-flex-positive: 2;
+              flex-grow: 2;
+      max-width: calc(100% - 240px);
+    }
+main section.with-sidebar .content.darker {
+      background: #eee;
+    }
+@media (max-width: 767px) {
+
+    main section.with-sidebar {
+        display: block;
+    }
+
+    main section.with-sidebar aside.kea-sidebar {
+        width: 100%;
+        border-right: none;
+    }
+
+    main section.with-sidebar .content.with-sidebar {
+        max-width: 100%;
+        padding-top: 20px;
+    }
+}
+aside.kea-sidebar nav .section-title {
+      font-weight: strong;
+      display: block;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+aside.kea-sidebar nav ul {
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+aside.kea-sidebar nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+aside.kea-sidebar nav ul li a {
+          color: #333;
+          text-decoration: none
+        }
+aside.kea-sidebar nav ul li a.active {
+    color: #388e3c;
+    text-decoration: underline;
+}
+aside.kea-sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+</style><style type="text/css">/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: #29d;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+          animation: nprogress-spinner 400ms linear infinite;
+}
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+.nprogress-custom-parent #nprogress .spinner, .nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+@-webkit-keyframes nprogress-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#nprogress .bar {
+		background: #359335;
+	}
+#nprogress .peg {
+		-webkit-box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+		        box-shadow: 0 0 10px #359335, 0 0 5px #359335;
+	}
+#nprogress .spinner-icon {
+		border-top-color: #359335;
+		border-left-color: #359335;
+	}
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsSaga"); </script></head>
+  <body>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a class="active" aria-current="true" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <code>kea-saga</code> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p><p>Also read the sections of the guide marked &quot;with kea-saga&quot; to learn more.</p></div><div class="description"><h2>Installation</h2><p>First install the <code>kea-saga</code> and <code>redux-saga</code> packages:</p><pre><code class="bash hljs">yarn add kea-saga redux-saga
+npm install --save kea-saga redux-saga
+</code></pre><p>Then import <code>kea-saga</code> somewhere in your app&apos;s entrypoint or <code>store.js</code>, before any calls to <code>kea()</code> and <code>getStore()</code> are made:</p><pre><code class="javascript hljs bash">import <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p>If, however, you wish to configure your store manually, connect the saga middleware like so:</p><pre><code class="javascript hljs bash">import { keaReducer } from <span class="hljs-string">&apos;kea&apos;</span>
+import { keaSaga } from <span class="hljs-string">&apos;kea-saga&apos;</span>
+
+<span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">getStore</span></span> () {
+  const reducers = combineReducers({
+    kea: keaReducer(<span class="hljs-string">&apos;kea&apos;</span>),
+    scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
+  })
+
+  const sagaMiddleware = createSagaMiddleware()
+  const finalCreateStore = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+
+  const store = finalCreateStore(reducers)
+
+  sagaMiddleware.run(keaSaga)
+
+  <span class="hljs-built_in">return</span> store
+}
+</code></pre></div><div class="description"><h2>Usage</h2><p>First, read the docs on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage to learn how sagas work.</p><p>Adding <code>kea-saga</code> will give your logic stores will get access to the keys: <code>start</code>, <code>stop</code>, <code>takeEvery</code>, <code>takeLatest</code>, <code>workers</code>, <code>sagas</code>.</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-built_in">export</span> default kea({
+  // ... see the api docs <span class="hljs-keyword">for</span> more
+
+  start: <span class="hljs-keyword">function</span> * () {
+    // saga started or component mounted
+    console.log(this)
+  },
+
+  stop: <span class="hljs-keyword">function</span> * () {
+    // saga cancelled or component unmounted
+  },
+
+  takeEvery: ({ actions, workers }) =&gt; ({
+    [actions.simpleAction]: <span class="hljs-keyword">function</span> * () {
+      // inline worker
+    },
+    [actions.actionWithDynamicPayload]: workers.dynamicWorker
+  }),
+
+  takeLatest: ({ actions, workers }) =&gt; ({
+    [actions.actionWithStaticPayload]: <span class="hljs-keyword">function</span> * () {
+      // inline worker
+    },
+    [actions.actionWithManyParameters]: workers.dynamicWorker
+  }),
+
+  workers: {
+    * dynamicWorker (action) {
+      const { id, message } = action.payload // <span class="hljs-keyword">if</span> from takeEvery/takeLatest
+      // reference with workers.dynamicWorker
+    },
+    longerWayToDefine: <span class="hljs-keyword">function</span> * () {
+      // another way to define a worker
+    }
+  },
+
+  sagas: [saga1, saga2]
+})
+</code></pre><h4>start: <code>function * () {}</code></h4><p>Saga that is started whenever the component is connected or the saga exported from this component starts</p><p>Note: sagas are started before your <u>wrapped component&apos;s</u> <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen inside <code>start</code>.</p><pre><code class="javascript hljs bash">// Input
+start: <span class="hljs-keyword">function</span> * () {
+  // saga started or component mounted
+  console.log(this)
+}
+
+// Output
+myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
+  // saga started or component mounted
+  console.log(this)
+  // =&gt; { actions, workers, path, key, get: <span class="hljs-keyword">function</span> * (), fetch: <span class="hljs-keyword">function</span> * () }
+}
+</code></pre><h4>stop: <code>function * () {}</code></h4><p>Saga that is started whenever the component is disconnected or the saga exported from this component is cancelled</p><p>This function is called right before your <u>wrapped component&apos;s</u> <code>componentWillUnmount</code> lifecycle method.</p><pre><code class="javascript hljs bash">// Input
+stop: <span class="hljs-keyword">function</span> * () {
+  // saga cancelled or component unmounted
+}
+
+// Output
+myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
+  try {
+    // start()
+  } finally {
+    <span class="hljs-keyword">if</span> (cancelled()) {
+      // saga cancelled or component unmounted
+    }
+  }
+}
+</code></pre><h4>takeEvery: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeEvery</code>.</p><pre><code class="javascript hljs bash">// Input
+takeEvery: ({ actions, workers }) =&gt; ({
+  [actions.simpleAction]: <span class="hljs-keyword">function</span> * () {
+    // inline worker
+  },
+  [actions.actionWithDynamicPayload]: workers.dynamicWorker
+})
+
+// Output
+myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
+  // pseudocode
+  yield fork(<span class="hljs-keyword">function</span> * () {
+    yield [
+      takeEvery(actions.simpleAction.toString(), <span class="hljs-keyword">function</span> * () {
+        // inline worker
+      }.<span class="hljs-built_in">bind</span>(this)),
+      takeEvery(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(this))
+    ]
+  })
+}
+</code></pre><h4>takeLatest: <code>({ actions }) =&gt; ({})</code></h4><p>Run the following workers every time the action is dispatched, cancel the previous worker if still running</p><p>Note: sagas are started before your wrapped component&apos;s <code>componentDidMount</code>. Actions dispatched before this lifecycle method will not be seen by <code>takeLatest</code>.</p><pre><code class="javascript hljs bash">// Input
+takeLatest: ({ actions, workers }) =&gt; ({
+  [actions.simpleAction]: <span class="hljs-keyword">function</span> * () {
+    // inline worker
+  },
+  [actions.actionWithDynamicPayload]: workers.dynamicWorker
+})
+
+// Output
+myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
+  // pseudocode
+  yield fork(<span class="hljs-keyword">function</span> * () {
+    yield [
+      takeLatest(actions.simpleAction.toString(), <span class="hljs-keyword">function</span> * () {
+        // inline worker
+      }.<span class="hljs-built_in">bind</span>(this)),
+      takeLatest(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(this))
+    ]
+  })
+}
+</code></pre><h4>workers: <code>{}</code></h4><p>An object of workers which you may reference in other sagas.</p><pre><code class="javascript hljs bash">// Input
+workers: {
+  * dynamicWorker (action) {
+    const { id, message } = action.payload // <span class="hljs-keyword">if</span> from takeEvery/takeLatest
+    // reference with workers.dynamicWorker
+  },
+  longerWayToDefine: <span class="hljs-keyword">function</span> * () {
+    // another worker
+  }
+}
+
+// Output
+myRandomSceneLogic.workers == {
+  dynamicWorker: <span class="hljs-keyword">function</span> (action) *
+    const { id, message } = action.payload // <span class="hljs-keyword">if</span> from takeEvery/takeLatest
+    // reference with workers.dynamicWorker
+  }.<span class="hljs-built_in">bind</span>(myRandomSceneLogic),
+
+  longerWayToDefine: <span class="hljs-keyword">function</span> () * {
+    // another worker
+  }.<span class="hljs-built_in">bind</span>(myRandomSceneLogic)
+}
+</code></pre><h4>sagas: <code>[]</code></h4><p>Array of sagas that get exported with this component&apos;s saga</p><pre><code class="javascript hljs bash">// Input
+sagas: [saga1, saga2]
+
+// Output
+myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
+  yield fork(saga1)
+  yield fork(saga2)
+
+  // start() ...
+}
+</code></pre></div></div></div></div></section></main></div></div>
+    <script src="/common.bundle.js"></script>
+  
+
+</body></html>

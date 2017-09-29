@@ -379,12 +379,56 @@ aside.kea-sidebar nav ul li a:hover {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("examplesGithub"); </script><style type="text/css">.example-github-scene {
-  padding: 20px;
-}
-</style></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsThunk"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="" href="/guide">Docs</a><a class="active" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Examples</strong><ul><li><a aria-current="false" href="/examples/todos">TodoMVC</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/tree/master/app/scenes/examples/todos" target="_blank">source</a></small></li><li><a class="active" aria-current="true" href="/examples/github">Github</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/blob/master/app/scenes/examples/github/index.js" target="_blank">source</a></small></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 10 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1016 stars, 24 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 2 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 2 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 0 forks.</div></div></div></div></div></section></main></div></div>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a class="active" aria-current="true" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Thunks</h2><p>Thunks are the simplest ways to define side effects with Redux.</p></div><div class="description"><h2>Installation</h2><p>First install the <code>kea-thunk</code> and <code>redux-thunk</code> packages:</p><pre><code class="bash hljs">yarn add kea-thunk redux-thunk
+npm install --save kea-thunk redux-thunk
+</code></pre><p>Then import <code>kea-thunk</code> somewhere in your app&apos;s entrypoint or <code>store.js</code>, before any calls to <code>kea()</code> and <code>getStore()</code> are made:</p><pre><code class="javascript hljs bash">import <span class="hljs-string">&apos;kea-thunk&apos;</span>
+</code></pre><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p>If, however, you wish to configure your store manually, connect the thunk middleware like so:</p><pre><code class="javascript hljs bash">import { keaReducer } from <span class="hljs-string">&apos;kea&apos;</span>
+import { createStore, combineReducers, applyMiddleware, compose } from <span class="hljs-string">&apos;redux&apos;</span>
+
+import thunk from <span class="hljs-string">&apos;redux-thunk&apos;</span>
+
+<span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">getStore</span></span> () {
+  const reducers = combineReducers({
+    kea: keaReducer(<span class="hljs-string">&apos;kea&apos;</span>),
+    scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
+  })
+
+  const finalCreateStore = compose(
+    applyMiddleware(thunk)
+  )(createStore)
+
+  const store = finalCreateStore(reducers)
+
+  <span class="hljs-built_in">return</span> { store }
+}
+</code></pre></div><div class="description"><h2>Usage</h2><p>You define thunks in a block called <code>thunks</code>. Here are some examples:</p><pre><code class="javascript hljs bash">const delay = (ms) =&gt; new Promise(resolve =&gt; window.setTimeout(resolve, ms))
+
+const logic = kea({
+  actions: ({ constants }) =&gt; ({
+    updateName: name =&gt; ({ name })
+  }),
+
+  thunks: ({ actions, dispatch, getState }) =&gt; ({
+    updateNameAsync: async name =&gt; {
+      await delay(1000)            // standard promise
+      await actions.anotherThunk() // another thunk action
+      actions.updateName(name)     // not a thunk, so no async needed
+      dispatch({ <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;RANDOM_REDUX_ACTION&apos;</span> }) // random redux action
+    },
+    anotherThunk: async () =&gt; {
+      // <span class="hljs-keyword">do</span> something
+    }
+  }),
+
+  reducers: ({ actions, constants }) =&gt; ({
+    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, PropTypes.string, {
+      [actions.updateName]: (state, payload) =&gt; payload.name
+    }]
+  })
+})
+</code></pre><p>As you can see, you have access to the standard Redux <code>dispatch</code> and <code>getState</code> methods. However you don&apos;t need to call <code>dispatch</code> before any action in the actions object. They are wrapped automatically.</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
