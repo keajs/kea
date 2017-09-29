@@ -16,11 +16,18 @@
     "url": "https://github.com/keajs/kea/issues"
   },
   "homepage": "https://github.com/keajs/kea#readme",
+  "size-limit": [
+    {
+      "path": "lib/index.js",
+      "limit": "15 KB"
+     }
+  ],
   "scripts": {
     "build": "npm run lint && npm run build:cjs && npm run build:es",
     "build:cjs": "babel src --out-dir lib",
     "build:es": "BABEL_ENV=es babel src --out-dir es",
     "start": "BABEL_ENV=es babel -w src --out-dir es",
+    "size": "size-limit",
     "test": "jest",
     "lint": "eslint src/**",
     "prepublish": "npm run build"
@@ -29,9 +36,7 @@
     "es",
     "lib",
     "src",
-    "logic.js",
-    "saga.js",
-    "scene.js"
+    "saga.js"
   ],
   "jest": {
     "testPathIgnorePatterns": [
@@ -49,7 +54,6 @@
     "react": "*",
     "react-redux": "5.x",
     "redux": "3.x",
-    "redux-saga": ">= 0.14",
     "reselect": "2.x || 3.x"
   },
   "devDependencies": {
@@ -80,6 +84,7 @@
     "react-test-renderer": "^15.6.1",
     "redux": "^3.7.2",
     "redux-saga": "^0.15.6",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "size-limit": "^0.11.3"
   }
 }

@@ -1,16 +1,22 @@
 import { kea } from './kea'
-import { clearActionCache } from './logic/actions'
-import { clearStore } from './scene/store'
-import { clearRunningSagas } from './scene/saga'
+import { resetCache } from './kea/cache'
+import { clearReducerCache } from './kea/reducer'
+import { clearActionCache } from './kea/actions/create'
 
 export { kea } from './kea'
-export { createAction } from './logic/actions'
-export { keaReducer, keaSaga } from './scene/store'
+export { keaReducer } from './kea/reducer'
+export { createAction } from './kea/actions/create'
+
+export { getStore } from './kea/store'
+
+// for plugins
+export { getCache, setCache } from './kea/cache'
+export { activatePlugin } from './kea/plugins'
 
 export const connect = (mapping) => kea({ connect: mapping })
 
 export function resetKeaCache () {
+  resetCache()
   clearActionCache()
-  clearStore()
-  clearRunningSagas()
+  clearReducerCache()
 }

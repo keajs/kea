@@ -1,13 +1,11 @@
-/* global test, expect */
-import { kea } from '../index'
+/* global test, expect, beforeEach */
+import { kea, getStore, resetKeaCache } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-
-import getStore from './helper/get-store'
 
 class SampleComponent extends Component {
   render () {
@@ -24,6 +22,10 @@ class SampleComponent extends Component {
     )
   }
 }
+
+beforeEach(() => {
+  resetKeaCache()
+})
 
 test('singletons connect to react components', () => {
   const store = getStore()
@@ -61,7 +63,7 @@ test('singletons connect to react components', () => {
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-  expect(store.getState()).toEqual({ scenes: { something: { name: 'chirpy' } } })
+  expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'chirpy' } } })
 
   const sampleComponent = wrapper.find('SampleComponent').node
 
@@ -71,7 +73,7 @@ test('singletons connect to react components', () => {
   const { updateName } = sampleComponent.actions
   updateName('somename')
 
-  expect(store.getState()).toEqual({ scenes: { something: { name: 'somename' } } })
+  expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'somename' } } })
 
   wrapper.render()
 
@@ -119,7 +121,7 @@ test('dynamic connect to react components', () => {
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-  expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'chirpy' } } } })
+  expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'chirpy' } } } })
 
   const sampleComponent = wrapper.find('SampleComponent').node
 
@@ -129,7 +131,7 @@ test('dynamic connect to react components', () => {
   const { updateName } = sampleComponent.actions
   updateName('somename')
 
-  expect(store.getState()).toEqual({ scenes: { something: { 12: { name: 'somename12' } } } })
+  expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'somename12' } } } })
 
   wrapper.render()
 
@@ -192,7 +194,7 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-  expect(store.getState()).toEqual({scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
+  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
 
   const sampleComponent = wrapper.find('SampleComponent').node
 
@@ -202,7 +204,7 @@ test('connected props can be used as selectors', () => {
   const { updateName } = sampleComponent.actions
   updateName('somename')
 
-  expect(store.getState()).toEqual({scenes: {homepage: {first: {name: 'somename'}, second: {}}}})
+  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'somename'}, second: {}}}})
 
   wrapper.render()
 

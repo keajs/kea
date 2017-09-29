@@ -1,13 +1,11 @@
-/* global test, expect */
-import { kea } from '../index'
+/* global test, expect, beforeEach */
+import { kea, getStore, resetKeaCache } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
-
-import getStore from './helper/get-store'
 
 class SampleComponent extends Component {
   render () {
@@ -24,6 +22,10 @@ class SampleComponent extends Component {
     )
   }
 }
+
+beforeEach(() => {
+  resetKeaCache()
+})
 
 test('snapshots must match', () => {
   const store = getStore()

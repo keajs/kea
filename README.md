@@ -65,9 +65,12 @@ export default class Slider extends Component {
 }
 ```
 
-Kea logic stores also supports Sagas. They will be started and terminated together with your component! Each instance of your component runs its own sagas!
+For side effects, choose between [thunks](https://github.com/keajs/kea-thunk) or [sagas](https://github.com/keajs/kea-saga).
+
+Using the [kea-saga](https://github.com/keajs/kea-saga) package. They will be started and terminated together with your component!
 
 ```jsx
+import 'kea-saga' // import somewhere to enable support for sagas
 import { kea } from 'kea'
 
 @kea({

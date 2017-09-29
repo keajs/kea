@@ -1,13 +1,11 @@
 /* global test, expect, beforeEach */
-import { kea, resetKeaCache } from '../index'
+import { kea, resetKeaCache, getStore } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-
-import getStore from './helper/get-store'
 
 beforeEach(() => {
   resetKeaCache()

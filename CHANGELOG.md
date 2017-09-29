@@ -7,6 +7,15 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.25.0 - 2017-09-29
+### Plugin support!
+- Kea now supports plugins!
+- The previous saga functionality has moved to [kea-saga](https://github.com/keajs/kea-saga). Please install it to continue using sagas!
+- There's a new function, [`getStore`](https://kea.js.org/api/store), which greatly simplifies configuring your store, especially when importing plugins.
+
+### Removed deprecations
+- Removed `Logic` and `Scene` classes and other old deprecated code. Please make sure your app works with 0.24.1 without warnings before upgrading!
+
 ## 0.24.2 - 2017-09-17
 ### Changed
 - Leverage action cache to enable parameterized kea logic. See #43 for more details. By @rheng

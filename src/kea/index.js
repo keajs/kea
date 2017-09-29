@@ -1,24 +1,21 @@
-import { createPropTransforms, propTypesFromMapping } from '../logic/props'
-import { createActions, createActionTransforms } from '../logic/actions'
-import { combineReducerObjects, convertReducerArrays } from '../logic/reducer'
-import { convertConstants } from '../logic/create'
-import { pathSelector, createSelectors } from '../logic/selectors'
-import { createSaga } from '../saga/create'
-import { getConnectedSagas } from '../saga/connected'
-import { firstReducerRoot, isSyncedWithStore, addReducer, startSaga, cancelSaga } from '../scene/store'
-import { createCombinedSaga } from '../scene/saga'
+import { selectPropsFromLogic } from './connect/props'
+import { propTypesFromMapping } from './connect/prop-types'
+import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
+import { pathSelector, createSelectors } from './logic/selectors'
+import { createActions } from './actions/create'
+import { selectActionsFromLogic } from './connect/actions'
+
+import convertConstants from '../utils/convert-constants'
 import shallowEqual from '../utils/shallow-equal'
 
 import { createSelector } from 'reselect'
-import { select, call } from 'redux-saga/effects'
 import { connectAdvanced } from 'react-redux'
 
-let inlineCache = {}
-let actionCache = {}
+import { setCache, getCache } from './cache'
 
-export function cachedSelectors (path) {
-  return inlineCache[path.join('.')] || {}
-}
+import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
+
+import { installedPlugins } from './plugins'
 
 const DEBUG = false
 
@@ -28,247 +25,108 @@ function isStateless (Component) {
   return !Component.prototype.render
 }
 
-const hydrationAction = 'hydrate kea store'
+const hydrationAction = '@@kea/hydrate store'
 
-function injectSagasIntoClass (Klass, _this, connectedActions, object) {
-  if (Klass._injectedKeaSaga) {
-    console.error('[KEA] Error! Already injected kea saga into component', Klass)
-  }
-  Klass._injectedKeaSaga = true
+export function kea (input) {
+  const hasConnect = !!(input.connect)
+  const hasLogic = !!(input.path || input.actions || input.reducers || input.selectors)
+  const isSingleton = !input.key
 
-  const originalComponentDidMount = Klass.prototype.componentDidMount
-  Klass.prototype.componentDidMount = function () {
-    if (DEBUG) {
-      console.log('component did mount')
-    }
+  let output = {}
 
-    // this === component instance
-    this._keaSagaBase = {}
-    this._keaRunningSaga = null
+  // check which plugins are active
+  output.activePlugins = []
+  installedPlugins.forEach(plugin => {
+    output.activePlugins[plugin.name] = plugin.isActive(input, output)
+  })
 
-    const key = _this.key ? _this.key(this.props) : 'index'
-    const path = _this.path(key)
-
-    let sagas = (_this.sagas || []).map(saga => {
-      return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
-    })
-
-    if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-      const _component = this
-      _component._keaSagaBase = {
-        start: _this.start,
-        stop: _this.stop,
-        takeEvery: _this.takeEvery,
-        takeLatest: _this.takeLatest,
-        workers: _this.workers ? Object.assign({}, _this.workers) : {},
-        key: key,
-        path: path,
-        props: this.props,
-        get: function * (key) {
-          const { selectors, selector } = cachedSelectors(path)
-          return yield select(key ? selectors[key] : selector)
-        },
-        fetch: function * () {
-          let results = {}
-          const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-          for (let i = 0; i < keys.length; i++) {
-            results[keys[i]] = yield _component._keaSagaBase.get(keys[i])
-          }
-          return results
-        }
-      }
-
-      let sagaActions = Object.assign({}, connectedActions)
-
-      // inject key to the payload of inline actions
-      Object.keys(object.actions || {}).forEach(actionKey => {
-        sagaActions[actionKey] = (...args) => {
-          const createdAction = object.actions[actionKey](...args)
-          return Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) })
-        }
-        sagaActions[actionKey].toString = object.actions[actionKey].toString
-      })
-
-      const saga = createSaga(this._keaSagaBase, { actions: sagaActions })
-      sagas.push(saga)
-    }
-
-    if (sagas.length > 0) {
-      this._keaRunningSaga = startSaga(createCombinedSaga(sagas, path.join('.')))
-    }
-
-    originalComponentDidMount && originalComponentDidMount.bind(this)()
-  }
-
-  const originalComponentWillReceiveProps = Klass.prototype.componentWillReceiveProps
-  Klass.prototype.componentWillReceiveProps = function (nextProps) {
-    this._keaSagaBase.props = nextProps
-
-    originalComponentWillReceiveProps && originalComponentWillReceiveProps.bind(this)(nextProps)
-  }
-
-  const originalComponentWillUnmount = Klass.prototype.componentWillUnmount
-  Klass.prototype.componentWillUnmount = function () {
-    if (DEBUG) {
-      console.log('component will unmount')
-    }
-    if (this._keaRunningSaga) {
-      cancelSaga(this._keaRunningSaga)
-    }
-
-    originalComponentWillUnmount && originalComponentWillUnmount.bind(this)()
-  }
-}
-
-export function kea (_this) {
-  const hasConnect = !!(_this.connect)
-  const hasLogic = !!(_this.path || _this.actions || _this.reducers || _this.selectors)
-  let hasSaga = !!(_this.sagas || _this.start || _this.stop || _this.takeEvery || _this.takeLatest || (_this.connect && _this.connect.sagas))
-  const isSingleton = !_this.key
-
-  let object = {}
-
-  if (!_this.path) {
+  if (!input.path) {
     const reducerRoot = firstReducerRoot()
     if (!reducerRoot) {
       console.error('[KEA] Could not find the root of the keaReducer! Make sure you call keaReducer() before any call to kea() is made. See: https://kea.js.org/api/reducer')
     }
     let inlinePath = [reducerRoot, '_kea', `inline-${nonameCounter++}`]
-    _this.path = () => inlinePath
+    input.path = () => inlinePath
   }
 
   let propTypes = {}
   let connect = {}
-  let connectedActions = {}
-  let connectedSelectors = {}
 
   if (hasConnect) {
     // the { connect: { props, actions } } part
-    connect = _this.connect || {}
+    connect = input.connect || {}
 
     // get default proptypes and add connected ones
     propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
 
     // connected actions and props/selectors
-    connectedActions = createActionTransforms(connect.actions).actions
-    connectedSelectors = createPropTransforms(connect.props).selectorFunctions
+    output.connected = {
+      actions: selectActionsFromLogic(connect.actions),
+      selectors: selectPropsFromLogic(connect.props)
+    }
 
     if (isSingleton) {
-      object.actions = Object.assign({}, connectedActions)
-      object.selectors = Object.assign({}, connectedSelectors)
+      output.actions = Object.assign({}, output.connected.actions)
+      output.selectors = Object.assign({}, output.connected.selectors)
     }
 
-    const connectedSagas = getConnectedSagas(connect)
-
-    // sagas we automatically connect from actions && props
-    if (connectedSagas.length > 0) {
-      hasSaga = true
-      _this.sagas = _this.sagas ? _this.sagas.concat(connectedSagas) : connectedSagas
-    }
-
-    // we have _this: { connect: { sagas: [] } }, add to _this: { sagas: [] }
-    if (connect.sagas) {
-      _this.sagas = _this.sagas ? _this.sagas.concat(connect.sagas) : connect.sagas
-    }
+    installedPlugins.forEach(plugin => {
+      plugin.afterConnect && plugin.afterConnect(output.activePlugins[plugin.name], input, output)
+    })
   }
 
   // pregenerate as many things as we can
-  object.constants = _this.constants ? convertConstants(_this.constants(object)) : {}
+  output.constants = input.constants ? convertConstants(input.constants(output)) : {}
 
   if (hasLogic) {
     // we don't know yet if it's going to be a singleton (no key) or inline (key)
     // however the actions and constants are common for all, so get a path without the dynamic
     // component and initialize them
-    object.path = _this.path('').filter(p => p)
-    object.actions = Object.assign({}, object.actions, _this.actions ? createActions(_this.actions(object), object.path) : {})
-    object.props = {}
+    output.path = input.path('').filter(p => p)
+    output.actions = Object.assign({}, output.actions, input.actions ? createActions(input.actions(output), output.path) : {})
+    output.props = {}
+
+    installedPlugins.forEach(plugin => {
+      plugin.afterCreateActions && plugin.afterCreateActions(output.activePlugins[plugin.name], input, output)
+    })
   }
 
   if (hasLogic && isSingleton) {
-    object.selector = (state) => pathSelector(object.path, state)
-    object.reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
-    object.reducer = _this.reducer ? _this.reducer(object) : combineReducerObjects(object.path, object.reducers)
-    object.selectors = Object.assign({}, object.selectors, createSelectors(object.path, Object.keys(object.reducers || {})))
+    output.selector = (state) => pathSelector(output.path, state)
+    output.reducers = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
+    output.reducer = input.reducer ? input.reducer(output) : combineReducerObjects(output.path, output.reducers)
+    output.selectors = Object.assign({}, output.selectors, createSelectors(output.path, Object.keys(output.reducers || {})))
 
-    const selectorResponse = _this.selectors ? _this.selectors(object) : {}
+    const selectorResponse = input.selectors ? input.selectors(output) : {}
     Object.keys(selectorResponse).forEach(selectorKey => {
       // s == [() => args, selectorFunction, propType]
       const s = selectorResponse[selectorKey]
       const args = s[0]()
       if (s[2]) {
-        object.reducers[selectorKey] = { type: s[2] }
+        output.reducers[selectorKey] = { type: s[2] }
       }
-      object.selectors[selectorKey] = createSelector(...args, s[1])
+      output.selectors[selectorKey] = createSelector(...args, s[1])
     })
 
-    object.get = function * (key) {
-      return yield select(key ? object.selectors[key] : object.selector)
-    }
-
-    object.fetch = function * () {
-      let results = {}
-
-      const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-
-      for (let i = 0; i < keys.length; i++) {
-        results[keys[i]] = yield object.get(keys[i])
-      }
-
-      return results
-    }
+    installedPlugins.forEach(plugin => {
+      plugin.afterAddSingletonLogic && plugin.afterAddSingletonLogic(output.activePlugins[plugin.name], input, output)
+    })
   }
 
-  if (hasSaga && isSingleton) {
-    object.saga = function * () {
-      let sagas = (_this.sagas || []).map(saga => {
-        return saga && saga._hasKeaSaga && saga.saga ? saga.saga : saga
-      })
-
-      if (_this.start || _this.stop || _this.takeEvery || _this.takeLatest) {
-        if (!object._createdSaga) {
-          const hasSelectors = !!(object.selectors && Object.keys(object.selectors).length > 0)
-          const _singletonSagaBase = {
-            start: _this.start,
-            stop: _this.stop,
-            takeEvery: _this.takeEvery,
-            takeLatest: _this.takeLatest,
-            workers: _this.workers ? Object.assign({}, _this.workers) : {},
-            key: object.key,
-            path: object.path,
-            get: hasSelectors ? function * (key) {
-              return yield select(key ? object.selectors[key] : object.selector)
-            } : undefined,
-            fetch: hasSelectors ? function * () {
-              let results = {}
-              const keys = Array.isArray(arguments[0]) ? arguments[0] : arguments
-              for (let i = 0; i < keys.length; i++) {
-                results[keys[i]] = yield this.get(keys[i])
-              }
-              return results
-            } : undefined
-          }
-
-          let sagaActions = Object.assign({}, connectedActions, object.actions)
-
-          object._createdSaga = createSaga(_singletonSagaBase, { actions: sagaActions })
-        }
-
-        sagas.push(object._createdSaga)
-      }
-
-      const sagaPath = object.path ? object.path.join('.') : _this.path('').filter(p => p).join('.')
-      yield call(createCombinedSaga(sagas, sagaPath))
-    }
+  if (isSingleton) {
+    installedPlugins.forEach(plugin => {
+      plugin.afterCreateSingleton && plugin.afterCreateSingleton(output.activePlugins[plugin.name], input, output)
+    })
   }
 
   const response = function (Klass) {
     // initializing as a singleton
     if (Klass === false) {
       if (!isSingleton) {
-        console.error(`[KEA-LOGIC] Standalone "export default kea({})" functions must have no "key"!`, object.path, Klass)
+        console.error(`[KEA-LOGIC] Standalone "export default kea({})" functions must have no "key"!`, output.path, Klass)
       }
 
-      return Object.assign(_this, object)
+      return Object.assign(input, output)
     }
 
     if (Klass && Klass.propTypes) {
@@ -277,7 +135,7 @@ export function kea (_this) {
 
     if (hasLogic) {
       // add proptypes from reducer
-      const reducers = _this.reducers ? convertReducerArrays(_this.reducers(object)) : {}
+      const reducers = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
       Object.keys(reducers).forEach(reducerKey => {
         if (reducers[reducerKey].type) {
           propTypes[reducerKey] = reducers[reducerKey].type
@@ -285,7 +143,7 @@ export function kea (_this) {
       })
 
       // add proptypes from selectors
-      const selectorsThatDontWork = _this.selectors ? _this.selectors({}) : {}
+      const selectorsThatDontWork = input.selectors ? input.selectors({}) : {}
       Object.keys(selectorsThatDontWork).forEach(selectorKey => {
         if (selectorsThatDontWork[selectorKey][2]) {
           propTypes[selectorKey] = selectorsThatDontWork[selectorKey][2]
@@ -300,10 +158,10 @@ export function kea (_this) {
     if (Klass && hasLogic) {
       // add kea metadata to component
       Klass.kea = {
-        path: _this.path,
-        constants: object.constants,
-        actions: object.actions,
-        select: (key) => cachedSelectors(_this.path(key))
+        path: input.path,
+        constants: output.constants,
+        actions: output.actions,
+        select: (key) => getCache(input.path(key), 'selectors')
       }
     }
 
@@ -316,11 +174,13 @@ export function kea (_this) {
       }
     }
 
-    // If we're wrapping a functional React component, skip adding sagas.
+    // If we're wrapping a functional React component, skip adding plugins.
     // This requires lifecycle methods like componentWillMount, etc, which functional components don't have.
-    // We'll instead add sagas to Redux's Connected class.
-    if (Klass && hasSaga && !isStateless(Klass)) {
-      injectSagasIntoClass(Klass, _this, connectedActions, object)
+    // We'll instead add plugins to Redux's Connected class.
+    if (Klass && !isStateless(Klass)) {
+      installedPlugins.forEach(plugin => {
+        plugin.injectToClass && plugin.injectToClass(output.activePlugins[plugin.name], input, output, Klass)
+      })
     }
 
     const selectorFactory = (dispatch, options) => {
@@ -343,19 +203,19 @@ export function kea (_this) {
           // see comment in logic-component.js
 
           // connected props
-          Object.keys(connectedSelectors).forEach(propKey => {
-            nextProps[propKey] = connectedSelectors[propKey](nextState, nextOwnProps)
+          Object.keys(output.connected.selectors).forEach(propKey => {
+            nextProps[propKey] = output.connected.selectors[propKey](nextState, nextOwnProps)
           })
         }
 
         if (hasLogic) {
-          key = _this.key ? _this.key(nextOwnProps) : 'index'
+          key = input.key ? input.key(nextOwnProps) : 'index'
 
           if (typeof key === 'undefined') {
-            console.error(`"key" can't be undefined in path: ${_this.path('undefined').join('.')}`)
+            console.error(`"key" can't be undefined in path: ${input.path('undefined').join('.')}`)
           }
 
-          path = _this.path(key)
+          path = input.path(key)
           joinedPath = path.join('.')
 
           if (DEBUG) {
@@ -370,7 +230,7 @@ export function kea (_this) {
           // if we need to add it, create "dummy" selectors for the default values until then
 
           // is the reducer created? if we have "true" in the cache, it's definitely created
-          let reducerCreated = inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated
+          let reducerCreated = !!getCache(joinedPath, 'reducerCreated')
 
           // if it's not let's double check. maybe it is now?
           if (!reducerCreated) {
@@ -383,12 +243,12 @@ export function kea (_this) {
           }
 
           // we have the selectors cached! with the current reducerCreated state!
-          if (inlineCache[joinedPath] && inlineCache[joinedPath].reducerCreated === reducerCreated) {
+          if (!!getCache(joinedPath, reducerCreated) === reducerCreated) {
             if (DEBUG) {
               console.log('cache hit!')
             }
-            selector = inlineCache[joinedPath].selector
-            selectors = inlineCache[joinedPath].selectors
+            selector = getCache(joinedPath, 'selector')
+            selectors = getCache(joinedPath, 'selectors')
 
           // either we have nothing cached or the cache is invalid. regenerate the selectors!
           } else {
@@ -397,9 +257,11 @@ export function kea (_this) {
             }
 
             // add { path } and { key } to the reducer creator function
-            let localObject = Object.assign({}, object, { path, key, props: nextOwnProps })
-            localObject.reducers = _this.reducers ? convertReducerArrays(_this.reducers(localObject)) : {}
-            localObject.reducer = _this.reducer ? _this.reducer(localObject) : combineReducerObjects(path, localObject.reducers)
+            let localObject = Object.assign({}, output, { path, key, props: nextOwnProps })
+            localObject.reducers = input.reducers ? convertReducerArrays(input.reducers(localObject)) : {}
+            localObject.reducer = input.reducer ? input.reducer(localObject) : combineReducerObjects(path, localObject.reducers)
+
+            const connectedSelectors = output.connected ? output.connected.selectors : {}
 
             // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
             if (reducerCreated) {
@@ -412,7 +274,7 @@ export function kea (_this) {
 
               const realSelectors = createSelectors(path, Object.keys(localObject.reducers))
 
-              // if we don't know for sure that the reducer is in the current store object,
+              // if we don't know for sure that the reducer is in the current store output,
               // then fallback to giving the default value
               selectors = Object.assign({}, connectedSelectors || {})
               Object.keys(localObject.reducers).forEach(key => {
@@ -427,7 +289,7 @@ export function kea (_this) {
             }
 
             // create
-            const selectorResponse = _this.selectors ? _this.selectors(Object.assign({}, localObject, { selectors })) : {}
+            const selectorResponse = input.selectors ? input.selectors(Object.assign({}, localObject, { selectors })) : {}
 
             Object.keys(selectorResponse).forEach(selectorKey => {
               // s == [() => args, selectorFunction, propType]
@@ -438,11 +300,11 @@ export function kea (_this) {
             })
 
             // store in the cache
-            inlineCache[joinedPath] = {
+            setCache(joinedPath, {
               reducerCreated,
               selector,
               selectors
-            }
+            })
           }
 
           if (DEBUG) {
@@ -459,23 +321,23 @@ export function kea (_this) {
         }
 
         // TODO: cache these even if no path present
-        let actions = joinedPath ? actionCache[joinedPath] : null
+        let actions = joinedPath ? getCache(joinedPath, 'actions') : null
 
         if (!actions) {
           actions = {}
 
           if (hasConnect) {
             // pass conneted actions as they are
-            Object.keys(connectedActions).forEach(actionKey => {
-              actions[actionKey] = (...args) => dispatch(connectedActions[actionKey](...args))
+            Object.keys(output.connected.actions).forEach(actionKey => {
+              actions[actionKey] = (...args) => dispatch(output.connected.actions[actionKey](...args))
             })
           }
 
           if (hasLogic) {
             // inject key to the payload of inline actions
-            Object.keys(object.actions).forEach(actionKey => {
+            Object.keys(output.actions).forEach(actionKey => {
               actions[actionKey] = (...args) => {
-                const createdAction = object.actions[actionKey](...args)
+                const createdAction = output.actions[actionKey](...args)
                 return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
               }
             })
@@ -486,11 +348,11 @@ export function kea (_this) {
           }
 
           if (joinedPath) {
-            actionCache[joinedPath] = actions
+            setCache(joinedPath, { actions })
           }
         }
 
-        // if the props did not change, return the old cached object
+        // if the props did not change, return the old cached output
         if (!result || !shallowEqual(lastProps, nextProps)) {
           lastProps = nextProps
           result = Object.assign({}, nextProps, { actions, dispatch })
@@ -502,34 +364,37 @@ export function kea (_this) {
 
     const KonnektedKlass = connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
 
-    // If we were wrapping a functional React component, add the saga code to the connected component.
-    if (Klass && hasSaga && isStateless(Klass)) {
-      injectSagasIntoClass(KonnektedKlass, _this, connectedActions, object)
+    // If we were wrapping a functional React component, add the plugin code to the connected component.
+    if (Klass && isStateless(Klass)) {
+      installedPlugins.forEach(plugin => {
+        plugin.injectToConnectedClass && plugin.injectToConnectedClass(output.activePlugins[plugin.name], input, output, KonnektedKlass)
+      })
     }
 
     return KonnektedKlass
   }
 
-  response.path = object.path
-  response.constants = object.constants
-  response.actions = object.actions
-  response.reducer = object.reducer
-  response.reducers = object.reducers
-  response.selector = object.selector
-  response.selectors = object.selectors
-  response.saga = object.saga
-  response.get = object.get
-  response.fetch = object.fetch
+  response.path = output.path
+  response.constants = output.constants
+  response.actions = output.actions
+  response.reducer = output.reducer
+  response.reducers = output.reducers
+  response.selector = output.selector
+  response.selectors = output.selectors
 
   response._isKeaFunction = true
   response._isKeaSingleton = isSingleton
   response._hasKeaConnect = hasConnect
   response._hasKeaLogic = hasLogic
-  response._hasKeaSaga = hasSaga
+  response._keaPlugins = output.activePlugins
 
-  if (object.path) {
+  installedPlugins.forEach(plugin => {
+    plugin.addToResponse && plugin.addToResponse(output.activePlugins[plugin.name], input, output, response)
+  })
+
+  if (output.path) {
     if (isSingleton) {
-      addReducer(object.path, object.reducer, true)
+      addReducer(output.path, output.reducer, true)
       response._keaReducerConnected = true
     } else {
       response._keaReducerConnected = false
