@@ -54,7 +54,6 @@
     "react": "*",
     "react-redux": "5.x",
     "redux": "3.x",
-    "redux-saga": ">= 0.14",
     "reselect": "2.x || 3.x"
   },
   "devDependencies": {

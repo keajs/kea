@@ -6,6 +6,7 @@ import { installedPlugins } from '../plugins'
 const defaultOptions = {
   paths: ['kea', 'scenes'],
   middleware: [],
+  compose: [],
   reducers: {}
 }
 
@@ -27,8 +28,12 @@ export function getStore (opts = {}) {
   let finalCreateStore
 
   // combine middleware
-  if (options.middleware) {
-    finalCreateStore = compose(...(options.middleware.map(m => applyMiddleware(m))))(createStore)
+  if (options.middleware.length > 0) {
+    options.compose = [applyMiddleware(...options.middleware)].concat(options.compose)
+  }
+
+  if (options.compose.length > 0) {
+    finalCreateStore = compose(...options.compose)(createStore)
   } else {
     finalCreateStore = createStore
   }
