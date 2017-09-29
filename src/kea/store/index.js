@@ -3,10 +3,14 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { keaReducer } from '../reducer'
 import { installedPlugins } from '../plugins'
 
+const reduxDevTools = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
+
 const defaultOptions = {
   paths: ['kea', 'scenes'],
   middleware: [],
-  compose: [],
+  compose: [
+    reduxDevTools
+  ],
   reducers: {}
 }
 
