@@ -6,8 +6,16 @@ As we're at the 0.x phase, deprecations and breaking changes will still happen. 
 Once we react 1.0 all deprecations will be removed and the project will switch to SemVer.
 
 ## Uncommitted
-### Removed deprecations (starting from 0.25 - unreleased)
-- Removed `Logic` and `Scene` classes and other old deprecated code.
+
+
+## 0.25.0 - 2017-09-29
+### Plugin support!
+- Kea now supports plugins!
+- The previous saga functionality has moved to [kea-saga](https://github.com/keajs/kea-saga). Please install it to continue using sagas!
+- There's a new function, [`getStore`](https://kea.js.org/api/store), which greatly simplifies configuring your store, especially when importing plugins.
+
+### Removed deprecations
+- Removed `Logic` and `Scene` classes and other old deprecated code. Please make sure your app works with 0.24.1 without warnings before upgrading!
 
 ## 0.24.1 - 2017-09-10
 ### Changed
