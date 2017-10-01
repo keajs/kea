@@ -426,6 +426,17 @@ aside.kea-sidebar nav ul li a:hover {
         margin: 0;
       }
 
+  .homepage-scene .split .wide-description {
+      margin-left: 20px;
+      -webkit-box-flex: 1;
+          -ms-flex: 1 auto;
+              flex: 1 auto;
+    }
+
+  .homepage-scene .split .wide-description .demo {
+        margin: 0;
+      }
+
   .homepage-scene .split .code {
       width: 650px;
       min-width: 650px;
@@ -560,7 +571,135 @@ aside.kea-sidebar nav ul li a:hover {
 }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="active" href="/">Home</a><a class="" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class=""><div class="content without-sidebar"><div><div class="homepage-scene"><div class="landing"><div class="intro"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMTAuMDAwMDAwKSI+CiAgICAgICAgICAgIDxlbGxpcHNlIGlkPSJPdmFsIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMTEiIGZpbGw9IiNGRkZGRkYiIGN4PSI5OSIgY3k9IjkwIiByeD0iOTAiIHJ5PSI5MCI+PC9lbGxpcHNlPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDMxLjAwMDAwMCkiIGZpbGw9IiMwMDAwMDAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTE0OS4yOTI2NDEsMjcuMzg3NTQ3IEMxNDcuOTA0OTkyLDIzLjIzNzU5OTIgMTQ1LjI3NTkzNCwyMS44NDk5NTAzIDE0NS4yNzU5MzQsMjEuODQ5OTUwMyBDMTQ1LjI3MjY4NCwyMS44NDk5NTAzIDE0NC43MjM0NzQsMjMuNTc4ODI0NCAxNDMuNDA3MzIsMjQuMzc1MDE2NCBDMTQyLjA5MTE2NiwyNS4xNzEyMDg0IDE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDAuNDYzMDM0LDI0Ljg5NDk3ODUgQzE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDMuNjkwMDQ5LDM5LjY0ODkwNCAxNDIuNjE3NjI3LDQ3LjkwOTgwMjMgQzE0MS41NDUyMDYsNTYuMTY3NDUwOSAxMzguMjE0MTk4LDYxLjk1MjAyOTYgMTM2LjQ0MzA3Nyw2Ni4xOTk0NzAzIEMxMzQuNjc1MjA2LDcwLjQ0NjkxMDkgMTI5LjgwNzA2LDc4Ljc2NjMwNSAxMjUuMTE3NjUyLDg0LjA3MzE2ODUgQzEyMC40MjQ5OTQsODkuMzg2NTMxNSAxMDYuMjYyNTI1LDEwMy4wOTA3ODMgMTAwLjE3MjQ2OSwxMDcuMDA2NzQ4IEM5NC4wODI0MTI0LDExMC45MTk0NjMgOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDkwLjM4NzQzMTUsMTExLjQxMzQyNyBDOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDk2LjM2MDQ5NjQsMTE2LjQ4OTU1OCA5OS4yNjI1MzUxLDExOC4xNTM0MzYgQzEwMi4xNjQ1NzQsMTE5LjgxNzMxNSAxMDMuOTk3NDQsMTE5Ljk4NjMwMyAxMDUuODc1ODAzLDExOS45NDQwNTYgQzEwNy43NTA5MTcsMTE5LjkwNTA1OSAxMDkuNTU0NTM2LDExOS40NTk4NDEgMTEwLjcxNDcwMSwxMTguNzQ0ODkzIEMxMTEuODc0ODY3LDExOC4wMzMxOTUgMTE0LjI4OTQ0MSwxMTcuODUxMjA4IDExNS4xODMxMjYsMTE5LjEwNTYxNyBDMTE2LjA3NjgxLDEyMC4zNTM1MjYgMTE2LjM0MzI5MSwxMjEuODcxMTY2IDExNi4zNDMyOTEsMTIxLjg3MTE2NiBDMTE2LjM0MzI5MSwxMjEuODcxMTY2IDEyMS44Mzg2NDEsMTIyLjA0OTkwMyAxMjMuNTM1MDE3LDEyMy4zNDY1NTggQzEyNS4yMzEzOTQsMTI0LjY0MzIxNCAxMjUuMTQzNjUsMTI3LjYzNjI0NiAxMjUuMTQzNjUsMTI3LjYzNjI0NiBDMTI1LjE0MzY1LDEyNy42MzYyNDYgMTI0LjE5MTQ2OSwxMjQuODA1NzAyIDEyMi41OTU4MzYsMTI0LjgwNTcwMiBDMTIwLjk5Njk1MiwxMjQuODA1NzAyIDEyMi4zMDk4NTcsMTI2LjU4OTgyMiAxMTkuNjgwNzk4LDEyNi40OTg4MjkgQzExNy4wNDg0OSwxMjYuNDA0NTg1IDEwOS43NjU3NywxMjQuNTY4NDY5IDEwMy42MTA3MTgsMTI0LjAwNjI2IEM5Ny40NTU2NjY3LDEyMy40NDQwNTEgOTAuOTY5MTM5MSwxMjQuMTk0NzQ2IDg4LjE1MTU5NDMsMTI0LjU2ODQ2OSBDODUuMzMwNzk5NywxMjQuOTQ1NDQyIDgxLjU3NDA3MzQsMTI1LjkzMzM3IDgwLjA2NjE4MzIsMTI1LjEzMzkyOCBDNzguNTY0NzkyNSwxMjQuMzM0NDg2IDc4LjQyNTA1MjcsMTIzLjExNTgyNSA3OC40MjUwNTI3LDEyMy4xMTU4MjUgQzc4LjQyNTA1MjcsMTIzLjExNTgyNSA3Ny44NTk1OTM5LDEyMy4xNjEzMjIgNzYuNzgwNjcyNSwxMjQuMDU1MDA3IEM3NS42OTg1MDEzLDEyNC45NDU0NDIgNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc1LjQ2MTI2ODYsMTI2LjE3MDYwMyBDNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc0LjU3MDgzMzQsMTIzLjc3MjI3NyA3Ni4zMDk0NTY4LDEyMi41OTU4NjMgQzc4LjA0ODA4MDIsMTIxLjQxOTQ0OSA3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuMTI3MDAxNiwxMjEuNjU2NjgxIEM3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuNzM3OTU3MSwxMjAuNjcyMDAzIDgxLjM4MjMzNzMsMTIwLjg2MDQ4OSBDODMuMDI5OTY3MywxMjEuMDQ1NzI2IDkxLjY3NDMzNzcsMTIwLjY3MjAwMyA5Mi41NjgwMjI2LDEyMC42NzIwMDMgQzkzLjQ2MTcwNzYsMTIwLjY3MjAwMyA5NC42ODM2MTg2LDEyMC40MzgwMiA5My40MTI5NjExLDExOS4zMDcxMDIgQzkyLjE0NTU1MzQsMTE4LjE3OTQzNSA4NS43MDc3NzIzLDExMi4wNzMxMjkgODUuNzA3NzcyMywxMTIuMDczMTI5IEM4NS43MDQ1MjI1LDExMi4wNzMxMjkgNzcuNjM1MzYwMiwxMTMuMTA5ODA0IDcwLjg2Mjg1MzUsMTEyLjg1MzA3MiBDNjQuMDkwMzQ2NywxMTIuNTkzMDkxIDU0LjA5MDgyNSwxMTIuMDE0NjM0IDU0LjA5MDgyNSwxMTIuMDE0NjM0IEM1NC4wOTA4MjUsMTEyLjAxNDYzNCAxNS42NTkxMjQsMTQ0LjE1NDc5MyA4LjQzMTY1MDM5LDE0OS45MTk4NzMgQzEuMjAwOTI3MDEsMTU1LjY4ODIwMyAtMC43NzE2NzkzMjYsMTU0LjczOTI3MiAwLjI1MTk5NjExOSwxNTAuNzk3MzA5IEMxLjI3MjQyMTgsMTQ2Ljg1NTM0NiAxMC44Mzk3MjUsMTM0LjM2OTc1NSAxMC44Mzk3MjUsMTM0LjM2OTc1NSBDMTAuODM2NDc1MiwxMzQuMzY5NzU1IDkuNzQ0NTU0NzcsMTMyLjU0MzM4OCAxMC45ODU5NjQ0LDEyOS4yNjExMjcgQzEyLjIyNzM3MzksMTI1Ljk3MjM2NyAxNC40MTc3MTQ0LDEyMS4yOTkyMDcgMTQuNDE3NzE0NCwxMjEuMjk5MjA3IEMxNC40MTQ0NjQ3LDEyMS4yOTkyMDcgMTAuOTUzNDY2NywxMjUuNjQ3MzkxIDkuODg3NTQ0MzUsMTI2Ljk5NjA0MiBDOC44MjE2MjE5OCwxMjguMzQ3OTQ0IDcuNjA5NDYwMjcsMTI4Ljk5MTM5NyA4LjM5MjY1MzIzLDEyNS44NjE4NzUgQzkuMTc5MDk1OTUsMTIyLjczMjM1MyAxNi44MjkwMzg4LDEwNy41NDk0NTkgMjguODUzMTYzMSw5MS4zODgzODU3IEM0MC44NzQwMzc2LDc1LjIzMDU2MjUgNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDUzLjE1NDg5MzEsNjYuMTc5OTcxNyBDNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDY1LjAxNjUyOTMsNTEuNDg3NzkxNyA3Mi44MDI5NjIyLDQ0Ljk2ODc2NjUgQzgwLjU5MjY0NDgsMzguNDQ5NzQxMyA4OC42NDg4MDgxLDMyLjgzNDE1MDMgOTAuNTUzMTY5NCwzMS4zODQ3NTU5IEM5Mi40NTQyODA5LDI5LjkzODYxMTIgOTMuNzIxNjg4NiwyOC4xMjg0OTMgOTQuODEwMzU5MywyNS42ODE0MjEyIEM5NS44OTU3ODAzLDIzLjIzNzU5OTIgMTAzLjY4MjIxMyw5LjExMDg3ODA5IDEwOS44NDA1MTUsMy44NTkyNjA1NyBDMTE1Ljk5ODgxNiwtMS4zOTU2MDY3MSAxMjcuMjA0LC0wLjIwMjk0MzU3NCAxMzEuMTc1MjExLDEuMTkxMjA0ODkgQzEzNS4xNDMxNzIsMi41OTE4NTI4OCAxMzkuMTY5NjI5LDUuNTAwMzkxMDUgMTQwLjY3NzUxOSw3LjIzMjUxNDg5IEMxNDIuMTg4NjU5LDguOTY0NjM4NzQgMTQyLjE4ODY1OSwxMC4zNjUyODY3IDE0Mi4xODg2NTksMTAuMzY1Mjg2NyBDMTQyLjE4NTQwOSwxMC4zNjUyODY3IDE0Ny4yMTYwNDMsMTIuMjA3OTAyNSAxNDkuOTU4ODQzLDE1Ljc4NTg5MTkgQzE1Mi42OTUxNDQsMTkuMzYzODgxNCAxNTUuMDQ0NzIyLDI2Ljc5NjA5MDEgMTQ5Ljk0OTA5NCwzNS4yMTI5NzcgQzE0OS45NDkwOTQsMzUuMjEyOTc3IDE1MC42NzM3OTEsMzEuNTQwNzQ0NSAxNDkuMjkyNjQxLDI3LjM4NzU0NyBaIiBpZD0iRmlsbC0zMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbC0yIiBzdHJva2U9IiNGRkZGRkYiIGN4PSIxMzEiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=" alt=""><div class="text"><h1>Kea</h1><strong>High level abstraction between <nobr>React and Redux</nobr></strong><div class="links"><a href="/guide/installation">Get started</a>&#xA0;&#xA0;&#xA0;&#xA0;<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>&#xA0;&#xA0;&#xA0;&#xA0;<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe></div></div></div></div><h2>What is Kea?</h2><div class="description"><p>Kea is a state management library for React. It <em>empowers</em> Redux, making it as easy to use as <code>setState</code> while retaining composability and improving code clarity.</p><ul><li><strong>100% Redux</strong>: Built on top of <a href="http://redux.js.org/">redux</a> and <a href="https://github.com/reactjs/reselect">reselect</a>.</li><li><strong>Side effect agnostic</strong>: use <a href="/effects/thunk">thunks</a> with redux-thunk, <a href="/effects/saga">sagas</a> with redux-saga or (soon!) <a href="https://github.com/keajs/kea/issues/40">epics</a> with redux-observable.</li><li><strong>Wrappable</strong>: Write logic alongside React components. Easier than <code>setState</code> and perfect for small components.</li><li><strong>Connectable</strong>: Pull in data and actions through ES6+ <a href="/guide/connected">imports</a>. Built for large and ambitious apps.</li><li><strong>No boilerplate</strong>: Forget <code>mapStateToProps</code> and redundant constants. Only write code that matters!</li><li><strong>No new concepts</strong>: Use actions, reducers and selectors. Gradually migrate <a href="/guide/migration">existing Redux applications</a>.</li></ul><p>Compare it to other state management libraries: <a href="https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02">Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.</a></p><p><a href="/guide/installation">Read the guide</a> or check out the examples below:</p></div><h2>Simple counter</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="active" href="/">Home</a><a class="" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class=""><div class="content without-sidebar"><div><div class="homepage-scene"><div class="landing"><div class="intro"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMTAuMDAwMDAwKSI+CiAgICAgICAgICAgIDxlbGxpcHNlIGlkPSJPdmFsIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMTEiIGZpbGw9IiNGRkZGRkYiIGN4PSI5OSIgY3k9IjkwIiByeD0iOTAiIHJ5PSI5MCI+PC9lbGxpcHNlPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDMxLjAwMDAwMCkiIGZpbGw9IiMwMDAwMDAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTE0OS4yOTI2NDEsMjcuMzg3NTQ3IEMxNDcuOTA0OTkyLDIzLjIzNzU5OTIgMTQ1LjI3NTkzNCwyMS44NDk5NTAzIDE0NS4yNzU5MzQsMjEuODQ5OTUwMyBDMTQ1LjI3MjY4NCwyMS44NDk5NTAzIDE0NC43MjM0NzQsMjMuNTc4ODI0NCAxNDMuNDA3MzIsMjQuMzc1MDE2NCBDMTQyLjA5MTE2NiwyNS4xNzEyMDg0IDE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDAuNDYzMDM0LDI0Ljg5NDk3ODUgQzE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDMuNjkwMDQ5LDM5LjY0ODkwNCAxNDIuNjE3NjI3LDQ3LjkwOTgwMjMgQzE0MS41NDUyMDYsNTYuMTY3NDUwOSAxMzguMjE0MTk4LDYxLjk1MjAyOTYgMTM2LjQ0MzA3Nyw2Ni4xOTk0NzAzIEMxMzQuNjc1MjA2LDcwLjQ0NjkxMDkgMTI5LjgwNzA2LDc4Ljc2NjMwNSAxMjUuMTE3NjUyLDg0LjA3MzE2ODUgQzEyMC40MjQ5OTQsODkuMzg2NTMxNSAxMDYuMjYyNTI1LDEwMy4wOTA3ODMgMTAwLjE3MjQ2OSwxMDcuMDA2NzQ4IEM5NC4wODI0MTI0LDExMC45MTk0NjMgOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDkwLjM4NzQzMTUsMTExLjQxMzQyNyBDOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDk2LjM2MDQ5NjQsMTE2LjQ4OTU1OCA5OS4yNjI1MzUxLDExOC4xNTM0MzYgQzEwMi4xNjQ1NzQsMTE5LjgxNzMxNSAxMDMuOTk3NDQsMTE5Ljk4NjMwMyAxMDUuODc1ODAzLDExOS45NDQwNTYgQzEwNy43NTA5MTcsMTE5LjkwNTA1OSAxMDkuNTU0NTM2LDExOS40NTk4NDEgMTEwLjcxNDcwMSwxMTguNzQ0ODkzIEMxMTEuODc0ODY3LDExOC4wMzMxOTUgMTE0LjI4OTQ0MSwxMTcuODUxMjA4IDExNS4xODMxMjYsMTE5LjEwNTYxNyBDMTE2LjA3NjgxLDEyMC4zNTM1MjYgMTE2LjM0MzI5MSwxMjEuODcxMTY2IDExNi4zNDMyOTEsMTIxLjg3MTE2NiBDMTE2LjM0MzI5MSwxMjEuODcxMTY2IDEyMS44Mzg2NDEsMTIyLjA0OTkwMyAxMjMuNTM1MDE3LDEyMy4zNDY1NTggQzEyNS4yMzEzOTQsMTI0LjY0MzIxNCAxMjUuMTQzNjUsMTI3LjYzNjI0NiAxMjUuMTQzNjUsMTI3LjYzNjI0NiBDMTI1LjE0MzY1LDEyNy42MzYyNDYgMTI0LjE5MTQ2OSwxMjQuODA1NzAyIDEyMi41OTU4MzYsMTI0LjgwNTcwMiBDMTIwLjk5Njk1MiwxMjQuODA1NzAyIDEyMi4zMDk4NTcsMTI2LjU4OTgyMiAxMTkuNjgwNzk4LDEyNi40OTg4MjkgQzExNy4wNDg0OSwxMjYuNDA0NTg1IDEwOS43NjU3NywxMjQuNTY4NDY5IDEwMy42MTA3MTgsMTI0LjAwNjI2IEM5Ny40NTU2NjY3LDEyMy40NDQwNTEgOTAuOTY5MTM5MSwxMjQuMTk0NzQ2IDg4LjE1MTU5NDMsMTI0LjU2ODQ2OSBDODUuMzMwNzk5NywxMjQuOTQ1NDQyIDgxLjU3NDA3MzQsMTI1LjkzMzM3IDgwLjA2NjE4MzIsMTI1LjEzMzkyOCBDNzguNTY0NzkyNSwxMjQuMzM0NDg2IDc4LjQyNTA1MjcsMTIzLjExNTgyNSA3OC40MjUwNTI3LDEyMy4xMTU4MjUgQzc4LjQyNTA1MjcsMTIzLjExNTgyNSA3Ny44NTk1OTM5LDEyMy4xNjEzMjIgNzYuNzgwNjcyNSwxMjQuMDU1MDA3IEM3NS42OTg1MDEzLDEyNC45NDU0NDIgNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc1LjQ2MTI2ODYsMTI2LjE3MDYwMyBDNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc0LjU3MDgzMzQsMTIzLjc3MjI3NyA3Ni4zMDk0NTY4LDEyMi41OTU4NjMgQzc4LjA0ODA4MDIsMTIxLjQxOTQ0OSA3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuMTI3MDAxNiwxMjEuNjU2NjgxIEM3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuNzM3OTU3MSwxMjAuNjcyMDAzIDgxLjM4MjMzNzMsMTIwLjg2MDQ4OSBDODMuMDI5OTY3MywxMjEuMDQ1NzI2IDkxLjY3NDMzNzcsMTIwLjY3MjAwMyA5Mi41NjgwMjI2LDEyMC42NzIwMDMgQzkzLjQ2MTcwNzYsMTIwLjY3MjAwMyA5NC42ODM2MTg2LDEyMC40MzgwMiA5My40MTI5NjExLDExOS4zMDcxMDIgQzkyLjE0NTU1MzQsMTE4LjE3OTQzNSA4NS43MDc3NzIzLDExMi4wNzMxMjkgODUuNzA3NzcyMywxMTIuMDczMTI5IEM4NS43MDQ1MjI1LDExMi4wNzMxMjkgNzcuNjM1MzYwMiwxMTMuMTA5ODA0IDcwLjg2Mjg1MzUsMTEyLjg1MzA3MiBDNjQuMDkwMzQ2NywxMTIuNTkzMDkxIDU0LjA5MDgyNSwxMTIuMDE0NjM0IDU0LjA5MDgyNSwxMTIuMDE0NjM0IEM1NC4wOTA4MjUsMTEyLjAxNDYzNCAxNS42NTkxMjQsMTQ0LjE1NDc5MyA4LjQzMTY1MDM5LDE0OS45MTk4NzMgQzEuMjAwOTI3MDEsMTU1LjY4ODIwMyAtMC43NzE2NzkzMjYsMTU0LjczOTI3MiAwLjI1MTk5NjExOSwxNTAuNzk3MzA5IEMxLjI3MjQyMTgsMTQ2Ljg1NTM0NiAxMC44Mzk3MjUsMTM0LjM2OTc1NSAxMC44Mzk3MjUsMTM0LjM2OTc1NSBDMTAuODM2NDc1MiwxMzQuMzY5NzU1IDkuNzQ0NTU0NzcsMTMyLjU0MzM4OCAxMC45ODU5NjQ0LDEyOS4yNjExMjcgQzEyLjIyNzM3MzksMTI1Ljk3MjM2NyAxNC40MTc3MTQ0LDEyMS4yOTkyMDcgMTQuNDE3NzE0NCwxMjEuMjk5MjA3IEMxNC40MTQ0NjQ3LDEyMS4yOTkyMDcgMTAuOTUzNDY2NywxMjUuNjQ3MzkxIDkuODg3NTQ0MzUsMTI2Ljk5NjA0MiBDOC44MjE2MjE5OCwxMjguMzQ3OTQ0IDcuNjA5NDYwMjcsMTI4Ljk5MTM5NyA4LjM5MjY1MzIzLDEyNS44NjE4NzUgQzkuMTc5MDk1OTUsMTIyLjczMjM1MyAxNi44MjkwMzg4LDEwNy41NDk0NTkgMjguODUzMTYzMSw5MS4zODgzODU3IEM0MC44NzQwMzc2LDc1LjIzMDU2MjUgNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDUzLjE1NDg5MzEsNjYuMTc5OTcxNyBDNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDY1LjAxNjUyOTMsNTEuNDg3NzkxNyA3Mi44MDI5NjIyLDQ0Ljk2ODc2NjUgQzgwLjU5MjY0NDgsMzguNDQ5NzQxMyA4OC42NDg4MDgxLDMyLjgzNDE1MDMgOTAuNTUzMTY5NCwzMS4zODQ3NTU5IEM5Mi40NTQyODA5LDI5LjkzODYxMTIgOTMuNzIxNjg4NiwyOC4xMjg0OTMgOTQuODEwMzU5MywyNS42ODE0MjEyIEM5NS44OTU3ODAzLDIzLjIzNzU5OTIgMTAzLjY4MjIxMyw5LjExMDg3ODA5IDEwOS44NDA1MTUsMy44NTkyNjA1NyBDMTE1Ljk5ODgxNiwtMS4zOTU2MDY3MSAxMjcuMjA0LC0wLjIwMjk0MzU3NCAxMzEuMTc1MjExLDEuMTkxMjA0ODkgQzEzNS4xNDMxNzIsMi41OTE4NTI4OCAxMzkuMTY5NjI5LDUuNTAwMzkxMDUgMTQwLjY3NzUxOSw3LjIzMjUxNDg5IEMxNDIuMTg4NjU5LDguOTY0NjM4NzQgMTQyLjE4ODY1OSwxMC4zNjUyODY3IDE0Mi4xODg2NTksMTAuMzY1Mjg2NyBDMTQyLjE4NTQwOSwxMC4zNjUyODY3IDE0Ny4yMTYwNDMsMTIuMjA3OTAyNSAxNDkuOTU4ODQzLDE1Ljc4NTg5MTkgQzE1Mi42OTUxNDQsMTkuMzYzODgxNCAxNTUuMDQ0NzIyLDI2Ljc5NjA5MDEgMTQ5Ljk0OTA5NCwzNS4yMTI5NzcgQzE0OS45NDkwOTQsMzUuMjEyOTc3IDE1MC42NzM3OTEsMzEuNTQwNzQ0NSAxNDkuMjkyNjQxLDI3LjM4NzU0NyBaIiBpZD0iRmlsbC0zMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbC0yIiBzdHJva2U9IiNGRkZGRkYiIGN4PSIxMzEiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=" alt=""><div class="text"><h1>Kea</h1><strong>High level abstraction between <nobr>React and Redux</nobr></strong><div class="links"><a href="/guide/installation">Get started</a>&#xA0;&#xA0;&#xA0;&#xA0;<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>&#xA0;&#xA0;&#xA0;&#xA0;<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe></div></div></div></div><h2>What is Kea?</h2><div class="description"><p>Kea is a state management library for React. It <em>empowers</em> Redux, making it as easy to use as <code>setState</code> while retaining composability and improving code clarity.</p><ul><li><strong>100% Redux</strong>: Built on top of <a href="http://redux.js.org/">redux</a> and <a href="https://github.com/reactjs/reselect">reselect</a>.</li><li><strong>Side effect agnostic</strong>: use <a href="/effects/thunk">thunks</a> with redux-thunk, <a href="/effects/saga">sagas</a> with redux-saga or (soon!) <a href="https://github.com/keajs/kea/issues/40">epics</a> with redux-observable.</li><li><strong>Wrappable</strong>: Write logic alongside React components. Easier than <code>setState</code> and perfect for small components.</li><li><strong>Connectable</strong>: Pull in data and actions through ES6+ <a href="/guide/connected">imports</a>. Built for large and ambitious apps.</li><li><strong>No boilerplate</strong>: Forget <code>mapStateToProps</code> and redundant constants. Only write code that matters!</li><li><strong>No new concepts</strong>: Use actions, reducers and selectors. Gradually migrate <a href="/guide/migration">existing Redux applications</a>.</li></ul><p>Compare it to other state management libraries: <a href="https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02">Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.</a></p></div><h2>How does it work?</h2><div class="split"><div class="wide-description"><p>In Kea, you define logic stores with the <code>kea({})</code> function.</p><p>Each logic store contains <code>actions</code>, <code>reducers</code> and <code>selectors</code>.</p></div><div class="code"><pre><code class="javascript hljs">kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function">(<span class="hljs-params">{}</span>) =&gt;</span> ({ }),
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({ }),
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({ })
+})
+</code></pre></div></div><div class="split"><div class="wide-description"><p>They work just like in Redux:</p><p></p><ul><li>They are all pure functions (no side effects, same input = same output)</li><li><strong>Actions</strong> are functions which take an input and return a payload</li><li><strong>Reducers</strong> take actions as input and return new_data = old_data + payload</li><li><strong>Selectors</strong> take the input of multiple reducers and return a combined output</li></ul><p></p><p>See here for a nice overview of how Redux works: <a href="https://medium.com/gitconnected/redux-logic-flow-crazy-simple-summary-35416eadabd8">Redux Logic Flow&#x200A;&#x2014;&#x200A;Crazy Simple Summary</a></p><p>For example, to build a simple counter:</p></div><div class="code"><pre><code class="javascript hljs">kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
+      (counter) =&gt; counter * <span class="hljs-number">2</span>,
+      PropTypes.number
+    ]
+  })
+})
+</code></pre></div></div><div class="split"><div class="wide-description"><p>The logic stores can either</p><p>1) be wrapped around your component or pure function:</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({ <span class="hljs-comment">/* options from above */</span> })
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
+    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> &lt;div&gt;...&lt;/div&gt;
+  }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> logic(Counter)
+</code></pre></div></div><div class="split"><div class="wide-description"><p>2) used as decorators:</p></div><div class="code"><pre><code class="javascript hljs">@kea({ <span class="hljs-comment">/* options from above */</span> })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">return</span> &lt;div /&gt;
+  }
+}
+</code></pre></div></div><div class="split"><div class="wide-description"><p>or</p><p>3) imported and then connected to.</p><p>You can also connect logic stores together, to e.g:</p><p></p><ul><li>... use actions from one logic store in the reducer of another.</li><li>... combine reducers from multiple logic stores into one selector.</li></ul><p></p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({ <span class="hljs-comment">/* options from above */</span> })
+
+<span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;features-logic&apos;</span>
+
+@connect({
+  <span class="hljs-attr">actions</span>: [
+    featuresLogic, [
+      <span class="hljs-string">&apos;increment&apos;</span>,
+      <span class="hljs-string">&apos;decrement&apos;</span>
+    ]
+  ],
+  <span class="hljs-attr">props</span>: [
+    featuresLogic, [
+      <span class="hljs-string">&apos;counter&apos;</span>,
+      <span class="hljs-string">&apos;doubleCounter&apos;</span>
+    ]
+  ]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">return</span> &lt;div /&gt;
+  }
+}
+</code></pre></div></div><div class="split"><div class="wide-description"><p>Eventually you&apos;ll need side effects. Then you have a choice.</p><p>You can use simple <a href="/effects/thunk">thunks</a> via redux-thunk:</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&apos;kea-thunk&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">const</span> incrementerLogic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increase</span>: <span class="hljs-literal">true</span>
+  }),
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.increase]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + <span class="hljs-number">1</span>
+    }]
+  }),
+  <span class="hljs-attr">thunks</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, dispatch, getState }</span>) =&gt;</span> ({
+    <span class="hljs-attr">increaseAsync</span>: <span class="hljs-keyword">async</span> (ms) =&gt; {
+      <span class="hljs-keyword">await</span> delay(ms)
+      <span class="hljs-keyword">await</span> actions.increase()
+    }
+  })
+})
+</code></pre></div></div><div class="split"><div class="wide-description"><p>.... or the more powerful <a href="/effects/saga">sagas</a> via redux-saga.</p><p>(coming soon: <a href="https://github.com/keajs/kea/issues/40">support for epics</a> with redux-observable)</p><p>Check out the examples below or <a href="/guide/installation">start reading the guide</a> for more.</p><p>If you&apos;re already using Redux in your apps, it&apos;s <a href="/guide/migration">really easy to migrate</a>.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&apos;kea-saga&apos;</span>
+<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">const</span> sliderLogic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentImage</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
+      (currentSlide) =&gt; images[currentSlide],
+      PropTypes.object
+    ]
+  }),
+
+  <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
+        <span class="hljs-attr">change</span>: take(updateSlide.toString()),
+        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+      })
+
+      <span class="hljs-keyword">if</span> (timeout) {
+        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
+        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
+      }
+    }
+  }
+})
+</code></pre></div></div><h2>Simple counter</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
