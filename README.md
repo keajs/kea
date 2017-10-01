@@ -15,6 +15,21 @@ In the documentation you will find [**several examples with source**](https://ke
 
 No, really, [check out the docs](https://kea.js.org/)!
 
+# What is Kea?
+
+Kea is a state management library for React. It *empowers* Redux, making it as easy to use as `setState` while retaining composability and improving code clarity.
+
+* **100% Redux**: Built on top of [redux](http://redux.js.org/) and [reselect](https://github.com/reactjs/reselect).
+* **Side effect agnostic**: use [thunks](https://kea.js.org/effects/thunk) with redux-thunk, [sagas](https://kea.js.org/effects/saga) with redux-saga or (soon!) [epics](https://github.com/keajs/kea/issues/40) with redux-observable.
+* **Wrappable**: Write logic alongside React components. Easier than `setState` and perfect for small components.
+* **Connectable**: Pull in data and actions through ES6+ [imports](https://kea.js.org/guide/connected). Built for large and ambitious apps.
+* **No boilerplate**: Forget `mapStateToProps` and redundant constants. Only write code that matters!
+* **No new concepts**: Use actions, reducers and selectors. Gradually migrate [existing Redux applications](https://kea.js.org/guide/migration).
+
+Compare it to other state management libraries: [Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.](https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02)
+
+
+
 # How does it work?
 
 In Kea, you define logic stores with the `kea({})` function.
