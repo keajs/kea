@@ -15,345 +15,214 @@ In the documentation you will find [**several examples with source**](https://ke
 
 No, really, [check out the docs](https://kea.js.org/)!
 
-# The basics
+# How does it work?
 
-You create and connect kea **logic stores** to your components like this:
+In Kea, you define logic stores with the `kea({})` function.
 
-```jsx
-import { kea } from 'kea'
+Each logic store contains `actions`, `reducers` and `selectors`.
 
-@kea({
-  key: (props) => props.id,
-  path: (key) => ['scenes', 'homepage', 'slider', key],
+```js
+kea({
+  actions: ({}) => ({ }),
+  reducers: ({ actions }) => ({ }),
+  selectors: ({ selectors }) => ({ })
+})
+```
 
+They work just like in Redux:
+
+* They are all pure functions (no side effects, same input = same output)
+* **Actions** are functions which take an input and return a payload
+* **Reducers** take actions as input and return new_data = old_data + payload
+* **Selectors** take the input of multiple reducers and return a combined output
+
+See here for a nice overview of how Redux works: [Redux Logic Flow — Crazy Simple Summary](https://medium.com/gitconnected/redux-logic-flow-crazy-simple-summary-35416eadabd8)
+
+For example, to build a simple counter:
+
+```js
+kea({
   actions: () => ({
-    updateSlide: index => ({ index })
+    increment: (amount) => ({ amount }),
+    decrement: (amount) => ({ amount })
   }),
 
-  reducers: ({ actions, key, props }) => ({
-    currentSlide: [props.initialSlide || 0, PropTypes.number, {
-      [actions.updateSlide]: (state, payload) => payload.key === key ? payload.index % images.length : state
+  reducers: ({ actions }) => ({
+    counter: [0, PropTypes.number, {
+      [actions.increment]: (state, payload) => state + payload.amount,
+      [actions.decrement]: (state, payload) => state - payload.amount
     }]
   }),
 
   selectors: ({ selectors }) => ({
-    currentImage: [
-      () => [selectors.currentSlide],
-      (currentSlide) => images[currentSlide],
-      PropTypes.object
+    doubleCounter: [
+      () => [selectors.counter],
+      (counter) => counter * 2,
+      PropTypes.number
     ]
   })
 })
-export default class Slider extends Component {
+```
+
+The logic stores can either
+
+1) be wrapped around your component or pure function:
+
+```js
+const logic = kea({ /* options from above */ })
+
+class Counter extends Component {
   render () {
-    const { currentSlide, currentImage } = this.props
-    const { updateSlide } = this.actions
+    const { counter, doubleCounter } = this.props
+    const { increment, decrement } = this.actions
 
-    const title = `Image copyright by ${currentImage.author}`
+    return <div>...</div>
+  }
+}
 
-    return (
-      <div className='kea-slider'>
-        <img src={currentImage.src} alt={title} title={title} />
-        <div className='buttons'>
-          {range(images.length).map(i => (
-            <span key={i} className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
-          ))}
-        </div>
-      </div>
-    )
+export default logic(Counter)
+```
+
+2) used as decorators:
+
+```js
+@kea({ /* options from above */ })
+export default class Counter extends Component {
+  render () {
+    return <div />
   }
 }
 ```
 
-For side effects, choose between [thunks](https://github.com/keajs/kea-thunk) or [sagas](https://github.com/keajs/kea-saga).
+or
 
-Using the [kea-saga](https://github.com/keajs/kea-saga) package. They will be started and terminated together with your component!
+3) imported and then connected to:
 
-```jsx
-import 'kea-saga' // import somewhere to enable support for sagas
+```js
+// features-logic.js
 import { kea } from 'kea'
+export default kea({ /* options from above */ })
 
-@kea({
-  key: (props) => props.id,
-
-  path: (key) => ['scenes', 'homepage', 'slider', key],
-
-  actions: () => ({
-    updateSlide: index => ({ index })
-  }),
-
-  reducers: ({ actions, key, props }) => ({
-    currentSlide: [props.initialSlide || 0, PropTypes.number, {
-      [actions.updateSlide]: (state, payload) => payload.key === key ? payload.index % images.length : state
-    }]
-  }),
-
-  selectors: ({ selectors }) => ({
-    currentImage: [
-      () => [selectors.currentSlide],
-      (currentSlide) => images[currentSlide],
-      PropTypes.object
-    ]
-  }),
-
-  start: function * () {
-    const { updateSlide } = this.actions
-
-    console.log('Starting homepage slider saga')
-    // console.log(this, this.actions, this.props)
-
-    while (true) {
-      const { timeout } = yield race({
-        change: take(action => action.type === updateSlide.toString() && action.payload.key === this.key),
-        timeout: delay(5000)
-      })
-
-      if (timeout) {
-        const currentSlide = yield this.get('currentSlide')
-        yield put(updateSlide(currentSlide + 1))
-      }
-    }
-  },
-
-  stop: function * () {
-    console.log('Stopping homepage slider saga')
-  },
-
-  takeEvery: ({ actions, workers }) => ({
-    [actions.updateSlide]: workers.updateSlide
-  }),
-
-  workers: {
-    updateSlide: function * (action) {
-      if (action.payload.key === this.key) {
-        console.log('slide update triggered', action.payload.key, this.key, this.props.id)
-        // console.log(action, this)
-      }
-    }
-  }
-
-  // Also implemented:
-  // takeLatest: () => ({}),
-  // sagas: [ array of sagas from elsewhere that run with the component ],
-})
-export default class Slider extends Component {
-  render () {
-    const { currentSlide, currentImage } = this.props
-    const { updateSlide } = this.actions
-
-    const title = `Image copyright by ${currentImage.author}`
-
-    return (
-      <div className='kea-slider'>
-        <img src={currentImage.src} alt={title} title={title} />
-        <div className='buttons'>
-          {range(images.length).map(i => (
-            <span key={i} className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
-          ))}
-        </div>
-      </div>
-    )
-  }
-}
-```
-
-When the logic grows too big, you may extract it from your components and give it a new home in `logic.js` files.
-
-```jsx
-// logic.js
-export default kea({
-  path: () => ['scenes', 'homepage', 'index'],
-  actions: ({ constants }) => ({
-    updateName: name => ({ name })
-  })
-  // ...
-})
-```
-
-```jsx
 // index.js
-import sceneLogic from './logic'
-
-@sceneLogic
-export default class HomepageScene extends Component {
-  render () {
-    const { name } = this.props
-    const { updateName } = this.actions
-
-    // ...
-  }
-}
-```
-
-If you only wish to import some properties and actions from your logic stores, use the `@connect` decorator or add `connect: { props: [], actions: [] }` inside `@kea({})`, like so:
-
-```jsx
-// index.js
-import sceneLogic from './logic'
-import sceneSaga from './saga'
+import { connect } from 'kea'
+import featuresLogic from 'features-logic'
 
 @connect({
   actions: [
-    sceneLogic, [
-      'updateName'
+    featuresLogic, [
+      'increment',
+      'decrement'
     ]
   ],
   props: [
-    sceneLogic, [
-      'name',
-      'capitalizedName'
+    featuresLogic, [
+      'counter',
+      'doubleCounter'
     ]
-  ],
-  sagas: [
-    sceneSaga
   ]
 })
-export default class HomepageScene extends Component {
+export default class Counter extends Component {
   render () {
-    const { name } = this.props
-    const { updateName } = this.actions
-
-    // ...
+    return <div />
   }
 }
 ```
 
-# Connecting to your app
+You can also connect logic stores together, to e.g:
 
-Starting with `0.19`, all you need to do is to hook up `redux` and `redux-saga` as you normally would, and then just add `keaReducer` and `keaSaga`, like this:
+... use actions from one logic store in the reducer of another.
+... combine reducers from multiple logic stores into one selector.
 
-```js
-import { keaSaga, keaReducer } from 'kea' // add this
+Eventually you'll need side effects. Then you have a choice.
 
-const reducers = combineReducers({
-  scenes: keaReducer('scenes'), // add this
-  // other reducers
-  // e.g. routing: routerReducer,
-})
-
-const sagaMiddleware = createSagaMiddleware()
-const finalCreateStore = compose(
-  applyMiddleware(sagaMiddleware),
-  // other middleware
-  // e.g. applyMiddleware(routerMiddleware(browserHistory))
-)(createStore)
-
-const store = finalCreateStore(reducers)
-
-sagaMiddleware.run(keaSaga) // add this
-```
-
-# Singleton and dynamic logic stores
-
-If you specify the `key` key in `kea({})`, kea will create a dynamic logic store. Each component you connect it to, will have its own actions and reducers.
-
-Omitting this `key` key will create singletons. You can then export these singletons and connect to them as described above.
-
-# Redux all the way!
-
-When you run kea({}), you get in return an object that exposes all the standard redux constructs.
+You can use simple [thunks](https://kea.js.org/effects/thunk) via redux-thunk:
 
 ```js
-// homepage/logic.js
-export default kea({ ... })
-
-// homepage/index.js
-import homepageLogic from '~/scenes/homepage/logic'
-
-homepageLogic.path === ['scenes', 'homepage', 'index']
-homepageLogic.selector === (state) => state.scenes.homepage.index
-
-homepageLogic.actions === { updateName: (name) => { ... }, increaseAge: (amount) => { ... }, ... }
-homepageLogic.reducer === function (state, action) { ... }
-homepageLogic.selectors === { name: (state) => state.scenes.homepage.index.name, capitalizedName: ... }
-
-homepageLogic.saga === function * () { ... }
-```
-
-# Sagas
-
-You may also create sagas and connect other actions using `kea({})`:
-
-```js
+import 'kea-thunk'
 import { kea } from 'kea'
 
-import sceneLogic from '~/scenes/homepage/logic'
-import sliderLogic from '~/scenes/homepage/slider/logic'
-
-export default kea({
-  // pull in actions from logic stores
-  connect: {
-    actions: [
-      sceneLogic, [
-        'updateName',
-        'increaseAge',
-        'decreaseAge'
-      ],
-      sliderLogic, [
-        'updateSlide'
-      ]
-    ]
-  },
-
-  // bind some actions to worker functions
-  takeEvery: ({ actions, workers }) => ({
-    [actions.updateName]: workers.nameLogger,
-    [actions.increaseAge]: workers.ageLogger,
-    [actions.decreaseAge]: workers.ageLogger
+const incrementerLogic = kea({
+  actions: () => ({
+    increase: true
   }),
-  // also available: takeLatest
-
-  // main loop of saga
-  // - update the slide every 5 sec
-  start: function * () {
-    // to ease readability we always list the actions we use on top
-    const { updateSlide } = this.actions
-
-    while (true) {
-      // wait for someone to call the updateSlide action or for 5 seconds to pass
-      const { timeout } = yield race({
-        change: take(updateSlide),
-        timeout: delay(5000)
-      })
-
-      // if timed out, advance the slide
-      if (timeout) {
-        // you can the contents of a logic store instance via "yield logic.get('property')"
-        const currentSlide = yield sliderLogic.get('currentSlide')
-        // dispatch the updateSlide action
-        yield put(updateSlide(currentSlide + 1))
-      }
-
-      // re-run loop - wait again for 5 sec
+  reducers: ({ actions }) => ({
+    counter: [0, PropTypes.number, {
+      [actions.increase]: (state, payload) => state + 1
+    }]
+  }),
+  thunks: ({ actions, dispatch, getState }) => ({
+    increaseAsync: async (ms) => {
+      await delay(ms)
+      await actions.increase()
     }
-  },
-
-  // clean up if needed
-  stop: function * () {
-    console.log('Closing saga')
-  },
-
-  workers: {
-    // on every updateName
-    nameLogger: function * (action) {
-      const { name } = action.payload
-      console.log(`The name changed to: ${name}!`)
-    },
-
-    // on every increaseAge, decreaseAge
-    ageLogger: function * (action) {
-      const age = yield sceneLogic.get('age')
-      console.log(`The age changed to: ${age}!`)
-    }
-  }
+  })
 })
 ```
 
-Read the documentation for [`redux-saga`](https://github.com/yelouafi/redux-saga)/
+.... or the more powerful [sagas](https://kea.js.org/effects/saga) via redux-saga.
 
-# Scaffolding (work in progress)
+(coming soon: [support for epics](https://github.com/keajs/kea/issues/40) with redux-observable)
 
-To get started with a new kea project, just type these commands:
+Check out [the examples on the homepage](https://kea.js.org) or [start reading the guide](https://kea.js.org/guide/installation) for more.
+
+If you're already using Redux in your apps, it's [really easy to migrate](https://kea.js.org/guide/migration).
+
+# Installation
+
+First install the packages:
+
+```sh
+# if you're using yarn
+yarn add kea redux react-redux reselect
+
+# if you're using npm
+npm install kea redux react-redux reselect --save
+```
+
+Then configure the [Redux store](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store). You may either do it [manually](https://kea.js.org/api/store#manual) or use the `getStore` helper. We recommend using the helper, as it will also configure any installed plugins (e.g. [kea-saga](https://kea.js.org/api/saga)). You may pass additional middleware and reducers as [options](https://kea.js.org/api/store).
+
+First, create a file called `store.js` with the following content:
+
+```js
+// store.js
+import { getStore } from 'kea'
+
+export default getStore({
+  // additional options (e.g. middleware, reducers, ...)
+})
+```
+
+Then import this in your app's entrypoint **before** any calls to `kea()` are made. In practice this means you should import your store before your root component.
+
+Finally, wrap your `<App />` with Redux's `<Provider />`.
+
+This is how your entrypoint would look like if you used `create-react-app`:
+
+```js
+// index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'; // <--- add this
+
+import './index.css';
+
+import store from './store'; // <--- add this BEFORE App
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+
+ReactDOM.render(
+  <Provider store={store}> // <-- add this
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
+registerServiceWorker();
+```
+
+# Scaffolding
+
+You may also use the CLI tool to start a new Kea project:
 
 ```
 npm install kea-cli -g
