@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 import { deconstructMapping } from './mapping'
 
-export function propTypesFromMapping (mapping, extra = null) {
+export function propTypesFromConnect (mapping, extra = null) {
   let propTypes = Object.assign({}, mapping.propTypes || mapping.passedProps || {})
 
   if (mapping.props) {
@@ -13,11 +13,11 @@ export function propTypesFromMapping (mapping, extra = null) {
     }
 
     propsArray.forEach(([logic, from, to]) => {
-      if (logic && logic.reducers) {
-        const reducer = logic.reducers[from]
+      if (logic && logic.propTypes) {
+        const propType = logic.propTypes[from]
 
-        if (reducer && reducer.type) {
-          propTypes[to] = reducer.type
+        if (propType) {
+          propTypes[to] = propType
         } else if (from !== '*') {
           console.error(`[KEA-LOGIC] prop type for "${from}" missing for logic:`, logic)
           console.trace()

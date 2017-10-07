@@ -1,5 +1,5 @@
 import { selectPropsFromLogic } from './connect/props'
-import { propTypesFromMapping } from './connect/prop-types'
+import { propTypesFromConnect } from './connect/prop-types'
 import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
 import { pathSelector, createSelectors } from './logic/selectors'
 import { createActions } from './actions/create'
@@ -19,176 +19,188 @@ import { installedPlugins } from './plugins'
 
 const DEBUG = false
 
-let nonameCounter = 0
-
 function isStateless (Component) {
   return !Component.prototype.render
 }
 
+let nonamePathCounter = 0
+
+function createUniquePathFunction () {
+  const reducerRoot = firstReducerRoot()
+  if (!reducerRoot) {
+    console.error('[KEA] Could not find the root of the keaReducer! Make sure you call keaReducer() before any call to kea() is made. See: https://kea.js.org/api/reducer')
+  }
+  let inlinePath = [reducerRoot, '_kea', `inline-${nonamePathCounter++}`]
+  return () => inlinePath
+}
+
 const hydrationAction = '@@kea/hydrate store'
 
-export function kea (input) {
+export function kea (_input) {
+  // clone the input and add a path if needed
+  const input = Object.assign(_input.path ? {} : { path: createUniquePathFunction() }, _input)
+
   const hasConnect = !!(input.connect)
-  const hasLogic = !!(input.path || input.actions || input.reducers || input.selectors)
-  const isSingleton = !input.key
+  const hasDefinedPath = !!_input.path
+  const hasLogic = !!(input.actions || input.reducers || input.selectors)
 
-  let output = {}
+  let output = {
+    activePlugins: {},
+    isSingleton: !input.key,
 
-  // check which plugins are active
-  output.activePlugins = []
+    path: null,
+    constants: {},
+
+    connected: { actions: {}, selectors: {}, propTypes: {} },
+    created: { actions: {}, reducerObjects: {}, selectors: {}, propTypes: {}, defaults: {} },
+
+    actions: {},
+    reducers: {},
+    selector: null,
+    selectors: {},
+    propTypes: {},
+    defaults: {}
+  }
+
+  // check which plugins are active based on the input
   installedPlugins.forEach(plugin => {
     output.activePlugins[plugin.name] = plugin.isActive(input, output)
   })
 
-  if (!input.path) {
-    const reducerRoot = firstReducerRoot()
-    if (!reducerRoot) {
-      console.error('[KEA] Could not find the root of the keaReducer! Make sure you call keaReducer() before any call to kea() is made. See: https://kea.js.org/api/reducer')
-    }
-    let inlinePath = [reducerRoot, '_kea', `inline-${nonameCounter++}`]
-    input.path = () => inlinePath
-  }
+  // set the constants
+  output.constants = input.constants ? convertConstants(input.constants(output)) : {}
 
-  let propTypes = {}
-  let connect = {}
-
+  // anything to connect to?
   if (hasConnect) {
     // the { connect: { props, actions } } part
-    connect = input.connect || {}
+    const connect = input.connect || {}
 
-    // get default proptypes and add connected ones
-    propTypes = Object.assign({}, connect.props ? propTypesFromMapping(connect) : {})
-
-    // connected actions and props/selectors
+    // store connected actions, selectors and propTypes separately
     output.connected = {
       actions: selectActionsFromLogic(connect.actions),
-      selectors: selectPropsFromLogic(connect.props)
+      selectors: selectPropsFromLogic(connect.props),
+      propTypes: propTypesFromConnect(connect)
     }
 
-    if (isSingleton) {
-      output.actions = Object.assign({}, output.connected.actions)
-      output.selectors = Object.assign({}, output.connected.selectors)
-    }
+    // set actions, selectors and propTypes to the connected ones
+    Object.assign(output, output.connected)
 
+    // run the afterConnect plugin hook
     installedPlugins.forEach(plugin => {
       plugin.afterConnect && plugin.afterConnect(output.activePlugins[plugin.name], input, output)
     })
   }
 
-  // pregenerate as many things as we can
-  output.constants = input.constants ? convertConstants(input.constants(output)) : {}
+  // we don't know yet if it's going to be a singleton (no key) or inline (key)
+  // however the actions and constants are common for all, so get a path without the dynamic
+  // component and initialize them
+  output.path = input.path('').filter(p => p)
 
-  if (hasLogic) {
-    // we don't know yet if it's going to be a singleton (no key) or inline (key)
-    // however the actions and constants are common for all, so get a path without the dynamic
-    // component and initialize them
-    output.path = input.path('').filter(p => p)
-    output.actions = Object.assign({}, output.actions, input.actions ? createActions(input.actions(output), output.path) : {})
-    output.props = {}
+  if (input.actions) {
+    // create new actions
+    output.created.actions = createActions(input.actions(output), output.path)
 
-    installedPlugins.forEach(plugin => {
-      plugin.afterCreateActions && plugin.afterCreateActions(output.activePlugins[plugin.name], input, output)
-    })
+    // add them to the actions hash
+    output.actions = Object.assign(output.actions, output.created.actions)
   }
 
-  if (hasLogic && isSingleton) {
-    output.selector = (state) => pathSelector(output.path, state)
-    output.reducers = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
-    output.reducer = input.reducer ? input.reducer(output) : combineReducerObjects(output.path, output.reducers)
-    output.selectors = Object.assign({}, output.selectors, createSelectors(output.path, Object.keys(output.reducers || {})))
+  // if it's a singleton, create all the reducers and selectors and add them to redux
+  if (output.isSingleton) {
+    // we have reducer or selector inputs, create all output reducers and selectors
+    // ... or the "path" is manually defined, so we must put something in redux
+    if (hasDefinedPath || input.reducers || input.selectors) {
+      // create the reducers from the input
+      output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
-    const selectorResponse = input.selectors ? input.selectors(output) : {}
-    Object.keys(selectorResponse).forEach(selectorKey => {
-      // s == [() => args, selectorFunction, propType]
-      const s = selectorResponse[selectorKey]
-      const args = s[0]()
-      if (s[2]) {
-        output.reducers[selectorKey] = { type: s[2] }
+      // add propTypes
+      Object.keys(output.created.reducerObjects).forEach(reducerKey => {
+        const reducerObject = output.created.reducerObjects[reducerKey]
+        if (reducerObject.type) {
+          output.created.propTypes[reducerKey] = reducerObject.type
+        }
+
+        output.created.defaults[reducerKey] = reducerObject.value
+        output.reducers[reducerKey] = reducerObject.reducer
+      })
+
+      // combine the created reducers into one
+      output.reducer = combineReducerObjects(output.path, output.created.reducerObjects)
+
+      // add a global selector for the path
+      output.selector = (state) => pathSelector(output.path, state)
+
+      // create selectors from the reducers
+      output.created.selectors = createSelectors(output.path, Object.keys(output.created.reducerObjects))
+
+      // add the created selectors and propTypes to the output
+      output.selectors = Object.assign(output.selectors, output.created.selectors)
+      output.propTypes = Object.assign(output.propTypes, output.created.propTypes)
+      output.defaults = Object.assign(output.defaults, output.created.defaults)
+
+      // any additional selectors to create?
+      if (input.selectors) {
+        const selectorResponse = input.selectors(output)
+
+        Object.keys(selectorResponse).forEach(selectorKey => {
+          // s == [() => args, selectorFunction, propType]
+          const s = selectorResponse[selectorKey]
+          const args = s[0]()
+
+          if (s[2]) {
+            output.created.propTypes[selectorKey] = s[2]
+            output.propTypes[selectorKey] = output.created.propTypes[selectorKey]
+          }
+
+          output.created.selectors[selectorKey] = createSelector(...args, s[1])
+          output.selectors[selectorKey] = output.created.selectors[selectorKey]
+        })
       }
-      output.selectors[selectorKey] = createSelector(...args, s[1])
-    })
 
-    installedPlugins.forEach(plugin => {
-      plugin.afterAddSingletonLogic && plugin.afterAddSingletonLogic(output.activePlugins[plugin.name], input, output)
-    })
-  }
+      // hook up the reducer to the global kea reducers object
+      addReducer(output.path, output.reducer, true)
+    }
 
-  if (isSingleton) {
     installedPlugins.forEach(plugin => {
       plugin.afterCreateSingleton && plugin.afterCreateSingleton(output.activePlugins[plugin.name], input, output)
     })
   }
 
+  // we will return this function which can wrap the logic store around a component
   const response = function (Klass) {
-    // initializing as a singleton
-    if (Klass === false) {
-      if (!isSingleton) {
-        console.error(`[KEA-LOGIC] Standalone "export default kea({})" functions must have no "key"!`, output.path, Klass)
-      }
-
-      return Object.assign(input, output)
+    if (!Klass) {
+      console.error('[KEA] Logic stores must be wrapped around React Components or stateless functions!', input, output)
+      return
     }
 
-    if (Klass && Klass.propTypes) {
-      propTypes = Object.assign({}, propTypes, Klass.propTypes)
-    }
+    // inject the propTypes to the class
+    Klass.propTypes = Object.assign({}, output.propTypes, Klass.propTypes || {})
 
-    if (hasLogic) {
-      // add proptypes from reducer
-      const reducers = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
-      Object.keys(reducers).forEach(reducerKey => {
-        if (reducers[reducerKey].type) {
-          propTypes[reducerKey] = reducers[reducerKey].type
+    // dealing with a Component
+    if (!isStateless(Klass)) {
+      // inject to the component something that
+      // converts this.props.actions to this.actions
+      if (Object.keys(output.actions).length > 0) {
+        const originalComponentWillMount = Klass.prototype.componentWillMount
+        Klass.prototype.componentWillMount = function () {
+          this.actions = this.props.actions
+          originalComponentWillMount && originalComponentWillMount.bind(this)()
         }
-      })
-
-      // add proptypes from selectors
-      const selectorsThatDontWork = input.selectors ? input.selectors({}) : {}
-      Object.keys(selectorsThatDontWork).forEach(selectorKey => {
-        if (selectorsThatDontWork[selectorKey][2]) {
-          propTypes[selectorKey] = selectorsThatDontWork[selectorKey][2]
-        }
-      })
-    }
-
-    if (Klass) {
-      Klass.propTypes = Object.assign({}, propTypes, Klass.propTypes || {})
-    }
-
-    if (Klass && hasLogic) {
-      // add kea metadata to component
-      Klass.kea = {
-        path: input.path,
-        constants: output.constants,
-        actions: output.actions,
-        select: (key) => getCache(input.path(key), 'selectors')
       }
-    }
 
-    if (Klass && (hasLogic || hasConnect)) {
-      // convert this.props.actions to this.actions in the component
-      const originalComponentWillMount = Klass.prototype.componentWillMount
-      Klass.prototype.componentWillMount = function () {
-        this.actions = this.props.actions
-        originalComponentWillMount && originalComponentWillMount.bind(this)()
-      }
-    }
-
-    // If we're wrapping a functional React component, skip adding plugins.
-    // This requires lifecycle methods like componentWillMount, etc, which functional components don't have.
-    // We'll instead add plugins to Redux's Connected class.
-    if (Klass && !isStateless(Klass)) {
+      // Since Klass == Component, tell the plugins to add themselves to it.
+      // if it's a stateless functional component, we'll do it in the end with Redux's Connect class
       installedPlugins.forEach(plugin => {
         plugin.injectToClass && plugin.injectToClass(output.activePlugins[plugin.name], input, output, Klass)
       })
     }
 
+    //
     const selectorFactory = (dispatch, options) => {
       let lastProps = {}
       let result = null
 
       if (!isSyncedWithStore()) {
-        dispatch({type: hydrationAction})
+        dispatch({ type: hydrationAction })
       }
 
       return (nextState, nextOwnProps) => {
@@ -375,7 +387,7 @@ export function kea (input) {
     const KonnektedKlass = connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
 
     // If we were wrapping a functional React component, add the plugin code to the connected component.
-    if (Klass && isStateless(Klass)) {
+    if (isStateless(Klass)) {
       installedPlugins.forEach(plugin => {
         plugin.injectToConnectedClass && plugin.injectToConnectedClass(output.activePlugins[plugin.name], input, output, KonnektedKlass)
       })
@@ -384,16 +396,23 @@ export function kea (input) {
     return KonnektedKlass
   }
 
-  response.path = output.path
+  response.path = output.isSingleton && (hasDefinedPath || hasLogic) ? output.path : undefined
+
   response.constants = output.constants
   response.actions = output.actions
-  response.reducer = output.reducer
-  response.reducers = output.reducers
-  response.selector = output.selector
-  response.selectors = output.selectors
+  response.propTypes = output.propTypes
+
+  if (output.isSingleton) {
+    response.reducer = output.reducer
+    response.reducers = output.reducers
+    response.defaults = output.defaults
+    response.selector = output.selector
+    response.selectors = output.selectors
+  }
 
   response._isKeaFunction = true
-  response._isKeaSingleton = isSingleton
+  response._isKeaSingleton = output.isSingleton
+
   response._hasKeaConnect = hasConnect
   response._hasKeaLogic = hasLogic
   response._keaPlugins = output.activePlugins
@@ -401,15 +420,6 @@ export function kea (input) {
   installedPlugins.forEach(plugin => {
     plugin.addToResponse && plugin.addToResponse(output.activePlugins[plugin.name], input, output, response)
   })
-
-  if (output.path) {
-    if (isSingleton) {
-      addReducer(output.path, output.reducer, true)
-      response._keaReducerConnected = true
-    } else {
-      response._keaReducerConnected = false
-    }
-  }
 
   return response
 }

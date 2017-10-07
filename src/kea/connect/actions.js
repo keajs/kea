@@ -12,7 +12,9 @@ export function selectActionsFromLogic (mapping = []) {
   actionsArray.forEach(([logic, from, to]) => {
     const actions = logic && logic.actions ? logic.actions : logic
 
-    if (typeof actions[from] === 'function') {
+    if (from === '*') {
+      hash[to] = actions
+    } else if (typeof actions[from] === 'function') {
       hash[to] = actions[from]
     } else {
       console.error(`[KEA-LOGIC] action "${from}" missing for logic:`, logic)

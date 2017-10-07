@@ -51,20 +51,22 @@ test('singleton logic has all the right properties', () => {
   // reducers
   const defaultValues = { name: 'chirpy' }
   const state = { scenes: { homepage: { index: defaultValues } } }
-  expect(Object.keys(response.reducers).sort()).toEqual(['capitalizedName', 'name'])
+  expect(Object.keys(response.reducers).sort()).toEqual(['name'])
 
-  expect(response.reducers).toHaveProperty('name.reducer')
-  expect(response.reducers).toHaveProperty('name.type', PropTypes.string)
-  expect(response.reducers).toHaveProperty('name.value', 'chirpy')
+  expect(response.reducers).toHaveProperty('name')
+  expect(response.propTypes.name).toEqual(PropTypes.string)
+  expect(response.defaults.name).toEqual('chirpy')
 
-  const nameReducer = response.reducers.name.reducer
+  const nameReducer = response.reducers.name
   expect(Object.keys(nameReducer)).toEqual([ updateName.toString() ])
   expect(nameReducer[updateName.toString()]).toBeDefined()
   expect(nameReducer[updateName.toString()]('', { name: 'newName' })).toBe('newName')
 
-  expect(response.reducers).not.toHaveProperty('capitalizedName.reducer')
-  expect(response.reducers).toHaveProperty('capitalizedName.type', PropTypes.string)
-  expect(response.reducers).not.toHaveProperty('capitalizedName.value', 'chirpy')
+  // TODO: add defaults and propTypes
+
+  expect(response.reducers).not.toHaveProperty('capitalizedName')
+  expect(response.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
+  expect(response.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
 
   // big reducer
   expect(typeof response.reducer).toBe('function')
@@ -114,7 +116,7 @@ test('it is not a singleton if there is a key', () => {
   // check generic
   expect(response._isKeaFunction).toBe(true)
   expect(response._isKeaSingleton).toBe(false)
-  expect(response.path).toEqual(['scenes', 'homepage', 'index'])
+  expect(response.path).not.toBeDefined()
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
   // actions

@@ -38,6 +38,7 @@ test('connected props and actions get passed, reducers get added to the store', 
 
   const reducerState2 = scenesReducer({}, { type: 'discard' })
   expect(reducerState2).toEqual({ homepage: { first: { name: 'chirpy' } } })
+  expect(Object.keys(firstLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
