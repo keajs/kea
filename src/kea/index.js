@@ -194,7 +194,6 @@ export function kea (_input) {
       })
     }
 
-    //
     const selectorFactory = (dispatch, options) => {
       let lastProps = {}
       let result = null
@@ -204,39 +203,43 @@ export function kea (_input) {
       }
 
       return (nextState, nextOwnProps) => {
-        let key
-        let path
-        let joinedPath
+        // get the key if it's defined
+        const key = input.key ? input.key(nextOwnProps) : null
 
+        // if the key function was defined and returns undefined, something is up. give an error
+        if (typeof key === 'undefined') {
+          console.error(`"key" can't be undefined in path: ${input.path('undefined').join('.')}`)
+        }
+
+        // get the path of this logic store
+        const path = input.path(key)
+        const joinedPath = path.join('.')
+
+        // store the props given to the component in nextProps.
+        // already fill it with the props passed to the component from above
         let nextProps = Object.assign({}, nextOwnProps)
 
+        // add data from the connected selectors into nextProps
+        // TODO: is this needed?
         if (hasConnect) {
-          // TODO: this will fail if the redux tree is not initialized yet.
-          // see comment in logic-component.js
-
-          // connected props
           Object.keys(output.connected.selectors).forEach(propKey => {
             nextProps[propKey] = output.connected.selectors[propKey](nextState, nextOwnProps)
           })
         }
 
+        // did we create any reducers/selectors inside the logic store?
         if (hasLogic) {
-          key = input.key ? input.key(nextOwnProps) : null
-
-          if (typeof key === 'undefined') {
-            console.error(`"key" can't be undefined in path: ${input.path('undefined').join('.')}`)
-          }
-
-          path = input.path(key)
-          joinedPath = path.join('.')
-
           if (DEBUG) {
             console.log(`Inline selectorFactory for ${joinedPath}`)
             console.log({ nextOwnProps, nextState, key, path })
           }
 
-          let selector
-          let selectors
+          // get a selector to the root of the path in redux. cache it so it's only created once
+          let selector = getCache(joinedPath, 'selector')
+          if (!selector) {
+            selector = (state) => pathSelector(path, state)
+            setCache(joinedPath, { selector })
+          }
 
           // now we must check if the reducer is already in redux, or we need to add it
           // if we need to add it, create "dummy" selectors for the default values until then
@@ -247,61 +250,62 @@ export function kea (_input) {
           // if it's not let's double check. maybe it is now?
           if (!reducerCreated) {
             try {
-              selector = (state) => pathSelector(path, state)
               reducerCreated = typeof selector(nextState) !== 'undefined'
             } catch (e) {
               reducerCreated = false
             }
           }
 
+          let selectors
+
           // we have the selectors cached! with the current reducerCreated state!
           if (!!getCache(joinedPath, reducerCreated) === reducerCreated) {
             if (DEBUG) {
               console.log('cache hit!')
             }
-            selector = getCache(joinedPath, 'selector')
             selectors = getCache(joinedPath, 'selectors')
 
           // either we have nothing cached or the cache is invalid. regenerate the selectors!
           } else {
-            if (!selector) {
-              selector = (state) => pathSelector(path, state)
-            }
+            // create a new "output" that also contains { path, key, props }
+            // this will be used as /input/ to create the reducers and selectors
+            const wrappedOutput = Object.assign({}, output, { path, key, props: nextOwnProps })
 
-            // add { path } and { key } to the reducer creator function
-            let localObject = Object.assign({}, output, { path, key, props: nextOwnProps })
-            localObject.reducers = input.reducers ? convertReducerArrays(input.reducers(localObject)) : {}
-            localObject.reducer = input.reducer ? input.reducer(localObject) : combineReducerObjects(path, localObject.reducers)
+            // we can't just recycle this from the singleton, as the reducers can have defaults that depend on props
+            const reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
             const connectedSelectors = output.connected ? output.connected.selectors : {}
+            const createdSelectors = createSelectors(path, Object.keys(reducerObjects))
 
             // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
             if (reducerCreated) {
-              selectors = Object.assign({}, connectedSelectors || {}, createSelectors(path, Object.keys(localObject.reducers)))
+              selectors = Object.assign({}, connectedSelectors, createdSelectors)
             } else {
-              addReducer(path, localObject.reducer, true)
-              if (!isSyncedWithStore()) {
-                dispatch({type: hydrationAction})
-              }
+              // not in redux, so add the reducer!
+              const reducer = combineReducerObjects(path, reducerObjects)
+              addReducer(path, reducer, true)
 
-              const realSelectors = createSelectors(path, Object.keys(localObject.reducers))
+              // send a hydration action to redux, to make sure that the store is up to date on the next render
+              if (!isSyncedWithStore()) {
+                dispatch({ type: hydrationAction })
+              }
 
               // if we don't know for sure that the reducer is in the current store output,
               // then fallback to giving the default value
               selectors = Object.assign({}, connectedSelectors || {})
-              Object.keys(localObject.reducers).forEach(key => {
+              Object.keys(reducerObjects).forEach(key => {
                 selectors[key] = (state) => {
                   try {
-                    return realSelectors[key](state)
+                    return createdSelectors[key](state)
                   } catch (error) {
-                    return localObject.reducers[key].value
+                    return reducerObjects[key].value
                   }
                 }
               })
             }
 
             // create
-            const selectorResponse = input.selectors ? input.selectors(Object.assign({}, localObject, { selectors })) : {}
+            const selectorResponse = input.selectors ? input.selectors(Object.assign({}, wrappedOutput, { selectors })) : {}
 
             Object.keys(selectorResponse).forEach(selectorKey => {
               // s == [() => args, selectorFunction, propType]
@@ -314,7 +318,6 @@ export function kea (_input) {
             // store in the cache
             setCache(joinedPath, {
               reducerCreated,
-              selector,
               selectors
             })
           }
