@@ -17,8 +17,6 @@ import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
 
 import { installedPlugins } from './plugins'
 
-const DEBUG = false
-
 function isStateless (Component) {
   return !Component.prototype.render
 }
@@ -220,8 +218,8 @@ export function kea (_input) {
         let nextProps = Object.assign({}, nextOwnProps)
 
         // add data from the connected selectors into nextProps
-        // TODO: is this needed?
-        if (hasConnect) {
+        // only do this if we have no own reducers/selectors, otherwise it gets done later
+        if (hasConnect && !hasLogic) {
           Object.keys(output.connected.selectors).forEach(propKey => {
             nextProps[propKey] = output.connected.selectors[propKey](nextState, nextOwnProps)
           })
@@ -229,11 +227,6 @@ export function kea (_input) {
 
         // did we create any reducers/selectors inside the logic store?
         if (hasLogic) {
-          if (DEBUG) {
-            console.log(`Inline selectorFactory for ${joinedPath}`)
-            console.log({ nextOwnProps, nextState, key, path })
-          }
-
           // get a selector to the root of the path in redux. cache it so it's only created once
           let selector = getCache(joinedPath, 'selector')
           if (!selector) {
@@ -245,24 +238,21 @@ export function kea (_input) {
           // if we need to add it, create "dummy" selectors for the default values until then
 
           // is the reducer created? if we have "true" in the cache, it's definitely created
-          let reducerCreated = !!getCache(joinedPath, 'reducerCreated')
+          let reduxMounted = !!getCache(joinedPath, 'reduxMounted')
 
           // if it's not let's double check. maybe it is now?
-          if (!reducerCreated) {
+          if (!reduxMounted) {
             try {
-              reducerCreated = typeof selector(nextState) !== 'undefined'
+              reduxMounted = typeof selector(nextState) !== 'undefined'
             } catch (e) {
-              reducerCreated = false
+              reduxMounted = false
             }
           }
 
           let selectors
 
-          // we have the selectors cached! with the current reducerCreated state!
-          if (!!getCache(joinedPath, reducerCreated) === reducerCreated) {
-            if (DEBUG) {
-              console.log('cache hit!')
-            }
+          // we have the selectors cached with the current reduxMounted state!
+          if (!!getCache(joinedPath, reduxMounted) === reduxMounted) {
             selectors = getCache(joinedPath, 'selectors')
 
           // either we have nothing cached or the cache is invalid. regenerate the selectors!
@@ -274,14 +264,8 @@ export function kea (_input) {
             // we can't just recycle this from the singleton, as the reducers can have defaults that depend on props
             const reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
-            const connectedSelectors = output.connected ? output.connected.selectors : {}
-            const createdSelectors = createSelectors(path, Object.keys(reducerObjects))
-
-            // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
-            if (reducerCreated) {
-              selectors = Object.assign({}, connectedSelectors, createdSelectors)
-            } else {
-              // not in redux, so add the reducer!
+            // not in redux, so add the reducer!
+            if (!reduxMounted) {
               const reducer = combineReducerObjects(path, reducerObjects)
               addReducer(path, reducer, true)
 
@@ -289,7 +273,16 @@ export function kea (_input) {
               if (!isSyncedWithStore()) {
                 dispatch({ type: hydrationAction })
               }
+            }
 
+            // get connected selectors and selectors created from the reducer
+            const connectedSelectors = output.connected ? output.connected.selectors : {}
+            const createdSelectors = createSelectors(path, Object.keys(reducerObjects))
+
+            // if the reducer is in redux, get real reducer selectors. otherwise add dummies that return defaults
+            if (reduxMounted) {
+              selectors = Object.assign({}, connectedSelectors, createdSelectors)
+            } else {
               // if we don't know for sure that the reducer is in the current store output,
               // then fallback to giving the default value
               selectors = Object.assign({}, connectedSelectors || {})
@@ -304,77 +297,62 @@ export function kea (_input) {
               })
             }
 
-            // create
+            // create the additional selectors
             const selectorResponse = input.selectors ? input.selectors(Object.assign({}, wrappedOutput, { selectors })) : {}
 
             Object.keys(selectorResponse).forEach(selectorKey => {
               // s == [() => args, selectorFunction, propType]
               const s = selectorResponse[selectorKey]
-
               const args = s[0]()
               selectors[selectorKey] = createSelector(...args, s[1])
             })
 
             // store in the cache
             setCache(joinedPath, {
-              reducerCreated,
+              reduxMounted,
               selectors
             })
           }
 
-          if (DEBUG) {
-            console.log({ selector, selectors })
-          }
-
+          // and add to props
           Object.keys(selectors).forEach(selectorKey => {
             nextProps[selectorKey] = selectors[selectorKey](nextState, nextOwnProps)
           })
         }
 
-        if (DEBUG) {
-          console.log({ nextProps })
-        }
+        // actions need to be created just once, see if they are cached
+        let actions = getCache(joinedPath, 'actions')
 
-        // TODO: cache these even if no path present
-        let actions = joinedPath ? getCache(joinedPath, 'actions') : null
-
+        // nothing was in the cache, so create them
         if (!actions) {
           actions = {}
 
-          if (hasConnect) {
-            // pass conneted actions as they are
-            Object.keys(output.connected.actions).forEach(actionKey => {
-              actions[actionKey] = (...args) => dispatch(output.connected.actions[actionKey](...args))
-            })
-          }
+          // pass conneted actions as they are, just wrap with dispatch
+          const connectedActionKeys = Object.keys(output.connected.actions)
+          connectedActionKeys.forEach(actionKey => {
+            actions[actionKey] = (...args) => dispatch(output.connected.actions[actionKey](...args))
+          })
 
-          if (hasLogic) {
-            // inject key to the payload of inline actions
-            Object.keys(output.actions).forEach(actionKey => {
-              if (key) {
-                actions[actionKey] = (...args) => {
-                  const createdAction = output.actions[actionKey](...args)
+          // inject key to the payload of created actions, if there is a key
+          const createdActionKeys = Object.keys(output.created.actions)
+          createdActionKeys.forEach(actionKey => {
+            if (key) {
+              actions[actionKey] = (...args) => {
+                const createdAction = output.created.actions[actionKey](...args)
 
-                  // an object! add the key and dispatch
-                  if (typeof createdAction === 'object') {
-                    return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
-                  } else { // a function? a string? return it!
-                    return dispatch(createdAction)
-                  }
+                // an object! add the key and dispatch
+                if (typeof createdAction === 'object') {
+                  return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+                } else { // a function? a string? return it!
+                  return dispatch(createdAction)
                 }
-              } else {
-                actions[actionKey] = (...args) => dispatch(output.actions[actionKey](...args))
               }
-            })
-          }
+            } else {
+              actions[actionKey] = (...args) => dispatch(output.created.actions[actionKey](...args))
+            }
+          })
 
-          if (DEBUG) {
-            console.log({ actions })
-          }
-
-          if (joinedPath) {
-            setCache(joinedPath, { actions })
-          }
+          setCache(joinedPath, { actions })
         }
 
         // if the props did not change, return the old cached output
@@ -387,9 +365,10 @@ export function kea (_input) {
       }
     }
 
+    // connect this function to Redux
     const KonnektedKlass = connectAdvanced(selectorFactory, { methodName: 'kea' })(Klass)
 
-    // If we were wrapping a functional React component, add the plugin code to the connected component.
+    // If we were wrapping a stateless functional React component, add the plugin code to the connected component.
     if (isStateless(Klass)) {
       installedPlugins.forEach(plugin => {
         plugin.injectToConnectedClass && plugin.injectToConnectedClass(output.activePlugins[plugin.name], input, output, KonnektedKlass)
@@ -399,6 +378,10 @@ export function kea (_input) {
     return KonnektedKlass
   }
 
+  // the response will contain a path only if
+  // - it's a singleton
+  // - or we manually specified a path
+  // - or it contains some data (e.g. reducers)
   response.path = output.isSingleton && (hasDefinedPath || hasLogic) ? output.path : undefined
 
   response.constants = output.constants
