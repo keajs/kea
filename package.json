@@ -27,6 +27,7 @@
     "build:cjs": "babel src --out-dir lib",
     "build:es": "BABEL_ENV=es babel src --out-dir es",
     "start": "BABEL_ENV=es babel -w src --out-dir es",
+    "start:cjs": "babel -w src --out-dir lib",
     "size": "size-limit",
     "test": "jest",
     "lint": "eslint src/**",
