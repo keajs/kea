@@ -410,12 +410,15 @@ const logic = kea({
     updateName: name =&gt; ({ name })
   }),
 
-  thunks: ({ actions, dispatch, getState }) =&gt; ({
+  thunks: ({ actions, get, fetch, dispatch, getState }) =&gt; ({
     updateNameAsync: async name =&gt; {
       await delay(1000)            // standard promise
       await actions.anotherThunk() // another thunk action
       actions.updateName(name)     // not a thunk, so no async needed
       dispatch({ <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;RANDOM_REDUX_ACTION&apos;</span> }) // random redux action
+
+      get(<span class="hljs-string">&apos;name&apos;</span>) // <span class="hljs-string">&apos;chirpy&apos;</span>
+      fetch(<span class="hljs-string">&apos;name&apos;</span>, <span class="hljs-string">&apos;otherKey&apos;</span>) // { name: <span class="hljs-string">&apos;chirpy&apos;</span>, otherKey: undefined }
     },
     anotherThunk: async () =&gt; {
       // <span class="hljs-keyword">do</span> something

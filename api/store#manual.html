@@ -388,14 +388,17 @@ aside.kea-sidebar nav ul li a:hover {
   <span class="hljs-comment">// what root paths are available for kea</span>
   paths: [<span class="hljs-string">&apos;kea&apos;</span>, <span class="hljs-string">&apos;scenes&apos;</span>],
 
-  <span class="hljs-comment">// middleware that gets passed to applyMiddleware(...middlewareArray)</span>
+  <span class="hljs-comment">// additional reducers that your app uses</span>
+  reducers: {},
+
+  <span class="hljs-comment">// middleware that gets passed to applyMiddleware(...middleware)</span>
   middleware: [],
 
-  <span class="hljs-comment">// gets passed to compose(middleware, ...composeArray)(createStore)</span>
-  compose: [ reduxDevTools ],
+  <span class="hljs-comment">// the compose function, defaults to the one from redux-devtools-extension or redux&apos;s own compose</span>
+  compose: composeWithDevTools || compose,
 
-  <span class="hljs-comment">// additional reducers that your app uses</span>
-  reducers: {}
+  <span class="hljs-comment">// gets passed to compose(middleware, ...enhancers)(createStore)</span>
+  enhancers: []
 })
 
 <span class="hljs-comment">// index.js</span>
@@ -420,10 +423,6 @@ ReactDOM.render(
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> getStore({
   <span class="hljs-attr">middleware</span>: [
     routerMiddleware(history)
-  ],
-  <span class="hljs-attr">compose</span>: [
-    <span class="hljs-comment">// this is added automatically if you don not specify &quot;compose:&quot;, just redefining here:</span>
-    <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span> !== <span class="hljs-string">&apos;undefined&apos;</span> &amp;&amp; <span class="hljs-built_in">window</span>.__REDUX_DEVTOOLS_EXTENSION__ ? <span class="hljs-built_in">window</span>.__REDUX_DEVTOOLS_EXTENSION__() : <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f
   ],
   <span class="hljs-attr">reducers</span>: {
     <span class="hljs-attr">router</span>: routerReducer
