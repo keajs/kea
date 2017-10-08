@@ -213,27 +213,26 @@ export function kea (_input) {
         const path = input.path(key)
         const joinedPath = path.join('.')
 
-        // store the props given to the component in nextProps.
-        // already fill it with the props passed to the component from above
-        let nextProps = Object.assign({}, nextOwnProps)
+        // get a selector to the root of the path in redux. cache it so it's only created once
+        let selector = getCache(joinedPath, 'selector')
+        if (!selector) {
+          selector = (state) => pathSelector(path, state)
+          setCache(joinedPath, { selector })
+        }
+
+        let selectors = getCache(joinedPath, 'selectors')
 
         // add data from the connected selectors into nextProps
         // only do this if we have no own reducers/selectors, otherwise it gets done later
-        if (hasConnect && !hasLogic) {
-          Object.keys(output.connected.selectors).forEach(propKey => {
-            nextProps[propKey] = output.connected.selectors[propKey](nextState, nextOwnProps)
-          })
+        if (hasConnect && !hasLogic && !selectors) {
+          selectors = output.connected.selectors
+
+          // store in the cache. kea-saga wants to access this. TODO: find a better way?
+          setCache(joinedPath, { selectors: output.connected.selectors })
         }
 
         // did we create any reducers/selectors inside the logic store?
         if (hasLogic) {
-          // get a selector to the root of the path in redux. cache it so it's only created once
-          let selector = getCache(joinedPath, 'selector')
-          if (!selector) {
-            selector = (state) => pathSelector(path, state)
-            setCache(joinedPath, { selector })
-          }
-
           // now we must check if the reducer is already in redux, or we need to add it
           // if we need to add it, create "dummy" selectors for the default values until then
 
@@ -249,14 +248,8 @@ export function kea (_input) {
             }
           }
 
-          let selectors
-
-          // we have the selectors cached with the current reduxMounted state!
-          if (!!getCache(joinedPath, reduxMounted) === reduxMounted) {
-            selectors = getCache(joinedPath, 'selectors')
-
-          // either we have nothing cached or the cache is invalid. regenerate the selectors!
-          } else {
+          // we don't have the selectors cached with the current reduxMounted state!
+          if (!!getCache(joinedPath, reduxMounted) !== reduxMounted) {
             // create a new "output" that also contains { path, key, props }
             // this will be used as /input/ to create the reducers and selectors
             const wrappedOutput = Object.assign({}, output, { path, key, props: nextOwnProps })
@@ -313,8 +306,14 @@ export function kea (_input) {
               selectors
             })
           }
+        }
 
-          // and add to props
+        // store the props given to the component in nextProps.
+        // already fill it with the props passed to the component from above
+        let nextProps = Object.assign({}, nextOwnProps)
+
+        // and add to props
+        if (selectors) {
           Object.keys(selectors).forEach(selectorKey => {
             nextProps[selectorKey] = selectors[selectorKey](nextState, nextOwnProps)
           })
