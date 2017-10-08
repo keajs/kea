@@ -7,6 +7,11 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.26.0 - 2017-10-08
+### Changed
+- Add support for specifying your own compose enhancer in `getStore()`, e.g. for [remote-redux-devtools](https://github.com/zalmoxisus/remote-redux-devtools#when-to-use-devtools-compose-helper)
+- A lot of code refactoring. The plugins API changed a bit, so upgrade your `kea-saga` and `kea-thunk` packages accordingly.
+
 ## 0.25.0 - 2017-09-29
 ### Plugin support!
 - Kea now supports plugins!
