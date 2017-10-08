@@ -3,15 +3,15 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { keaReducer } from '../reducer'
 import { installedPlugins } from '../plugins'
 
-const reduxDevTools = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
+const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
 
 const defaultOptions = {
   paths: ['kea', 'scenes'],
+  reducers: {},
   middleware: [],
-  compose: [
-    reduxDevTools
-  ],
-  reducers: {}
+  compose: reduxDevToolsCompose,
+  enhancers: []
 }
 
 export function getStore (opts = {}) {
@@ -29,18 +29,16 @@ export function getStore (opts = {}) {
     plugin.beforeReduxStore && plugin.beforeReduxStore(options)
   })
 
-  let finalCreateStore
-
-  // combine middleware
+  // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
-    options.compose = [applyMiddleware(...options.middleware)].concat(options.compose)
+    options.enhancers = [applyMiddleware(...options.middleware)].concat(options.enhancers)
   }
 
-  if (options.compose.length > 0) {
-    finalCreateStore = compose(...options.compose)(createStore)
-  } else {
-    finalCreateStore = createStore
-  }
+  // use a special compose function?
+  const composeEnchancer = options.compose || compose
+
+  // create the store creator
+  const finalCreateStore = composeEnchancer(...options.enhancers)(createStore)
 
   // combine reducers
   const combinedReducers = combineReducers(options.reducers)
