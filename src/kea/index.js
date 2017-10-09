@@ -35,13 +35,15 @@ function createUniquePathFunction () {
 const hydrationAction = '@@kea/hydrate store'
 
 export function kea (_input) {
+  // a few helpers for later
+  const hasManualPath = !!_input.path
+  const hasConnect = !!(_input.connect)
+  const hasLogic = !!(_input.actions || _input.reducers || _input.selectors)
+
   // clone the input and add a path if needed
-  const input = Object.assign(_input.path ? {} : { path: createUniquePathFunction() }, _input)
+  const input = Object.assign(hasManualPath ? {} : { path: createUniquePathFunction() }, _input)
 
-  const hasConnect = !!(input.connect)
-  const hasDefinedPath = !!_input.path
-  const hasLogic = !!(input.actions || input.reducers || input.selectors)
-
+  // this will be filled in and passed to plugins as needed
   let output = {
     activePlugins: {},
     isSingleton: !input.key,
@@ -106,7 +108,7 @@ export function kea (_input) {
   if (output.isSingleton) {
     // we have reducer or selector inputs, create all output reducers and selectors
     // ... or the "path" is manually defined, so we must put something in redux
-    if (hasDefinedPath || input.reducers || input.selectors) {
+    if (hasManualPath || input.reducers || input.selectors) {
       // create the reducers from the input
       output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
@@ -381,7 +383,7 @@ export function kea (_input) {
   // - it's a singleton
   // - or we manually specified a path
   // - or it contains some data (e.g. reducers)
-  response.path = output.isSingleton && (hasDefinedPath || hasLogic) ? output.path : undefined
+  response.path = output.isSingleton && (hasManualPath || hasLogic) ? output.path : undefined
 
   response.constants = output.constants
   response.actions = output.actions
