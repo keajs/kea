@@ -23,11 +23,12 @@
     }
   ],
   "scripts": {
-    "build": "npm run lint && npm run build:cjs && npm run build:es",
+    "build": "npm run lint && concurrently --kill-others \"npm run build:cjs\" \"npm run build:es\"",
     "build:cjs": "babel src --out-dir lib",
     "build:es": "BABEL_ENV=es babel src --out-dir es",
-    "start": "BABEL_ENV=es babel -w src --out-dir es",
+    "start": "concurrently --kill-others \"npm run start:cjs\" \"npm run start:es\"",
     "start:cjs": "babel -w src --out-dir lib",
+    "start:es": "BABEL_ENV=es babel -w src --out-dir es",
     "size": "size-limit",
     "test": "jest",
     "lint": "eslint src/**",
@@ -67,6 +68,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "concurrently": "^3.5.0",
     "enzyme": "^2.9.1",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
