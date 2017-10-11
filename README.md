@@ -1,6 +1,6 @@
 ![NPM Version](https://img.shields.io/npm/v/kea.svg)
 
-![Kea Logo](https://kea.rocks/img/logo.png)
+![Kea Logo](https://raw.githubusercontent.com/keajs/kea-website/master/app/assets/logo.svg)
 
 A `kea` is two things:
 
