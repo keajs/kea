@@ -41,7 +41,7 @@ export function kea (_input) {
   const hasLogic = !!(_input.actions || _input.reducers || _input.selectors)
 
   // clone the input and add a path if needed
-  const input = Object.assign(hasManualPath ? {} : { path: createUniquePathFunction() }, _input)
+  const input = Object.assign({}, _input, hasManualPath ? {} : { path: createUniquePathFunction() })
 
   // this will be filled in and passed to plugins as needed
   let output = {
