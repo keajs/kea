@@ -23,6 +23,17 @@ class SampleComponent extends Component {
   }
 }
 
+class ActionComponent extends Component {
+  render () {
+    return (
+      <div>
+        <div className='actions'>{Object.keys(this.actions).sort().join(',')}</div>
+        <div className='props'>{Object.keys(this.props).sort().join(',')}</div>
+      </div>
+    )
+  }
+}
+
 beforeEach(() => {
   resetKeaCache()
 })
@@ -211,6 +222,40 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+
+  wrapper.unmount()
+})
+
+test('doubly connected actions are merged', () => {
+  const store = getStore()
+
+  const firstLogic = kea({
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  const secondLogic = kea({
+    actions: ({ constants }) => ({
+      updateNameAgain: name => ({ name })
+    })
+  })
+
+  const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent />
+    </Provider>
+  )
+
+  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
+  expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
 
   wrapper.unmount()
 })

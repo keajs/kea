@@ -326,7 +326,7 @@ export function kea (_input) {
 
         // nothing was in the cache, so create them
         if (!actions) {
-          actions = {}
+          actions = nextOwnProps.actions ? Object.assign({}, nextOwnProps.actions) : {}
 
           // pass conneted actions as they are, just wrap with dispatch
           const connectedActionKeys = Object.keys(output.connected.actions)
