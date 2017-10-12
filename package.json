@@ -32,7 +32,8 @@
     "size": "size-limit",
     "test": "jest",
     "lint": "eslint src/**",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "postinstall": "opencollective postinstall"
   },
   "files": [
     "es",
@@ -49,7 +50,8 @@
     ]
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0"
+    "babel-runtime": "^6.26.0",
+    "opencollective": "^1.0.3"
   },
   "peerDependencies": {
     "prop-types": "*",
@@ -89,5 +91,10 @@
     "redux-saga": "^0.15.6",
     "reselect": "^3.0.1",
     "size-limit": "^0.11.3"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/kea",
+    "logo": "https://opencollective.com/opencollective/logo.txt"
   }
 }
