@@ -41,7 +41,7 @@ export function kea (_input) {
   const hasLogic = !!(_input.actions || _input.reducers || _input.selectors)
 
   // clone the input and add a path if needed
-  const input = Object.assign(hasManualPath ? {} : { path: createUniquePathFunction() }, _input)
+  const input = Object.assign({}, _input, hasManualPath ? {} : { path: createUniquePathFunction() })
 
   // this will be filled in and passed to plugins as needed
   let output = {
@@ -326,7 +326,7 @@ export function kea (_input) {
 
         // nothing was in the cache, so create them
         if (!actions) {
-          actions = {}
+          actions = nextOwnProps.actions ? Object.assign({}, nextOwnProps.actions) : {}
 
           // pass conneted actions as they are, just wrap with dispatch
           const connectedActionKeys = Object.keys(output.connected.actions)
