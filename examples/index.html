@@ -226,6 +226,25 @@ h2, h3 {
     header.body-header nav a.logo {
     padding: 5px;
 }
+
+    header.body-header nav a.opencollective {
+    color: #388e3c;
+}
+
+    header.body-header nav a .short-text {
+        display: none;
+}
+
+@media (max-width: 500px) {
+
+    header.body-header nav a .long-text {
+          display: none;
+    }
+
+    header.body-header nav a .short-text {
+          display: inline-block;
+    }
+}
 main section.with-sidebar {
     border-top: 1px solid #e0e0e0;
 
@@ -250,6 +269,9 @@ main section.with-sidebar aside.kea-sidebar {
               box-sizing: border-box;
       padding: 10px;
       float: left;
+    }
+main section.with-sidebar .content {
+      padding-bottom: 20px;
     }
 main section.with-sidebar .content.with-sidebar {
       display: block;
@@ -303,6 +325,14 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
+footer {
+  padding: 1px 20px;
+  color: #fff;
+  background: #3a72a5;
+}
+footer a {
+    color: #ffff00;
+  }
 </style><style type="text/css">/* Make clicks pass-through */
 #nprogress {
   pointer-events: none;
@@ -767,7 +797,7 @@ aside.kea-sidebar nav ul li a:hover {
 }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="" href="/guide">Docs</a><a class="active" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Examples</strong><ul><li><a aria-current="true" href="/examples/todos" class="active">TodoMVC</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/tree/master/app/scenes/examples/todos" target="_blank">source</a></small></li><li><a aria-current="false" href="/examples/github">Github</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/blob/master/app/scenes/examples/github/index.js" target="_blank">source</a></small></li></ul></div></nav></aside><div class="content with-sidebar darker"><div><div class="todo-scene"><section class="todoapp"><header class="header"><h1>todos</h1><input class="new-todo" placeholder="What needs to be done?"></header></section><footer class="info"><p>Double-click to edit a todo</p><p>Created by <a href="https://github.com/mariusandra">mariusandra</a></p></footer></div></div></div></section></main></div></div>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="" href="/guide">Docs</a><a class="active" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Examples</strong><ul><li><a aria-current="true" href="/examples/todos" class="active">TodoMVC</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/tree/master/app/scenes/examples/todos" target="_blank">source</a></small></li><li><a aria-current="false" href="/examples/github">Github</a><small style="margin-left: 10px;"><a href="https://github.com/keajs/kea-website/blob/master/app/scenes/examples/github/index.js" target="_blank">source</a></small></li></ul></div></nav></aside><div class="content with-sidebar darker"><div><div class="todo-scene"><section class="todoapp"><header class="header"><h1>todos</h1><input class="new-todo" placeholder="What needs to be done?"></header></section><footer class="info"><p>Double-click to edit a todo</p><p>Created by <a href="https://github.com/mariusandra">mariusandra</a></p></footer></div></div></div></section></main><footer><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 

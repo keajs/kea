@@ -226,6 +226,25 @@ h2, h3 {
     header.body-header nav a.logo {
     padding: 5px;
 }
+
+    header.body-header nav a.opencollective {
+    color: #388e3c;
+}
+
+    header.body-header nav a .short-text {
+        display: none;
+}
+
+@media (max-width: 500px) {
+
+    header.body-header nav a .long-text {
+          display: none;
+    }
+
+    header.body-header nav a .short-text {
+          display: inline-block;
+    }
+}
 main section.with-sidebar {
     border-top: 1px solid #e0e0e0;
 
@@ -250,6 +269,9 @@ main section.with-sidebar aside.kea-sidebar {
               box-sizing: border-box;
       padding: 10px;
       float: left;
+    }
+main section.with-sidebar .content {
+      padding-bottom: 20px;
     }
 main section.with-sidebar .content.with-sidebar {
       display: block;
@@ -303,6 +325,14 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
+footer {
+  padding: 1px 20px;
+  color: #fff;
+  background: #3a72a5;
+}
+footer a {
+    color: #ffff00;
+  }
 </style><style type="text/css">/* Make clicks pass-through */
 #nprogress {
   pointer-events: none;
@@ -427,7 +457,7 @@ aside.kea-sidebar nav ul li a:hover {
 }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://www.github.com/keajs/kea" target="_blank">Github</a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" aria-current="true" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a class="active" aria-current="true" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="sliders-scene"><div class="description"><h2>Example #3 - Sliders</h2><p>This example demonstrates side effects through sagas.</p><p>We will build a slider that will update its image every 5 seconds.</p><h2>Final result</h2><p>The final result will look like this:</p><div class="demo"><div class="slider-container"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div></div><p>Whenever you press any of the dots the 5 second counter will reset.</p><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
 yarn add kea-saga redux-saga
 
 <span class="hljs-comment"># if using npm</span>
@@ -637,7 +667,7 @@ import images from <span class="hljs-string">&apos;./images&apos;</span>
   }
 }
 
-</code></pre><p>Next page: <a href="/guide/github">Github API</a></p></div></div></div></div></section></main></div></div>
+</code></pre><p>Next page: <a href="/guide/github">Github API</a></p></div></div></div></div></section></main><footer><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 
