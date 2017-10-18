@@ -37,7 +37,7 @@ Thank you to all our sponsors! Your continued support makes this project possibl
 <a href="https://opencollective.com/kea/sponsor/1/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/kea/sponsor/2/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/2/avatar.svg"></a>
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/kea#sponsor)]
+[Support this project by becoming a sponsor](https://opencollective.com/kea#sponsor). Your logo will show up here and on [kea.js.org](https://kea.js.org) with a link to your website.
 
 
 # How does it work?
