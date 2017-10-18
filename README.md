@@ -29,15 +29,15 @@ Kea is a state management library for React. It *empowers* Redux, making it as e
 Compare it to other state management libraries: [Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.](https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02)
 
 
-## Sponsors
-
-Thank you to all our sponsors! Your continued support makes this project possible!
+## Thank you to our sponsors!
 
 <a href="https://opencollective.com/kea/sponsor/0/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/kea/sponsor/1/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/kea/sponsor/2/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/2/avatar.svg"></a>
 
-[Support this project by becoming a sponsor](https://opencollective.com/kea#sponsor). Your logo will show up here and on [kea.js.org](https://kea.js.org) with a link to your website.
+[Support this project by becoming a sponsor](https://opencollective.com/kea#sponsor).
+
+Your logo will show up here and on [kea.js.org](https://kea.js.org) with a link to your website.
 
 
 # How does it work?
