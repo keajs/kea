@@ -7,6 +7,10 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.26.5 - 2017-10-21
+### Fixed
+- Only mount the reducer in redux, if there's an actual reducer or a manually given path
+
 ## 0.26.3 - 2017-10-12
 ### Fixed
 - Now if you pass a wrapped component (`logic(Component)`) an `actions` prop, its conents be merged with the created actions prop.
