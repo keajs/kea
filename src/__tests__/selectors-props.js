@@ -60,5 +60,8 @@ test('selectors have access to the component\'s props', () => {
   expect(wrapper.find('#book-1').text()).toEqual('book1')
   expect(wrapper.find('#book-2').text()).toEqual('book2')
 
+  // only one of the components should be in the store, as only one has a reducer
+  expect(Object.keys(store.getState().kea._kea).length).toEqual(1)
+
   wrapper.unmount()
 })

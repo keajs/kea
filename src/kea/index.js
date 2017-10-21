@@ -39,6 +39,7 @@ export function kea (_input) {
   const hasManualPath = !!_input.path
   const hasConnect = !!(_input.connect)
   const hasLogic = !!(_input.actions || _input.reducers || _input.selectors)
+  const shouldMountReducer = hasManualPath || !!_input.reducers
 
   // clone the input and add a path if needed
   const input = Object.assign({}, _input, hasManualPath ? {} : { path: createUniquePathFunction() })
@@ -157,7 +158,9 @@ export function kea (_input) {
       }
 
       // hook up the reducer to the global kea reducers object
-      addReducer(output.path, output.reducer, true)
+      if (shouldMountReducer) {
+        addReducer(output.path, output.reducer, true)
+      }
     }
 
     installedPlugins.forEach(plugin => {
@@ -239,10 +242,10 @@ export function kea (_input) {
           // if we need to add it, create "dummy" selectors for the default values until then
 
           // is the reducer created? if we have "true" in the cache, it's definitely created
-          let reduxMounted = !!getCache(joinedPath, 'reduxMounted')
+          let reduxMounted = shouldMountReducer && !!getCache(joinedPath, 'reduxMounted')
 
-          // if it's not let's double check. maybe it is now?
-          if (!reduxMounted) {
+          // if it's not and should eventually be, let's double check. maybe it is now?
+          if (shouldMountReducer && !reduxMounted) {
             try {
               reduxMounted = typeof selector(nextState) !== 'undefined'
             } catch (e) {
@@ -260,7 +263,7 @@ export function kea (_input) {
             const reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
             // not in redux, so add the reducer!
-            if (!reduxMounted) {
+            if (shouldMountReducer && !reduxMounted) {
               const reducer = combineReducerObjects(path, reducerObjects)
               addReducer(path, reducer, true)
 
