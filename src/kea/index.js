@@ -266,11 +266,11 @@ export function kea (_input) {
             if (shouldMountReducer && !reduxMounted) {
               const reducer = combineReducerObjects(path, reducerObjects)
               addReducer(path, reducer, true)
+            }
 
-              // send a hydration action to redux, to make sure that the store is up to date on the next render
-              if (!isSyncedWithStore()) {
-                dispatch({ type: hydrationAction })
-              }
+            // send a hydration action to redux, to make sure that the store is up to date on the next render
+            if (!isSyncedWithStore()) {
+              dispatch({ type: hydrationAction })
             }
 
             // get connected selectors and selectors created from the reducer
