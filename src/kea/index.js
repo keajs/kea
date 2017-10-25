@@ -64,8 +64,8 @@ export function kea (_input) {
   }
 
   // check which plugins are active based on the input
-  installedPlugins.forEach(plugin => {
-    output.activePlugins[plugin.name] = plugin.isActive(input, output)
+  installedPlugins.isActive.forEach(isActive => {
+    output.activePlugins[isActive._name] = isActive(input, output)
   })
 
   // set the constants
@@ -87,9 +87,7 @@ export function kea (_input) {
     Object.assign(output, output.connected)
 
     // run the afterConnect plugin hook
-    installedPlugins.forEach(plugin => {
-      plugin.afterConnect && plugin.afterConnect(output.activePlugins[plugin.name], input, output)
-    })
+    installedPlugins.afterConnect.forEach(f => f(input, output))
   }
 
   // we don't know yet if it's going to be a singleton (no key) or inline (key)
@@ -163,9 +161,7 @@ export function kea (_input) {
       }
     }
 
-    installedPlugins.forEach(plugin => {
-      plugin.afterCreateSingleton && plugin.afterCreateSingleton(output.activePlugins[plugin.name], input, output)
-    })
+    installedPlugins.afterCreateSingleton.forEach(f => f(input, output))
   }
 
   // we will return this function which can wrap the logic store around a component
@@ -192,9 +188,7 @@ export function kea (_input) {
 
       // Since Klass == Component, tell the plugins to add themselves to it.
       // if it's a stateless functional component, we'll do it in the end with Redux's Connect class
-      installedPlugins.forEach(plugin => {
-        plugin.injectToClass && plugin.injectToClass(output.activePlugins[plugin.name], input, output, Klass)
-      })
+      installedPlugins.injectToClass.forEach(f => f(input, output, Klass))
     }
 
     const selectorFactory = (dispatch, options) => {
@@ -374,9 +368,7 @@ export function kea (_input) {
 
     // If we were wrapping a stateless functional React component, add the plugin code to the connected component.
     if (isStateless(Klass)) {
-      installedPlugins.forEach(plugin => {
-        plugin.injectToConnectedClass && plugin.injectToConnectedClass(output.activePlugins[plugin.name], input, output, KonnektedKlass)
-      })
+      installedPlugins.injectToConnectedClass.forEach(f => f(input, output, KonnektedKlass))
     }
 
     return KonnektedKlass
@@ -407,9 +399,7 @@ export function kea (_input) {
   response._hasKeaLogic = hasLogic
   response._keaPlugins = output.activePlugins
 
-  installedPlugins.forEach(plugin => {
-    plugin.addToResponse && plugin.addToResponse(output.activePlugins[plugin.name], input, output, response)
-  })
+  installedPlugins.addToResponse.forEach(f => f(input, output, response))
 
   return response
 }

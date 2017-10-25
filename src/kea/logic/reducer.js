@@ -70,7 +70,7 @@ export function combineReducerObjects (path, objects) {
     if (typeof object.reducer === 'function') {
       reducers[key] = object.reducer
     } else {
-      reducers[key] = path && object.persist
+      reducers[key] = path && object.options && object.options.persist
         ? createPersistentReducer(object.reducer, object.value, path.join('.') + key)
         : createReducer(object.reducer, object.value)
     }
@@ -99,7 +99,7 @@ export function convertReducerArrays (reducers) {
         value: s[0],
         type: s[1], // proptype
         reducer: s[3] || s[2]
-      }, s[3] ? s[2] : {}), keys[i])
+      }, s[3] ? { options: s[2] } : {}), keys[i])
     }
   }
 
