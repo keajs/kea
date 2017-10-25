@@ -37,7 +37,7 @@ export function combineReducerObjects (path, objects) {
   }
 }
 
-// input: object with values: [value, type, options, reducer]
+// input: object with values: [value, (type), (options), reducer]
 // output: object with values: { value, type, reducer, ...options }
 export function convertReducerArrays (reducers) {
   if (!reducers) {
@@ -48,12 +48,23 @@ export function convertReducerArrays (reducers) {
   for (let i = 0; i < keys.length; i++) {
     const s = reducers[keys[i]]
     if (Array.isArray(s)) {
-      // s = [ value, type, options, reducer ]
-      reducers[keys[i]] = warnIfUndefinedActionCreator(Object.assign({
-        value: s[0],
-        type: s[1], // proptype
-        reducer: createReducer(s[3] || s[2], s[0])
-      }, s[3] ? { options: s[2] } : {}), keys[i])
+      // s = [ value, (type), (options), reducer ]
+      const value = s[0]
+      const reducer = s[s.length - 1]
+      const type = typeof s[1] === 'function' ? s[1] : undefined
+      const options = typeof s[s.length - 2] === 'object' ? s[s.length - 2] : undefined
+
+      let reducerObject = {
+        value: value,
+        type: type,
+        reducer: createReducer(reducer, value)
+      }
+
+      if (options) {
+        reducerObject.options = options
+      }
+
+      reducers[keys[i]] = warnIfUndefinedActionCreator(reducerObject, keys[i])
     }
   }
 
