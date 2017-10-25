@@ -58,9 +58,8 @@ test('singleton logic has all the right properties', () => {
   expect(response.defaults.name).toEqual('chirpy')
 
   const nameReducer = response.reducers.name
-  expect(Object.keys(nameReducer)).toEqual([ updateName.toString() ])
-  expect(nameReducer[updateName.toString()]).toBeDefined()
-  expect(nameReducer[updateName.toString()]('', { name: 'newName' })).toBe('newName')
+  expect(nameReducer).toBeDefined()
+  expect(nameReducer('', updateName('newName'))).toBe('newName')
 
   // TODO: add defaults and propTypes
 

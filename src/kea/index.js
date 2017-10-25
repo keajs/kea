@@ -112,9 +112,7 @@ export function kea (_input) {
       output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
       // run plugins on the created reducer objects
-      installedPlugins.interceptReducerObjects.forEach(f => {
-        output.created.reducerObjects = f(input, output, output.created.reducerObjects)
-      })
+      installedPlugins.mutateReducerObjects.forEach(f => f(input, output, output.created.reducerObjects))
 
       // add propTypes
       Object.keys(output.created.reducerObjects).forEach(reducerKey => {
@@ -131,9 +129,7 @@ export function kea (_input) {
       output.reducer = combineReducerObjects(output.path, output.created.reducerObjects)
 
       // run plugins on the created reducer
-      installedPlugins.interceptReducer.forEach(f => {
-        output.reducer = f(input, output, output.reducer)
-      })
+      installedPlugins.mutateReducer.forEach(f => f(input, output, output.reducer))
 
       // add a global selector for the path
       output.selector = (state) => pathSelector(output.path, state)
@@ -267,18 +263,14 @@ export function kea (_input) {
             let reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
             // run plugins on the created reducer objects
-            installedPlugins.interceptReducerObjects.forEach(f => {
-              reducerObjects = f(input, output, reducerObjects)
-            })
+            installedPlugins.mutateReducerObjects.forEach(f => f(input, output, reducerObjects))
 
             // not in redux, so add the reducer!
             if (shouldMountReducer && !reduxMounted) {
               let reducer = combineReducerObjects(path, reducerObjects)
 
               // run plugins on the created reducer
-              installedPlugins.interceptReducer.forEach(f => {
-                reducer = f(input, output, reducer)
-              })
+              installedPlugins.mutateReducer.forEach(f => f(input, output, reducer))
 
               addReducer(path, reducer, true)
             }

@@ -14,11 +14,11 @@ export let installedPlugins = {
   // f(input, output)
   afterCreateSingleton: [],
 
-  // f(input, output, reducerObjects) => reducerObjects
-  interceptReducerObjects: [],
+  // f(input, output, reducerObjects)
+  mutateReducerObjects: [],
 
-  // f(input, output, reducer) => reducer
-  interceptReducer: [],
+  // f(input, output, reducer)
+  mutateReducer: [],
 
   // f(input, output, Klass)
   injectToClass: [],

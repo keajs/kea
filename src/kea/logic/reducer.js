@@ -1,20 +1,5 @@
 import { combineReducers } from 'redux'
 
-// storageAvailable('localStorage') == true or false
-function storageAvailable (type) {
-  try {
-    var storage = window[type]
-    var x = '__storage_test__'
-    storage.setItem(x, x)
-    storage.removeItem(x)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
-let storageCache = {}
-
 function warnIfUndefinedActionCreator (object, property) {
   if (process.env.NODE_ENV !== 'production') {
     if (object.reducer.undefined !== undefined) {
@@ -36,44 +21,13 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
-// create reducer function from such an object { [action]: (state, payload) => state }
-// with the added benefit that it's stored in localStorage
-export function createPersistentReducer (actions, defaultValue, key) {
-  if (storageAvailable('localStorage')) {
-    let storage = window.localStorage
-
-    const value = storage[key] ? JSON.parse(storage[key]) : defaultValue
-    storageCache[key] = value
-
-    const reducer = createReducer(actions, value)
-
-    return (state, payload) => {
-      const result = reducer(state, payload)
-      if (storageCache[key] !== result) {
-        storageCache[key] = result
-        storage[key] = JSON.stringify(result)
-      }
-      return result
-    }
-  } else {
-    return createReducer(actions, defaultValue)
-  }
-}
-
 // input: object with values: { value, type, reducer, ...options } or function(state, action) {}
 // output: combined reducer function (state, action) {}
 export function combineReducerObjects (path, objects) {
   const reducers = {}
 
   Object.keys(objects).forEach(key => {
-    const object = objects[key]
-    if (typeof object.reducer === 'function') {
-      reducers[key] = object.reducer
-    } else {
-      reducers[key] = path && object.options && object.options.persist
-        ? createPersistentReducer(object.reducer, object.value, path.join('.') + key)
-        : createReducer(object.reducer, object.value)
-    }
+    reducers[key] = objects[key].reducer
   })
 
   if (Object.keys(reducers).length > 0) {
@@ -98,7 +52,7 @@ export function convertReducerArrays (reducers) {
       reducers[keys[i]] = warnIfUndefinedActionCreator(Object.assign({
         value: s[0],
         type: s[1], // proptype
-        reducer: s[3] || s[2]
+        reducer: createReducer(s[3] || s[2], s[0])
       }, s[3] ? { options: s[2] } : {}), keys[i])
     }
   }
