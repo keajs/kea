@@ -111,6 +111,11 @@ export function kea (_input) {
       // create the reducers from the input
       output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
+      // run plugins on the created reducer objects
+      installedPlugins.interceptReducerObjects.forEach(f => {
+        output.created.reducerObjects = f(input, output, output.created.reducerObjects)
+      })
+
       // add propTypes
       Object.keys(output.created.reducerObjects).forEach(reducerKey => {
         const reducerObject = output.created.reducerObjects[reducerKey]
@@ -124,6 +129,11 @@ export function kea (_input) {
 
       // combine the created reducers into one
       output.reducer = combineReducerObjects(output.path, output.created.reducerObjects)
+
+      // run plugins on the created reducer
+      installedPlugins.interceptReducer.forEach(f => {
+        output.reducer = f(input, output, output.reducer)
+      })
 
       // add a global selector for the path
       output.selector = (state) => pathSelector(output.path, state)
@@ -254,11 +264,22 @@ export function kea (_input) {
             const wrappedOutput = Object.assign({}, output, { path, key, props: nextOwnProps })
 
             // we can't just recycle this from the singleton, as the reducers can have defaults that depend on props
-            const reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
+            let reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
+
+            // run plugins on the created reducer objects
+            installedPlugins.interceptReducerObjects.forEach(f => {
+              reducerObjects = f(input, output, reducerObjects)
+            })
 
             // not in redux, so add the reducer!
             if (shouldMountReducer && !reduxMounted) {
-              const reducer = combineReducerObjects(path, reducerObjects)
+              let reducer = combineReducerObjects(path, reducerObjects)
+
+              // run plugins on the created reducer
+              installedPlugins.interceptReducer.forEach(f => {
+                reducer = f(input, output, reducer)
+              })
+
               addReducer(path, reducer, true)
             }
 
