@@ -1,11 +1,15 @@
 {
-  "presets": [["env", { "loose": true }], "react"],
-  "plugins": ["transform-object-rest-spread", "transform-class-properties", ["transform-runtime", { "useESModules": true }]],
-
   "env": {
+    "test": {
+      "presets": [["env", { "loose": true }], "react"]
+    },
+
+    "cjs": {
+      "presets": [["env", { "loose": true }], "react"]
+    },
+
     "es": {
-      "presets": [["env", { "loose": true, "modules": false }], "react"],
-      "plugins": ["transform-object-rest-spread", "transform-class-properties", "transform-runtime"]
+      "presets": [["env", { "loose": true, "modules": false }], "react"]
     }
   }
 }
