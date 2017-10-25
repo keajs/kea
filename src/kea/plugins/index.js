@@ -1,4 +1,7 @@
-export let installedPlugins = {
+export let globalPlugins = {
+  // all plugins that are activated
+  _activated: {},
+
   // f(options)
   beforeReduxStore: [],
 
@@ -27,19 +30,30 @@ export let installedPlugins = {
   injectToConnectedClass: [],
 
   // f(input, output, response)
-  addToResponse: []
-}
-let installedPluginHash = {}
+  addToResponse: [],
 
-export function activatePlugin (plugin) {
-  if (!installedPluginHash[plugin.name]) {
+  // f()
+  clearCache: []
+}
+
+export function activatePlugin (plugin, pluginTarget = globalPlugins) {
+  if (!pluginTarget._activated[plugin.name]) {
     Object.keys(plugin).forEach(key => {
       if (typeof plugin[key] === 'function') {
         plugin[key]._name = plugin.name
-        installedPlugins[key].push(plugin[key])
+        pluginTarget[key].push(plugin[key])
       }
     })
 
-    installedPluginHash[plugin.name] = true
+    pluginTarget._activated[plugin.name] = true
   }
+}
+
+export function clearActivatedPlugins (pluginTarget = globalPlugins) {
+  pluginTarget.clearCache.forEach(f => f())
+
+  Object.keys(pluginTarget).forEach(key => {
+    pluginTarget[key] = []
+  })
+  pluginTarget._activated = {}
 }

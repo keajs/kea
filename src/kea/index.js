@@ -15,7 +15,7 @@ import { setCache, getCache } from './cache'
 
 import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
 
-import { installedPlugins } from './plugins'
+import { globalPlugins, activatePlugin } from './plugins'
 
 function isStateless (Component) {
   return !Component.prototype.render
@@ -63,8 +63,17 @@ export function kea (_input) {
     defaults: {}
   }
 
+  let plugins = globalPlugins
+
+  if (input.plugins) {
+    plugins = Object.assign({}, globalPlugins)
+    input.plugins.forEach(plugin => {
+      activatePlugin(plugin, plugins)
+    })
+  }
+
   // check which plugins are active based on the input
-  installedPlugins.isActive.forEach(isActive => {
+  plugins.isActive.forEach(isActive => {
     output.activePlugins[isActive._name] = isActive(input, output)
   })
 
@@ -87,7 +96,7 @@ export function kea (_input) {
     Object.assign(output, output.connected)
 
     // run the afterConnect plugin hook
-    installedPlugins.afterConnect.forEach(f => f(input, output))
+    plugins.afterConnect.forEach(f => f(input, output))
   }
 
   // we don't know yet if it's going to be a singleton (no key) or inline (key)
@@ -112,7 +121,7 @@ export function kea (_input) {
       output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
       // run plugins on the created reducer objects
-      installedPlugins.mutateReducerObjects.forEach(f => f(input, output, output.created.reducerObjects))
+      plugins.mutateReducerObjects.forEach(f => f(input, output, output.created.reducerObjects))
 
       // add propTypes
       Object.keys(output.created.reducerObjects).forEach(reducerKey => {
@@ -129,7 +138,7 @@ export function kea (_input) {
       output.reducer = combineReducerObjects(output.path, output.created.reducerObjects)
 
       // run plugins on the created reducer
-      installedPlugins.mutateReducer.forEach(f => f(input, output, output.reducer))
+      plugins.mutateReducer.forEach(f => f(input, output, output.reducer))
 
       // add a global selector for the path
       output.selector = (state) => pathSelector(output.path, state)
@@ -167,7 +176,7 @@ export function kea (_input) {
       }
     }
 
-    installedPlugins.afterCreateSingleton.forEach(f => f(input, output))
+    plugins.afterCreateSingleton.forEach(f => f(input, output))
   }
 
   // we will return this function which can wrap the logic store around a component
@@ -194,7 +203,7 @@ export function kea (_input) {
 
       // Since Klass == Component, tell the plugins to add themselves to it.
       // if it's a stateless functional component, we'll do it in the end with Redux's Connect class
-      installedPlugins.injectToClass.forEach(f => f(input, output, Klass))
+      plugins.injectToClass.forEach(f => f(input, output, Klass))
     }
 
     const selectorFactory = (dispatch, options) => {
@@ -263,14 +272,14 @@ export function kea (_input) {
             let reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
             // run plugins on the created reducer objects
-            installedPlugins.mutateReducerObjects.forEach(f => f(input, output, reducerObjects))
+            plugins.mutateReducerObjects.forEach(f => f(input, output, reducerObjects))
 
             // not in redux, so add the reducer!
             if (shouldMountReducer && !reduxMounted) {
               let reducer = combineReducerObjects(path, reducerObjects)
 
               // run plugins on the created reducer
-              installedPlugins.mutateReducer.forEach(f => f(input, output, reducer))
+              plugins.mutateReducer.forEach(f => f(input, output, reducer))
 
               addReducer(path, reducer, true)
             }
@@ -381,7 +390,7 @@ export function kea (_input) {
 
     // If we were wrapping a stateless functional React component, add the plugin code to the connected component.
     if (isStateless(Klass)) {
-      installedPlugins.injectToConnectedClass.forEach(f => f(input, output, KonnektedKlass))
+      plugins.injectToConnectedClass.forEach(f => f(input, output, KonnektedKlass))
     }
 
     return KonnektedKlass
@@ -412,7 +421,7 @@ export function kea (_input) {
   response._hasKeaLogic = hasLogic
   response._keaPlugins = output.activePlugins
 
-  installedPlugins.addToResponse.forEach(f => f(input, output, response))
+  plugins.addToResponse.forEach(f => f(input, output, response))
 
   return response
 }

@@ -2,6 +2,7 @@ import { kea } from './kea'
 import { resetCache } from './kea/cache'
 import { clearReducerCache } from './kea/reducer'
 import { clearActionCache } from './kea/actions/create'
+import { clearActivatedPlugins } from './kea/plugins'
 
 export { kea } from './kea'
 export { keaReducer } from './kea/reducer'
@@ -19,4 +20,5 @@ export function resetKeaCache () {
   resetCache()
   clearActionCache()
   clearReducerCache()
+  clearActivatedPlugins()
 }
