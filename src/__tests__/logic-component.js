@@ -300,14 +300,3 @@ test('no protypes needed', () => {
 
   wrapper.unmount()
 })
-
-test('getStore can be passed initial state', () => {
-  const preloadedState = {
-    'kea': {},
-    'scenes': { 'something': { 'name': 'chirpy' } }
-  }
-  const store = getStore({
-    preloadedState
-  })
-  expect(store.getState()).toEqual(preloadedState)
-})
