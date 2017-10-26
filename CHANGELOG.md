@@ -7,6 +7,14 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 0.27.0 - 2017-10-25
+### Changed
+- Bigger changes to the plugin system. Please upgrade all plugins (e.g. `kea-saga`) to the supported versions!
+- Plugins must now be manually installed by either passing them to the `plugins` array in `getStore`, running them through `activatePlugin()` or importing from `'kea-plugin/install'`. See the README of each plugin for details.
+- Some plugins can now also be installed just for individual logic stores, e.g. [`kea-localstorage`](https://github.com/kea/kea-localstorage).
+- **BREAKING** Removed support for `{ persist: true }` to store the output of reducers in LocalStorage. Use the [`kea-localstorage`](https://github.com/kea/kea-localstorage) plugin to restore support for this feature.
+- PropTypes are no longer necessary when defining reducers.
+
 ## 0.26.5 - 2017-10-21
 ### Fixed
 - Only mount the reducer in redux, if there's an actual reducer or a manually given path
