@@ -409,75 +409,39 @@ footer.opencollective-footer a {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideFaq"); </script></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("pluginsLocalStorage"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a class="active" aria-current="true" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2>Frequently Asked Questions</h2><ul><li><a href="#react-router">Using React-Router (V4) routes within kea connected components</a></li></ul><p>Got more questions to add? Think something belongs here? <a href="https://github.com/keajs/kea/issues">Raise an issue!</a></p><h3 id="react-router">Using React-Router (V4) routes within kea connected components</h3><p>If your kea component contains routes from react-router, they will not automatically receive changes to the current location that&apos;s passed implicitly by React context due to how React optimizes for rendering. This will cause React Router&apos;s location-aware components out of sync, as in the following example:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React,  { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a class="active" aria-current="true" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>LocalStorage</h2><p>You may store the content of your reducers in LocalStorage with the <a href="https://github.com/keajs/kea-localstorage"><code>kea-localstorage</code></a> plugin.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-localstorage"><code>kea-localstorage</code></a> package:</p><pre><code class="bash hljs">yarn add kea-localstorage
+npm install --save kea-localstorage
+</code></pre><p>Then import <code>localStoragePlugin</code> from <code>kea-localstorage</code> in your <code>store.js</code> and add it to the plugins array in <code>getStore()</code></p><pre><code class="javascript hljs bash">import localStoragePlugin from <span class="hljs-string">&apos;kea-thunk&apos;</span>
 
-<span class="hljs-keyword">const</span> logic = kea({})
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Wrapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render() {
-    <span class="hljs-keyword">return</span>(
-      &lt;div&gt;{this.props.children}&lt;/div&gt;
-    )
-  }
-}
-
-<span class="hljs-keyword">const</span> Wrapper =  logic(_Wrapper) <span class="hljs-comment">// switch routes does not work</span>
-<span class="hljs-comment">//const Wrapper = _Wrapper  // switch routes works</span>
-
-<span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
-  &lt;ConnectedRouter history={history}&gt;
-    &lt;Wrapper&gt;
-      &lt;ul&gt;
-        &lt;li&gt;&lt;Link to=&quot;/&quot;&gt;Home&lt;/Link&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;Link to=&quot;/foo&quot;&gt;Foo&lt;/Link&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;Link to=&quot;/bar&quot;&gt;Bar&lt;/Link&gt;&lt;/li&gt;        
-      &lt;/ul&gt;
-      &lt;Route exact path=&quot;/&quot; component={Home} /&gt;
-      &lt;Route path=&quot;/foo&quot; component={Foo} /&gt;
-      &lt;Route path=&quot;/bar&quot; component={Bar} /&gt;
-    &lt;/Wrapper&gt;    
-  &lt;/ConnectedRouter&gt;
-)</code></pre><h4>Quick Solution</h4><p>The easiest solution is to wrap the kea component with the withRouter() to remove the blocked states. This is not the most efficient solution.</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> Wrapper = withRouter(logic(_Wrapper))</code></pre><h4>Recommended Solution</h4><p>The more efficient method is to pass the location explicitly as a prop to the kea component. Here&apos;s one approach:</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> routeSelector = <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.router
-
-<span class="hljs-keyword">const</span> logic = kea({
-  <span class="hljs-attr">connect</span>: {
-    <span class="hljs-attr">props</span>: [
-      routeSelector, [
-        <span class="hljs-string">&apos;location&apos;</span>
-      ]
-    ]
-  },
-  <span class="hljs-comment">// other kea properties (e.g. actions, reducers, etc)</span>
+const store = getStore({
+  plugins: [
+    localStoragePlugin
+  ]
 })
+</code></pre><p>Alternatively you may skip installing it globally and only include in the logic stores that need this plugin</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+import localStoragePlugin from <span class="hljs-string">&apos;kea-thunk&apos;</span>
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Wrapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render() {
-    <span class="hljs-keyword">return</span>(
-      &lt;div&gt;{this.props.children}&lt;/div&gt;
-    )
-  }
-}
+const logic = kea({
+  plugins: [
+    localStoragePlugin
+  ],
 
-<span class="hljs-keyword">const</span> Wrapper = logic(_Wrapper) <span class="hljs-comment">// this will now work</span>
+  // actions, reducers, etc
+})
+</code></pre></div><div class="description"><h2>Usage</h2><p>To make a reducer persist in LocalStorage, your logic store <strong>must</strong> have a defined <code>path</code>.</p><p>Just add <code>{ persist: true }</code> as an option to your reducers, and it will be stored:</p><pre><code class="javascript hljs bash">const logic = kea({
+  actions: ({ constants }) =&gt; ({
+    updateName: name =&gt; ({ name })
+  }),
 
-<span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
-  &lt;ConnectedRouter history={history}&gt;
-    &lt;Wrapper&gt;
-      &lt;ul&gt;
-        &lt;li&gt;&lt;Link to=&quot;/&quot;&gt;Home&lt;/Link&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;Link to=&quot;/foo&quot;&gt;Foo&lt;/Link&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;Link to=&quot;/bar&quot;&gt;Bar&lt;/Link&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-      &lt;Route exact path=&quot;/&quot; component={Home} /&gt;
-      &lt;Route path=&quot;/foo&quot; component={Foo} /&gt;
-      &lt;Route path=&quot;/bar&quot; component={Bar} /&gt;
-    &lt;/Wrapper&gt;
-  &lt;/ConnectedRouter&gt;
-)
-</code></pre><p>The detailed description for how to do this can be found at <a href="https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md">Dealing with Update Blocking</a>.</p></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+  reducers: ({ actions, constants }) =&gt; ({
+    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, PropTypes.string, { persist: <span class="hljs-literal">true</span> }, {
+      [actions.updateName]: (state, payload) =&gt; payload.name
+    }]
+  })
+})
+</code></pre></div><div class="description"><h2>Example</h2><p>Change the text and refresh the page. The content should remain:</p><div class="demo"><input type="text" value="kea rocks!"></div></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 

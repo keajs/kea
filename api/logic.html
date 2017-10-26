@@ -325,12 +325,12 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-footer {
+footer.opencollective-footer {
   padding: 1px 20px;
   color: #fff;
   background: #3a72a5;
 }
-footer a {
+footer.opencollective-footer a {
     color: #ffff00;
   }
 </style><style type="text/css">/* Make clicks pass-through */
@@ -411,12 +411,17 @@ footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiLogic"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" aria-current="true" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" aria-current="true" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">import</span> localStoragePlugin <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea-localstorage&apos;</span>
 
 <span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic.js&apos;</span>
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
+  <span class="hljs-attr">plugins</span>: [
+    localStoragePlugin
+  ],
+
   <span class="hljs-attr">connect</span>: {
     <span class="hljs-attr">actions</span>: [
       otherLogic, [
@@ -454,7 +459,7 @@ footer a {
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
-    <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* optional options: { persist: true }, */</span> {
+    <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* with localStoragePlugin: { persist: true }, */</span> {
       <span class="hljs-comment">// operations</span>
       [actions.simpleAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.value <span class="hljs-comment">// return the new state,</span>
       [actions.complexAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
@@ -487,49 +492,16 @@ footer a {
       },
       PropTypes.object
     ]
-  }),
-
-  <span class="hljs-comment">// saga functions</span>
-
-  start: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// saga started or component mounted</span>
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)
-  },
-
-  <span class="hljs-attr">stop</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-comment">// saga cancelled or component unmounted</span>
-  },
-
-  <span class="hljs-attr">takeEvery</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.simpleAction]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-comment">// inline worker</span>
-    },
-    [actions.actionWithDynamicPayload]: workers.dynamicWorker
-  }),
-
-  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.actionWithStaticPayload]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-comment">// inline worker</span>
-    },
-    [actions.actionWithManyParameters]: workers.dynamicWorker
-  }),
-
-  <span class="hljs-attr">workers</span>: {
-    * dynamicWorker (action) {
-      <span class="hljs-keyword">const</span> { id, message } = action.payload <span class="hljs-comment">// if from takeEvery/takeLatest</span>
-      <span class="hljs-comment">// reference with workers.dynamicWorker</span>
-    },
-    <span class="hljs-attr">longerWayToDefine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-comment">// another way to define a worker</span>
-    }
-  },
-
-  <span class="hljs-attr">sagas</span>: [saga1, saga2]
+  })
 })
 
 <span class="hljs-comment">// index.js</span>
 <span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;scenes/my-random-scene/logic&apos;</span>
-</code></pre><h3>Options</h3><h4>path: <code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+</code></pre><h3>Options</h3><h4>plugins: <code>[]</code></h4><p>Plugins that only this logic store will use. See the <code>plugins</code> array in <code>getStore</code> on how to install global plugins.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
+plugins: [
+  localStoragePlugin
+]
+</code></pre><h4>path: <code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
 path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
 
 <span class="hljs-comment">// Output</span>
@@ -657,7 +629,7 @@ myRandomSceneLogic.selectors == {
   <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
   <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
 }
-</code></pre></div></div></div></section></main><footer><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 

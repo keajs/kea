@@ -325,12 +325,12 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-footer {
+footer.opencollective-footer {
   padding: 1px 20px;
   color: #fff;
   background: #3a72a5;
 }
-footer a {
+footer.opencollective-footer a {
     color: #ffff00;
   }
 </style><style type="text/css">/* Make clicks pass-through */
@@ -989,7 +989,7 @@ footer a {
     )
   }
 }
-</code></pre></div></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 10 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1089 stars, 30 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 3 stars, 5 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 2 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 0 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github</a></div></div><h2>Debounced countdown <small>with <a href="/effects/saga">sagas</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+</code></pre></div></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 11 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1090 stars, 31 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 3 stars, 5 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 2 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 0 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github</a></div></div><h2>Debounced countdown <small>with <a href="/effects/saga">sagas</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
 <span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
@@ -1101,7 +1101,7 @@ footer a {
     )
   }
 }
-</code></pre></div></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br>Read the guide: <a href="/guide/connected">Connected</a></div></div></div></div></div></section></main><footer><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre></div></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br>Read the guide: <a href="/guide/connected">Connected</a></div></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 

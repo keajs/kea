@@ -325,12 +325,12 @@ aside.kea-sidebar nav ul li a.active {
 aside.kea-sidebar nav ul li a:hover {
     text-decoration: underline;
 }
-footer {
+footer.opencollective-footer {
   padding: 1px 20px;
   color: #fff;
   background: #3a72a5;
 }
-footer a {
+footer.opencollective-footer a {
     color: #ffff00;
   }
 </style><style type="text/css">/* Make clicks pass-through */
@@ -411,13 +411,21 @@ footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsSaga"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a class="active" aria-current="true" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <code>kea-saga</code> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p><p>Also read the sections of the guide marked &quot;with kea-saga&quot; to learn more.</p></div><div class="description"><h2>Installation</h2><p>First install the <code>kea-saga</code> and <code>redux-saga</code> packages:</p><pre><code class="bash hljs">yarn add kea-saga redux-saga
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a class="active" aria-current="true" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p><p>Also read the sections of the guide marked &quot;with kea-saga&quot; to learn more.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> and <a href="https://github.com/redux-saga/redux-saga"><code>redux-saga</code></a> packages:</p><pre><code class="bash hljs">yarn add kea-saga redux-saga
 npm install --save kea-saga redux-saga
-</code></pre><p>Then import <code>kea-saga</code> somewhere in your app&apos;s entrypoint or <code>store.js</code>, before any calls to <code>kea()</code> and <code>getStore()</code> are made:</p><pre><code class="javascript hljs bash">import <span class="hljs-string">&apos;kea-saga&apos;</span>
-</code></pre><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p>If, however, you wish to configure your store manually, connect the saga middleware like so:</p><pre><code class="javascript hljs bash">import { keaReducer } from <span class="hljs-string">&apos;kea&apos;</span>
-import { keaSaga } from <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p>Then import <code>sagaPlugin</code> from <code>kea-saga</code> in your <code>store.js</code> and add it to the plugins array in <code>getStore()</code></p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+
+const store = getStore({
+  plugins: [
+    sagaPlugin
+  ]
+})
+</code></pre><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p>If, however, you wish to configure your store manually, connect the saga middleware like so:</p><pre><code class="javascript hljs bash">import { keaReducer, activatePlugin } from <span class="hljs-string">&apos;kea&apos;</span>
+import sagaPlugin, { keaSaga } from <span class="hljs-string">&apos;kea-saga&apos;</span>
 
 <span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">getStore</span></span> () {
+  activatePlugin(sagaPlugin)
+
   const reducers = combineReducers({
     kea: keaReducer(<span class="hljs-string">&apos;kea&apos;</span>),
     scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
@@ -573,7 +581,7 @@ myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
 
   // start() ...
 }
-</code></pre></div></div></div></div></section></main><footer><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 
