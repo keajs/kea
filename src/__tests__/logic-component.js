@@ -29,6 +29,7 @@ class ActionComponent extends Component {
       <div>
         <div className='actions'>{Object.keys(this.actions).sort().join(',')}</div>
         <div className='props'>{Object.keys(this.props).sort().join(',')}</div>
+        <div className='name'>{this.props.name}</div>
       </div>
     )
   }
@@ -256,6 +257,46 @@ test('doubly connected actions are merged', () => {
 
   expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
   expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
+
+  wrapper.unmount()
+})
+
+test('no protypes needed', () => {
+  const store = getStore()
+
+  const firstLogic = kea({
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  const secondLogic = kea({
+    actions: ({ constants }) => ({
+      updateNameAgain: name => ({ name })
+    })
+  })
+
+  const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent />
+    </Provider>
+  )
+
+  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
+  expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
+  const sampleComponent = wrapper.find('ActionComponent').node
+
+  const { updateName } = sampleComponent.actions
+  updateName('somename')
+
+  expect(wrapper.find('.name').text()).toEqual('somename')
 
   wrapper.unmount()
 })
