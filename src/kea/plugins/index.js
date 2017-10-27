@@ -38,6 +38,15 @@ export let globalPlugins = {
 
 export function activatePlugin (plugin, pluginTarget = globalPlugins) {
   if (!pluginTarget._activated[plugin.name]) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (pluginTarget === globalPlugins && plugin.global === false) {
+        console.error(`[KEA] Plugin "${plugin.name}" can not be used as a global plugin! Please use locally in kea({}) calls.`)
+      }
+      if (pluginTarget !== globalPlugins && plugin.local === false) {
+        console.error(`[KEA] Plugin "${plugin.name}" can not be used as a local plugin! Please install globally in getStore({})! Also, make sure the call to getStore({}) takes place before any call to kea({}), otherwise the plugin will not yet be active! See https://kea.js.org/guide/installation`)
+      }
+    }
+
     Object.keys(plugin).forEach(key => {
       if (typeof plugin[key] === 'function') {
         plugin[key]._name = plugin.name
