@@ -9,6 +9,7 @@ const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEV
 const defaultOptions = {
   paths: ['kea', 'scenes'],
   reducers: {},
+  preloadedState: undefined,
   middleware: [],
   compose: reduxDevToolsCompose,
   enhancers: [],
@@ -48,7 +49,7 @@ export function getStore (opts = {}) {
   const combinedReducers = combineReducers(options.reducers)
 
   // create store
-  const store = finalCreateStore(combinedReducers)
+  const store = finalCreateStore(combinedReducers, options.preloadedState)
 
   // run post-hooks
   globalPlugins.afterReduxStore.forEach(f => f(options, store))
