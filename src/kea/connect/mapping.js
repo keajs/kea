@@ -5,7 +5,7 @@ import { addReducer } from '../reducer'
 
 function connectLogicIfUnconnected (logic) {
   if (logic._isKeaSingleton && !logic._keaReducerConnected && logic.reducer) {
-    addReducer(logic.path, logic.reducer, true)
+    addReducer(logic.path, logic.reducer)
     logic._keaReducerConnected = true
   }
 }

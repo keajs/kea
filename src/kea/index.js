@@ -172,7 +172,7 @@ export function kea (_input) {
 
       // hook up the reducer to the global kea reducers object
       if (shouldMountReducer) {
-        addReducer(output.path, output.reducer, true)
+        addReducer(output.path, output.reducer)
       }
     }
 
@@ -281,7 +281,7 @@ export function kea (_input) {
               // run plugins on the created reducer
               plugins.mutateReducer.forEach(f => f(input, output, reducer))
 
-              addReducer(path, reducer, true)
+              addReducer(path, reducer)
             }
 
             // send a hydration action to redux, to make sure that the store is up to date on the next render

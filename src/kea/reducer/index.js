@@ -40,7 +40,7 @@ export function firstReducerRoot () {
   return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
-export function addReducer (path, reducer, regenerate = false) {
+export function addReducer (path, reducer) {
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -56,9 +56,13 @@ export function addReducer (path, reducer, regenerate = false) {
     if (i === path.length - 1) {
       // there's already something here!
       if (pointer[pathPart]) {
+        // if we're in the root level in the tree and it's an empty object
+        if (i === 0 && typeof pointer[pathPart] === 'object' && Object.keys(pointer[pathPart]).length === 0) {
+          // don't block here
+
         // if it's a function, assume it's a reducer and replacing it is fine
         // otherwise give an error
-        if (typeof pointer[pathPart] !== 'function') {
+        } else if (typeof pointer[pathPart] !== 'function') {
           console.error(`[KEA-LOGIC] Can not add reducer to "${path.join('.')}". There is something in the way:`, pointer[pathPart])
           return
         }
@@ -73,9 +77,7 @@ export function addReducer (path, reducer, regenerate = false) {
     }
   }
 
-  if (regenerate) {
-    regenerateRootReducer(pathStart)
-  }
+  regenerateRootReducer(pathStart)
 }
 
 export function regenerateRootReducer (pathStart) {
@@ -96,13 +98,14 @@ export function isSyncedWithStore (pathStart = null) {
 }
 
 export function recursiveCreateReducer (treeNode) {
+  if (typeof treeNode === 'function') {
+    return treeNode
+  }
+
   let children = {}
+
   Object.keys(treeNode).forEach(key => {
-    if (typeof treeNode[key] === 'function') {
-      children[key] = treeNode[key]
-    } else {
-      children[key] = recursiveCreateReducer(treeNode[key])
-    }
+    children[key] = recursiveCreateReducer(treeNode[key])
   })
 
   return Object.keys(children).length > 0 ? combineReducers(children) : (state, action) => state
