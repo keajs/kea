@@ -37,8 +37,7 @@ test('getStore can be initalized with a preloaded state', () => {
   expect(store.getState()).toEqual(preloadedState)
 })
 
-
-test('getStore preloaded state will not be immidiatly overiden by reducer defautl state', () => {
+test('getStore preloaded state will not be immidiatly overiden by reducer default state', () => {
   const preloadedState = {
     'kea': {},
     'scenes': { 'something': { 'name': 'chirpoo' } }
