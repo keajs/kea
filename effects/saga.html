@@ -413,36 +413,23 @@ footer.opencollective-footer a {
   <body>
     <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a class="active" aria-current="true" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p><p>Also read the sections of the guide marked &quot;with kea-saga&quot; to learn more.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> and <a href="https://github.com/redux-saga/redux-saga"><code>redux-saga</code></a> packages:</p><pre><code class="bash hljs">yarn add kea-saga redux-saga
 npm install --save kea-saga redux-saga
-</code></pre><p>Then import <code>sagaPlugin</code> from <code>kea-saga</code> in your <code>store.js</code> and add it to the plugins array in <code>getStore()</code></p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p>Then you have a few ways to install the plugin:</p><pre><code class="javascript hljs bash">// the cleanest way
+import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+import { getStore } from <span class="hljs-string">&apos;kea&apos;</span>
 
 const store = getStore({
-  plugins: [
-    sagaPlugin
-  ]
+  plugins: [ sagaPlugin ]
 })
-</code></pre><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p>If, however, you wish to configure your store manually, connect the saga middleware like so:</p><pre><code class="javascript hljs bash">import { keaReducer, activatePlugin } from <span class="hljs-string">&apos;kea&apos;</span>
-import sagaPlugin, { keaSaga } from <span class="hljs-string">&apos;kea-saga&apos;</span>
 
-<span class="hljs-built_in">export</span> default <span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">getStore</span></span> () {
-  activatePlugin(sagaPlugin)
+// another way
+import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+import { activatePlugin } from <span class="hljs-string">&apos;kea&apos;</span>
 
-  const reducers = combineReducers({
-    kea: keaReducer(<span class="hljs-string">&apos;kea&apos;</span>),
-    scenes: keaReducer(<span class="hljs-string">&apos;scenes&apos;</span>)
-  })
+activatePlugin(sagaPlugin)
 
-  const sagaMiddleware = createSagaMiddleware()
-  const finalCreateStore = compose(
-    applyMiddleware(sagaMiddleware)
-  )(createStore)
-
-  const store = finalCreateStore(reducers)
-
-  sagaMiddleware.run(keaSaga)
-
-  <span class="hljs-built_in">return</span> store
-}
-</code></pre></div><div class="description"><h2>Usage</h2><p>First, read the docs on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage to learn how sagas work.</p><p>Adding <code>kea-saga</code> will give your logic stores will get access to the keys: <code>start</code>, <code>stop</code>, <code>takeEvery</code>, <code>takeLatest</code>, <code>workers</code>, <code>sagas</code>.</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+// the shortest way
+import <span class="hljs-string">&apos;kea-saga/install&apos;</span>
+</code></pre><p>Use whichever way is most convenient for your setup.</p><p>Note that the <code>kea-saga</code> plugin needs to be installed globally as it needs to add its middleware to the store. You can&apos;t use it as a local plugin inside <code>kea({})</code> calls.</p><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p><button>I&apos;m not using <code>getStore</code></button></p></div><div class="description"><h2>Usage</h2><p>First, read the docs on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage to learn how sagas work.</p><p>Adding <code>kea-saga</code> will give your logic stores will get access to the keys: <code>start</code>, <code>stop</code>, <code>takeEvery</code>, <code>takeLatest</code>, <code>workers</code>, <code>sagas</code>.</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-built_in">export</span> default kea({
   // ... see the api docs <span class="hljs-keyword">for</span> more
