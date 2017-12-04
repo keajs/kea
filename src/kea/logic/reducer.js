@@ -57,7 +57,7 @@ export function convertReducerArrays (reducers) {
       let reducerObject = {
         value: value,
         type: type,
-        reducer: createReducer(reducer, value)
+        reducer: typeof reducer === 'function' ? reducer : createReducer(reducer, value)
       }
 
       if (options) {
