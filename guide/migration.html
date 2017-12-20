@@ -432,7 +432,7 @@ footer.opencollective-footer a {
     ]
   ]
 })
-<span class="hljs-keyword">export</span> deafult <span class="hljs-keyword">const</span> MyComponent extends Component {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
   render () {
     <span class="hljs-keyword">const</span> { prop1, prop2, i18nLocale, currentUserId, myForm } = <span class="hljs-keyword">this</span>.props
     <span class="hljs-comment">// ...</span>
@@ -446,7 +446,7 @@ footer.opencollective-footer a {
 
 <span class="hljs-comment">// just to get the dispatch</span>
 @kea({})
-<span class="hljs-keyword">export</span> deafult <span class="hljs-keyword">const</span> MyComponent extends Component {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
   handleButton = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
     <span class="hljs-keyword">const</span> { dispatch } = <span class="hljs-keyword">this</span>.props
 
@@ -496,7 +496,7 @@ footer.opencollective-footer a {
     }
   }
 })
-<span class="hljs-keyword">export</span> deafult <span class="hljs-keyword">const</span> MyComponent extends Component {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
   <span class="hljs-comment">// ...</span>
 }
 </code></pre><h2>Using Kea actions and selectors elsewhere</h2><p>If the redux-only part of your app needs access to some props or actions from kea logic stores, you can import them like so:</p><pre><code class="javascript hljs"><span class="hljs-comment">// my-logic.js</span>
