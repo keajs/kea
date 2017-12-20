@@ -206,7 +206,7 @@ export function kea (_input) {
       plugins.injectToClass.forEach(f => f(input, output, Klass))
     }
 
-    const selectorFactory = (dispatch, options) => {
+    const selectorFactory = (dispatch, factoryOptions) => {
       let lastProps = {}
       let result = null
 
