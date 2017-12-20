@@ -204,7 +204,7 @@ yarn add kea redux react-redux reselect
 npm install kea redux react-redux reselect --save
 ```
 
-Then configure the [Redux store](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store). You may either do it [manually](https://kea.js.org/api/store#manual) or use the `getStore` helper. We recommend using the helper, as it will also configure any installed plugins (e.g. [kea-saga](https://kea.js.org/api/saga)). You may pass additional middleware and reducers as [options](https://kea.js.org/api/store).
+Then configure the [Redux store](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store). You may either do it [manually](https://kea.js.org/api/store#manual) or use the `getStore` helper. We recommend using the helper, as it will also configure any installed plugins (e.g. [kea-saga](https://kea.js.org/effects/saga)). You may pass additional middleware and reducers as [options](https://kea.js.org/api/store).
 
 First, create a file called `store.js` with the following content:
 
