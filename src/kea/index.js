@@ -263,7 +263,7 @@ export function kea (_input) {
           }
 
           // we don't have the selectors cached with the current reduxMounted state!
-          if (!!getCache(joinedPath, reduxMounted) !== reduxMounted) {
+          if (getCache(joinedPath, 'reduxMounted') !== reduxMounted) {
             // create a new "output" that also contains { path, key, props }
             // this will be used as /input/ to create the reducers and selectors
             const wrappedOutput = Object.assign({}, output, { path, key, props: nextOwnProps })
