@@ -21,6 +21,8 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
+const emptyObj = {}
+
 // input: object with values: { value, type, reducer, ...options } or function(state, action) {}
 // output: combined reducer function (state, action) {}
 export function combineReducerObjects (path, objects) {
@@ -33,7 +35,7 @@ export function combineReducerObjects (path, objects) {
   if (Object.keys(reducers).length > 0) {
     return combineReducers(reducers)
   } else {
-    return () => ({})
+    return () => emptyObj
   }
 }
 
