@@ -1,7 +1,7 @@
 import { selectPropsFromLogic } from './connect/props'
 import { propTypesFromConnect } from './connect/prop-types'
 import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
-import { pathSelector, createSelectors } from './logic/selectors'
+import { pathSelector, safePathSelector, createSelectors } from './logic/selectors'
 import { createActions } from './actions/create'
 import { selectActionsFromLogic } from './connect/actions'
 
@@ -303,7 +303,7 @@ export function kea (_input) {
               Object.keys(reducerObjects).forEach(key => {
                 selectors[key] = (state) => {
                   try {
-                    return createdSelectors[key](state)
+                    return createdSelectors[key](state, nextOwnProps)
                   } catch (error) {
                     return reducerObjects[key].value
                   }
@@ -412,6 +412,11 @@ export function kea (_input) {
     response.defaults = output.defaults
     response.selector = output.selector
     response.selectors = output.selectors
+  } else {
+    response.withKey =
+      (input, safe = true) =>
+        (state, params) =>
+          (safe ? safePathSelector : pathSelector)(input.path(typeof input === 'function' ? input(params) : input), state)
   }
 
   response._isKeaFunction = true

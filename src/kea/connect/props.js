@@ -17,9 +17,12 @@ export function selectPropsFromLogic (propsMapping = []) {
     if (from === '*') {
       hash[to] = isFunction ? logic : (logic.selector ? logic.selector : selectors)
     } else if (isFunction) {
-      hash[to] = (state) => (logic(state) || {})[from]
+      hash[to] = (state, props) => (logic(state, props) || {})[from]
     } else if (typeof selectors[from] !== 'undefined') {
       hash[to] = selectors[from]
+    } else if (logic && logic._isKeaSingleton === false) {
+      console.error(`[KEA-LOGIC] it's not possible to connect to dynamic logic stores directly. Use "logic.withKey(params => params.id)" instead`)
+      console.trace()
     } else {
       console.error(`[KEA-LOGIC] selector "${from}" missing for logic:`, logic)
       console.trace()
