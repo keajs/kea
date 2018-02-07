@@ -9,7 +9,7 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## 0.28.0 - 2018-02-07
 ### New feature
-- Added `logic.withKey(params => params.id)` that you can use to connect dynamic components. See [the documentation](https://kea.js.org/api/component) for more details.
+- Added `logic.withKey(params => params.id)` that you can use to connect dynamic components. See [this comment](https://github.com/keajs/kea/issues/72#issuecomment-363857072) for more details.
 
 ## 0.27.0 - 2017-10-25
 ### Changed
