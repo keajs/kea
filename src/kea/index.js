@@ -414,9 +414,9 @@ export function kea (_input) {
     response.selectors = output.selectors
   } else {
     response.withKey =
-      (input, safe = true) =>
+      (paramCreator, safe = true) =>
         (state, params) =>
-          (safe ? safePathSelector : pathSelector)(input.path(typeof input === 'function' ? input(params) : input), state)
+          (safe ? safePathSelector : pathSelector)(input.path(typeof paramCreator === 'function' ? paramCreator(params) : paramCreator), state)
   }
 
   response._isKeaFunction = true
