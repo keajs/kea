@@ -348,9 +348,25 @@ export function kea (_input) {
           actions = nextOwnProps.actions ? Object.assign({}, nextOwnProps.actions) : {}
 
           // pass conneted actions as they are, just wrap with dispatch
+          // ... unless they have a "keyCreator" that was added with "logic.withKey(keyCreator)"
           const connectedActionKeys = Object.keys(output.connected.actions)
           connectedActionKeys.forEach(actionKey => {
-            actions[actionKey] = (...args) => dispatch(output.connected.actions[actionKey](...args))
+            const connectedAction = output.connected.actions[actionKey]
+            // we need to inject the latest key before calling the action
+            if (connectedAction._keaKeyCreator) {
+              actions[actionKey] = (...args) => {
+                const actionResponse = connectedAction(...args)
+                // an object! add the key and dispatch
+                if (typeof actionResponse === 'object') {
+                  const connectedKey = typeof connectedAction._keaKeyCreator === 'function' ? connectedAction._keaKeyCreator(nextOwnProps) : connectedAction._keaKeyCreator
+                  return dispatch(Object.assign({}, actionResponse, { payload: Object.assign({ key: connectedKey }, actionResponse.payload) }))
+                } else { // a function? a string? return it!
+                  return dispatch(actionResponse)
+                }
+              }
+            } else {
+              actions[actionKey] = (...args) => dispatch(connectedAction(...args))
+            }
           })
 
           // inject key to the payload of created actions, if there is a key
@@ -358,13 +374,13 @@ export function kea (_input) {
           createdActionKeys.forEach(actionKey => {
             if (key) {
               actions[actionKey] = (...args) => {
-                const createdAction = output.created.actions[actionKey](...args)
+                const actionResponse = output.created.actions[actionKey](...args)
 
                 // an object! add the key and dispatch
-                if (typeof createdAction === 'object') {
-                  return dispatch(Object.assign({}, createdAction, { payload: Object.assign({ key: key }, createdAction.payload) }))
+                if (typeof actionResponse === 'object') {
+                  return dispatch(Object.assign({}, actionResponse, { payload: Object.assign({ key: key }, actionResponse.payload) }))
                 } else { // a function? a string? return it!
-                  return dispatch(createdAction)
+                  return dispatch(actionResponse)
                 }
               }
             } else {
@@ -413,10 +429,33 @@ export function kea (_input) {
     response.selector = output.selector
     response.selectors = output.selectors
   } else {
-    response.withKey =
-      (paramCreator, safe = true) =>
-        (state, params) =>
-          (safe ? safePathSelector : pathSelector)(input.path(typeof paramCreator === 'function' ? paramCreator(params) : paramCreator), state)
+    response.withKey = (keyCreator, safe = true) => {
+      const selectorFunction = safe ? safePathSelector : pathSelector
+
+      const withKeyResponse = (state, params) => {
+        const key = typeof keyCreator === 'function' ? keyCreator(params) : keyCreator
+        return selectorFunction(input.path(key), state)
+      }
+
+      withKeyResponse._keaKeyCreator = keyCreator
+      withKeyResponse.actions = response.actions
+      withKeyResponse.constants = response.constants
+      withKeyResponse.propTypes = {}
+
+      // find propTypes
+      const reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
+      // run plugins on the created reducer objects
+      plugins.mutateReducerObjects.forEach(f => f(input, output, reducerObjects))
+      // add propTypes
+      Object.keys(reducerObjects).forEach(reducerKey => {
+        const reducerObject = reducerObjects[reducerKey]
+        if (reducerObject.type) {
+          withKeyResponse.propTypes[reducerKey] = reducerObject.type
+        }
+      })
+
+      return withKeyResponse
+    }
   }
 
   response._isKeaFunction = true
