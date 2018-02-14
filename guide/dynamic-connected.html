@@ -411,7 +411,7 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideDynamicConnected"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a class="active" aria-current="true" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="connected-scene"><div class="description"><h2>Dynamic Connected logic</h2><p>If you need dynamic components (with a <code>key</code>) that also share data with other components, you will need to connect them in a special way.</p><p>You will need to use the <code>withKey(key)</code> method on the logic and pass it the <code>key</code> that points to the part of the dynamic logic store that you want to access.</p><pre><code class="javascript hljs">@connect({
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a class="active" aria-current="true" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="connected-scene"><div class="description"><p><strong style="color: red;">NB!</strong> Dynamic Connected Logics are a work in progress! They work, but there are specific issues still left to fix. For more information, please follow <a href="https://github.com/keajs/kea/issues/72">this issue</a>.</p><h2>Dynamic Connected logic</h2><p>If you need dynamic components (with a <code>key</code>) that also share data with other components, you will need to connect them in a special way.</p><p>You will need to use the <code>withKey(key)</code> method on the logic and pass it the <code>key</code> that points to the part of the dynamic logic store that you want to access.</p><pre><code class="javascript hljs">@connect({
   <span class="hljs-attr">props</span>: [
     <span class="hljs-comment">// connecting to a regular logic store</span>
     regularLogic, [
@@ -441,9 +441,9 @@ footer.opencollective-footer a {
     <span class="hljs-attr">doit</span>: <span class="hljs-literal">true</span>
   }),
 
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
     <span class="hljs-attr">done</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-      [actions.doit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>
+      [actions.doit]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> key === payload.key ? <span class="hljs-literal">true</span> : state
     }]
   })
 })
@@ -459,12 +459,12 @@ footer.opencollective-footer a {
 <span class="hljs-comment">// create another helper that wants data from this dynamic logic store</span>
 @connect({
   <span class="hljs-attr">actions</span>: [
-    dynamicLogic, [
+    dynamicLogic.withKey(<span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> props.id), [
       <span class="hljs-string">&apos;doit&apos;</span>
     ]
   ],
   <span class="hljs-attr">props</span>: [
-    dynamicLogic.withKey(<span class="hljs-function"><span class="hljs-params">params</span> =&gt;</span> params.id), [
+    dynamicLogic.withKey(<span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> props.id), [
       <span class="hljs-string">&apos;done&apos;</span>
     ]
   ]
@@ -473,8 +473,8 @@ footer.opencollective-footer a {
   render () {
     <span class="hljs-keyword">return</span> (
       &lt;div&gt;
-        &lt;p&gt;DataWithButtion - id: {this.props.id}, done: {this.props.done ? &apos;true&apos; : &apos;false&apos;}&lt;/p&gt;
-        &lt;p&gt;&lt;button onClick={this.actions.doit}&gt;Do it!&lt;/button&gt;&lt;/p&gt;
+        DataWithButtion - id: {this.props.id}, done: {this.props.done ? &apos;true&apos; : &apos;false&apos;}
+        &lt;button onClick={this.actions.doit}&gt;Do it!&lt;/button&gt;
       &lt;/div&gt;
     )
   }
@@ -485,13 +485,20 @@ footer.opencollective-footer a {
   render () {
     <span class="hljs-keyword">return</span> (
       &lt;div&gt;
-        &lt;OnlyData id={123} /&gt;
-        &lt;DataWithButtion id={123} /&gt;
+        &lt;div style={{ border: &apos;1px solid black&apos;, padding: 10 }}&gt;
+          &lt;OnlyData id={123} /&gt;
+          &lt;DataWithButtion id={123} /&gt;
+        &lt;/div&gt;
+        &lt;br /&gt;
+        &lt;div style={{ border: &apos;1px solid black&apos;, padding: 10 }}&gt;
+          &lt;DataWithButtion id={999} /&gt;
+          &lt;OnlyData id={999} /&gt;
+        &lt;/div&gt;
       &lt;/div&gt;
     )
   }
 }
-</code></pre><p>And here you can see it in action:</p><div class="demo"><div><div>OnlyData - id: 123, done: false</div><div><p>DataWithButtion - id: 123, done: false</p><p><button>Do it!</button></p></div></div></div><p>Next page: <a href="/guide/forms">Forms</a></p></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre><p>And here you can see it in action:</p><div class="demo"><div><div style="border: 1px solid black; padding: 10px;"><div>OnlyData - id: 123, done: false</div><div>DataWithButtion - id: 123, done: false<button>Do it!</button></div></div><br><div style="border: 1px solid black; padding: 10px;"><div>DataWithButtion - id: 999, done: false<button>Do it!</button></div><div>OnlyData - id: 999, done: false</div></div></div></div><p>Next page: <a href="/guide/forms">Forms</a></p></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
     <script src="/common.bundle.js"></script>
   
 
