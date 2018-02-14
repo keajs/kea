@@ -23,13 +23,19 @@ function isStateless (Component) {
 
 let nonamePathCounter = 0
 
-function createUniquePathFunction () {
+function createUniquePathFunction (keyCreator = null) {
   const reducerRoot = firstReducerRoot()
   if (!reducerRoot) {
     console.error('[KEA] Could not find the root of the keaReducer! Make sure you call keaReducer() before any call to kea() is made. See: https://kea.js.org/api/reducer')
   }
+
   let inlinePath = [reducerRoot, '_kea', `inline-${nonamePathCounter++}`]
-  return () => inlinePath
+
+  if (keyCreator) {
+    return (key) => inlinePath.concat([key])
+  } else {
+    return () => inlinePath
+  }
 }
 
 const hydrationAction = '@@kea/hydrate store'
@@ -85,11 +91,34 @@ export function kea (_input) {
     // the { connect: { props, actions } } part
     const connect = input.connect || {}
 
+    const { actions: connectedActions, meta: actionsMeta } = selectActionsFromLogic(connect.actions)
+    const { props: connectedProps, meta: propsMeta } = selectPropsFromLogic(connect.props)
+
     // store connected actions, selectors and propTypes separately
     output.connected = {
-      actions: selectActionsFromLogic(connect.actions),
-      selectors: selectPropsFromLogic(connect.props),
+      actions: connectedActions,
+      selectors: connectedProps,
       propTypes: propTypesFromConnect(connect)
+    }
+
+    // if we're connecting to dynamic components with key creators (props => props.id)
+    // we need to make sure we are dynamic as well
+    if (actionsMeta.withKeyCreator || propsMeta.withKeyCreator) {
+      // set as dynamic logic store
+      output.isSingleton = false
+
+      // create a key function if needed
+      if (!input.key) {
+        if (hasManualPath) {
+          console.error('[KEA] You must provide a key to components which connect to dynamic logic stores! Overwriting path!', input)
+        }
+
+        const keyCreators = actionsMeta.keyCreators.concat(propsMeta.keyCreators)
+
+        // the created key is the combination of all input keys used to connect to logic stores
+        input.key = (props) => keyCreators.map(c => c(props).toString()).join(',')
+        input.path = createUniquePathFunction(input.key)
+      }
     }
 
     // set actions, selectors and propTypes to the connected ones
@@ -458,6 +487,8 @@ export function kea (_input) {
           withKeyResponse.propTypes[reducerKey] = reducerObject.type
         }
       })
+
+      // TODO: add selectors
 
       return withKeyResponse
     }

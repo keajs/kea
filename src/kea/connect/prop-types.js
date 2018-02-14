@@ -6,7 +6,7 @@ export function propTypesFromConnect (mapping, extra = null) {
   let propTypes = Object.assign({}, mapping.propTypes || mapping.passedProps || {})
 
   if (mapping.props) {
-    const propsArray = deconstructMapping(mapping.props)
+    const { response: propsArray } = deconstructMapping(mapping.props)
 
     if (!propsArray) {
       return
@@ -27,7 +27,7 @@ export function propTypesFromConnect (mapping, extra = null) {
   }
 
   if (mapping.actions) {
-    const actionsArray = deconstructMapping(mapping.actions)
+    const { response: actionsArray } = deconstructMapping(mapping.actions)
 
     if (!actionsArray) {
       return

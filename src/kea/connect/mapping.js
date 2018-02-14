@@ -17,6 +17,7 @@ export function deconstructMapping (mapping) {
     return null
   }
 
+  let logics = []
   let response = []
 
   for (let i = 0; i < mapping.length; i += 2) {
@@ -24,6 +25,7 @@ export function deconstructMapping (mapping) {
     const array = mapping[i + 1]
 
     connectLogicIfUnconnected(logic)
+    logics.push(logic)
 
     for (let j = 0; j < array.length; j++) {
       if (array[j].includes(' as ')) {
@@ -35,5 +37,5 @@ export function deconstructMapping (mapping) {
     }
   }
 
-  return response
+  return { logics, response }
 }
