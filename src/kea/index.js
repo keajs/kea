@@ -112,6 +112,11 @@ export function kea (_input) {
     output.actions = Object.assign(output.actions, output.created.actions)
   }
 
+  // if we are passing along any propTypes, add them
+  if (input.propTypes) {
+    output.propTypes = Object.assign(output.propTypes, input.propTypes)
+  }
+
   // if it's a singleton, create all the reducers and selectors and add them to redux
   if (output.isSingleton) {
     // we have reducer or selector inputs, create all output reducers and selectors
