@@ -1,5 +1,9 @@
 {
   "env": {
+    "development": {
+      "presets": [["env", { "loose": true }], "react"]
+    },
+
     "test": {
       "presets": [["env", { "loose": true }], "react"]
     },
