@@ -227,12 +227,12 @@ export function kea (_input) {
     if (!isStateless(Klass)) {
       // inject to the component something that
       // converts this.props.actions to this.actions
-      if (Object.keys(output.actions).length > 0) {
-        const originalComponentWillMount = Klass.prototype.componentWillMount
-        Klass.prototype.componentWillMount = function () {
-          this.actions = this.props.actions
-          originalComponentWillMount && originalComponentWillMount.bind(this)()
-        }
+      if (!Object.getOwnPropertyDescriptor(Klass.prototype, 'actions')) {
+        Object.defineProperty(Klass.prototype, 'actions', {
+          get: function actions () {
+            return this.props.actions
+          }
+        })
       }
 
       // Since Klass == Component, tell the plugins to add themselves to it.
