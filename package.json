@@ -56,7 +56,7 @@
     "prop-types": "*",
     "react": "*",
     "react-redux": "5.x",
-    "redux": "3.x",
+    "redux": "3.x || 4.x",
     "reselect": "2.x || 3.x"
   },
   "devDependencies": {
