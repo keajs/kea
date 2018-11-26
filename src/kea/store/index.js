@@ -49,7 +49,7 @@ export function getStore (opts = {}) {
   const combinedReducers = combineReducers(options.reducers)
 
   // create store
-  const store = finalCreateStore(combinedReducers, {...options.preloadedState})
+  const store = finalCreateStore(combinedReducers, Object.assign({}, options.preloadedState))
 
   // run post-hooks
   globalPlugins.afterReduxStore.forEach(f => f(options, store))
