@@ -188,19 +188,22 @@ export function kea (_input) {
       // any additional selectors to create?
       if (input.selectors) {
         const selectorResponse = input.selectors(output)
-
-        Object.keys(selectorResponse).forEach(selectorKey => {
-          // s == [() => args, selectorFunction, propType]
-          const s = selectorResponse[selectorKey]
-          const args = s[0]()
-
-          if (s[2]) {
-            output.created.propTypes[selectorKey] = s[2]
+        const selectorKeys = Object.keys(selectorResponse)
+        const delayedSelectors = {}
+        const additionalSelectors = selectorKeys.reduce((additionalSelectors, selectorKey) => {
+          additionalSelectors[selectorKey] = (...args) => delayedSelectors[selectorKey](...args)
+          return additionalSelectors
+        }, {})
+        Object.assign(output.created.selectors, additionalSelectors)
+        Object.assign(output.selectors, additionalSelectors)
+        selectorKeys.forEach(selectorKey => {
+          const [getSelectorArgs, selectorFunction, propType] = selectorResponse[selectorKey]
+          const args = getSelectorArgs()
+          if (propType) {
+            output.created.propTypes[selectorKey] = propType
             output.propTypes[selectorKey] = output.created.propTypes[selectorKey]
           }
-
-          output.created.selectors[selectorKey] = createSelector(...args, s[1])
-          output.selectors[selectorKey] = output.created.selectors[selectorKey]
+          delayedSelectors[selectorKey] = createSelector(...args, selectorFunction)
         })
       }
 
