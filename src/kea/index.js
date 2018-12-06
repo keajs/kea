@@ -18,7 +18,10 @@ import { firstReducerRoot, isSyncedWithStore, addReducer } from './reducer'
 import { globalPlugins, activatePlugin } from './plugins'
 
 function isStateless (Component) {
-  return !Component.prototype.render
+  return (
+    typeof Component === 'function' && // can be various things
+    !(Component.prototype && Component.prototype.isReactComponent) // native arrows don't have prototypes // special property
+  )
 }
 
 let nonamePathCounter = 0
