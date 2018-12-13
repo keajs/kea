@@ -193,18 +193,14 @@ export function kea (_input) {
         const selectorResponse = input.selectors(output)
         const selectorKeys = Object.keys(selectorResponse)
 
-        const builtSelectors = {}
-
         // the order of selector keys is not defined: earlier selectors may reference later selectors
         // so build functions that act as proxies in order to avoid calling undefined functions
         // these will be swapped out for the real selectors after they are built
-        let proxySelectors = {}
+        let builtSelectors = {}
         selectorKeys.forEach(selectorKey => {
-          proxySelectors[selectorKey] = (...args) => builtSelectors[selectorKey](...args)
+          output.created.selectors[selectorKey] = (...args) => builtSelectors[selectorKey](...args)
+          output.selectors[selectorKey] = output.created.selectors[selectorKey]
         })
-
-        Object.assign(output.created.selectors, proxySelectors)
-        Object.assign(output.selectors, proxySelectors)
 
         selectorKeys.forEach(selectorKey => {
           const [getSelectorArgs, selectorFunction, propType] = selectorResponse[selectorKey]
@@ -365,12 +361,19 @@ export function kea (_input) {
 
             // create the additional selectors
             const selectorResponse = input.selectors ? input.selectors(Object.assign({}, wrappedOutput, { selectors })) : {}
+            const selectorKeys = Object.keys(selectorResponse)
 
-            Object.keys(selectorResponse).forEach(selectorKey => {
-              // s == [() => args, selectorFunction, propType]
-              const s = selectorResponse[selectorKey]
-              const args = s[0]()
-              selectors[selectorKey] = createSelector(...args, s[1])
+            // proxy via builtSelectors as the order of selectors is not defined and earlier defined ones might depend on later ones
+            let builtSelectors = {}
+            selectorKeys.forEach(selectorKey => {
+              selectors[selectorKey] = (...args) => builtSelectors[selectorKey](...args)
+            })
+
+            selectorKeys.forEach(selectorKey => {
+              const [getSelectorArgs, selectorFunction, propType] = selectorResponse[selectorKey] // eslint-disable-line
+              const args = getSelectorArgs()
+              builtSelectors[selectorKey] = createSelector(...args, selectorFunction)
+              selectors[selectorKey] = builtSelectors[selectorKey]
             })
 
             // store in the cache

@@ -54,17 +54,17 @@ test('singletons connect to react components', () => {
       }]
     }),
     selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-        },
-        PropTypes.string
-      ],
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
       ]
@@ -121,17 +121,17 @@ test('dynamic connect to react components', () => {
       }]
     }),
     selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-        },
-        PropTypes.string
-      ],
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
       ]
@@ -203,17 +203,17 @@ test('connected props can be used as selectors', () => {
       ]
     },
     selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-        },
-        PropTypes.string
-      ],
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
       ]
