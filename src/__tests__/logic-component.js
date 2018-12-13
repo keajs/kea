@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 
 class SampleComponent extends Component {
   render () {
-    const { id, name, capitalizedName } = this.props
+    const { id, name, capitalizedName, upperCaseName } = this.props
     const { updateName } = this.actions
 
     return (
@@ -17,6 +17,7 @@ class SampleComponent extends Component {
         <div className='id'>{id}</div>
         <div className='name'>{name}</div>
         <div className='capitalizedName'>{capitalizedName}</div>
+        <div className='upperCaseName'>{upperCaseName}</div>
         <div className='updateName' onClick={updateName}>updateName</div>
       </div>
     )
@@ -59,6 +60,13 @@ test('singletons connect to react components', () => {
           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
+      ],
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
       ]
     })
   })
@@ -74,6 +82,7 @@ test('singletons connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'chirpy' } } })
 
@@ -92,6 +101,7 @@ test('singletons connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
 
   wrapper.unmount()
 })
@@ -117,6 +127,13 @@ test('dynamic connect to react components', () => {
           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
+      ],
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
       ]
     })
   })
@@ -132,6 +149,7 @@ test('dynamic connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'chirpy' } } } })
 
@@ -150,6 +168,7 @@ test('dynamic connect to react components', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename12')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME12')
 
   wrapper.unmount()
 })
@@ -190,6 +209,13 @@ test('connected props can be used as selectors', () => {
           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
+      ],
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
       ]
     })
   })
@@ -205,6 +231,7 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
 
   expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
 
@@ -223,6 +250,7 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
 
   wrapper.unmount()
 })
