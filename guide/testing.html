@@ -421,7 +421,8 @@ beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;
 test(<span class="hljs-string">&apos;starts from a clear state&apos;</span>, () =&gt; {
   <span class="hljs-comment">// ...</span>
 })
-</code></pre><h3>Creating a store for your tests</h3><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { resetKeaCache, keaSaga, keaReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+</code></pre><h3>Creating a store for your tests</h3><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { resetKeaCache, keaReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">import</span> { keaSaga } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea-saga&apos;</span>
 <span class="hljs-keyword">import</span> { createStore, applyMiddleware, combineReducers, compose } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux&apos;</span>
 <span class="hljs-keyword">import</span> createSagaMiddleware <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
 
