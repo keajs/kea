@@ -26,6 +26,13 @@ test('connected props and actions get passed, reducers get added to the store', 
       }]
     }),
     selectors: ({ constants, selectors }) => ({
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
       capitalizedName: [
         () => [selectors.name],
         (name) => {
@@ -38,7 +45,7 @@ test('connected props and actions get passed, reducers get added to the store', 
 
   const reducerState2 = scenesReducer({}, { type: 'discard' })
   expect(reducerState2).toEqual({ homepage: { first: { name: 'chirpy' } } })
-  expect(Object.keys(firstLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+  expect(Object.keys(firstLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
@@ -51,7 +58,8 @@ test('connected props and actions get passed, reducers get added to the store', 
       props: [
         firstLogic, [
           'name',
-          'capitalizedName'
+          'capitalizedName',
+          'upperCaseName'
         ]
       ]
     }
@@ -61,7 +69,7 @@ test('connected props and actions get passed, reducers get added to the store', 
   expect(secondLogic._isKeaSingleton).toBe(true)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual(['updateName'])
-  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
 
   const reducerState3 = scenesReducer({}, { type: 'discard' })
   expect(reducerState3).toEqual({ homepage: { first: { name: 'chirpy' }, second: {} } })
@@ -77,7 +85,8 @@ test('connected props and actions get passed, reducers get added to the store', 
       props: [
         firstLogic, [
           'name',
-          'capitalizedName'
+          'capitalizedName',
+          'upperCaseName'
         ]
       ]
     },
@@ -90,10 +99,13 @@ test('connected props and actions get passed, reducers get added to the store', 
   expect(thirdLogic._isKeaSingleton).toBe(true)
   expect(thirdLogic.path).toEqual(['scenes', 'homepage', 'third'])
   expect(Object.keys(thirdLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
-  expect(Object.keys(thirdLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+  expect(Object.keys(thirdLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
 
   const reducerState4 = scenesReducer({}, { type: 'discard' })
   expect(reducerState4).toEqual({ homepage: { first: { name: 'chirpy' }, second: {}, third: {} } })
+
+  expect(thirdLogic.selectors.capitalizedName({ scenes: reducerState4 })).toBe('Chirpy')
+  expect(thirdLogic.selectors.upperCaseName({ scenes: reducerState4 })).toBe('CHIRPY')
 
   const fourthLogic = kea({
     connect: {
@@ -108,7 +120,8 @@ test('connected props and actions get passed, reducers get added to the store', 
       props: [
         firstLogic, [
           'name',
-          'capitalizedName'
+          'capitalizedName',
+          'upperCaseName'
         ]
       ]
     }
@@ -118,10 +131,13 @@ test('connected props and actions get passed, reducers get added to the store', 
   expect(fourthLogic._isKeaSingleton).toBe(true)
   expect(fourthLogic.path).not.toBeDefined()
   expect(Object.keys(fourthLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
-  expect(Object.keys(fourthLogic.selectors).sort()).toEqual(['capitalizedName', 'name'])
+  expect(Object.keys(fourthLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
 
   const reducerState5 = scenesReducer({}, { type: 'discard' })
   expect(reducerState5).toEqual(reducerState4)
+
+  expect(fourthLogic.selectors.capitalizedName({ scenes: reducerState5 })).toBe('Chirpy')
+  expect(fourthLogic.selectors.upperCaseName({ scenes: reducerState5 })).toBe('CHIRPY')
 })
 
 test('connected props can be used as selectors', () => {
@@ -151,6 +167,13 @@ test('connected props can be used as selectors', () => {
       ]
     },
     selectors: ({ constants, selectors }) => ({
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
       capitalizedName: [
         () => [selectors.name],
         (name) => {
@@ -165,10 +188,11 @@ test('connected props can be used as selectors', () => {
   expect(secondLogic._isKeaSingleton).toBe(true)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual([])
-  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+  expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
 
   store.dispatch(firstLogic.actions.updateName('derpy'))
   expect(secondLogic.selectors.capitalizedName(store.getState())).toBe('Derpy')
+  expect(secondLogic.selectors.upperCaseName(store.getState())).toBe('DERPY')
 })
 
 test('can get everything with *', () => {
