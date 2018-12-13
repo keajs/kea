@@ -25,17 +25,17 @@ test('singleton logic has all the right properties', () => {
       }]
     }),
     selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-        },
-        PropTypes.string
-      ],
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
+      ],
+      capitalizedName: [
+        () => [selectors.name],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
       ]

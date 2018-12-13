@@ -192,21 +192,33 @@ export function kea (_input) {
       if (input.selectors) {
         const selectorResponse = input.selectors(output)
         const selectorKeys = Object.keys(selectorResponse)
-        const delayedSelectors = {}
-        const additionalSelectors = selectorKeys.reduce((additionalSelectors, selectorKey) => {
-          additionalSelectors[selectorKey] = (...args) => delayedSelectors[selectorKey](...args)
-          return additionalSelectors
-        }, {})
-        Object.assign(output.created.selectors, additionalSelectors)
-        Object.assign(output.selectors, additionalSelectors)
+
+        const builtSelectors = {}
+
+        // the order of selector keys is not defined: earlier selectors may reference later selectors
+        // so build functions that act as proxies in order to avoid calling undefined functions
+        // these will be swapped out for the real selectors after they are built
+        let proxySelectors = {}
+        selectorKeys.forEach(selectorKey => {
+          proxySelectors[selectorKey] = (...args) => builtSelectors[selectorKey](...args)
+        })
+
+        Object.assign(output.created.selectors, proxySelectors)
+        Object.assign(output.selectors, proxySelectors)
+
         selectorKeys.forEach(selectorKey => {
           const [getSelectorArgs, selectorFunction, propType] = selectorResponse[selectorKey]
           const args = getSelectorArgs()
+
           if (propType) {
             output.created.propTypes[selectorKey] = propType
             output.propTypes[selectorKey] = output.created.propTypes[selectorKey]
           }
-          delayedSelectors[selectorKey] = createSelector(...args, selectorFunction)
+
+          builtSelectors[selectorKey] = createSelector(...args, selectorFunction)
+
+          output.created.selectors[selectorKey] = builtSelectors[selectorKey]
+          output.selectors[selectorKey] = builtSelectors[selectorKey]
         })
       }
 
