@@ -31,6 +31,13 @@ test('singleton logic has all the right properties', () => {
           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
         PropTypes.string
+      ],
+      upperCaseName: [
+        () => [selectors.capitalizedName],
+        (capitalizedName) => {
+          return capitalizedName.toUpperCase()
+        },
+        PropTypes.string
       ]
     })
   })
@@ -74,9 +81,10 @@ test('singleton logic has all the right properties', () => {
   expect(response.reducer({ name: 'something' }, updateName('newName'))).toEqual({ name: 'newName' })
 
   // selectors
-  expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
+  expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
   expect(response.selectors.name(state)).toEqual('chirpy')
   expect(response.selectors.capitalizedName(state)).toEqual('Chirpy')
+  expect(response.selectors.upperCaseName(state)).toEqual('CHIRPY')
 
   // root selector
   expect(response.selector(state)).toEqual(defaultValues)
