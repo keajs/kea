@@ -55,7 +55,7 @@
   "peerDependencies": {
     "prop-types": "*",
     "react": "*",
-    "react-redux": "5.x",
+    "react-redux": ">= 5",
     "redux": ">= 3",
     "reselect": ">= 2"
   },
