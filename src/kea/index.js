@@ -1,6 +1,6 @@
 import { selectPropsFromLogic } from './connect/props'
 import { propTypesFromConnect } from './connect/prop-types'
-import { combineReducerObjects, convertReducerArrays } from './logic/reducer'
+import { combineReducerObjects, convertReducerArrays, getReducerActions } from './logic/reducer'
 import { pathSelector, safePathSelector, createSelectors } from './logic/selectors'
 import { createActions } from './actions/create'
 import { selectActionsFromLogic } from './connect/actions'
@@ -155,6 +155,7 @@ export function kea (_input) {
     // ... or the "path" is manually defined, so we must put something in redux
     if (hasManualPath || input.reducers || input.selectors) {
       // create the reducers from the input
+      output.created.reducerActions = input.reducers ? getReducerActions(input.reducers(output)) : {}
       output.created.reducerObjects = input.reducers ? convertReducerArrays(input.reducers(output)) : {}
 
       // run plugins on the created reducer objects
@@ -172,7 +173,7 @@ export function kea (_input) {
       })
 
       // combine the created reducers into one
-      output.reducer = combineReducerObjects(output.path, output.created.reducerObjects)
+      output.reducer = combineReducerObjects(output.path, output.created.reducerObjects, output.created.reducerActions)
 
       // run plugins on the created reducer
       plugins.mutateReducer.forEach(f => f(input, output, output.reducer))
@@ -317,6 +318,7 @@ export function kea (_input) {
             const wrappedOutput = Object.assign({}, output, { path, key, props: nextOwnProps })
 
             // we can't just recycle this from the singleton, as the reducers can have defaults that depend on props
+            let reducerActions = input.reducers ? getReducerActions(input.reducers(wrappedOutput)) : {}
             let reducerObjects = input.reducers ? convertReducerArrays(input.reducers(wrappedOutput)) : {}
 
             // run plugins on the created reducer objects
@@ -324,7 +326,7 @@ export function kea (_input) {
 
             // not in redux, so add the reducer!
             if (shouldMountReducer && !reduxMounted) {
-              let reducer = combineReducerObjects(path, reducerObjects)
+              let reducer = combineReducerObjects(path, reducerObjects, reducerActions)
 
               // run plugins on the created reducer
               plugins.mutateReducer.forEach(f => f(input, output, reducer))

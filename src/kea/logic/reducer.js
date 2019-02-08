@@ -23,9 +23,10 @@ export function createReducer (mapping, defaultValue) {
 
 const emptyObj = {}
 
-// input: object with values: { value, type, reducer, ...options } or function(state, action) {}
+// input: objects = array of objects with values: { value, type, reducer, ...options }
+//        actions = { 'some redux action': true }
 // output: combined reducer function (state, action) {}
-export function combineReducerObjects (path, objects) {
+export function combineReducerObjects (path, objects, actions) {
   const reducers = {}
 
   Object.keys(objects).forEach(key => {
@@ -33,22 +34,54 @@ export function combineReducerObjects (path, objects) {
   })
 
   if (Object.keys(reducers).length > 0) {
-    return combineReducers(reducers)
+    let defaults = {}
+    for (let key of Object.keys(objects)) {
+      defaults[key] = objects[key].value
+    }
+
+    const reducer = combineReducers(reducers)
+    return (state = defaults, action) => {
+      if (state === defaults || actions[action.type] || Object.keys(state).length === 0) {
+        return reducer(state, action)
+      } else {
+        return state
+      }
+    }
   } else {
     return () => emptyObj
   }
 }
 
-// input: object with values: [value, (type), (options), reducer]
-// output: object with values: { value, type, reducer, ...options }
-export function convertReducerArrays (reducers) {
-  if (!reducers) {
-    return reducers
+export function getReducerActions (reducerArrays) {
+  const allActions = {}
+
+  for (let reducerKey of Object.keys(reducerArrays)) {
+    const s = reducerArrays[reducerKey]
+    if (Array.isArray(s)) {
+      const reducer = s[s.length - 1]
+
+      if (typeof reducer !== 'function') {
+        for (let key of Object.keys(reducer)) {
+          allActions[key] = true
+        }
+      }
+    }
   }
 
-  const keys = Object.keys(reducers)
-  for (let i = 0; i < keys.length; i++) {
-    const s = reducers[keys[i]]
+  return allActions
+}
+
+// input: object with values: [value, (type), (options), reducer]
+// output: object with values: { value, type, reducer, ...options }
+export function convertReducerArrays (reducerArrays) {
+  if (!reducerArrays) {
+    return reducerArrays
+  }
+
+  const reducers = {}
+
+  for (let reducerKey of Object.keys(reducerArrays)) {
+    const s = reducerArrays[reducerKey]
     if (Array.isArray(s)) {
       // s = [ value, (type), (options), reducer ]
       const value = s[0]
@@ -66,7 +99,9 @@ export function convertReducerArrays (reducers) {
         reducerObject.options = options
       }
 
-      reducers[keys[i]] = warnIfUndefinedActionCreator(reducerObject, keys[i])
+      reducers[reducerKey] = warnIfUndefinedActionCreator(reducerObject, reducerKey)
+    } else {
+      reducers[reducerKey] = s
     }
   }
 
