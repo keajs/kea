@@ -39,7 +39,8 @@ const mapStateToPropsCreator = input => (state, ownProps) => {
 const mapDispatchToPropsCreator = input => (dispatch, ownProps) => {
   const createdLogicEverything = convertInputToLogic({ input, props: ownProps })
 
-  let actions = {}
+  let actions = Object.assign({}, ownProps.actions)
+
   Object.entries(createdLogicEverything.actions).forEach(([key, action]) => {
     actions[key] = (...args) => dispatch(action(...args))
   })
