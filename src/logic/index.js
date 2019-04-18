@@ -26,7 +26,7 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps }
   }
 
   const path = getPathForInput(input, key)
-  const pathString = path.join(',')
+  const pathString = path.join('.')
 
   if (!logicCache[pathString]) {
     const output = convertInputWithPath(input, key, path)
@@ -90,10 +90,12 @@ function getPathForInput (input, key) {
     return pathCreator(key)
   }
 
+  const count = (++globalInputCounter).toString()
+
   if (key) {
-    pathCreator = (key) => ['kea', 'inline', (++globalInputCounter).toString(), key]
+    pathCreator = (key) => ['kea', 'inline', count, key]
   } else {
-    pathCreator = () => ['kea', 'inline', (++globalInputCounter).toString()]
+    pathCreator = () => ['kea', 'inline', count]
   }
 
   inputPathCreators.set(input, pathCreator)
