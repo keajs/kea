@@ -115,9 +115,9 @@ test('dynamic connect to react components', () => {
     actions: ({ constants }) => ({
       updateName: name => ({ name })
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions, constants, key }) => ({
       name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name + payload.key
+        [actions.updateName]: (state, payload) => payload.name + key
       }]
     }),
     selectors: ({ constants, selectors }) => ({
