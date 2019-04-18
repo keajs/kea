@@ -127,11 +127,7 @@ test('it is not a singleton if there is a key', () => {
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
   // actions
-  expect(Object.keys(response.actions)).toEqual(['updateName'])
-  const { updateName } = response.actions
-  expect(typeof updateName).toBe('function')
-  expect(updateName.toString()).toBe('update name (homepage.index)')
-  expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
+  expect(response.actions).not.toBeDefined()
 
   // reducers
   expect(response.reducer).not.toBeDefined()

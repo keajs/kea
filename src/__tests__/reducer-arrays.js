@@ -1,5 +1,5 @@
 /* global test, expect */
-import { convertReducerArrays } from '../kea/logic/reducer'
+import { convertReducerArrays } from '../logic/reducers'
 import PropTypes from 'prop-types'
 
 test('it converts reducer arrays correctly', () => {
