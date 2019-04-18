@@ -4,7 +4,7 @@ import { createActions } from './actions'
 import { createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
-import { addReducer } from '../store'
+import { addReducer } from '../store/reducer'
 
 let inputPathCreators = new WeakMap()
 let globalInputCounter = 0
