@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
 
@@ -9,7 +9,7 @@ export function kea (input) {
   const wrapper = (Klass) => {
     injectActionsIntoClass(Klass)
 
-    const Connect = connect(
+    const Connect = reduxConnect(
       mapStateToPropsCreator(input),
       mapDispatchToPropsCreator(input)
     )(Klass)
@@ -38,6 +38,10 @@ export function kea (input) {
   }
 
   return wrapper
+}
+
+export function connect (input) {
+  return kea({ connect: input })
 }
 
 const mapStateToPropsCreator = input => (state, ownProps) => {

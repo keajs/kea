@@ -12,7 +12,7 @@
 import { resetKeaLogicCache } from './kea'
 import { clearReducerCache } from './store'
 
-export { kea } from './kea'
+export { kea, connect } from './kea'
 export { keaReducer, getStore } from './store'
 
 export function resetKeaCache () {
