@@ -1,14 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
 
-export function kea (input) {
-  // with dynamic logic (key from props) we wrap connect() with our own wrapper
-  // to allow the store/state to regenerate before handing it over to mapStateToProps
-  // in the future we'll use this to also track which logic stores are mounted and which aren't
-  const mustWrapTheWrapper = !!input.key || false
+let mountedLogic = {}
 
+export function kea (input) {
   const wrapper = (Klass) => {
     injectActionsIntoClass(Klass)
 
@@ -17,14 +14,18 @@ export function kea (input) {
       mapDispatchToPropsCreator(input)
     )(Klass)
 
-    if (mustWrapTheWrapper) {
-      return function Kea (props) {
-        // attach the reducer to redux before handing it over to react-redux
-        convertInputToLogic({ input, props })
-        return <Connect {...props} />
-      }
-    } else {
-      return Connect
+    return function Kea (props) {
+      const logic = convertInputToLogic({ input, props })
+      const pathString = logic.path.join('.')
+
+      useEffect(() => {
+        mountedLogic[pathString] = (mountedLogic[pathString] || 0) + 1
+        return () => {
+          mountedLogic[pathString] = (mountedLogic[pathString] || 0) - 1
+        }
+      }, [pathString])
+
+      return <Connect {...props} />
     }
   }
 
@@ -88,6 +89,11 @@ function injectActionsIntoClass (Klass) {
   }
 }
 
+export function clearMountedLogic () {
+  mountedLogic = {}
+}
+
 export function resetKeaLogicCache () {
   clearLogicCache()
+  clearMountedLogic()
 }

@@ -7,6 +7,7 @@ export function createConnect (input, output) {
     const response = deconstructMapping(input.connect.actions)
 
     response.forEach(([logic, from, to]) => {
+      joinPaths(output.paths, logic.paths)
       output.actions[to] = logic.actions[from]
     })
   }
@@ -15,6 +16,7 @@ export function createConnect (input, output) {
     const response = deconstructMapping(input.connect.props)
 
     response.forEach(([logic, from, to]) => {
+      joinPaths(output.paths, logic.paths)
       if (from === '*') {
         output.selectors[to] = logic.selector
       } else {
@@ -22,6 +24,18 @@ export function createConnect (input, output) {
       }
     })
   }
+}
+
+function joinPaths (paths, pathsToAdd) {
+  if (!pathsToAdd || pathsToAdd.length === 0) {
+    return
+  }
+
+  pathsToAdd.forEach(path => {
+    if (paths.indexOf(path) === -1) {
+      paths.push(path)
+    }
+  })
 }
 
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]

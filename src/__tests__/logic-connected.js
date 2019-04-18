@@ -68,6 +68,7 @@ test('connected props and actions get passed, reducers get added to the store', 
   expect(secondLogic._isKeaFunction).toBe(true)
   expect(secondLogic._isKeaSingleton).toBe(true)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
+  expect([...secondLogic.paths].sort()).toEqual(['scenes.homepage.first', 'scenes.homepage.second'])
   expect(Object.keys(secondLogic.actions)).toEqual(['updateName'])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
 

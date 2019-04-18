@@ -55,6 +55,7 @@ function convertInputWithPath (input, key, path) {
   let output = {
     key,
     path,
+    paths: path ? [ path.join('.') ] : [],
     constants: {},
     actions: {},
     defaults: {},

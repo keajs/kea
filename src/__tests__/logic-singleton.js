@@ -46,6 +46,7 @@ test('singleton logic has all the right properties', () => {
   expect(response._isKeaFunction).toBe(true)
   expect(response._isKeaSingleton).toBe(true)
   expect(response.path).toEqual(['scenes', 'homepage', 'index'])
+  expect(response.paths).toEqual(['scenes.homepage.index'])
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
   // actions
