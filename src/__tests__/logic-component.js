@@ -4,8 +4,11 @@ import { kea, getStore, resetKeaCache } from '../index'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { mount } from 'enzyme'
+import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
+import Adapter from 'enzyme-adapter-react-16'
+
+configure({ adapter: new Adapter() })
 
 class SampleComponent extends Component {
   render () {
@@ -86,7 +89,7 @@ test('singletons connect to react components', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'chirpy' } } })
 
-  const sampleComponent = wrapper.find('SampleComponent').node
+  const sampleComponent = wrapper.find('SampleComponent').instance()
 
   expect(sampleComponent.actions).toBeDefined()
   expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
@@ -153,7 +156,7 @@ test('dynamic connect to react components', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'chirpy' } } } })
 
-  const sampleComponent = wrapper.find('SampleComponent').node
+  const sampleComponent = wrapper.find('SampleComponent').instance()
 
   expect(sampleComponent.actions).toBeDefined()
   expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
@@ -235,7 +238,7 @@ test('connected props can be used as selectors', () => {
 
   expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
 
-  const sampleComponent = wrapper.find('SampleComponent').node
+  const sampleComponent = wrapper.find('SampleComponent').instance()
 
   expect(sampleComponent.actions).toBeDefined()
   expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
@@ -319,7 +322,7 @@ test('no protypes needed', () => {
 
   expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
   expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
-  const sampleComponent = wrapper.find('ActionComponent').node
+  const sampleComponent = wrapper.find('ActionComponent').instance()
 
   const { updateName } = sampleComponent.actions
   updateName('somename')
