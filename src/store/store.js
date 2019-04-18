@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 
-import { keaReducer } from './reducer'
+import { keaReducer, attachStore } from './reducer'
 // import { globalPlugins, activatePlugin } from '../plugins'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -50,6 +50,11 @@ export function getStore (opts = {}) {
 
   // create store
   const store = finalCreateStore(combinedReducers, Object.assign({}, options.preloadedState))
+
+  // give kea direct access to this store
+  // we need this to dispatch hydration actions when new kea logic stores are
+  // injected together with react components
+  attachStore(store)
 
   // // run post-hooks
   // globalPlugins.afterReduxStore.forEach(f => f(options, store))

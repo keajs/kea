@@ -1,14 +1,21 @@
 import { combineReducers } from 'redux'
 
+export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
+
 // worker functions are loaded globally, reducers locally in store
 let defaultReducerRoot = null
 
 // all reducers that are created
 let reducerTree = {}
 let rootReducers = {}
-let syncedWithStore = {}
+let syncedWithStore = {} // TODO: remove?
+let store
 
 const defaultState = {}
+
+export function attachStore (storeReference) {
+  store = storeReference
+}
 
 export function clearReducerCache () {
   defaultReducerRoot = null
@@ -78,6 +85,7 @@ export function addReducer (path, reducer) {
   }
 
   regenerateRootReducer(pathStart)
+  store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
 }
 
 export function regenerateRootReducer (pathStart) {
