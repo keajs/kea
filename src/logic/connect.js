@@ -7,8 +7,12 @@ export function createConnect (input, output) {
     const response = deconstructMapping(input.connect.actions)
 
     response.forEach(([logic, from, to]) => {
-      joinPaths(output.paths, logic.paths)
-      output.actions[to] = logic.actions[from]
+      if (logic._isKeaFunction) {
+        joinPaths(output.paths, logic.paths)
+        output.actions[to] = logic.actions[from]
+      } else {
+        output.actions[to] = logic[from]
+      }
     })
   }
 
@@ -16,11 +20,12 @@ export function createConnect (input, output) {
     const response = deconstructMapping(input.connect.props)
 
     response.forEach(([logic, from, to]) => {
-      joinPaths(output.paths, logic.paths)
-      if (from === '*') {
-        output.selectors[to] = logic.selector
+      const isKea = logic._isKeaFunction
+      if (isKea) {
+        joinPaths(output.paths, logic.paths)
+        output.selectors[to] = from === '*' ? logic.selector : logic.selectors[from]
       } else {
-        output.selectors[to] = logic.selectors[from]
+        output.selectors[to] = from === '*' ? logic : (state, props) => logic(state, props)[from]
       }
     })
   }

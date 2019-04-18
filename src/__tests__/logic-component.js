@@ -331,3 +331,54 @@ test('no protypes needed', () => {
 
   wrapper.unmount()
 })
+
+test('can select with regular', () => {
+  const store = getStore({
+    reducers: {
+      random: () => ({ some: 'value' })
+    }
+  })
+
+  const logic = kea({
+    path: () => ['scenes', 'kea', 'first'],
+
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  const connectedLogic = kea({
+    connect: {
+      props: [
+        logic, ['name'],
+        (state) => state.random, ['some']
+      ]
+    }
+  })
+
+  function RegularSelectorTest ({ name, some }) {
+    return (
+      <div className='values'>
+        {name},{some}
+      </div>
+    )
+  }
+
+  const ConnectedComponent = connectedLogic(RegularSelectorTest)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent />
+    </Provider>
+  )
+
+  expect(wrapper.find('.values').text()).toEqual('chirpy,value')
+
+  wrapper.unmount()
+})
