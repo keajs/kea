@@ -26,10 +26,10 @@ export function kea (input) {
 }
 
 const mapStateToPropsCreator = input => (state, ownProps) => {
-  const createdLogicEverything = convertInputToLogic({ input, props: ownProps })
+  const logic = convertInputToLogic({ input, props: ownProps })
 
   let resp = {}
-  Object.entries(createdLogicEverything.selectors).forEach(([key, selector]) => {
+  Object.entries(logic.selectors).forEach(([key, selector]) => {
     resp[key] = selector(state, ownProps)
   })
 
@@ -37,11 +37,11 @@ const mapStateToPropsCreator = input => (state, ownProps) => {
 }
 
 const mapDispatchToPropsCreator = input => (dispatch, ownProps) => {
-  const createdLogicEverything = convertInputToLogic({ input, props: ownProps })
+  const logic = convertInputToLogic({ input, props: ownProps })
 
   let actions = Object.assign({}, ownProps.actions)
 
-  Object.entries(createdLogicEverything.actions).forEach(([key, action]) => {
+  Object.entries(logic.actions).forEach(([key, action]) => {
     actions[key] = (...args) => dispatch(action(...args))
   })
 
