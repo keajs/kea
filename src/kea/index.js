@@ -20,7 +20,7 @@ export function kea (input) {
       useEffect(() => {
         mountPaths(logic.paths)
         return () => unmountPaths(logic.paths)
-      }, logic.paths)
+      }, [logic.paths])
 
       return <Connect {...props} />
     }
