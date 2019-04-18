@@ -65,8 +65,8 @@ function convertInputWithPath (input, key, path) {
     reducer: () => ({})
   }
 
-  // no path if only connecting. this avoids polluting with empty reducers
-  if (Object.keys(input).length === 1 && input.connect) {
+  // no path if only connecting or selecting. this avoids polluting the store with empty reducers
+  if (Object.keys(input).length === 1 && (input.connect || input.selectors)) {
     output.path = undefined
   }
 

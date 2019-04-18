@@ -45,10 +45,6 @@ test('selectors have access to the component\'s props', () => {
     })
   })
 
-  // make sure booksLogic has been mounted to the store by dispatching some random action
-  // TODO: this should not be necessary!
-  store.dispatch({ type: 'bla' })
-
   const ConnectedBookDetail = bookDetailLogic(BookDetail)
 
   const wrapper = mount(
@@ -64,7 +60,7 @@ test('selectors have access to the component\'s props', () => {
   expect(wrapper.find('#book-2').text()).toEqual('book2')
 
   // only one of the components should be in the store, as only one has a reducer
-  expect(Object.keys(store.getState().kea._kea).length).toEqual(1)
+  expect(Object.keys(store.getState().kea.inline).length).toEqual(1)
 
   wrapper.unmount()
 })
