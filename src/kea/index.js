@@ -1,15 +1,31 @@
+import React from 'react'
 import { connect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
 
 export function kea (input) {
+  // with dynamic logic (key from props) we wrap connect() with our own wrapper
+  // to allow the store/state to regenerate before handing it over to mapStateToProps
+  // in the future we'll use this to also track which logic stores are mounted and which aren't
+  const mustWrapTheWrapper = !!input.key || false
+
   const wrapper = (Klass) => {
     injectActionsIntoClass(Klass)
 
-    return connect(
+    const Connect = connect(
       mapStateToPropsCreator(input),
       mapDispatchToPropsCreator(input)
     )(Klass)
+
+    if (mustWrapTheWrapper) {
+      return function Kea (props) {
+        // attach the reducer to redux before handing it over to react-redux
+        convertInputToLogic({ input, props })
+        return <Connect {...props} />
+      }
+    } else {
+      return Connect
+    }
   }
 
   wrapper._isKeaFunction = true
