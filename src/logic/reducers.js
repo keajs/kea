@@ -21,26 +21,28 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
-const emptyObj = {}
+export function createReducers (input, output) {
+  if (!input.reducers) {
+    return
+  }
 
-// input: object with values: { value, type, reducer, ...options } or function(state, action) {}
-// output: combined reducer function (state, action) {}
-export function combineReducerObjects (path, objects) {
-  const reducers = {}
+  const reducerCreators = input.reducers(output)
 
-  Object.keys(objects).forEach(key => {
-    reducers[key] = objects[key].reducer
+  const reducerObjects = convertReducerArrays(reducerCreators)
+
+  Object.keys(reducerObjects).forEach(key => {
+    const reducerObject = reducerObjects[key]
+
+    output.propTypes[key] = reducerObject.type
+    output.defaults[key] = reducerObject.value
+    output.reducers[key] = reducerObject.reducer
+    // TODO: store this somehow
+    // output.meta[key] = reducerObject.options
   })
 
-  if (Object.keys(reducers).length > 0) {
-    return combineReducers(reducers)
-  } else {
-    return () => emptyObj
-  }
+  output.reducer = combineReducers(output.reducers)
 }
 
-// input: object with values: [value, (type), (options), reducer]
-// output: object with values: { value, type, reducer, ...options }
 export function convertReducerArrays (reducers) {
   if (!reducers) {
     return reducers
