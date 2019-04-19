@@ -36,8 +36,7 @@ export function createReducers (input, output) {
     output.propTypes[key] = reducerObject.type
     output.defaults[key] = reducerObject.value
     output.reducers[key] = reducerObject.reducer
-    // TODO: store this somehow
-    // output.meta[key] = reducerObject.options
+    output.reducerOptions[key] = reducerObject.options
   })
 
   output.reducer = combineReducers(output.reducers)

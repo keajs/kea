@@ -60,6 +60,7 @@ function convertInputWithPath (input, key, path) {
     actions: {},
     defaults: {},
     reducers: {},
+    reducerOptions: {},
     selectors: {},
     propTypes: {},
     reducer: () => ({})
