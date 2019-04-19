@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 
 import { keaReducer, attachStore } from './reducer'
-// import { globalPlugins, activatePlugin } from '../plugins'
+import { plugins, activatePlugin } from '../plugins'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
@@ -20,10 +20,10 @@ export function getStore (opts = {}) {
   // clone options
   let options = Object.assign({}, defaultOptions, opts)
 
-  // // activate all the global plugins
-  // options.plugins.forEach(plugin => {
-  //   activatePlugin(plugin)
-  // })
+  // activate all the plugins
+  options.plugins.forEach(plugin => {
+    activatePlugin(plugin)
+  })
 
   // clone reducers
   options.reducers = Object.assign({}, options.reducers)
@@ -31,8 +31,8 @@ export function getStore (opts = {}) {
     options.reducers[path] = keaReducer(path)
   })
 
-  // // run pre-hooks
-  // globalPlugins.beforeReduxStore.forEach(f => f(options))
+  // run pre-hooks
+  plugins.beforeReduxStore.forEach(f => f(options))
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
@@ -56,8 +56,8 @@ export function getStore (opts = {}) {
   // injected together with react components
   attachStore(store)
 
-  // // run post-hooks
-  // globalPlugins.afterReduxStore.forEach(f => f(options, store))
+  // run post-hooks
+  plugins.afterReduxStore.forEach(f => f(options, store))
 
   return store
 }
