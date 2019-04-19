@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
+import { plugins } from '../plugins'
 
 let mountedPaths = {}
 
@@ -18,9 +19,9 @@ export function kea (input) {
       const logic = convertInputToLogic({ input, props })
 
       useEffect(() => {
-        mountPaths(logic.paths)
-        return () => unmountPaths(logic.paths)
-      }, [logic.paths])
+        mountPaths(logic, plugins)
+        return () => unmountPaths(logic, plugins)
+      }, [logic.path])
 
       return <Connect {...props} />
     }
@@ -91,15 +92,21 @@ function injectActionsIntoClass (Klass) {
   }
 }
 
-export function mountPaths (paths) {
-  paths.forEach(path => {
+export function mountPaths (logic) {
+  Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) + 1
+    if (plugins.mountedPath && mountedPaths[path] === 1) {
+      plugins.mountedPath.forEach(f => f(path, logic))
+    }
   })
 }
 
-export function unmountPaths (paths) {
-  paths.forEach(path => {
+export function unmountPaths (logic) {
+  Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) - 1
+    if (plugins.unmountedPath && mountedPaths[path] === 0) {
+      plugins.unmountedPath.forEach(f => f(path, logic))
+    }
   })
 }
 

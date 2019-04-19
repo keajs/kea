@@ -236,7 +236,7 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
 
-  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}, second: {}}}})
+  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}}}})
 
   const sampleComponent = wrapper.find('SampleComponent').instance()
 
@@ -246,7 +246,7 @@ test('connected props can be used as selectors', () => {
   const { updateName } = sampleComponent.actions
   updateName('somename')
 
-  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'somename'}, second: {}}}})
+  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'somename'}}}})
 
   wrapper.render()
 
@@ -286,7 +286,7 @@ test('doubly connected actions are merged', () => {
     </Provider>
   )
 
-  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
+  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
   expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
 
   wrapper.unmount()
@@ -320,7 +320,7 @@ test('no protypes needed', () => {
     </Provider>
   )
 
-  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name,root')
+  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
   expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
   const sampleComponent = wrapper.find('ActionComponent').instance()
 

@@ -33,7 +33,7 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps }
 
     logicCache[pathString] = output
 
-    if (output.path) {
+    if (output.reducer) {
       addReducer(output.path, output.reducer)
     }
   }
@@ -55,7 +55,7 @@ function convertInputWithPath (input, key, path) {
   let output = {
     key,
     path,
-    paths: path ? [ path.join('.') ] : [],
+    connections: {},
     constants: {},
     actions: {},
     defaults: {},
@@ -63,13 +63,10 @@ function convertInputWithPath (input, key, path) {
     reducerOptions: {},
     selectors: {},
     propTypes: {},
-    reducer: () => ({})
+    reducer: undefined
   }
 
-  // no path if only connecting or selecting. this avoids polluting the store with empty reducers
-  if (Object.keys(input).length === 1 && (input.connect || input.selectors)) {
-    output.path = undefined
-  }
+  output.connections[path.join('.')] = output
 
   createConnect(input, output)
   createConstants(input, output)

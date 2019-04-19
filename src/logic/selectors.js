@@ -6,22 +6,15 @@ export function pathSelector (path, state) {
   return ([state]).concat(path).reduce((v, a) => v[a])
 }
 
-export function safePathSelector (path, state) {
-  return ([state]).concat(path).reduce((v, a) => (v || {})[a])
-}
-
 export function createReducerSelectors (input, output) {
-  if (!output.path) {
+  if (!output.reducer) {
     return
   }
 
-  const rootSelector = state => pathSelector(output.path, state)
-
-  output.selector = rootSelector
-  output.selectors.root = rootSelector
+  output.selector = state => pathSelector(output.path, state)
 
   Object.keys(output.reducers).forEach(key => {
-    output.selectors[key] = createSelector(rootSelector, state => state[key])
+    output.selectors[key] = createSelector(output.selector, state => state[key])
   })
 }
 

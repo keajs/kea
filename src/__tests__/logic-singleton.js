@@ -46,7 +46,7 @@ test('singleton logic has all the right properties', () => {
   expect(response._isKeaFunction).toBe(true)
   expect(response._isKeaSingleton).toBe(true)
   expect(response.path).toEqual(['scenes', 'homepage', 'index'])
-  expect(response.paths).toEqual(['scenes.homepage.index'])
+  expect(Object.keys(response.connections)).toEqual(['scenes.homepage.index'])
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
   // actions
@@ -82,14 +82,13 @@ test('singleton logic has all the right properties', () => {
   expect(response.reducer({ name: 'something' }, updateName('newName'))).toEqual({ name: 'newName' })
 
   // selectors
-  expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'root', 'upperCaseName'])
+  expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
   expect(response.selectors.name(state)).toEqual('chirpy')
   expect(response.selectors.capitalizedName(state)).toEqual('Chirpy')
   expect(response.selectors.upperCaseName(state)).toEqual('CHIRPY')
 
   // root selector
   expect(response.selector(state)).toEqual(defaultValues)
-  expect(response.selectors.root(state)).toEqual(defaultValues)
 })
 
 test('it is not a singleton if there is a key', () => {
