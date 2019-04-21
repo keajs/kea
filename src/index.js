@@ -16,6 +16,7 @@ import { clearActivatedPlugins } from './plugins'
 
 export { kea, connect } from './kea'
 export { keaReducer, getStore, ATTACH_REDUCER } from './store'
+export { activatePlugin } from './plugins'
 
 export function resetKeaCache () {
   resetKeaLogicCache()

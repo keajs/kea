@@ -32,7 +32,7 @@ export function getStore (opts = {}) {
   })
 
   // run pre-hooks
-  plugins.beforeReduxStore.forEach(f => f(options))
+  plugins.forEach(f => f.beforeReduxStore && f.beforeReduxStore(options))
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
@@ -57,7 +57,7 @@ export function getStore (opts = {}) {
   attachStore(store)
 
   // run post-hooks
-  plugins.afterReduxStore.forEach(f => f(options, store))
+  plugins.forEach(f => f.afterReduxStore && f.afterReduxStore(options, store))
 
   return store
 }

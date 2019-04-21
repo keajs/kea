@@ -2,21 +2,23 @@ import React, { useEffect } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
-import { plugins } from '../plugins'
+import { plugins as globalPlugins } from '../plugins'
 
 let mountedPaths = {}
 
 export function kea (input) {
+  const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
+
   const wrapper = (Klass) => {
     injectActionsIntoClass(Klass)
 
     const Connect = reduxConnect(
-      mapStateToPropsCreator(input),
-      mapDispatchToPropsCreator(input)
+      mapStateToPropsCreator(input, plugins),
+      mapDispatchToPropsCreator(input, plugins)
     )(Klass)
 
     return function Kea (props) {
-      const logic = convertInputToLogic({ input, props })
+      const logic = convertInputToLogic({ input, props, plugins })
 
       useEffect(() => {
         mountPaths(logic, plugins)
@@ -32,10 +34,10 @@ export function kea (input) {
   wrapper._isKeaSingleton = !input.key
 
   if (!input.key) {
-    Object.assign(wrapper, convertInputToLogic({ input }))
+    Object.assign(wrapper, convertInputToLogic({ input, plugins }))
   } else {
-    Object.assign(wrapper, convertPartialDynamicInput(input))
-    wrapper.withKey = (key) => convertInputToLogic({ input, key })
+    Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
+    wrapper.withKey = (key) => convertInputToLogic({ input, key, plugins })
   }
 
   return wrapper
@@ -45,8 +47,8 @@ export function connect (input) {
   return kea({ connect: input })
 }
 
-const mapStateToPropsCreator = input => (state, ownProps) => {
-  const logic = convertInputToLogic({ input, props: ownProps })
+const mapStateToPropsCreator = (input, plugins) => (state, ownProps) => {
+  const logic = convertInputToLogic({ input, props: ownProps, plugins })
 
   let resp = {}
   Object.entries(logic.selectors).forEach(([key, selector]) => {
@@ -56,8 +58,8 @@ const mapStateToPropsCreator = input => (state, ownProps) => {
   return resp
 }
 
-const mapDispatchToPropsCreator = input => (dispatch, ownProps) => {
-  const logic = convertInputToLogic({ input, props: ownProps })
+const mapDispatchToPropsCreator = (input, plugins) => (dispatch, ownProps) => {
+  const logic = convertInputToLogic({ input, props: ownProps, plugins })
 
   let actions = Object.assign({}, ownProps.actions)
 
@@ -92,20 +94,20 @@ function injectActionsIntoClass (Klass) {
   }
 }
 
-export function mountPaths (logic) {
+export function mountPaths (logic, plugins) {
   Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) + 1
-    if (plugins.mountedPath && mountedPaths[path] === 1) {
-      plugins.mountedPath.forEach(f => f(path, logic))
+    if (mountedPaths[path] === 1) {
+      plugins.forEach(f => f.mountedPath && f.mountedPath(path, logic))
     }
   })
 }
 
-export function unmountPaths (logic) {
+export function unmountPaths (logic, plugins) {
   Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) - 1
-    if (plugins.unmountedPath && mountedPaths[path] === 0) {
-      plugins.unmountedPath.forEach(f => f(path, logic))
+    if (mountedPaths[path] === 0) {
+      plugins.forEach(f => f.unmountedPath && f.unmountedPath(path, logic))
     }
   })
 }

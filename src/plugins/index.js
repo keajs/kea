@@ -1,68 +1,71 @@
-export let plugins = {
-  // all plugins that are activated
-  _activated: {},
+export let plugins = []
 
-  // f(options)
-  beforeReduxStore: [],
+/*
+  plugins = [
+    {
+      // Required: name of the plugin
+      name: ''
 
-  // f(options, store)
-  afterReduxStore: [],
+      // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
+      beforeReduxStore (options)
 
-  // // f(input, output) => bool
-  // isActive: [],
+      // Run after the redux store is created.
+      afterReduxStore (options, store)
 
-  // // f(input, output)
-  // afterConnect: [],
+      // Run before we start converting the input into the output
+      beforeCreate (input, output)
 
-  // // f(input, output)
-  // afterCreateSingleton: [],
+      // Run after each step in the conversion
+      afterCreateConnect (input, output)
+      afterCreateConstants (input, output)
+      afterCreateActions (input, output)
+      afterCreateReducers (input, output)
+      afterCreateReducerSelectors (input, output)
+      afterCreateSelectors (input, output)
 
-  // // f(input, output, reducerObjects)
-  // mutateReducerObjects: [],
+      // Run after the input is fully converted to the output
+      afterCreate (input, output)
 
-  // // f(input, output, reducer)
-  // mutateReducer: [],
+      // Run when a logic store is mounted in React
+      mountedPath (path, logic)
+      unmountedPath (path, logic)
 
-  // // f(input, output, Klass)
-  // injectToClass: [],
+      // Run when we are removing kea from the system, e.g. when cleaning up after tests
+      clearCache ()
+    },
+    ...
+  ]
+*/
 
-  // // f(input, output, KonnektedKlass)
-  // injectToConnectedClass: [],
+// old and to be removed/migrated
+//   // // f(input, output)
+//   // afterConnect: [],
 
-  // // f(input, output, response)
-  // addToResponse: [],
+//   // // f(input, output)
+//   // afterCreateSingleton: [],
 
-  // f()
-  clearCache: []
+//   // // f(input, output, reducerObjects)
+//   // mutateReducerObjects: [],
+
+//   // // f(input, output, reducer)
+//   // mutateReducer: [],
+
+//   // // f(input, output, Klass)
+//   // injectToClass: [],
+
+//   // // f(input, output, KonnektedKlass)
+//   // injectToConnectedClass: [],
+
+//   // // f(input, output, response)
+//   // addToResponse: [],
+
+// }
+
+export function activatePlugin (plugin) {
+  plugins.push(plugin)
 }
 
-export function activatePlugin (plugin, pluginTarget = plugins) {
-  if (!pluginTarget._activated[plugin.name]) {
-    // if (process.env.NODE_ENV !== 'production') {
-    //   if (pluginTarget === plugins && plugin.global === false) {
-    //     console.error(`[KEA] Plugin "${plugin.name}" can not be used as a global plugin! Please use locally in kea({}) calls.`)
-    //   }
-    //   if (pluginTarget !== plugins && plugin.local === false) {
-    //     console.error(`[KEA] Plugin "${plugin.name}" can not be used as a local plugin! Please install globally in getStore({})! Also, make sure the call to getStore({}) takes place before any call to kea({}), otherwise the plugin will not yet be active! See https://kea.js.org/guide/installation`)
-    //   }
-    // }
-
-    Object.keys(plugin).forEach(key => {
-      if (typeof plugin[key] === 'function') {
-        plugin[key]._name = plugin.name // ??
-        pluginTarget[key].push(plugin[key])
-      }
-    })
-
-    pluginTarget._activated[plugin.name] = true
-  }
-}
-
-export function clearActivatedPlugins (pluginTarget = plugins) {
-  pluginTarget.clearCache.forEach(f => f())
-
-  Object.keys(pluginTarget).forEach(key => {
-    pluginTarget[key] = []
-  })
-  pluginTarget._activated = {}
+export function clearActivatedPlugins () {
+  plugins.forEach(f => f.clearCache && f.clearCache())
+  plugins = []
 }

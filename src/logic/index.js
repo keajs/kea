@@ -18,7 +18,7 @@ export function clearLogicCache () {
   logicCache = {}
 }
 
-export function convertInputToLogic ({ input, key: inputKey, props: inputProps }) {
+export function convertInputToLogic ({ input, key: inputKey, props: inputProps, plugins }) {
   const key = inputKey || (inputProps && input.key ? input.key(inputProps) : null)
 
   if (!key && input.key) {
@@ -29,7 +29,7 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps }
   const pathString = path.join('.')
 
   if (!logicCache[pathString]) {
-    const output = convertInputWithPath(input, key, path)
+    const output = convertInputWithPath(input, key, path, plugins)
 
     logicCache[pathString] = output
 
@@ -41,17 +41,18 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps }
   return logicCache[pathString]
 }
 
-export function convertPartialDynamicInput (input) {
+export function convertPartialDynamicInput ({ input, plugins }) {
   let output = {
     constants: {}
   }
 
   createConstants(input, output)
+  plugins.forEach(p => p.afterCreateConstants && p.afterCreateConstants(input, output))
 
   return output
 }
 
-function convertInputWithPath (input, key, path) {
+function convertInputWithPath (input, key, path, plugins) {
   let output = {
     key,
     path,
@@ -63,17 +64,33 @@ function convertInputWithPath (input, key, path) {
     reducerOptions: {},
     selectors: {},
     propTypes: {},
-    reducer: undefined
+    reducer: undefined,
+    plugins: plugins
   }
+
+  plugins.forEach(p => p.beforeCreate && p.beforeCreate(input, output))
+
+  createConnect(input, output)
+  plugins.forEach(p => p.afterCreateConnect && p.afterCreateConnect(input, output))
+
+  createConstants(input, output)
+  plugins.forEach(p => p.afterCreateConstants && p.afterCreateConstants(input, output))
+
+  createActions(input, output)
+  plugins.forEach(p => p.afterCreateActions && p.afterCreateActions(input, output))
+
+  createReducers(input, output)
+  plugins.forEach(p => p.afterCreateReducers && p.afterCreateReducers(input, output))
+
+  createReducerSelectors(input, output)
+  plugins.forEach(p => p.afterCreateReducerSelectors && p.afterCreateReducerSelectors(input, output))
+
+  createSelectors(input, output)
+  plugins.forEach(p => p.afterCreateSelectors && p.afterCreateSelectors(input, output))
 
   output.connections[path.join('.')] = output
 
-  createConnect(input, output)
-  createConstants(input, output)
-  createActions(input, output)
-  createReducers(input, output)
-  createReducerSelectors(input, output)
-  createSelectors(input, output)
+  plugins.forEach(p => p.afterCreate && p.afterCreate(input, output))
 
   return output
 }
