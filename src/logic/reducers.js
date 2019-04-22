@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux'
 
+const emptyObject = {}
+
 function warnIfUndefinedActionCreator (object, property) {
   if (process.env.NODE_ENV !== 'production') {
     if (object.reducer.undefined !== undefined) {
@@ -21,25 +23,34 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
-export function createReducers (input, output) {
+export function createReducerInputs (input, output) {
   if (!input.reducers) {
     return
   }
 
   const reducerCreators = input.reducers(output)
 
-  const reducerObjects = convertReducerArrays(reducerCreators)
+  output.reducerInputs = convertReducerArrays(reducerCreators)
+}
 
-  Object.keys(reducerObjects).forEach(key => {
-    const reducerObject = reducerObjects[key]
+export function createReducers (input, output) {
+  if (!input.reducers || !output.reducerInputs) {
+    return
+  }
 
-    output.propTypes[key] = reducerObject.type
-    output.defaults[key] = reducerObject.value
-    output.reducers[key] = reducerObject.reducer
-    output.reducerOptions[key] = reducerObject.options
+  Object.keys(output.reducerInputs).forEach(key => {
+    const reducerInput = output.reducerInputs[key]
+
+    output.propTypes[key] = reducerInput.type
+    output.defaults[key] = reducerInput.value
+    output.reducers[key] = reducerInput.reducer
   })
 
-  output.reducer = combineReducers(output.reducers)
+  if (Object.keys(output.reducers).length > 0) {
+    output.reducer = combineReducers(output.reducers)
+  } else {
+    output.reducer = () => emptyObject
+  }
 }
 
 export function convertReducerArrays (reducers) {
@@ -57,17 +68,17 @@ export function convertReducerArrays (reducers) {
       const type = typeof s[1] === 'function' ? s[1] : undefined
       const options = typeof s[s.length - 2] === 'object' ? s[s.length - 2] : undefined
 
-      let reducerObject = {
+      let reducerInput = {
         value: value,
         type: type,
         reducer: typeof reducer === 'function' ? reducer : createReducer(reducer, value)
       }
 
       if (options) {
-        reducerObject.options = options
+        reducerInput.options = options
       }
 
-      reducers[keys[i]] = warnIfUndefinedActionCreator(reducerObject, keys[i])
+      reducers[keys[i]] = warnIfUndefinedActionCreator(reducerInput, keys[i])
     }
   }
 

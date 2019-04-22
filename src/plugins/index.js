@@ -19,6 +19,7 @@ export let plugins = []
       afterCreateConnect (input, output, addConncetion)
       afterCreateConstants (input, output)
       afterCreateActions (input, output)
+      afterCreateReducerInputs (input, output)
       afterCreateReducers (input, output)
       afterCreateReducerSelectors (input, output)
       afterCreateSelectors (input, output)
@@ -42,30 +43,6 @@ export let plugins = []
     ...
   ]
 */
-
-// old and to be removed/migrated
-//   // // f(input, output)
-//   // afterConnect: [],
-
-//   // // f(input, output)
-//   // afterCreateSingleton: [],
-
-//   // // f(input, output, reducerObjects)
-//   // mutateReducerObjects: [],
-
-//   // // f(input, output, reducer)
-//   // mutateReducer: [],
-
-//   // // f(input, output, Klass)
-//   // injectToClass: [],
-
-//   // // f(input, output, KonnektedKlass)
-//   // injectToConnectedClass: [],
-
-//   // // f(input, output, response)
-//   // addToResponse: [],
-
-// }
 
 export function activatePlugin (plugin) {
   plugins.push(plugin)

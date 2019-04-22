@@ -1,7 +1,7 @@
 import { createConnect, addConnection } from './connect'
 import { createConstants } from './constants'
 import { createActions } from './actions'
-import { createReducers } from './reducers'
+import { createReducerInputs, createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
 import { addReducer } from '../store/reducer'
@@ -60,8 +60,8 @@ function convertInputWithPath (input, key, path, plugins) {
     constants: {},
     actions: {},
     defaults: {},
+    reducerInputs: {},
     reducers: {},
-    reducerOptions: {},
     selectors: {},
     propTypes: {},
     reducer: undefined,
@@ -78,6 +78,9 @@ function convertInputWithPath (input, key, path, plugins) {
 
   createActions(input, output)
   plugins.forEach(p => p.afterCreateActions && p.afterCreateActions(input, output))
+
+  createReducerInputs(input, output)
+  plugins.forEach(p => p.afterCreateReducerInputs && p.afterCreateReducerInputs(input, output))
 
   createReducers(input, output)
   plugins.forEach(p => p.afterCreateReducers && p.afterCreateReducers(input, output))
