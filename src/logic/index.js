@@ -1,4 +1,4 @@
-import { createConnect } from './connect'
+import { createConnect, addConnection } from './connect'
 import { createConstants } from './constants'
 import { createActions } from './actions'
 import { createReducers } from './reducers'
@@ -71,7 +71,7 @@ function convertInputWithPath (input, key, path, plugins) {
   plugins.forEach(p => p.beforeCreate && p.beforeCreate(input, output))
 
   createConnect(input, output)
-  plugins.forEach(p => p.afterCreateConnect && p.afterCreateConnect(input, output))
+  plugins.forEach(p => p.afterCreateConnect && p.afterCreateConnect(input, output, addConnection))
 
   createConstants(input, output)
   plugins.forEach(p => p.afterCreateConstants && p.afterCreateConstants(input, output))

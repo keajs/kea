@@ -8,7 +8,7 @@ export function createConnect (input, output) {
 
     response.forEach(([logic, from, to]) => {
       if (logic._isKeaFunction) {
-        addConncetion(output, logic)
+        addConnection(output, logic)
         output.actions[to] = logic.actions[from]
       } else {
         output.actions[to] = logic[from]
@@ -21,7 +21,7 @@ export function createConnect (input, output) {
 
     response.forEach(([logic, from, to]) => {
       if (logic._isKeaFunction) {
-        addConncetion(output, logic)
+        addConnection(output, logic)
         output.selectors[to] = from === '*' ? logic.selector : logic.selectors[from]
       } else {
         output.selectors[to] = from === '*' ? logic : (state, props) => logic(state, props)[from]
@@ -30,7 +30,7 @@ export function createConnect (input, output) {
   }
 }
 
-function addConncetion (output, logic) {
+export function addConnection (output, logic) {
   if (!logic.connections || Object.keys(logic.connections).length === 0) {
     return
   }

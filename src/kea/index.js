@@ -20,10 +20,14 @@ export function kea (input) {
     return function Kea (props) {
       const logic = convertInputToLogic({ input, props, plugins })
 
+      plugins.forEach(p => p.beforeMount && p.beforeMount(logic, props))
+
       useEffect(() => {
         mountPaths(logic, plugins)
         return () => unmountPaths(logic, plugins)
       }, [logic.path])
+
+      plugins.forEach(p => p.beforeRender && p.beforeRender(logic, props))
 
       return <Connect {...props} />
     }
@@ -98,7 +102,7 @@ export function mountPaths (logic, plugins) {
   Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) + 1
     if (mountedPaths[path] === 1) {
-      plugins.forEach(f => f.mountedPath && f.mountedPath(path, logic))
+      plugins.forEach(p => p.mountedPath && p.mountedPath(path, logic.connections[path]))
     }
   })
 }
@@ -107,7 +111,7 @@ export function unmountPaths (logic, plugins) {
   Object.keys(logic.connections).forEach(path => {
     mountedPaths[path] = (mountedPaths[path] || 0) - 1
     if (mountedPaths[path] === 0) {
-      plugins.forEach(f => f.unmountedPath && f.unmountedPath(path, logic))
+      plugins.forEach(p => p.unmountedPath && p.unmountedPath(path, logic.connections[path]))
     }
   })
 }

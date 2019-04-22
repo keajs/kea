@@ -16,7 +16,7 @@ export let plugins = []
       beforeCreate (input, output)
 
       // Run after each step in the conversion
-      afterCreateConnect (input, output)
+      afterCreateConnect (input, output, addConncetion)
       afterCreateConstants (input, output)
       afterCreateActions (input, output)
       afterCreateReducers (input, output)
@@ -26,9 +26,15 @@ export let plugins = []
       // Run after the input is fully converted to the output
       afterCreate (input, output)
 
-      // Run when a logic store is mounted in React
-      mountedPath (path, logic)
-      unmountedPath (path, logic)
+      // Run before the mounting code in React's scope (you can use hooks here)
+      beforeMount (logic, props)
+
+      // Run when a logic store is mounted/unmounted in React
+      mountedPath (pathString, logic)
+      unmountedPath (pathString, logic)
+
+      // Run after mounting and before rendering the component in React's scope (you can use hooks here)
+      beforeRender (logic, props)
 
       // Run when we are removing kea from the system, e.g. when cleaning up after tests
       clearCache ()
