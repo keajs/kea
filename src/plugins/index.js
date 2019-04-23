@@ -16,13 +16,13 @@ export let plugins = []
       beforeCreate (input, output)
 
       // Run after each step in the conversion
-      afterCreateConnect (input, output, addConncetion)
-      afterCreateConstants (input, output)
-      afterCreateActions (input, output)
-      afterCreateReducerInputs (input, output)
-      afterCreateReducers (input, output)
-      afterCreateReducerSelectors (input, output)
-      afterCreateSelectors (input, output)
+      afterConnect (input, output, addConncetion)
+      afterConstants (input, output)
+      afterActions (input, output)
+      afterReducerInputs (input, output)
+      afterReducers (input, output)
+      afterReducerSelectors (input, output)
+      afterSelectors (input, output)
 
       // Run after the input is fully converted to the output
       afterCreate (input, output)
@@ -31,6 +31,7 @@ export let plugins = []
       beforeMount (logic, props)
 
       // Run when a logic store is mounted/unmounted in React
+      preMountedPath (pathString, logic)
       mountedPath (pathString, logic)
       unmountedPath (pathString, logic)
 

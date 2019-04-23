@@ -47,7 +47,7 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   }
 
   createConstants(input, output)
-  plugins.forEach(p => p.afterCreateConstants && p.afterCreateConstants(input, output))
+  plugins.forEach(p => p.afterConstants && p.afterConstants(input, output))
 
   return output
 }
@@ -71,25 +71,25 @@ function convertInputWithPath (input, key, path, plugins) {
   plugins.forEach(p => p.beforeCreate && p.beforeCreate(input, output))
 
   createConnect(input, output)
-  plugins.forEach(p => p.afterCreateConnect && p.afterCreateConnect(input, output, addConnection))
+  plugins.forEach(p => p.afterConnect && p.afterConnect(input, output, addConnection))
 
   createConstants(input, output)
-  plugins.forEach(p => p.afterCreateConstants && p.afterCreateConstants(input, output))
+  plugins.forEach(p => p.afterConstants && p.afterConstants(input, output))
 
   createActions(input, output)
-  plugins.forEach(p => p.afterCreateActions && p.afterCreateActions(input, output))
+  plugins.forEach(p => p.afterActions && p.afterActions(input, output))
 
   createReducerInputs(input, output)
-  plugins.forEach(p => p.afterCreateReducerInputs && p.afterCreateReducerInputs(input, output))
+  plugins.forEach(p => p.afterReducerInputs && p.afterReducerInputs(input, output))
 
   createReducers(input, output)
-  plugins.forEach(p => p.afterCreateReducers && p.afterCreateReducers(input, output))
+  plugins.forEach(p => p.afterReducers && p.afterReducers(input, output))
 
   createReducerSelectors(input, output)
-  plugins.forEach(p => p.afterCreateReducerSelectors && p.afterCreateReducerSelectors(input, output))
+  plugins.forEach(p => p.afterReducerSelectors && p.afterReducerSelectors(input, output))
 
   createSelectors(input, output)
-  plugins.forEach(p => p.afterCreateSelectors && p.afterCreateSelectors(input, output))
+  plugins.forEach(p => p.afterSelectors && p.afterSelectors(input, output))
 
   output.connections[path.join('.')] = output
 
