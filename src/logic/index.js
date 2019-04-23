@@ -36,9 +36,15 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins, con
     if (connectToStore && output.reducer) {
       attachReducer(output.path, output.reducer)
     }
+  } else {
+    enhanceExistingLogic(logicCache[pathString], { props })
   }
 
   return logicCache[pathString]
+}
+
+function enhanceExistingLogic (output, { props }) {
+  output.props = props
 }
 
 export function convertPartialDynamicInput ({ input, plugins }) {
