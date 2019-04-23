@@ -4,7 +4,7 @@ import { createActions } from './actions'
 import { createReducerInputs, createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
-import { addReducer } from '../store/reducer'
+import { attachReducer } from '../store/reducer'
 
 let inputPathCreators = new WeakMap()
 let globalInputCounter = 0
@@ -18,7 +18,7 @@ export function clearLogicCache () {
   logicCache = {}
 }
 
-export function convertInputToLogic ({ input, key: inputKey, props: inputProps, plugins }) {
+export function convertInputToLogic ({ input, key: inputKey, props: inputProps, plugins, connectToStore = true }) {
   const key = inputKey || (inputProps && input.key ? input.key(inputProps) : null)
 
   if (!key && input.key) {
@@ -33,8 +33,8 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps, 
 
     logicCache[pathString] = output
 
-    if (output.reducer) {
-      addReducer(output.path, output.reducer)
+    if (connectToStore && output.reducer) {
+      attachReducer(output.path, output.reducer)
     }
   }
 

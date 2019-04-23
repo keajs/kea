@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
+export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 
 // worker functions are loaded globally, reducers locally in store
 let defaultReducerRoot = null
@@ -8,7 +9,6 @@ let defaultReducerRoot = null
 // all reducers that are created
 let reducerTree = {}
 let rootReducers = {}
-let syncedWithStore = {} // TODO: remove?
 let store
 
 const defaultState = {}
@@ -21,7 +21,6 @@ export function clearReducerCache () {
   defaultReducerRoot = null
   reducerTree = {}
   rootReducers = {}
-  syncedWithStore = {}
 }
 
 function initRootReducerTree (pathStart) {
@@ -47,12 +46,10 @@ export function firstReducerRoot () {
   return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
-export function addReducer (path, reducer) {
+export function attachReducer (path, reducer) {
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
-
-  syncedWithStore[pathStart] = false
 
   let pointer = reducerTree
 
@@ -88,21 +85,40 @@ export function addReducer (path, reducer) {
   store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
 }
 
+export function detachReducer (path, reducer) {
+  const pathStart = path[0]
+
+  initRootReducerTree(pathStart)
+
+  let pointer = reducerTree
+
+  // ['scenes', 'sceneName', 'page', 'key']
+  for (let i = path.length - 1; i >= 0; i--) {
+    let pointerToHere = pointer
+    for (let j = 0; j <= i; j++) {
+      pointerToHere = (pointerToHere && pointerToHere[path[j]]) || undefined
+    }
+
+    if (pointerToHere) {
+      if (Object.keys(pointerToHere).length === 0) {
+        // next
+      } else if (Object.keys(pointerToHere).length === 1 && i < path.length - 1 && typeof pointerToHere[path[i + 1]] !== 'undefined') {
+        // delete pointerToHere[path[i + 1]]
+        pointerToHere[path[i + 1]] = undefined
+      } else {
+        return
+      }
+    }
+  }
+
+  regenerateRootReducer(pathStart)
+  store && store.dispatch({ type: DETACH_REDUCER, payload: { path, reducer } })
+}
+
 export function regenerateRootReducer (pathStart) {
   const rootReducer = recursiveCreateReducer(reducerTree[pathStart])
 
-  rootReducers[pathStart] = (state, action) => {
-    syncedWithStore[pathStart] = true
-    return rootReducer(state, action)
-  }
-}
-
-export function isSyncedWithStore (pathStart = null) {
-  if (pathStart) {
-    return syncedWithStore[pathStart]
-  } else {
-    return Object.values(syncedWithStore).filter(k => !k).length === 0
-  }
+  rootReducers[pathStart] = rootReducer
 }
 
 export function recursiveCreateReducer (treeNode) {
@@ -111,10 +127,23 @@ export function recursiveCreateReducer (treeNode) {
   }
 
   let children = {}
-
   Object.keys(treeNode).forEach(key => {
-    children[key] = recursiveCreateReducer(treeNode[key])
+    if (typeof treeNode[key] !== 'undefined') {
+      children[key] = recursiveCreateReducer(treeNode[key])
+    }
   })
 
-  return Object.keys(children).length > 0 ? combineReducers(children) : (state, action) => state
+  // we have reducers, return combineReducers
+  if (Object.keys(children).length > 0) {
+    return combineReducers(children)
+
+  // we have reducers that were removed, return something that just returns an empty object
+  } else if (Object.keys(treeNode).length > 0) {
+    const emptyObj = {}
+    return () => emptyObj
+
+  // no reducers and nothing was ever removed... return something that returns with the preloaded state
+  } else {
+    return (state, action) => state
+  }
 }

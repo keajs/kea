@@ -1,2 +1,2 @@
 export { getStore } from './store'
-export { clearReducerCache, addReducer, keaReducer, ATTACH_REDUCER } from './reducer'
+export { clearReducerCache, attachReducer, detachReducer, keaReducer, ATTACH_REDUCER } from './reducer'
