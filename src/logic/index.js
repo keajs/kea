@@ -18,8 +18,8 @@ export function clearLogicCache () {
   logicCache = {}
 }
 
-export function convertInputToLogic ({ input, key: inputKey, props: inputProps, plugins, connectToStore = true }) {
-  const key = inputKey || (inputProps && input.key ? input.key(inputProps) : null)
+export function convertInputToLogic ({ input, key: inputKey, props, plugins, connectToStore = true }) {
+  const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
     throw new Error('Must have key')
@@ -29,7 +29,7 @@ export function convertInputToLogic ({ input, key: inputKey, props: inputProps, 
   const pathString = path.join('.')
 
   if (!logicCache[pathString]) {
-    const output = convertInputWithPath(input, key, path, plugins)
+    const output = convertInputWithPath({ input, key, path, plugins, props })
 
     logicCache[pathString] = output
 
@@ -52,10 +52,12 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   return output
 }
 
-function convertInputWithPath (input, key, path, plugins) {
+function convertInputWithPath ({ input, key, path, plugins, props }) {
   let output = {
     key,
     path,
+    plugins,
+    props,
     connections: {},
     constants: {},
     actions: {},
@@ -64,8 +66,7 @@ function convertInputWithPath (input, key, path, plugins) {
     reducers: {},
     selectors: {},
     propTypes: {},
-    reducer: undefined,
-    plugins: plugins
+    reducer: undefined
   }
 
   plugins.forEach(p => p.beforeCreate && p.beforeCreate(input, output))
