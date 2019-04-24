@@ -4,6 +4,7 @@ import { createActions } from './actions'
 import { createReducerInputs, createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
+import { runPlugins } from '../plugins'
 import { attachReducer } from '../store/reducer'
 
 let inputPathCreators = new WeakMap()
@@ -53,13 +54,16 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   }
 
   createConstants(input, output)
-  plugins.forEach(p => p.afterConstants && p.afterConstants(input, output))
+  runPlugins(plugins, 'afterConstants', input, output)
 
   return output
 }
 
+// Converts `input` into `logic`.
 function convertInputWithPath ({ input, key, path, plugins, props }) {
-  let output = {
+  // We will start with an object like this and extend it as we go along.
+  // In the end this object will be returned as `const logic = kea(input)`
+  let logic = {
     key,
     path,
     plugins,
@@ -67,42 +71,140 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     connections: {},
     constants: {},
     actions: {},
-    defaults: {},
     reducerInputs: {},
     reducers: {},
+    reducer: undefined,
+    defaults: {}, // do we need this? it can be taken from reducerInputs easily
     selectors: {},
-    propTypes: {},
-    reducer: undefined
+    propTypes: {}
   }
 
-  plugins.forEach(p => p.beforeCreate && p.beforeCreate(input, output))
+  // Let's call all plugins that want to hook into this moment.
+  runPlugins(plugins, 'beforeCreate', input, logic)
 
-  createConnect(input, output)
-  plugins.forEach(p => p.afterConnect && p.afterConnect(input, output, addConnection))
+  /*
+    Copy the connect'ed logic stores' selectors and actions into this object
 
-  createConstants(input, output)
-  plugins.forEach(p => p.afterConstants && p.afterConstants(input, output))
+    input.connect = {
+      props: [farmSceneLogic, ['chicken']],
+      actions: [farmSceneLogic, ['setChicken']]
+    }
 
-  createActions(input, output)
-  plugins.forEach(p => p.afterActions && p.afterActions(input, output))
+    ... converts to:
 
-  createReducerInputs(input, output)
-  plugins.forEach(p => p.afterReducerInputs && p.afterReducerInputs(input, output))
+    logic.connections = { 'scenes.farm': farmSceneLogic }
+    logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
+    logic.selectors = { chicken: (state) => state.scenes.farm }
 
-  createReducers(input, output)
-  plugins.forEach(p => p.afterReducers && p.afterReducers(input, output))
+    // TODO: should we rename connect.props to connect.selectors ?
+  */
+  createConnect(input, logic)
+  runPlugins(plugins, 'afterConnect', input, logic, addConnection)
 
-  createReducerSelectors(input, output)
-  plugins.forEach(p => p.afterReducerSelectors && p.afterReducerSelectors(input, output))
+  /*
+    Convert any requested constants to objects that can be destructured
 
-  createSelectors(input, output)
-  plugins.forEach(p => p.afterSelectors && p.afterSelectors(input, output))
+    input.constants = ['SOMETHING', 'CONSTANT_NAME']
 
-  output.connections[path.join('.')] = output
+    ... converts to:
 
-  plugins.forEach(p => p.afterCreate && p.afterCreate(input, output))
+    logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
+  */
+  createConstants(input, logic)
+  runPlugins(plugins, 'afterConstants', input, logic)
 
-  return output
+  /*
+    input.actions = ({ path, constants }) => ({
+      setDuckId: (duckId) => ({ duckId })
+    })
+
+    ... converts to:
+
+    logic.actions == {
+      setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
+    }
+  */
+  createActions(input, logic)
+  runPlugins(plugins, 'afterActions', input, logic)
+
+  /*
+    input.reducers = ({ actions, path, constants }) => ({
+      duckId: [10, PropTypes.number, { persist: true }, {
+        [actions.setDuckId]: (_, payload) => payload.duckId
+      }]
+    })
+
+    ... converts to:
+
+    logic.reducerInputs = {
+      duckId: {
+        value: 10,
+        type: PropTypes.number,
+        reducer: (state = 10, action) => action.type == actions.setDuckId.toString() ? action.payload.duckId : state,
+        options: { persist: true }
+      }
+    }
+  */
+  createReducerInputs(input, logic)
+  runPlugins(plugins, 'afterReducerInputs', input, logic)
+
+  /*
+    logic.reducerInputs = {
+      duckId: {
+        value: 10,
+        type: PropTypes.number,
+        reducer: (state = 10, action) => action.type == actions.setDuckId.toString() ? action.payload.duckId : state,
+        options: { persist: true }
+      }
+    }
+
+    ... converts to:
+
+    logic.propTypes = { duckId: PropTypes.number }
+    logic.defaults = { duckId: 10 }
+    logic.reducers = { duckId: function () {} }
+    logic.reducer = combineReducers(logic.reducers)
+  */
+  createReducers(input, logic)
+  runPlugins(plugins, 'afterReducers', input, logic)
+
+  /*
+    logic.reducers = { duckId: function () {} }
+
+    ... converts to
+
+    logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
+  */
+  createReducerSelectors(input, logic)
+  runPlugins(plugins, 'afterReducerSelectors', input, logic)
+
+  /*
+    input.selectors = ({ selectors }) => ({
+      duckAndChicken: [
+        () => [selectors.duckId, selectors.chickenId],
+        (duckId, chickenId) => duckId + chickenId,
+        PropType.number
+      ],
+    })
+
+    ... converts to
+
+    logic.selector = state => state.scenes.farm // memoized via reselect
+    logic.selectors = {
+      duckAndChicken: state => logic.selector(state).duckAndChicken // memoized via reselect
+    }
+  */
+  createSelectors(input, logic)
+  runPlugins(plugins, 'afterSelectors', input, logic)
+
+  /*
+    add a connection to ourselves in the end
+    logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
+  */
+  logic.connections[path.join('.')] = logic
+  runPlugins(plugins, 'afterCreate', input, logic)
+
+  return logic
 }
 
 function getPathForInput (input, key) {

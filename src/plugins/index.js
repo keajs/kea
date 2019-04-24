@@ -53,3 +53,7 @@ export function clearActivatedPlugins () {
   plugins.forEach(f => f.clearCache && f.clearCache())
   plugins = []
 }
+
+export function runPlugins (plugins, key, ...args) {
+  plugins.forEach(p => p[key] && p[key](...args))
+}
