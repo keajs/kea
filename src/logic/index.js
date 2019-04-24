@@ -30,12 +30,15 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins, con
   const pathString = path.join('.')
 
   if (!logicCache[pathString]) {
-    const output = convertInputWithPath({ input, key, path, plugins, props })
+    let logic = createBlankLogic({ key, path, plugins, props })
+    applyInputToLogic(input, logic)
 
-    logicCache[pathString] = output
+    input.merge && input.merge.forEach(merge => applyInputToLogic(merge, logic))
 
-    if (connectToStore && output.reducer) {
-      attachReducer(output.path, output.reducer)
+    logicCache[pathString] = logic
+
+    if (connectToStore && logic.reducer) {
+      attachReducer(logic.path, logic.reducer)
     }
   } else {
     enhanceExistingLogic(logicCache[pathString], { props })
@@ -44,26 +47,24 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins, con
   return logicCache[pathString]
 }
 
-function enhanceExistingLogic (output, { props }) {
-  output.props = props
+function enhanceExistingLogic (logic, { props }) {
+  logic.props = props
 }
 
 export function convertPartialDynamicInput ({ input, plugins }) {
-  let output = {
+  let logic = {
+    plugins: plugins,
     constants: {}
   }
 
-  createConstants(input, output)
-  runPlugins(plugins, 'afterConstants', input, output)
+  createConstants(input, logic)
+  runPlugins(logic.plugins, 'afterConstants', input, logic)
 
-  return output
+  return logic
 }
 
-// Converts `input` into `logic`.
-function convertInputWithPath ({ input, key, path, plugins, props }) {
-  // We will start with an object like this and extend it as we go along.
-  // In the end this object will be returned as `const logic = kea(input)`
-  let logic = {
+function createBlankLogic ({ key, path, plugins, props }) {
+  return {
     key,
     path,
     plugins,
@@ -78,9 +79,16 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     selectors: {},
     propTypes: {}
   }
+}
+
+// Converts `input` into `logic`.
+function applyInputToLogic (input, logic) {
+  // We will start with an object like this and extend it as we go along.
+  // In the end this object will be returned as `const logic = kea(input)`
+  // let logic = createBlankLogic({ key, path, plugins, props })
 
   // Let's call all plugins that want to hook into this moment.
-  runPlugins(plugins, 'beforeCreate', input, logic)
+  runPlugins(logic.plugins, 'beforeCreate', input, logic)
 
   /*
     Copy the connect'ed logic stores' selectors and actions into this object
@@ -99,7 +107,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     // TODO: should we rename connect.props to connect.selectors ?
   */
   createConnect(input, logic)
-  runPlugins(plugins, 'afterConnect', input, logic, addConnection)
+  runPlugins(logic.plugins, 'afterConnect', input, logic, addConnection)
 
   /*
     Convert any requested constants to objects that can be destructured
@@ -111,7 +119,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
   */
   createConstants(input, logic)
-  runPlugins(plugins, 'afterConstants', input, logic)
+  runPlugins(logic.plugins, 'afterConstants', input, logic)
 
   /*
     input.actions = ({ path, constants }) => ({
@@ -125,7 +133,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     }
   */
   createActions(input, logic)
-  runPlugins(plugins, 'afterActions', input, logic)
+  runPlugins(logic.plugins, 'afterActions', input, logic)
 
   /*
     input.reducers = ({ actions, path, constants }) => ({
@@ -146,7 +154,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     }
   */
   createReducerInputs(input, logic)
-  runPlugins(plugins, 'afterReducerInputs', input, logic)
+  runPlugins(logic.plugins, 'afterReducerInputs', input, logic)
 
   /*
     logic.reducerInputs = {
@@ -166,7 +174,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     logic.reducer = combineReducers(logic.reducers)
   */
   createReducers(input, logic)
-  runPlugins(plugins, 'afterReducers', input, logic)
+  runPlugins(logic.plugins, 'afterReducers', input, logic)
 
   /*
     logic.reducers = { duckId: function () {} }
@@ -176,7 +184,7 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
   */
   createReducerSelectors(input, logic)
-  runPlugins(plugins, 'afterReducerSelectors', input, logic)
+  runPlugins(logic.plugins, 'afterReducerSelectors', input, logic)
 
   /*
     input.selectors = ({ selectors }) => ({
@@ -195,14 +203,14 @@ function convertInputWithPath ({ input, key, path, plugins, props }) {
     }
   */
   createSelectors(input, logic)
-  runPlugins(plugins, 'afterSelectors', input, logic)
+  runPlugins(logic.plugins, 'afterSelectors', input, logic)
 
   /*
     add a connection to ourselves in the end
     logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   */
-  logic.connections[path.join('.')] = logic
-  runPlugins(plugins, 'afterCreate', input, logic)
+  logic.connections[logic.path.join('.')] = logic
+  runPlugins(logic.plugins, 'afterCreate', input, logic)
 
   return logic
 }
