@@ -14,7 +14,7 @@ beforeEach(() => {
   resetKeaCache()
 })
 
-// test('can use withkey for actions and props', () => {
+test('can use withkey for actions and props', () => {
 //   const store = getStore()
 
 //   const dynamicLogic = kea({
@@ -74,4 +74,4 @@ beforeEach(() => {
 //   expect(wrapper.find('.name').text()).toEqual('birb')
 
 //   wrapper.unmount()
-// })
+})
