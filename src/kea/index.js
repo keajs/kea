@@ -19,8 +19,15 @@ export function kea (input) {
       mapDispatchToPropsCreator(input, plugins, lazy)
     )(Klass)
 
+    let injectPropTypes = !isStateless(Klass)
+
     return function Kea (props) {
       const logic = convertInputToLogic({ input, props, plugins, connectToStore: !lazy })
+
+      if (injectPropTypes && logic.propTypes) {
+        injectPropTypes = false
+        Klass.propTypes = Object.assign(Klass.propTypes || {}, logic.propTypes)
+      }
 
       plugins.forEach(p => p.beforeMount && p.beforeMount(logic, props))
 
