@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
@@ -25,6 +25,7 @@ export function kea (input) {
 
     // inject proptypes into the class if it's a React.Component
     let injectPropTypes = !isStateless(Klass)
+    let firstRender = true
 
     return function Kea (props) {
       const logic = convertInputToLogic({ input, props, plugins })
@@ -36,10 +37,9 @@ export function kea (input) {
       }
 
       // mount paths only on first render
-      const rendered = useRef(false)
-      if (!rendered.current) {
+      if (firstRender) {
+        firstRender = false
         mountPaths(logic, plugins)
-        rendered.current = true
       }
 
       // unmount paths when component gets removed
