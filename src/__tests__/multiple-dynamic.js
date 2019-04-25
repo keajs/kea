@@ -14,7 +14,7 @@ beforeEach(() => {
   resetKeaCache()
 })
 
-test('dynamic reducer initial props', () => {
+test('multiple dynamic logic stores', () => {
   const store = getStore()
 
   const dynamicLogic = kea({
