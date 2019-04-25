@@ -6,7 +6,7 @@ export function pathSelector (path, state) {
   return ([state]).concat(path).reduce((v, a) => v[a])
 }
 
-export function createReducerSelectors (input, logic) {
+export function createReducerSelectors (logic, input) {
   if (!logic.reducer) {
     return
   }
@@ -18,7 +18,7 @@ export function createReducerSelectors (input, logic) {
   })
 }
 
-export function createSelectors (input, logic) {
+export function createSelectors (logic, input) {
   if (!input.selectors) {
     return
   }

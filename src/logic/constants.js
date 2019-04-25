@@ -1,4 +1,4 @@
-export function createConstants (input, logic) {
+export function createConstants (logic, input) {
   if (!input.constants) {
     return
   }

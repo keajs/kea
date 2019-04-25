@@ -23,7 +23,7 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
-export function createReducerInputs (input, logic) {
+export function createReducerInputs (logic, input) {
   if (!input.reducers) {
     return
   }
@@ -33,7 +33,7 @@ export function createReducerInputs (input, logic) {
   logic.reducerInputs = convertReducerArrays(reducerCreators)
 }
 
-export function createReducers (input, logic) {
+export function createReducers (logic, input) {
   if (!input.reducers || !logic.reducerInputs) {
     return
   }

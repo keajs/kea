@@ -30,7 +30,7 @@ export function createAction (type, payloadCreator) {
   return action
 }
 
-export function createActions (input, logic) {
+export function createActions (logic, input) {
   if (!input.actions) {
     return
   }

@@ -30,9 +30,9 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
 
   if (!logicCache[pathString]) {
     let logic = createBlankLogic({ key, path, plugins, props })
-    applyInputToLogic(input, logic)
+    applyInputToLogic(logic, input)
 
-    input.merge && input.merge.forEach(merge => applyInputToLogic(merge, logic))
+    input.merge && input.merge.forEach(merge => applyInputToLogic(logic, merge))
 
     logicCache[pathString] = logic
   } else {
@@ -48,7 +48,7 @@ export function convertPartialDynamicInput ({ input, plugins }) {
     constants: {}
   }
 
-  createConstants(input, logic)
+  createConstants(logic, input)
   runPlugins(logic.plugins, 'afterConstants', input, logic)
 
   return logic
@@ -78,7 +78,7 @@ function enhanceExistingLogic (logic, { props }) {
 }
 
 // Converts `input` into `logic`.
-function applyInputToLogic (input, logic) {
+function applyInputToLogic (logic, input) {
   // We will start with an object like this and extend it as we go along.
   // In the end this object will be returned as `const logic = kea(input)`
   // let logic = createBlankLogic({ key, path, plugins, props })
@@ -102,7 +102,7 @@ function applyInputToLogic (input, logic) {
 
     // TODO: should we rename connect.props to connect.selectors ?
   */
-  createConnect(input, logic)
+  createConnect(logic, input)
   runPlugins(logic.plugins, 'afterConnect', input, logic, addConnection)
 
   /*
@@ -114,7 +114,7 @@ function applyInputToLogic (input, logic) {
 
     logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
   */
-  createConstants(input, logic)
+  createConstants(logic, input)
   runPlugins(logic.plugins, 'afterConstants', input, logic)
 
   /*
@@ -128,7 +128,7 @@ function applyInputToLogic (input, logic) {
       setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
     }
   */
-  createActions(input, logic)
+  createActions(logic, input)
   runPlugins(logic.plugins, 'afterActions', input, logic)
 
   /*
@@ -149,7 +149,7 @@ function applyInputToLogic (input, logic) {
       }
     }
   */
-  createReducerInputs(input, logic)
+  createReducerInputs(logic, input)
   runPlugins(logic.plugins, 'afterReducerInputs', input, logic)
 
   /*
@@ -169,7 +169,7 @@ function applyInputToLogic (input, logic) {
     logic.reducers = { duckId: function () {} }
     logic.reducer = combineReducers(logic.reducers)
   */
-  createReducers(input, logic)
+  createReducers(logic, input)
   runPlugins(logic.plugins, 'afterReducers', input, logic)
 
   /*
@@ -179,7 +179,7 @@ function applyInputToLogic (input, logic) {
 
     logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
   */
-  createReducerSelectors(input, logic)
+  createReducerSelectors(logic, input)
   runPlugins(logic.plugins, 'afterReducerSelectors', input, logic)
 
   /*
@@ -198,7 +198,7 @@ function applyInputToLogic (input, logic) {
       duckAndChicken: state => logic.selector(state).duckAndChicken // memoized via reselect
     }
   */
-  createSelectors(input, logic)
+  createSelectors(logic, input)
   runPlugins(logic.plugins, 'afterSelectors', input, logic)
 
   /*

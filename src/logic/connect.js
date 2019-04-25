@@ -1,4 +1,4 @@
-export function createConnect (input, logic) {
+export function createConnect (logic, input) {
   if (!input.connect) {
     return
   }
