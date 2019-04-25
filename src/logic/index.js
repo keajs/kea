@@ -49,7 +49,7 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   }
 
   createConstants(logic, input)
-  runPlugins(logic.plugins, 'afterConstants', input, logic)
+  runPlugins(logic.plugins, 'afterConstants', logic, input)
 
   return logic
 }
@@ -84,7 +84,7 @@ function applyInputToLogic (logic, input) {
   // let logic = createBlankLogic({ key, path, plugins, props })
 
   // Let's call all plugins that want to hook into this moment.
-  runPlugins(logic.plugins, 'beforeCreate', input, logic)
+  runPlugins(logic.plugins, 'beforeCreate', logic, input)
 
   /*
     Copy the connect'ed logic stores' selectors and actions into this object
@@ -103,7 +103,7 @@ function applyInputToLogic (logic, input) {
     // TODO: should we rename connect.props to connect.selectors ?
   */
   createConnect(logic, input)
-  runPlugins(logic.plugins, 'afterConnect', input, logic, addConnection)
+  runPlugins(logic.plugins, 'afterConnect', logic, input, addConnection)
 
   /*
     Convert any requested constants to objects that can be destructured
@@ -115,7 +115,7 @@ function applyInputToLogic (logic, input) {
     logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
   */
   createConstants(logic, input)
-  runPlugins(logic.plugins, 'afterConstants', input, logic)
+  runPlugins(logic.plugins, 'afterConstants', logic, input)
 
   /*
     input.actions = ({ path, constants }) => ({
@@ -129,7 +129,7 @@ function applyInputToLogic (logic, input) {
     }
   */
   createActions(logic, input)
-  runPlugins(logic.plugins, 'afterActions', input, logic)
+  runPlugins(logic.plugins, 'afterActions', logic, input)
 
   /*
     input.reducers = ({ actions, path, constants }) => ({
@@ -150,7 +150,7 @@ function applyInputToLogic (logic, input) {
     }
   */
   createReducerInputs(logic, input)
-  runPlugins(logic.plugins, 'afterReducerInputs', input, logic)
+  runPlugins(logic.plugins, 'afterReducerInputs', logic, input)
 
   /*
     logic.reducerInputs = {
@@ -170,7 +170,7 @@ function applyInputToLogic (logic, input) {
     logic.reducer = combineReducers(logic.reducers)
   */
   createReducers(logic, input)
-  runPlugins(logic.plugins, 'afterReducers', input, logic)
+  runPlugins(logic.plugins, 'afterReducers', logic, input)
 
   /*
     logic.reducers = { duckId: function () {} }
@@ -180,7 +180,7 @@ function applyInputToLogic (logic, input) {
     logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
   */
   createReducerSelectors(logic, input)
-  runPlugins(logic.plugins, 'afterReducerSelectors', input, logic)
+  runPlugins(logic.plugins, 'afterReducerSelectors', logic, input)
 
   /*
     input.selectors = ({ selectors }) => ({
@@ -199,14 +199,14 @@ function applyInputToLogic (logic, input) {
     }
   */
   createSelectors(logic, input)
-  runPlugins(logic.plugins, 'afterSelectors', input, logic)
+  runPlugins(logic.plugins, 'afterSelectors', logic, input)
 
   /*
     add a connection to ourselves in the end
     logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   */
   logic.connections[logic.path.join('.')] = logic
-  runPlugins(logic.plugins, 'afterCreate', input, logic)
+  runPlugins(logic.plugins, 'afterCreate', logic, input)
 
   return logic
 }

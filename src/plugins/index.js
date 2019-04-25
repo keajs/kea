@@ -13,19 +13,19 @@ export let plugins = []
       afterReduxStore (options, store)
 
       // Run before we start converting the input into the logic
-      beforeCreate (input, logic)
+      beforeCreate (logic, input)
 
       // Run after each step in the conversion
-      afterConnect (input, logic, addConncetion)
-      afterConstants (input, logic)
-      afterActions (input, logic)
-      afterReducerInputs (input, logic)
-      afterReducers (input, logic)
-      afterReducerSelectors (input, logic)
-      afterSelectors (input, logic)
+      afterConnect (logic, input, addConncetion)
+      afterConstants (logic, input)
+      afterActions (logic, input)
+      afterReducerInputs (logic, input)
+      afterReducers (logic, input)
+      afterReducerSelectors (logic, input)
+      afterSelectors (logic, input)
 
       // Run after the input is fully converted to the logic
-      afterCreate (input, logic)
+      afterCreate (logic, input)
 
       // Run before the mounting code in React's scope (you can use hooks here)
       beforeMount (logic, props)
