@@ -1,14 +1,18 @@
-import { attachReducer, detachReducer } from '../store/reducer'
+import { attachReducer, detachReducer, getStore } from '../store/reducer'
 
-let mountPathCounter = {}
-let mountedLogic = {}
+// we store mounted paths on the store so that they could easily be garbabe collected during SSR
 
 export function mountPaths (logic, plugins) {
+  const store = getStore()
+  if (!store._mountedLogic) {
+    clearMountedPaths()
+  }
+
   Object.keys(logic.connections).forEach(path => {
-    mountPathCounter[path] = (mountPathCounter[path] || 0) + 1
-    if (mountPathCounter[path] === 1) {
+    store._mountPathCounter[path] = (store._mountPathCounter[path] || 0) + 1
+    if (store._mountPathCounter[path] === 1) {
       const connectedLogic = logic.connections[path]
-      mountedLogic[path] = connectedLogic
+      store._mountedLogic[path] = connectedLogic
 
       // attach reducer to redux if not already attached
       if (connectedLogic.reducer && !connectedLogic.mounted) {
@@ -22,11 +26,16 @@ export function mountPaths (logic, plugins) {
 }
 
 export function unmountPaths (logic, plugins, lazy) {
+  const store = getStore()
+  if (!store._mountedLogic) {
+    clearMountedPaths()
+  }
+
   Object.keys(logic.connections).reverse().forEach(path => {
-    mountPathCounter[path] = (mountPathCounter[path] || 0) - 1
-    if (mountPathCounter[path] === 0) {
+    store._mountPathCounter[path] = (store._mountPathCounter[path] || 0) - 1
+    if (store._mountPathCounter[path] === 0) {
       const connectedLogic = logic.connections[path]
-      delete mountedLogic[path]
+      delete store._mountedLogic[path]
 
       if (lazy && connectedLogic.reducer && connectedLogic.mounted) {
         detachReducer(connectedLogic.path, connectedLogic.reducer)
@@ -39,13 +48,17 @@ export function unmountPaths (logic, plugins, lazy) {
 }
 
 export function getMountedLogic () {
-  return mountedLogic
+  return getStore()._mountedLogic
 }
 
 export function getMountPathCounter () {
-  return mountPathCounter
+  return getStore()._mountPathCounter
 }
 
 export function clearMountedPaths () {
-  mountPathCounter = {}
+  const store = getStore()
+  if (store) {
+    store._mountPathCounter = {}
+    store._mountedLogic = {}
+  }
 }

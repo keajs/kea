@@ -17,6 +17,10 @@ export function attachStore (storeReference) {
   store = storeReference
 }
 
+export function getStore () {
+  return store
+}
+
 export function clearReducerCache () {
   defaultReducerRoot = null
   reducerTree = {}
