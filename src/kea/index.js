@@ -7,7 +7,6 @@ import { plugins as globalPlugins } from '../plugins'
 import { attachReducer } from '../store/reducer'
 
 import { mountPaths, unmountPaths } from './mount'
-export { clearMountedPaths } from './mount'
 
 export function kea (input) {
   const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
