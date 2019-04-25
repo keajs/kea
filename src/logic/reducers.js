@@ -23,33 +23,33 @@ export function createReducer (mapping, defaultValue) {
   }
 }
 
-export function createReducerInputs (input, output) {
+export function createReducerInputs (input, logic) {
   if (!input.reducers) {
     return
   }
 
-  const reducerCreators = input.reducers(output)
+  const reducerCreators = input.reducers(logic)
 
-  output.reducerInputs = convertReducerArrays(reducerCreators)
+  logic.reducerInputs = convertReducerArrays(reducerCreators)
 }
 
-export function createReducers (input, output) {
-  if (!input.reducers || !output.reducerInputs) {
+export function createReducers (input, logic) {
+  if (!input.reducers || !logic.reducerInputs) {
     return
   }
 
-  Object.keys(output.reducerInputs).forEach(key => {
-    const reducerInput = output.reducerInputs[key]
+  Object.keys(logic.reducerInputs).forEach(key => {
+    const reducerInput = logic.reducerInputs[key]
 
-    output.propTypes[key] = reducerInput.type
-    output.defaults[key] = reducerInput.value
-    output.reducers[key] = reducerInput.reducer
+    logic.propTypes[key] = reducerInput.type
+    logic.defaults[key] = reducerInput.value
+    logic.reducers[key] = reducerInput.reducer
   })
 
-  if (Object.keys(output.reducers).length > 0) {
-    output.reducer = combineReducers(output.reducers)
+  if (Object.keys(logic.reducers).length > 0) {
+    logic.reducer = combineReducers(logic.reducers)
   } else {
-    output.reducer = () => emptyObject
+    logic.reducer = () => emptyObject
   }
 }
 

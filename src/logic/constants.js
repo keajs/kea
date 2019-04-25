@@ -1,10 +1,10 @@
-export function createConstants (input, output) {
+export function createConstants (input, logic) {
   if (!input.constants) {
     return
   }
 
-  const constants = convertConstants(input.constants(output))
-  Object.assign(output.constants, constants)
+  const constants = convertConstants(input.constants(logic))
+  Object.assign(logic.constants, constants)
 }
 
 // convert ['A', 'B'] ==> { 'A': 'A', 'B': 'B' }

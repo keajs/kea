@@ -1,35 +1,35 @@
 import { createSelector } from 'reselect'
 
 // input: ['scenes', 'something', 'other'], state
-// output: state.scenes.something.other
+// logic: state.scenes.something.other
 export function pathSelector (path, state) {
   return ([state]).concat(path).reduce((v, a) => v[a])
 }
 
-export function createReducerSelectors (input, output) {
-  if (!output.reducer) {
+export function createReducerSelectors (input, logic) {
+  if (!logic.reducer) {
     return
   }
 
-  output.selector = state => pathSelector(output.path, state)
+  logic.selector = state => pathSelector(logic.path, state)
 
-  Object.keys(output.reducers).forEach(key => {
-    output.selectors[key] = createSelector(output.selector, state => state[key])
+  Object.keys(logic.reducers).forEach(key => {
+    logic.selectors[key] = createSelector(logic.selector, state => state[key])
   })
 }
 
-export function createSelectors (input, output) {
+export function createSelectors (input, logic) {
   if (!input.selectors) {
     return
   }
 
-  const selectorInputs = input.selectors(output)
+  const selectorInputs = input.selectors(logic)
   const selectorKeys = Object.keys(selectorInputs)
 
   // small cache so the order would not count
   let builtSelectors = {}
   selectorKeys.forEach(key => {
-    output.selectors[key] = (...args) => builtSelectors[key](...args)
+    logic.selectors[key] = (...args) => builtSelectors[key](...args)
   })
 
   Object.keys(selectorInputs).forEach(key => {
@@ -37,10 +37,10 @@ export function createSelectors (input, output) {
     const args = input()
 
     if (type) {
-      output.propTypes[key] = type
+      logic.propTypes[key] = type
     }
 
     builtSelectors[key] = createSelector(...args, func)
-    output.selectors[key] = builtSelectors[key]
+    logic.selectors[key] = builtSelectors[key]
   })
 }

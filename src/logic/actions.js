@@ -30,15 +30,15 @@ export function createAction (type, payloadCreator) {
   return action
 }
 
-export function createActions (input, output) {
+export function createActions (input, logic) {
   if (!input.actions) {
     return
   }
 
-  const path = output.path
+  const path = logic.path
   const payloadCreators = input.actions(input)
 
   Object.keys(payloadCreators).forEach(key => {
-    output.actions[key] = createAction(createActionType(key, path), payloadCreators[key])
+    logic.actions[key] = createAction(createActionType(key, path), payloadCreators[key])
   })
 }
