@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "watch": "rollup -cw",
     "lint": "eslint src/**",
     "prepublish": "npm run build",
     "start": "./node_modules/.bin/webpack-dev-server --history-api-fallback --hot --host 0.0.0.0 --port 4040",
