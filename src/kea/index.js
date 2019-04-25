@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
 import { hasConnectWithKey } from '../logic/connect'
 import { plugins as globalPlugins } from '../plugins'
-import { attachReducer, detachReducer } from '../store/reducer'
+import { attachReducer } from '../store/reducer'
 
-let mountedPaths = {}
+import { mountPaths, unmountPaths, clearMountedPaths } from './mount'
 
 export function kea (input) {
   const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
@@ -35,13 +35,14 @@ export function kea (input) {
         Klass.propTypes = Object.assign(Klass.propTypes || {}, logic.propTypes)
       }
 
-      // run beforeMount plugins
-      plugins.forEach(p => p.beforeMount && p.beforeMount(logic, props))
+      // mount paths only on first render
+      const rendered = useRef(false)
+      if (!rendered.current) {
+        mountPaths(logic, plugins)
+        rendered.current = true
+      }
 
-      // mount the paths and logic stores
-      mountPaths(logic, plugins)
-
-      // code to run before unmounting
+      // unmount paths when component gets removed
       useEffect(() => () => unmountPaths(logic, plugins, lazy), [])
 
       // TODO: unmount & remount if path changed
@@ -138,43 +139,6 @@ function injectActionsIntoClass (Klass) {
       })
     }
   }
-}
-
-export function mountPaths (logic, plugins) {
-  Object.keys(logic.connections).forEach(path => {
-    mountedPaths[path] = (mountedPaths[path] || 0) + 1
-    if (mountedPaths[path] === 1) {
-      const mountedLogic = logic.connections[path]
-
-      // attach reducer to redux if not already attached
-      if (mountedLogic.reducer && !mountedLogic.mounted) {
-        attachReducer(mountedLogic.path, mountedLogic.reducer)
-        mountedLogic.mounted = true
-      }
-
-      plugins.forEach(p => p.mountedPath && p.mountedPath(path, mountedLogic))
-    }
-  })
-}
-
-export function unmountPaths (logic, plugins, lazy) {
-  Object.keys(logic.connections).reverse().forEach(path => {
-    mountedPaths[path] = (mountedPaths[path] || 0) - 1
-    if (mountedPaths[path] === 0) {
-      const unmountedLogic = logic.connections[path]
-
-      if (lazy && unmountedLogic.reducer && unmountedLogic.mounted) {
-        detachReducer(unmountedLogic.path, unmountedLogic.reducer)
-        unmountedLogic.mounted = true
-      }
-
-      plugins.forEach(p => p.unmountedPath && p.unmountedPath(path, unmountedLogic))
-    }
-  })
-}
-
-export function clearMountedPaths () {
-  mountedPaths = {}
 }
 
 export function resetKeaLogicCache () {

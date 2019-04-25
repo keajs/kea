@@ -27,12 +27,9 @@ export let plugins = []
       // Run after the input is fully converted to the logic
       afterCreate (logic, input)
 
-      // Run before the mounting code in React's scope (you can use hooks here)
-      beforeMount (logic, props)
-
       // Run when a logic store is mounted/unmounted in React
-      mountedPath (pathString, logic)
-      unmountedPath (pathString, logic)
+      mounted (pathString, logic)
+      unmounted (pathString, logic)
 
       // Run after mounting and before rendering the component in React's scope (you can use hooks here)
       beforeRender (logic, props)
