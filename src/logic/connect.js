@@ -1,4 +1,4 @@
-export function createConnect (input, output) {
+export function createConnect (input, logic) {
   if (!input.connect) {
     return
   }
@@ -6,12 +6,13 @@ export function createConnect (input, output) {
   if (input.connect.actions) {
     const response = deconstructMapping(input.connect.actions)
 
-    response.forEach(([logic, from, to]) => {
-      if (logic._isKeaFunction) {
-        addConnection(output, logic)
-        output.actions[to] = logic.actions[from]
+    response.forEach(([otherLogic, from, to]) => {
+      if (otherLogic._isKeaWithKey || otherLogic._isKeaFunction) {
+        const logicToConenct = otherLogic._isKeaWithKey ? otherLogic(logic.props) : otherLogic
+        addConnection(logic, logicToConenct)
+        logic.actions[to] = logicToConenct.actions[from]
       } else {
-        output.actions[to] = logic[from]
+        logic.actions[to] = otherLogic[from]
       }
     })
   }
@@ -19,31 +20,32 @@ export function createConnect (input, output) {
   if (input.connect.props) {
     const response = deconstructMapping(input.connect.props)
 
-    response.forEach(([logic, from, to]) => {
-      if (logic._isKeaFunction) {
-        addConnection(output, logic)
-        output.selectors[to] = from === '*' ? logic.selector : logic.selectors[from]
+    response.forEach(([otherLogic, from, to]) => {
+      if (otherLogic._isKeaWithKey || otherLogic._isKeaFunction) {
+        const logicToConenct = otherLogic._isKeaWithKey ? otherLogic(logic.props) : otherLogic
+        addConnection(logic, logicToConenct)
+        logic.selectors[to] = from === '*' ? logicToConenct.selector : logicToConenct.selectors[from]
       } else {
-        output.selectors[to] = from === '*' ? logic : (state, props) => logic(state, props)[from]
+        logic.selectors[to] = from === '*' ? otherLogic : (state, props) => otherLogic(state, props)[from]
       }
     })
   }
 }
 
-export function addConnection (output, logic) {
-  if (!logic.connections || Object.keys(logic.connections).length === 0) {
+export function addConnection (logic, otherLogic) {
+  if (!otherLogic.connections || Object.keys(otherLogic.connections).length === 0) {
     return
   }
 
-  Object.keys(logic.connections).forEach(path => {
-    if (!output.connections[path]) {
-      output.connections[path] = logic.connections[path]
+  Object.keys(otherLogic.connections).forEach(path => {
+    if (!logic.connections[path]) {
+      logic.connections[path] = otherLogic.connections[path]
     }
   })
 }
 
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
-// output: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
+// logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
 export function deconstructMapping (mapping) {
   if (mapping.length % 2 === 1) {
     console.error(`[KEA-LOGIC] uneven mapping given to connect:`, mapping)
@@ -68,4 +70,24 @@ export function deconstructMapping (mapping) {
   }
 
   return response
+}
+
+export function hasConnectWithKey (connect) {
+  if (connect && connect.props) {
+    for (let i = 0; i < connect.props.length; i += 2) {
+      if (connect.props[i]._isKeaWithKey) {
+        return true
+      }
+    }
+  }
+
+  if (connect && connect.actions) {
+    for (let i = 0; i < connect.actions.length; i += 2) {
+      if (connect.actions[i]._isKeaWithKey) {
+        return true
+      }
+    }
+  }
+
+  return false
 }

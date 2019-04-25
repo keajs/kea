@@ -5,7 +5,6 @@ import { createReducerInputs, createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
 import { runPlugins } from '../plugins'
-import { attachReducer } from '../store/reducer'
 
 let inputPathCreators = new WeakMap()
 let globalInputCounter = 0
@@ -19,7 +18,7 @@ export function clearLogicCache () {
   logicCache = {}
 }
 
-export function convertInputToLogic ({ input, key: inputKey, props, plugins, connectToStore = true }) {
+export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
@@ -36,19 +35,11 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins, con
     input.merge && input.merge.forEach(merge => applyInputToLogic(merge, logic))
 
     logicCache[pathString] = logic
-
-    if (connectToStore && logic.reducer) {
-      attachReducer(logic.path, logic.reducer)
-    }
   } else {
     enhanceExistingLogic(logicCache[pathString], { props })
   }
 
   return logicCache[pathString]
-}
-
-function enhanceExistingLogic (logic, { props }) {
-  logic.props = props
 }
 
 export function convertPartialDynamicInput ({ input, plugins }) {
@@ -69,6 +60,7 @@ function createBlankLogic ({ key, path, plugins, props }) {
     path,
     plugins,
     props,
+    mounted: false,
     connections: {},
     constants: {},
     actions: {},
@@ -79,6 +71,10 @@ function createBlankLogic ({ key, path, plugins, props }) {
     selectors: {},
     propTypes: {}
   }
+}
+
+function enhanceExistingLogic (logic, { props }) {
+  logic.props = props
 }
 
 // Converts `input` into `logic`.

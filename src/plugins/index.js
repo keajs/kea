@@ -31,7 +31,6 @@ export let plugins = []
       beforeMount (logic, props)
 
       // Run when a logic store is mounted/unmounted in React
-      preMountedPath (pathString, logic)
       mountedPath (pathString, logic)
       unmountedPath (pathString, logic)
 

@@ -11,11 +11,13 @@
 // 0. set proptypes on the component
 
 // 1.0 todo
-// - set proptypes on the component
-// - merge logic
-// - listeners in core?
-// - .withKey
-// - lazy mode cleanup
+// + set proptypes on the component
+// + .withKey
+// . merge logic
+// . lazy mode cleanup
+// . listeners plugin
+// . mount & pre
+// . can initialize without a store?
 
 import { resetKeaLogicCache } from './kea'
 import { clearReducerCache } from './store'
