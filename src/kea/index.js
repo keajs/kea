@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
-import { convertInputToLogic, convertPartialDynamicInput, clearLogicCache } from '../logic/index'
+import { convertInputToLogic, convertPartialDynamicInput } from '../logic/index'
 import { hasConnectWithKey } from '../logic/connect'
 import { plugins as globalPlugins } from '../plugins'
 import { attachReducer } from '../store/reducer'
 
-import { mountPaths, unmountPaths, clearMountedPaths } from './mount'
+import { mountPaths, unmountPaths } from './mount'
+export { clearMountedPaths } from './mount'
 
 export function kea (input) {
   const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
@@ -140,9 +141,4 @@ function injectActionsIntoClass (Klass) {
       })
     }
   }
-}
-
-export function resetKeaLogicCache () {
-  clearLogicCache()
-  clearMountedPaths()
 }

@@ -5,7 +5,8 @@
 // . mount & pre
 // . can initialize without a store?
 
-import { resetKeaLogicCache } from './kea'
+import { clearMountedPaths } from './kea'
+import { clearLogicCache } from './logic'
 import { clearReducerCache } from './store'
 import { clearActivatedPlugins } from './plugins'
 
@@ -16,7 +17,8 @@ export { activatePlugin } from './plugins'
 export { createAction } from './logic/actions'
 
 export function resetKeaCache () {
-  resetKeaLogicCache()
+  clearMountedPaths()
+  clearLogicCache()
   clearReducerCache()
   clearActivatedPlugins()
 }
