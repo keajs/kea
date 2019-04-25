@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 
-import { resetKeaCache } from '../reset'
 import { keaReducer, attachStore } from './reducer'
 import { plugins, activatePlugin } from '../plugins'
 
@@ -18,9 +17,6 @@ const defaultOptions = {
 }
 
 export function getStore (opts = {}) {
-  // reset everything, needed for SSR
-  resetKeaCache()
-
   // clone options
   let options = Object.assign({}, defaultOptions, opts)
 
