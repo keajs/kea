@@ -25,6 +25,10 @@ export function createConnect (logic, input) {
         const logicToConenct = otherLogic._isKeaWithKey ? otherLogic(logic.props) : otherLogic
         addConnection(logic, logicToConenct)
         logic.selectors[to] = from === '*' ? logicToConenct.selector : logicToConenct.selectors[from]
+
+        if (from !== '*' && typeof logicToConenct.propTypes[from] !== 'undefined') {
+          logic.propTypes[to] = logicToConenct.propTypes[from]
+        }
       } else {
         logic.selectors[to] = from === '*' ? otherLogic : (state, props) => otherLogic(state, props)[from]
       }
