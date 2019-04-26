@@ -22,8 +22,9 @@ import { getCache } from '../cache'
       afterConnect (logic, input, addConncetion)
       afterConstants (logic, input)
       afterActions (logic, input)
-      afterReducerInputs (logic, input)
+      afterDefaults (logic, input)
       afterReducers (logic, input)
+      afterReducer (logic, input)
       afterReducerSelectors (logic, input)
       afterSelectors (logic, input)
 

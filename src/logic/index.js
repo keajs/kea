@@ -1,8 +1,9 @@
 import { createConnect, addConnection } from './connect'
 import { createConstants } from './constants'
 import { createActions } from './actions'
-import { createReducerInputs } from './reducer-inputs'
+import { createDefaults } from './defaults'
 import { createReducers } from './reducers'
+import { createReducer } from './reducer'
 import { createSelectors, createReducerSelectors } from './selectors'
 
 import { getCache } from '../cache'
@@ -56,10 +57,10 @@ function createBlankLogic ({ key, path, plugins, props }) {
     connections: {},
     constants: {},
     actions: {},
-    reducerInputs: {},
+    defaults: {},
     reducers: {},
+    reducerOptions: {},
     reducer: undefined,
-    defaults: {}, // do we need this? it can be taken from reducerInputs easily
     selectors: {},
     propTypes: {}
   }
@@ -124,6 +125,22 @@ function applyInputToLogic (logic, input) {
   runPlugins(logic.plugins, 'afterActions', logic, input)
 
   /*
+    input.defaults = ({ actions, selectors }) => (state, props) => ({
+      key1: selectors.something(state).key1,
+      key2: selectors.other(state, props).key2
+    })
+
+    ... converts to:
+
+    logic.defaults = {
+      key1: 10,
+      key2: 20
+    }
+  */
+  createDefaults(logic, input)
+  runPlugins(logic.plugins, 'afterDefaults', logic, input)
+
+  /*
     input.reducers = ({ actions, path, constants }) => ({
       duckId: [10, PropTypes.number, { persist: true }, {
         [actions.setDuckId]: (_, payload) => payload.duckId
@@ -132,17 +149,18 @@ function applyInputToLogic (logic, input) {
 
     ... converts to:
 
-    logic.reducerInputs = {
-      duckId: {
-        value: 10,
-        type: PropTypes.number,
-        reducer: (state = 10, action) => action.type == actions.setDuckId.toString() ? action.payload.duckId : state,
-        options: { persist: true }
-      }
+    logic.reducers = {
+      duckId: function () {}
+    },
+    logic.propTypes = {
+      duckId: PropTypes.number
+    },
+    logic.defaults = {
+      duckId: 10
     }
   */
-  createReducerInputs(logic, input)
-  runPlugins(logic.plugins, 'afterReducerInputs', logic, input)
+  createReducers(logic, input)
+  runPlugins(logic.plugins, 'afterReducers', logic, input)
 
   /*
     logic.reducerInputs = {
@@ -161,8 +179,8 @@ function applyInputToLogic (logic, input) {
     logic.reducers = { duckId: function () {} }
     logic.reducer = combineReducers(logic.reducers)
   */
-  createReducers(logic, input)
-  runPlugins(logic.plugins, 'afterReducers', logic, input)
+  createReducer(logic, input)
+  runPlugins(logic.plugins, 'afterReducer', logic, input)
 
   /*
     logic.reducers = { duckId: function () {} }
