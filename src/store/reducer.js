@@ -1,29 +1,11 @@
 import { combineReducers } from 'redux'
 
-import { getCache } from '../cache'
-/*
-getCache() == {
-  defaultReducerRoot: null,
-  reducerTree: {},
-  rootReducers: {}
-}
-*/
+import { getCache, getReduxStore } from '../cache'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 
-// worker functions are loaded globally, reducers locally in store
-let store
-
 const defaultState = {}
-
-export function attachStore (storeReference) {
-  store = storeReference
-}
-
-export function getStore () {
-  return store
-}
 
 function initRootReducerTree (pathStart) {
   const { reducerTree } = getCache()
@@ -88,6 +70,8 @@ export function attachReducer (path, reducer) {
   }
 
   regenerateRootReducer(pathStart)
+
+  const store = getReduxStore()
   store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
 }
 
@@ -119,6 +103,8 @@ export function detachReducer (path, reducer) {
   }
 
   regenerateRootReducer(pathStart)
+
+  const store = getReduxStore()
   store && store.dispatch({ type: DETACH_REDUCER, payload: { path, reducer } })
 }
 

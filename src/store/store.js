@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 
-import { keaReducer, attachStore } from './reducer'
+import { keaReducer } from './reducer'
 import { activatePlugin } from '../plugins'
-import { getCache } from '../cache'
+import { getCache, attachStore } from '../cache'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
