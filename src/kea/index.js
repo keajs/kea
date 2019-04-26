@@ -15,8 +15,7 @@ export function kea (input) {
 
   plugins.forEach(p => p.beforeKea && p.beforeKea(input))
 
-  const mountDirectly = !input.key && !hasConnectWithKey(input.connect)
-  const lazy = (input.options && input.options.lazy) || !mountDirectly || false
+  const lazy = (input.options && input.options.lazy) || !!input.key || hasConnectWithKey(input.connect) || false
 
   const wrapper = (Klass) => {
     // make this.actions work if it's a React.Component we're operating with
@@ -46,7 +45,7 @@ export function kea (input) {
         firstRender.current = false
 
         // give access to the logic to the return value
-        if (!mountDirectly) {
+        if (lazy) {
           Object.assign(wrapper, logic)
         }
 
@@ -66,7 +65,7 @@ export function kea (input) {
 
   // TODO: legacy names. remove/change them?
   wrapper._isKeaFunction = true
-  wrapper._isKeaSingleton = mountDirectly
+  wrapper._isKeaSingleton = !lazy
 
   if (input.key) {
     wrapper.withKey = keyOrCreator => {
@@ -84,7 +83,7 @@ export function kea (input) {
     }
   }
 
-  if (mountDirectly) {
+  if (!lazy) {
     const logic = convertInputToLogic({ input, plugins })
 
     // if we're in eager mode (!lazy), attach the reducer directly
