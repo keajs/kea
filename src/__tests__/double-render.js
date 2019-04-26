@@ -2,7 +2,7 @@
 import { kea, getStore, resetKeaCache } from '../index'
 
 import './helper/jsdom'
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
