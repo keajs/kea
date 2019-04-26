@@ -2,7 +2,7 @@
 import { kea, getStore, resetKeaCache } from '../index'
 
 import './helper/jsdom'
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
@@ -24,7 +24,7 @@ test('multiple dynamic logic stores', () => {
       updateName: name => ({ name })
     }),
     reducers: ({ actions, props, key }) => ({
-      name: ['', PropTypes.string, {
+      name: [props.defaultName, PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }]
     })
@@ -43,25 +43,25 @@ test('multiple dynamic logic stores', () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      {allNames.map(location => (
-        <ConnectedComponent key={location.id} id={location.id} />
+      {allNames.map(name => (
+        <ConnectedComponent key={name.id} id={name.id} defaultName={name.name} />
       ))}
     </Provider>
   )
 
-  // expect(wrapper.find('.id').text()).toEqual('12')
-  // expect(wrapper.find('.name').text()).toEqual('bird')
+  expect(wrapper.find('.id').length).toEqual(3)
+  expect(wrapper.find('.name').length).toEqual(3)
 
-  // expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bird' } } } })
+  expect(wrapper.find('.id').map(node => node.text()).join(',')).toEqual('12,13,15')
+  expect(wrapper.find('.name').map(node => node.text()).join(',')).toEqual('bla,george,michael')
 
-  // store.dispatch(dynamicLogic.withKey(12).actions.updateName('birb'))
+  expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bla' }, 13: { name: 'george' }, 15: { name: 'michael' } } } })
 
-  // expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
+  store.dispatch(dynamicLogic.withKey(12).actions.updateName('birb'))
 
-  // wrapper.render()
+  expect(wrapper.find('.name').map(node => node.text()).join(',')).toEqual('birb,george,michael')
 
-  // expect(wrapper.find('.id').text()).toEqual('12')
-  // expect(wrapper.find('.name').text()).toEqual('birb')
+  expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' }, 13: { name: 'george' }, 15: { name: 'michael' } } } })
 
   wrapper.unmount()
 })
