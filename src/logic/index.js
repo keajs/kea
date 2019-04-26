@@ -4,19 +4,8 @@ import { createActions } from './actions'
 import { createReducerInputs, createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
+import { getCache } from '../cache'
 import { runPlugins } from '../plugins'
-
-let inputPathCreators = new WeakMap()
-let globalInputCounter = 0
-
-let logicCache = {}
-
-export function clearLogicCache () {
-  inputPathCreators = new WeakMap()
-  globalInputCounter = 0
-
-  logicCache = {}
-}
 
 export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
@@ -27,6 +16,8 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
 
   const path = getPathForInput(input, key)
   const pathString = path.join('.')
+
+  const { logicCache } = getCache()
 
   if (!logicCache[pathString]) {
     let logic = createBlankLogic({ key, path, plugins, props })
@@ -216,13 +207,15 @@ function getPathForInput (input, key) {
     return input.path(key)
   }
 
+  const { inputPathCreators } = getCache()
+
   let pathCreator = inputPathCreators.get(input)
 
   if (pathCreator) {
     return pathCreator(key)
   }
 
-  const count = (++globalInputCounter).toString()
+  const count = (++getCache().globalInputCounter).toString()
 
   if (key) {
     pathCreator = (key) => ['kea', 'inline', count, key]

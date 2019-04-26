@@ -1,14 +1,18 @@
 import { combineReducers } from 'redux'
 
+import { getCache } from '../cache'
+/*
+getCache() == {
+  defaultReducerRoot: null,
+  reducerTree: {},
+  rootReducers: {}
+}
+*/
+
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 
 // worker functions are loaded globally, reducers locally in store
-let defaultReducerRoot = null
-
-// all reducers that are created
-let reducerTree = {}
-let rootReducers = {}
 let store
 
 const defaultState = {}
@@ -21,13 +25,8 @@ export function getStore () {
   return store
 }
 
-export function clearReducerCache () {
-  defaultReducerRoot = null
-  reducerTree = {}
-  rootReducers = {}
-}
-
 function initRootReducerTree (pathStart) {
+  const { reducerTree } = getCache()
   if (!reducerTree[pathStart]) {
     reducerTree[pathStart] = {}
     regenerateRootReducer(pathStart)
@@ -35,10 +34,11 @@ function initRootReducerTree (pathStart) {
 }
 
 export function keaReducer (pathStart = 'scenes', options = {}) {
+  const { rootReducers } = getCache()
   initRootReducerTree(pathStart)
 
   if (options && options.default) {
-    defaultReducerRoot = pathStart
+    getCache().defaultReducerRoot = pathStart
   }
 
   return (state = defaultState, action) => {
@@ -47,10 +47,12 @@ export function keaReducer (pathStart = 'scenes', options = {}) {
 }
 
 export function firstReducerRoot () {
+  const { defaultReducerRoot, reducerTree } = getCache()
   return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
 export function attachReducer (path, reducer) {
+  const { reducerTree } = getCache()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -90,6 +92,7 @@ export function attachReducer (path, reducer) {
 }
 
 export function detachReducer (path, reducer) {
+  const { reducerTree } = getCache()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -120,6 +123,7 @@ export function detachReducer (path, reducer) {
 }
 
 export function regenerateRootReducer (pathStart) {
+  const { reducerTree, rootReducers } = getCache()
   const rootReducer = recursiveCreateReducer(reducerTree[pathStart])
 
   rootReducers[pathStart] = rootReducer

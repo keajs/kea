@@ -3,12 +3,14 @@ import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput } from '../logic/index'
 import { hasConnectWithKey } from '../logic/connect'
-import { plugins as globalPlugins } from '../plugins'
 import { attachReducer } from '../store/reducer'
+
+import { getCache } from '../cache'
 
 import { mountPaths, unmountPaths } from './mount'
 
 export function kea (input) {
+  const globalPlugins = getCache().plugins
   const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
 
   const mountDirectly = !input.key && !hasConnectWithKey(input.connect)

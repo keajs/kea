@@ -1,4 +1,4 @@
-export let plugins = []
+import { getCache } from '../cache'
 
 /*
   plugins = [
@@ -42,12 +42,7 @@ export let plugins = []
 */
 
 export function activatePlugin (plugin) {
-  plugins.push(plugin)
-}
-
-export function clearActivatedPlugins () {
-  plugins.forEach(f => f.clearCache && f.clearCache())
-  plugins = []
+  getCache().plugins.push(plugin)
 }
 
 export function runPlugins (plugins, key, ...args) {
