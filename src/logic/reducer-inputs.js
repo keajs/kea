@@ -38,6 +38,15 @@ export function createReducerInputs (logic, input) {
       const type = typeof s[1] === 'function' ? s[1] : undefined
       const options = typeof s[s.length - 2] === 'object' ? s[s.length - 2] : undefined
 
+      if (typeof value === 'function') {
+        const store = getReduxStore()
+        if (store && store.getState) {
+          value = value(store && store.getState(), logic && logic.props)
+        } else {
+          console.error(`[KEA] Can not use default selector for reducer ${keys[i]} in ${logic.path.join('.')} before connecting to store`)
+        }
+      }
+
       let reducerInput = {
         value: value,
         type: type,
