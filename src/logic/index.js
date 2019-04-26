@@ -1,7 +1,8 @@
 import { createConnect, addConnection } from './connect'
 import { createConstants } from './constants'
 import { createActions } from './actions'
-import { createReducerInputs, createReducers } from './reducers'
+import { createReducerInputs } from './reducer-inputs'
+import { createReducers } from './reducers'
 import { createSelectors, createReducerSelectors } from './selectors'
 
 import { getCache } from '../cache'

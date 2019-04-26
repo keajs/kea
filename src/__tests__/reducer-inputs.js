@@ -1,16 +1,25 @@
 /* global test, expect */
-import { convertReducerArrays } from '../logic/reducers'
+import { createReducerInputs } from '../logic/reducer-inputs'
 import PropTypes from 'prop-types'
 
 test('it converts reducer arrays correctly', () => {
   const reducerFunction = state => state
 
-  const convertedArrays = convertReducerArrays({
-    everything: [0, PropTypes.number, { persist: true }, { ACTION: reducerFunction }],
-    noProp: [0, { persist: true }, { ACTION: reducerFunction }],
-    noOptions: [0, PropTypes.number, { ACTION: reducerFunction }],
-    noPropNoOptions: [0, { ACTION: reducerFunction }]
-  })
+  const logic = { reducerInputs: {} }
+
+  createReducerInputs(
+    logic,
+    {
+      reducers: () => ({
+        everything: [0, PropTypes.number, { persist: true }, { ACTION: reducerFunction }],
+        noProp: [0, { persist: true }, { ACTION: reducerFunction }],
+        noOptions: [0, PropTypes.number, { ACTION: reducerFunction }],
+        noPropNoOptions: [0, { ACTION: reducerFunction }]
+      })
+    }
+  )
+
+  const convertedArrays = logic.reducerInputs
 
   expect(typeof convertedArrays.everything.reducer).toBe('function')
   expect(typeof convertedArrays.noProp.reducer).toBe('function')
