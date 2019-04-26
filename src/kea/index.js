@@ -44,6 +44,12 @@ export function kea (input) {
       const firstRender = useRef(true)
       if (firstRender.current) {
         firstRender.current = false
+
+        // give access to the logic to the return value
+        if (!mountDirectly) {
+          Object.assign(wrapper, logic)
+        }
+
         mountPaths(logic, plugins)
       }
 
