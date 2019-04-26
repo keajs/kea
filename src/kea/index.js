@@ -13,6 +13,8 @@ export function kea (input) {
   const globalPlugins = getCache().plugins
   const plugins = input.plugins && input.plugins.length > 0 ? [...globalPlugins, ...input.plugins] : [...globalPlugins]
 
+  plugins.forEach(p => p.beforeKea && p.beforeKea(input))
+
   const mountDirectly = !input.key && !hasConnectWithKey(input.connect)
   const lazy = (input.options && input.options.lazy) || !mountDirectly || false
 

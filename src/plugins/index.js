@@ -12,6 +12,9 @@ import { getCache } from '../cache'
       // Run after the redux store is created.
       afterReduxStore (options, store)
 
+      // Run before we start doing anything
+      beforeKea (input)
+
       // Run before we start converting the input into the logic
       beforeCreate (logic, input)
 
