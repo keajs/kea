@@ -44,14 +44,13 @@ test('defaults from props and selectors', () => {
   const singletonLogic = kea({
     // TODO: it must also work without requiring lazy here!
     options: { lazy: true },
+
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
 
-    // TODO: it must also work without requiring a key here!
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'dynamic', key],
+    path: () => ['scenes', 'dynamic'],
 
     actions: ({ constants }) => ({
       updateName: name => ({ name })
@@ -95,21 +94,21 @@ test('defaults from props and selectors', () => {
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'storedName' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } } }
+    scenes: { dynamic: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } }
   })
 
   store.dispatch(singletonLogic.actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } } }
+    scenes: { dynamic: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } }
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } } }
+    scenes: { dynamic: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } }
   })
 
   wrapper.render()
@@ -152,12 +151,12 @@ test('defaults from input.defaults selector', () => {
   const singletonLogic = kea({
     // TODO: it must also work without requiring lazy here!
     options: { lazy: true },
+
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
 
-    // TODO: it must also work without requiring a key here!
     key: (props) => props.id,
     path: (key) => ['scenes', 'dynamic', key],
 
@@ -266,14 +265,11 @@ test('defaults from input.defaults without selector', () => {
   const singletonLogic = kea({
     // TODO: it must also work without requiring lazy here!
     options: { lazy: true },
+
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
-
-    // TODO: it must also work without requiring a key here!
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'dynamic', key],
 
     actions: ({ constants }) => ({
       updateName: name => ({ name })
@@ -322,22 +318,22 @@ test('defaults from input.defaults without selector', () => {
   expect(wrapper.find('.directName').text()).toEqual('george')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'storedName' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } }
+    kea: { inline: { 1: { storedName: 'storedName' }, 2: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
+    scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } }
+    kea: { inline: { 1: { storedName: 'birb' }, 2: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
+    scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } } }
+    kea: { inline: { 1: { storedName: 'birb' }, 2: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } } },
+    scenes: {}
   })
 
   wrapper.render()
