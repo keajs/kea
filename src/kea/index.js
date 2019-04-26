@@ -68,22 +68,7 @@ export function kea (input) {
   wrapper._isKeaFunction = true
   wrapper._isKeaSingleton = mountDirectly
 
-  // if we can mount directly (no key or connection to key or anything, do it)
-  if (mountDirectly) {
-    const logic = convertInputToLogic({ input, plugins })
-
-    // if we're in eager mode (!lazy), attach the reducer directly
-    if (!lazy && logic.reducer && !logic.mounted) {
-      attachReducer(logic.path, logic.reducer)
-      logic.mounted = true
-    }
-
-    Object.assign(wrapper, logic)
-
-  // otherwise return a .withKey() function that accepts keys and keyCreators
-  } else {
-    Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
-
+  if (input.key) {
     wrapper.withKey = keyOrCreator => {
       if (typeof keyOrCreator === 'function') {
         const withKey = props => {
@@ -97,6 +82,20 @@ export function kea (input) {
         return Object.assign({}, wrapper, logic)
       }
     }
+  }
+
+  if (mountDirectly) {
+    const logic = convertInputToLogic({ input, plugins })
+
+    // if we're in eager mode (!lazy), attach the reducer directly
+    if (!lazy && logic.reducer && !logic.mounted) {
+      attachReducer(logic.path, logic.reducer)
+      logic.mounted = true
+    }
+
+    Object.assign(wrapper, logic)
+  } else {
+    Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   }
 
   return wrapper
