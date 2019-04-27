@@ -154,7 +154,7 @@ function combineKeaReducers (reducers) {
   const reducerKeys = Object.keys(reducers)
 
   return function combination (state = {}, action) {
-    let stateChanged = false
+    let stateChanged = Object.keys(state).length !== reducerKeys.length
     let nextState = {}
 
     for (let i = 0; i < reducerKeys.length; i++) {
