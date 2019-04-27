@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux'
-
 import { getCache, getReduxStore } from '../cache'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
@@ -75,7 +73,7 @@ export function attachReducer (path, reducer) {
   store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
 }
 
-export function detachReducer (path, reducer) {
+export function detachReducer (path) {
   const { reducerTree } = getCache()
   const pathStart = path[0]
 
@@ -83,8 +81,10 @@ export function detachReducer (path, reducer) {
 
   let pointer = reducerTree
 
+  let detached = false
+
   // ['scenes', 'sceneName', 'page', 'key']
-  for (let i = path.length - 1; i >= 0; i--) {
+  for (let i = path.length - 2; i >= 0; i--) {
     let pointerToHere = pointer
     for (let j = 0; j <= i; j++) {
       pointerToHere = (pointerToHere && pointerToHere[path[j]]) || undefined
@@ -93,19 +93,23 @@ export function detachReducer (path, reducer) {
     if (pointerToHere) {
       if (Object.keys(pointerToHere).length === 0) {
         // next
-      } else if (Object.keys(pointerToHere).length === 1 && i < path.length - 1 && typeof pointerToHere[path[i + 1]] !== 'undefined') {
-        // delete pointerToHere[path[i + 1]]
-        pointerToHere[path[i + 1]] = undefined
+      } else if (Object.keys(pointerToHere).length >= 1 && i === path.length - 2 && typeof pointerToHere[path[i + 1]] === 'function') {
+        delete pointerToHere[path[i + 1]]
+        detached = true
+      } else if (detached && Object.keys(pointerToHere).length >= 1 && i < path.length - 2 && Object.keys(pointerToHere[path[i + 1]]).length === 0) {
+        delete pointerToHere[path[i + 1]]
       } else {
-        return
+        break
       }
     }
   }
 
   regenerateRootReducer(pathStart)
 
-  const store = getReduxStore()
-  store && store.dispatch({ type: DETACH_REDUCER, payload: { path, reducer } })
+  if (detached) {
+    const store = getReduxStore()
+    store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
+  }
 }
 
 export function regenerateRootReducer (pathStart) {
@@ -121,6 +125,7 @@ export function recursiveCreateReducer (treeNode) {
   }
 
   let children = {}
+
   Object.keys(treeNode).forEach(key => {
     if (typeof treeNode[key] !== 'undefined') {
       children[key] = recursiveCreateReducer(treeNode[key])
@@ -129,15 +134,41 @@ export function recursiveCreateReducer (treeNode) {
 
   // we have reducers, return combineReducers
   if (Object.keys(children).length > 0) {
-    return combineReducers(children)
+    return combineKeaReducers(children)
 
   // we have reducers that were removed, return something that just returns an empty object
-  } else if (Object.keys(treeNode).length > 0) {
+  // } else if (Object.keys(treeNode).length > 0) {
+  } else {
     const emptyObj = {}
     return () => emptyObj
 
   // no reducers and nothing was ever removed... return something that returns with the preloaded state
-  } else {
-    return (state, action) => state
+  // } else {
+  //   return (state, action) => state
+  }
+}
+
+// We are using our own function for the tree nodes instead of redux's combineReducers beacause this way we will not
+// get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting
+function combineKeaReducers (reducers) {
+  const reducerKeys = Object.keys(reducers)
+
+  return function combination (state = {}, action) {
+    let stateChanged = false
+    let nextState = {}
+
+    for (let i = 0; i < reducerKeys.length; i++) {
+      const key = reducerKeys[i]
+      const reducer = reducers[key]
+      const previousKeyState = state[key]
+      const nextKeyState = reducer(previousKeyState, action)
+      if (typeof nextKeyState === 'undefined') {
+        throw new Error(`[KEA] Reducer "${key}" returned undefined for action "${action && action.type}"`)
+      }
+      nextState[key] = nextKeyState
+      stateChanged = stateChanged || nextKeyState !== previousKeyState
+    }
+
+    return stateChanged ? nextState : state
   }
 }
