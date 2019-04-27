@@ -64,7 +64,7 @@ test('can use withkey for actions and props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'defaultName' } } } })
 
-  store.dispatch(dynamicLogic.withKey(12).actions.updateName('birb'))
+  store.dispatch(dynamicLogic.buildWithKey(12).actions.updateName('birb'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
 

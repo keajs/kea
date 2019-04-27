@@ -57,7 +57,7 @@ test('multiple dynamic logic stores', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bla' }, 13: { name: 'george' }, 15: { name: 'michael' } } } })
 
-  store.dispatch(dynamicLogic.withKey(12).actions.updateName('birb'))
+  store.dispatch(dynamicLogic.buildWithKey(12).actions.updateName('birb'))
 
   expect(wrapper.find('.name').map(node => node.text()).join(',')).toEqual('birb,george,michael')
 
