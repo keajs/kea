@@ -9,6 +9,9 @@ export function createConnect (logic, input) {
     response.forEach(([otherLogic, from, to]) => {
       if (otherLogic._isKeaWithKey || otherLogic._isKeaFunction) {
         const logicToConenct = otherLogic._isKeaWithKey ? otherLogic(logic.props) : otherLogic
+        if (logicToConenct.build && logicToConenct.build._mustBuild) {
+          logicToConenct.build()
+        }
         addConnection(logic, logicToConenct)
         logic.actions[to] = logicToConenct.actions[from]
       } else {
@@ -23,6 +26,9 @@ export function createConnect (logic, input) {
     response.forEach(([otherLogic, from, to]) => {
       if (otherLogic._isKeaWithKey || otherLogic._isKeaFunction) {
         const logicToConenct = otherLogic._isKeaWithKey ? otherLogic(logic.props) : otherLogic
+        if (logicToConenct.build && logicToConenct.build._mustBuild) {
+          logicToConenct.build()
+        }
         addConnection(logic, logicToConenct)
         logic.selectors[to] = from === '*' ? logicToConenct.selector : logicToConenct.selectors[from]
 

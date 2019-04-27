@@ -68,19 +68,25 @@ export function kea (input) {
   wrapper._isKeaSingleton = !lazy
 
   if (input.key) {
-    wrapper.withKey = keyOrCreator => {
-      if (typeof keyOrCreator === 'function') {
-        const withKey = props => {
-          const logic = convertInputToLogic({ input, key: keyOrCreator(props), props, plugins })
-          return Object.assign({}, wrapper, logic)
-        }
-        withKey._isKeaWithKey = true
-        return withKey
-      } else {
-        const logic = convertInputToLogic({ input, key: keyOrCreator, plugins })
+    wrapper.withKey = keyCreator => {
+      const buildWithProps = props => {
+        const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins })
         return Object.assign({}, wrapper, logic)
       }
+      buildWithProps._isKeaWithKey = true
+      return buildWithProps
     }
+    wrapper.buildWithKey = (key) => {
+      const logic = convertInputToLogic({ input, key, plugins })
+      return Object.assign({}, wrapper, logic)
+    }
+  } else if (lazy) {
+    wrapper.build = () => {
+      const logic = convertInputToLogic({ input, plugins })
+      wrapper.build._mustBuild = false
+      return Object.assign(wrapper, logic)
+    }
+    wrapper.build._mustBuild = true
   }
 
   if (!lazy) {
