@@ -1,23 +1,21 @@
 import { createSelector } from 'reselect'
 
-// input: ['scenes', 'something', 'other'], state
-// logic: state.scenes.something.other
-export function pathSelector (path, state) {
-  return ([state]).concat(path).reduce((v, a) => v[a])
-}
-
-export function createReducerSelectors (logic, input) {
-  if (!logic.reducer) {
-    return
-  }
-
-  logic.selector = state => pathSelector(logic.path, state)
-
-  Object.keys(logic.reducers).forEach(key => {
-    logic.selectors[key] = createSelector(logic.selector, state => state[key])
+/*
+  input.selectors = ({ selectors }) => ({
+    duckAndChicken: [
+      () => [selectors.duckId, selectors.chickenId],
+      (duckId, chickenId) => duckId + chickenId,
+      PropType.number
+    ],
   })
-}
 
+  ... converts to
+
+  logic.selector = state => state.scenes.farm // memoized via reselect
+  logic.selectors = {
+    duckAndChicken: state => logic.selector(state).duckAndChicken // memoized via reselect
+  }
+*/
 export function createSelectors (logic, input) {
   if (!input.selectors) {
     return
@@ -43,4 +41,10 @@ export function createSelectors (logic, input) {
     builtSelectors[key] = createSelector(...args, func)
     logic.selectors[key] = builtSelectors[key]
   })
+}
+
+// input: ['scenes', 'something', 'other'], state
+// logic: state.scenes.something.other
+export function pathSelector (path, state) {
+  return ([state]).concat(path).reduce((v, a) => v[a])
 }

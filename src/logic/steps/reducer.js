@@ -2,6 +2,13 @@ import { combineReducers } from 'redux'
 
 const emptyObject = {}
 
+/*
+  logic.reducers = { duckId: function () {} }
+
+  ... converts to:
+
+  logic.reducer = combineReducers(logic.reducers)
+*/
 export function createReducer (logic, input) {
   if (!input.reducers) {
     return
@@ -13,4 +20,3 @@ export function createReducer (logic, input) {
     logic.reducer = () => emptyObject
   }
 }
-

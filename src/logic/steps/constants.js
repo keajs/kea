@@ -1,3 +1,12 @@
+/*
+  Convert any requested constants to objects that can be destructured
+
+  input.constants = ['SOMETHING', 'CONSTANT_NAME']
+
+  ... converts to:
+
+  logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
+*/
 export function createConstants (logic, input) {
   if (!input.constants) {
     return

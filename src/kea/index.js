@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { convertInputToLogic, convertPartialDynamicInput } from '../logic/index'
-import { hasConnectWithKey } from '../logic/connect'
+import { hasConnectWithKey } from '../logic/steps/connect'
 import { attachReducer } from '../store/reducer'
 
 import { getCache } from '../cache'

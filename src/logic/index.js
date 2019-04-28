@@ -1,10 +1,5 @@
-import { createConnect, addConnection } from './connect'
-import { createConstants } from './constants'
-import { createActions } from './actions'
-import { createDefaults } from './defaults'
-import { createReducers } from './reducers'
-import { createReducer } from './reducer'
-import { createSelectors, createReducerSelectors } from './selectors'
+import { getSteps } from './steps'
+import { createConstants } from './steps/constants'
 
 import { getCache } from '../cache'
 import { runPlugins } from '../plugins'
@@ -79,137 +74,12 @@ function applyInputToLogic (logic, input) {
   // Let's call all plugins that want to hook into this moment.
   runPlugins(logic.plugins, 'beforeCreate', logic, input)
 
-  /*
-    Copy the connect'ed logic stores' selectors and actions into this object
+  const steps = getSteps()
 
-    input.connect = {
-      props: [farmSceneLogic, ['chicken']],
-      actions: [farmSceneLogic, ['setChicken']]
-    }
-
-    ... converts to:
-
-    logic.connections = { 'scenes.farm': farmSceneLogic }
-    logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
-    logic.selectors = { chicken: (state) => state.scenes.farm }
-
-    // TODO: should we rename connect.props to connect.selectors ?
-  */
-  createConnect(logic, input)
-  runPlugins(logic.plugins, 'afterConnect', logic, input, addConnection)
-
-  /*
-    Convert any requested constants to objects that can be destructured
-
-    input.constants = ['SOMETHING', 'CONSTANT_NAME']
-
-    ... converts to:
-
-    logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
-  */
-  createConstants(logic, input)
-  runPlugins(logic.plugins, 'afterConstants', logic, input)
-
-  /*
-    input.actions = ({ path, constants }) => ({
-      setDuckId: (duckId) => ({ duckId })
-    })
-
-    ... converts to:
-
-    logic.actions == {
-      setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
-    }
-  */
-  createActions(logic, input)
-  runPlugins(logic.plugins, 'afterActions', logic, input)
-
-  /*
-    input.defaults = ({ actions, selectors }) => (state, props) => ({
-      key1: selectors.something(state).key1,
-      key2: selectors.other(state, props).key2
-    })
-
-    ... converts to:
-
-    logic.defaults = {
-      key1: 10,
-      key2: 20
-    }
-  */
-  createDefaults(logic, input)
-  runPlugins(logic.plugins, 'afterDefaults', logic, input)
-
-  /*
-    input.reducers = ({ actions, path, constants }) => ({
-      duckId: [10, PropTypes.number, { persist: true }, {
-        [actions.setDuckId]: (_, payload) => payload.duckId
-      }]
-    })
-
-    ... converts to:
-
-    logic.reducers = {
-      duckId: function () {}
-    },
-    logic.propTypes = {
-      duckId: PropTypes.number
-    },
-    logic.defaults = {
-      duckId: 10
-    }
-  */
-  createReducers(logic, input)
-  runPlugins(logic.plugins, 'afterReducers', logic, input)
-
-  /*
-    logic.reducerInputs = {
-      duckId: {
-        value: 10,
-        type: PropTypes.number,
-        reducer: (state = 10, action) => action.type == actions.setDuckId.toString() ? action.payload.duckId : state,
-        options: { persist: true }
-      }
-    }
-
-    ... converts to:
-
-    logic.propTypes = { duckId: PropTypes.number }
-    logic.defaults = { duckId: 10 }
-    logic.reducers = { duckId: function () {} }
-    logic.reducer = combineReducers(logic.reducers)
-  */
-  createReducer(logic, input)
-  runPlugins(logic.plugins, 'afterReducer', logic, input)
-
-  /*
-    logic.reducers = { duckId: function () {} }
-
-    ... converts to
-
-    logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
-  */
-  createReducerSelectors(logic, input)
-  runPlugins(logic.plugins, 'afterReducerSelectors', logic, input)
-
-  /*
-    input.selectors = ({ selectors }) => ({
-      duckAndChicken: [
-        () => [selectors.duckId, selectors.chickenId],
-        (duckId, chickenId) => duckId + chickenId,
-        PropType.number
-      ],
-    })
-
-    ... converts to
-
-    logic.selector = state => state.scenes.farm // memoized via reselect
-    logic.selectors = {
-      duckAndChicken: state => logic.selector(state).duckAndChicken // memoized via reselect
-    }
-  */
-  createSelectors(logic, input)
-  runPlugins(logic.plugins, 'afterSelectors', logic, input)
+  for (const step of Object.keys(steps)) {
+    steps[step](logic, input)
+    runPlugins(logic.plugins, `after${step.charAt(0).toUpperCase()}${step.slice(1)}`, logic, input)
+  }
 
   /*
     add a connection to ourselves in the end

@@ -8,6 +8,9 @@ export function resetKeaCache () {
   }
 
   cache = {
+    // actions
+    actions: {},
+
     // reducers
     defaultReducerRoot: null,
     reducerTree: {},

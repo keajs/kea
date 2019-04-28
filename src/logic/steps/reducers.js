@@ -1,24 +1,24 @@
-import { getReduxStore } from '../cache'
+import { getReduxStore } from '../../cache'
 
-function warnIfUndefinedActionCreator (object, property) {
-  if (process.env.NODE_ENV !== 'production') {
-    if (object.undefined !== undefined) {
-      console.warn(`A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
-    }
+/*
+  input.reducers = ({ actions, path, constants }) => ({
+    duckId: [10, PropTypes.number, { persist: true }, {
+      [actions.setDuckId]: (_, payload) => payload.duckId
+    }]
+  })
+
+  ... converts to:
+
+  logic.reducers = {
+    duckId: function () {}
+  },
+  logic.propTypes = {
+    duckId: PropTypes.number
+  },
+  logic.defaults = {
+    duckId: 10
   }
-}
-
-// create reducer function from such an object { [action]: (state, payload) => state }
-function createMappingReducer (mapping, defaultValue) {
-  return (state = defaultValue, action) => {
-    if (mapping[action.type]) {
-      return mapping[action.type](state, action.payload, action.meta)
-    } else {
-      return state
-    }
-  }
-}
-
+*/
 export function createReducers (logic, input) {
   if (!input.reducers) {
     return
@@ -66,6 +66,25 @@ export function createReducers (logic, input) {
       logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value)
 
       warnIfUndefinedActionCreator(logic.reducers, key)
+    }
+  }
+}
+
+function warnIfUndefinedActionCreator (object, property) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (object.undefined !== undefined) {
+      console.warn(`A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
+    }
+  }
+}
+
+// create reducer function from such an object { [action]: (state, payload) => state }
+function createMappingReducer (mapping, defaultValue) {
+  return (state = defaultValue, action) => {
+    if (mapping[action.type]) {
+      return mapping[action.type](state, action.payload, action.meta)
+    } else {
+      return state
     }
   }
 }

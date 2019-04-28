@@ -1,3 +1,19 @@
+/*
+  Copy the connect'ed logic stores' selectors and actions into this object
+
+  input.connect = {
+    props: [farmSceneLogic, ['chicken']],
+    actions: [farmSceneLogic, ['setChicken']]
+  }
+
+  ... converts to:
+
+  logic.connections = { 'scenes.farm': farmSceneLogic }
+  logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
+  logic.selectors = { chicken: (state) => state.scenes.farm }
+
+  // TODO: should we rename connect.props to connect.selectors ?
+*/
 export function createConnect (logic, input) {
   if (!input.connect) {
     return
