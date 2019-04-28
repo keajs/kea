@@ -132,24 +132,18 @@ export function recursiveCreateReducer (treeNode) {
     }
   })
 
-  // we have reducers, return combineReducers
   if (Object.keys(children).length > 0) {
     return combineKeaReducers(children)
-
-  // we have reducers that were removed, return something that just returns an empty object
-  // } else if (Object.keys(treeNode).length > 0) {
   } else {
     const emptyObj = {}
     return () => emptyObj
-
-  // no reducers and nothing was ever removed... return something that returns with the preloaded state
-  // } else {
-  //   return (state, action) => state
   }
 }
 
 // We are using our own function for the tree nodes instead of redux's combineReducers beacause this way we will not
-// get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting
+// get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting.
+// Instead we'll simply discard the keys we don't need.
+// Please note that logic store reducers are still built with redux's combineReducers.
 function combineKeaReducers (reducers) {
   const reducerKeys = Object.keys(reducers)
 
