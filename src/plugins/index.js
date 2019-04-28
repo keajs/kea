@@ -34,6 +34,7 @@ import { getCache } from '../cache/provider'
         reducer (logic, input)
         reducerSelectors (logic, input)
         selectors (logic, input)
+        // or add your own steps with custom names here and other plugins can then extend them
       }
 
       // after the steps to convert input into logic
