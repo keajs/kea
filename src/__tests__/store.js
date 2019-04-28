@@ -29,18 +29,28 @@ beforeEach(() => {
   resetKeaCache()
 })
 
-test('getStore can be initalized with a preloaded state', () => {
+test('getStore can be initalized with a preloaded state for non-kea reducers', () => {
   const preloadedState = {
     'kea': {},
-    'scenes': { 'something': { 'name': 'chirpy' } }
+    'scenes': { 'something': { 'name': 'chirpy' } },
+    'routes': { 'someRoute': true }
   }
   const store = getStore({
-    preloadedState
+    reducers: {
+      routes: (state = {}, action) => state
+    },
+    preloadedState: preloadedState
   })
-  expect(store.getState()).toEqual(preloadedState)
+  expect(store.getState()).toEqual({
+    kea: {},
+    scenes: {},
+    routes: { 'someRoute': true }
+  })
 })
 
-test('getStore preloaded state will not be immidiatly overiden by reducer default state', () => {
+test('getStore preloaded state will be immidiatly overiden by reducer default state', () => {
+  // use defaults instead of initalizing kea reducers
+
   const preloadedState = {
     'kea': {},
     'scenes': { 'something': { 'name': 'chirpoo' } }
@@ -79,10 +89,13 @@ test('getStore preloaded state will not be immidiatly overiden by reducer defaul
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpoo')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpoo')
+  expect(wrapper.find('.name').text()).toEqual('chirpy')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
-  expect(store.getState()).toEqual(preloadedState)
+  expect(store.getState()).toEqual({
+    'kea': {},
+    'scenes': { 'something': { 'name': 'chirpy' } }
+  })
 
   wrapper.unmount()
 })
