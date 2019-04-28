@@ -80,28 +80,39 @@ export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
   }
 }
 
+// run plugins with this key with the rest of the arguments
 export function runPlugins (plugins, key, ...args) {
   plugins.activated.forEach(p => p[key] && p[key](...args))
+}
+
+// make a murky deep copy of the plugins object
+function copyPlugins (plugins) {
+  let copy = {
+    activated: [...plugins.activated],
+    logicSteps: {},
+    logicKeys: Object.assign({}, plugins.logicKeys)
+  }
+  for (let key of Object.keys(plugins.logicSteps)) {
+    copy.logicSteps[key] = [...plugins.logicSteps[key]]
+  }
+  return copy
 }
 
 export function getLocalPlugins (input) {
   let { plugins } = getCache()
 
-  if (input.plugins && input.plugins.length > 0) {
-    let allPlugins = {
-      activated: [...plugins.activated],
-      logicSteps: {},
-      logicKeys: Object.assign({}, plugins.logicKeys)
-    }
-    for (let key of Object.keys(plugins.logicSteps)) {
-      allPlugins.logicSteps[key] = [...plugins.logicSteps[key]]
-    }
-
-    for (let plugin of input.plugins) {
-      activatePlugin(plugin, allPlugins)
-    }
-    return allPlugins
+  // return global (activated) plugins if no need to add local plugins
+  if (!input.plugins || input.plugins.length === 0) {
+    return plugins
   }
 
-  return plugins
+  // otherwise copy the global plugins...
+  let localPlugins = copyPlugins(plugins)
+
+  // and add all the local ones
+  for (let plugin of input.plugins) {
+    activatePlugin(plugin, localPlugins)
+  }
+
+  return localPlugins
 }
