@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import { pathSelector } from './selectors'
 
 /*
   logic.reducers = { duckId: function () {} }
@@ -18,4 +17,10 @@ export function createReducerSelectors (logic, input) {
   Object.keys(logic.reducers).forEach(key => {
     logic.selectors[key] = createSelector(logic.selector, state => state[key])
   })
+}
+
+// input: ['scenes', 'something', 'other'], state
+// output: state.scenes.something.other
+function pathSelector (path, state) {
+  return ([state]).concat(path).reduce((v, a) => v[a])
 }

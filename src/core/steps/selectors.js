@@ -42,9 +42,3 @@ export function createSelectors (logic, input) {
     logic.selectors[key] = builtSelectors[key]
   })
 }
-
-// input: ['scenes', 'something', 'other'], state
-// logic: state.scenes.something.other
-export function pathSelector (path, state) {
-  return ([state]).concat(path).reduce((v, a) => v[a])
-}

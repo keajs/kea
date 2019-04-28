@@ -6,6 +6,11 @@ import { getCache } from '../cache'
       // Required: name of the plugin
       name: ''
 
+      // default values for output in logic stores
+      defaults: () => ({
+        key: {}
+      }),
+
       // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
       beforeReduxStore (options)
 
@@ -20,6 +25,7 @@ import { getCache } from '../cache'
 
       // either add new steps or add after effects for existing steps
       steps: {
+        // steps from core that you can extend
         connect (logic, input)
         constants (logic, input)
         actions (logic, input)
