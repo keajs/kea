@@ -7,15 +7,15 @@ import { createReducer } from './reducer'
 import { createReducerSelectors } from './reducer-selectors'
 import { createSelectors } from './selectors'
 
-export function getSteps () {
+export function getDefaultSteps () {
   return {
-    connect: createConnect,
-    constants: createConstants,
-    actions: createActions,
-    defaults: createDefaults,
-    reducers: createReducers,
-    reducer: createReducer,
-    reducerSelectors: createReducerSelectors,
-    selectors: createSelectors
+    connect: [createConnect],
+    constants: [createConstants],
+    actions: [createActions],
+    defaults: [createDefaults],
+    reducers: [createReducers],
+    reducer: [createReducer],
+    reducerSelectors: [createReducerSelectors],
+    selectors: [createSelectors]
   }
 }

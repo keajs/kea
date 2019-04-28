@@ -1,3 +1,5 @@
+import { getDefaultSteps } from '../logic/steps'
+
 let cache
 
 resetKeaCache()
@@ -18,6 +20,7 @@ export function resetKeaCache () {
 
     // plugins
     plugins: [],
+    steps: getDefaultSteps(),
 
     // mount
     mountPathCounter: {},
