@@ -1,6 +1,6 @@
 
 import corePlugin from '../core'
-import { activatePlugin } from '../plugins'
+import { activatePlugin, runPlugins } from '../plugins'
 
 let cache
 
@@ -8,7 +8,7 @@ resetKeaCache()
 
 export function resetKeaCache () {
   if (cache && cache.plugins) {
-    cache.plugins.forEach(f => f.clearCache && f.clearCache())
+    runPlugins(cache.plugins, 'clearCache')
   }
 
   cache = {
@@ -21,8 +21,10 @@ export function resetKeaCache () {
     rootReducers: {},
 
     // plugins
-    plugins: [],
-    steps: {},
+    plugins: {
+      activated: [],
+      logicSteps: {}
+    },
 
     // mount
     mountPathCounter: {},

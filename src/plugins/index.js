@@ -21,10 +21,10 @@ import { getCache } from '../cache'
       beforeKea (input)
 
       // before the steps to convert input into logic
-      beforeSteps (logic, input)
+      beforeLogic (logic, input)
 
       // either add new steps or add after effects for existing steps
-      steps: {
+      logicSteps: {
         // steps from core that you can extend
         connect (logic, input)
         constants (logic, input)
@@ -37,7 +37,7 @@ import { getCache } from '../cache'
       }
 
       // after the steps to convert input into logic
-      afterSteps (logic, inpput)
+      afterLogic (logic, inpput)
 
       // Run when a logic store is mounted/unmounted in React
       mounted (pathString, logic)
@@ -53,42 +53,41 @@ import { getCache } from '../cache'
   ]
 */
 
-export function activatePlugin (plugin, pluginTarget = getCache().plugins, stepsTarget = getCache().steps) {
-  pluginTarget.push(plugin)
+export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
+  pluginTarget.activated.push(plugin)
 
-  if (plugin.steps) {
-    for (const key of Object.keys(plugin.steps)) {
-      if (stepsTarget[key]) {
-        stepsTarget[key].push(plugin.steps[key])
+  if (plugin.logicSteps) {
+    for (const key of Object.keys(plugin.logicSteps)) {
+      if (pluginTarget.logicSteps[key]) {
+        pluginTarget.logicSteps[key].push(plugin.logicSteps[key])
       } else {
-        stepsTarget[key] = [plugin.steps[key]]
+        pluginTarget.logicSteps[key] = [plugin.logicSteps[key]]
       }
     }
   }
 }
 
 export function runPlugins (plugins, key, ...args) {
-  plugins.forEach(p => p[key] && p[key](...args))
+  plugins.activated.forEach(p => p[key] && p[key](...args))
 }
 
 export function getLocalPlugins (input) {
-  let { steps, plugins } = getCache()
+  let { plugins } = getCache()
 
   if (input.plugins && input.plugins.length > 0) {
-    const globalSteps = steps
-    const globalPlugins = plugins
-
-    plugins = [...globalPlugins]
-    steps = {}
-
-    for (let key of Object.keys(globalSteps)) {
-      steps[key] = [...globalSteps[key]]
+    let allPlugins = {
+      activated: [...plugins.activated],
+      logicSteps: {}
+    }
+    for (let key of Object.keys(plugins.logicSteps)) {
+      allPlugins.logicSteps[key] = [...plugins.logicSteps[key]]
     }
 
     for (let plugin of input.plugins) {
-      activatePlugin(plugin, plugins, steps)
+      activatePlugin(plugin, allPlugins)
     }
+    return allPlugins
   }
 
-  return { steps, plugins }
+  return plugins
 }

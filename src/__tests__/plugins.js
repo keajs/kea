@@ -14,14 +14,14 @@ beforeEach(() => {
 })
 
 test('the core plugin is activated automatically', () => {
-  const { plugins, steps } = getCache()
+  const { plugins } = getCache()
 
-  expect(plugins).toEqual([corePlugin])
-  expect(Object.keys(steps)).toEqual(Object.keys(corePlugin.steps))
+  expect(plugins.activated).toEqual([corePlugin])
+  expect(Object.keys(plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
 })
 
 test('plugins add stpes', () => {
-  const { plugins, steps } = getCache()
+  const { plugins } = getCache()
 
   const testPlugin = {
     name: 'test',
@@ -30,7 +30,7 @@ test('plugins add stpes', () => {
       ranAfterConnect: false
     }),
 
-    steps: {
+    logicSteps: {
       connect (logic, input) {
         logic.ranAfterConnect = true
       }
@@ -39,10 +39,10 @@ test('plugins add stpes', () => {
 
   activatePlugin(testPlugin)
 
-  expect(plugins).toEqual([corePlugin, testPlugin])
-  expect(Object.keys(steps)).toEqual(Object.keys(corePlugin.steps))
+  expect(plugins.activated).toEqual([corePlugin, testPlugin])
+  expect(Object.keys(plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
 
-  expect(steps.connect).toEqual([ corePlugin.steps.connect, testPlugin.steps.connect ])
+  expect(plugins.logicSteps.connect).toEqual([ corePlugin.logicSteps.connect, testPlugin.logicSteps.connect ])
 
   const logic = kea({})
 

@@ -1,4 +1,5 @@
 import { attachReducer, detachReducer } from '../store/reducer'
+import { runPlugins } from '../plugins'
 
 import { getCache } from '../cache'
 
@@ -19,7 +20,7 @@ export function mountPaths (logic, plugins) {
         connectedLogic.mounted = true
       }
 
-      plugins.forEach(p => p.mounted && p.mounted(path, connectedLogic))
+      runPlugins(plugins, 'mounted', path, connectedLogic)
     }
   })
 }
@@ -40,7 +41,7 @@ export function unmountPaths (logic, plugins, lazy) {
         connectedLogic.mounted = false
       }
 
-      plugins.forEach(p => p.unmounted && p.unmounted(path, connectedLogic))
+      runPlugins(plugins, 'unmounted', path, connectedLogic)
     }
   })
 }

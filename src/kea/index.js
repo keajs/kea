@@ -5,14 +5,14 @@ import { convertInputToLogic, convertPartialDynamicInput } from '../logic/index'
 import { hasConnectWithKey } from '../core/shared/connect'
 import { attachReducer } from '../store/reducer'
 
-import { getLocalPlugins } from '../plugins'
+import { getLocalPlugins, runPlugins } from '../plugins'
 
 import { mountPaths, unmountPaths } from './mount'
 
 export function kea (input) {
-  const { steps, plugins } = getLocalPlugins(input)
+  const plugins = getLocalPlugins(input)
 
-  plugins.forEach(p => p.beforeKea && p.beforeKea(input))
+  runPlugins(plugins, 'beforeKea', input)
 
   const lazy = (input.options && input.options.lazy) || !!input.key || hasConnectWithKey(input.connect) || false
 
@@ -21,8 +21,8 @@ export function kea (input) {
     injectActionsIntoClass(Klass)
 
     const Connect = reduxConnect(
-      mapStateToPropsCreator(input, plugins, steps),
-      mapDispatchToPropsCreator(input, plugins, steps)
+      mapStateToPropsCreator(input, plugins),
+      mapDispatchToPropsCreator(input, plugins)
     )(Klass)
 
     // inject proptypes into the class if it's a React.Component
@@ -30,7 +30,7 @@ export function kea (input) {
     let injectPropTypes = !isStateless(Klass)
 
     return function Kea (props) {
-      const logic = convertInputToLogic({ input, props, plugins, steps })
+      const logic = convertInputToLogic({ input, props, plugins })
 
       // inject proptypes to React.Component
       if (injectPropTypes && logic.propTypes) {
@@ -56,7 +56,7 @@ export function kea (input) {
 
       // TODO: unmount & remount if path changed
 
-      plugins.forEach(p => p.beforeRender && p.beforeRender(logic, props))
+      runPlugins(plugins, 'beforeRender', logic, props)
 
       return <Connect {...props} />
     }
@@ -69,19 +69,19 @@ export function kea (input) {
   if (input.key) {
     wrapper.withKey = keyCreator => {
       const buildWithProps = props => {
-        const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins, steps })
+        const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins })
         return Object.assign({}, wrapper, logic)
       }
       buildWithProps._isKeaWithKey = true
       return buildWithProps
     }
     wrapper.buildWithKey = (key) => {
-      const logic = convertInputToLogic({ input, key, plugins, steps })
+      const logic = convertInputToLogic({ input, key, plugins })
       return Object.assign({}, wrapper, logic)
     }
   } else if (lazy) {
     wrapper.build = () => {
-      const logic = convertInputToLogic({ input, plugins, steps })
+      const logic = convertInputToLogic({ input, plugins })
       wrapper.build._mustBuild = false
       return Object.assign(wrapper, logic)
     }
@@ -89,7 +89,7 @@ export function kea (input) {
   }
 
   if (!lazy) {
-    const logic = convertInputToLogic({ input, plugins, steps })
+    const logic = convertInputToLogic({ input, plugins })
 
     // if we're in eager mode (!lazy), attach the reducer directly
     if (!lazy && logic.reducer && !logic.mounted) {
@@ -109,8 +109,8 @@ export function connect (input) {
   return kea({ connect: input })
 }
 
-const mapStateToPropsCreator = (input, plugins, steps) => (state, ownProps) => {
-  const logic = convertInputToLogic({ input, props: ownProps, plugins, steps })
+const mapStateToPropsCreator = (input, plugins) => (state, ownProps) => {
+  const logic = convertInputToLogic({ input, props: ownProps, plugins })
 
   let resp = {}
   Object.entries(logic.selectors).forEach(([key, selector]) => {
@@ -120,8 +120,8 @@ const mapStateToPropsCreator = (input, plugins, steps) => (state, ownProps) => {
   return resp
 }
 
-const mapDispatchToPropsCreator = (input, plugins, steps) => (dispatch, ownProps) => {
-  const logic = convertInputToLogic({ input, props: ownProps, plugins, steps })
+const mapDispatchToPropsCreator = (input, plugins) => (dispatch, ownProps) => {
+  const logic = convertInputToLogic({ input, props: ownProps, plugins })
 
   let actions = Object.assign({}, ownProps.actions)
 

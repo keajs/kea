@@ -3,7 +3,7 @@ import { createConstants } from '../core/steps/constants'
 import { getCache } from '../cache'
 import { runPlugins } from '../plugins'
 
-export function convertInputToLogic ({ input, key: inputKey, props, plugins, steps }) {
+export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
@@ -16,7 +16,7 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins, ste
   const { logicCache } = getCache()
 
   if (!logicCache[pathString]) {
-    let logic = createBlankLogic({ key, path, plugins, steps, props })
+    let logic = createBlankLogic({ key, path, plugins, props })
     applyInputToLogic(logic, input)
 
     input.merge && input.merge.forEach(merge => applyInputToLogic(logic, merge))
@@ -41,17 +41,16 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   return logic
 }
 
-function createBlankLogic ({ key, path, plugins, steps, props }) {
+function createBlankLogic ({ key, path, plugins, props }) {
   let logic = {
     key,
     path,
     plugins,
-    steps,
     props,
     mounted: false
   }
 
-  plugins.forEach(p => p.defaults && Object.assign(logic, p.defaults()))
+  plugins.activated.forEach(p => p.defaults && Object.assign(logic, p.defaults()))
 
   return logic
 }
@@ -67,10 +66,12 @@ function applyInputToLogic (logic, input) {
   // let logic = createBlankLogic({ key, path, plugins, props })
 
   // Let's call all plugins that want to hook into this moment.
-  runPlugins(logic.plugins, 'beforeSteps', logic, input)
+  runPlugins(logic.plugins, 'beforeLogic', logic, input)
 
-  for (const step of Object.keys(logic.steps)) {
-    for (const func of logic.steps[step]) {
+  const steps = logic.plugins.logicSteps
+
+  for (const step of Object.keys(steps)) {
+    for (const func of steps[step]) {
       func(logic, input)
     }
   }
@@ -80,7 +81,7 @@ function applyInputToLogic (logic, input) {
     logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   */
   logic.connections[logic.path.join('.')] = logic
-  runPlugins(logic.plugins, 'afterSteps', logic, input)
+  runPlugins(logic.plugins, 'afterLogic', logic, input)
 
   return logic
 }

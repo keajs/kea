@@ -23,7 +23,7 @@ export default {
     propTypes: {}
   }),
 
-  steps: {
+  logicSteps: {
     connect: createConnect,
     constants: createConstants,
     actions: createActions,
