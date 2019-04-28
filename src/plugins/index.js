@@ -19,7 +19,7 @@ import { getCache } from '../cache'
       beforeCreate (logic, input)
 
       // Run after each step in the conversion
-      afterConnect (logic, input, addConncetion)
+      afterConnect (logic, input)
       afterConstants (logic, input)
       afterActions (logic, input)
       afterDefaults (logic, input)
