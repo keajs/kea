@@ -66,6 +66,18 @@ export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
       }
     }
   }
+
+  if (plugin.defaults) {
+    const defaultKeys = Object.keys(plugin.defaults())
+    for (const key of defaultKeys) {
+      if (process.env.NODE_ENV !== 'production') {
+        if (pluginTarget.logicKeys[key]) {
+          console.warn(`[KEA] Plugin "${plugin.name}" redefines logic key "${key}".`)
+        }
+      }
+      pluginTarget.logicKeys[key] = true
+    }
+  }
 }
 
 export function runPlugins (plugins, key, ...args) {
@@ -78,7 +90,8 @@ export function getLocalPlugins (input) {
   if (input.plugins && input.plugins.length > 0) {
     let allPlugins = {
       activated: [...plugins.activated],
-      logicSteps: {}
+      logicSteps: {},
+      logicKeys: Object.assign({}, plugins.logicKeys)
     }
     for (let key of Object.keys(plugins.logicSteps)) {
       allPlugins.logicSteps[key] = [...plugins.logicSteps[key]]

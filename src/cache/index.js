@@ -24,7 +24,8 @@ export function resetKeaCache () {
     // plugins
     plugins: {
       activated: [],
-      logicSteps: {}
+      logicSteps: {},
+      logicKeys: {}
     },
 
     // mount
