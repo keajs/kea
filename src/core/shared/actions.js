@@ -1,4 +1,4 @@
-import { getCache } from '../../cache'
+import { getCache } from '../../cache/provider'
 
 const isObject = (item) => typeof item === 'object' && !Array.isArray(item) && item !== null
 

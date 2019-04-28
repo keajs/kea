@@ -1,4 +1,4 @@
-import { getCache } from '../cache'
+import { getCache } from '../cache/provider'
 
 /*
   plugins = [
@@ -6,7 +6,7 @@ import { getCache } from '../cache'
       // Required: name of the plugin
       name: ''
 
-      // default values for output in logic stores
+      // default values for output in logic stores, also used to register keys that logic will contain
       defaults: () => ({
         key: {}
       }),

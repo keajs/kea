@@ -1,17 +1,18 @@
-
 import corePlugin from '../core'
 import { activatePlugin, runPlugins } from '../plugins'
 
-let cache
+import { getCache, setCache } from './provider'
 
-resetKeaCache()
+export { getCache, setCache, getReduxStore, attachStore } from './provider'
 
 export function resetKeaCache () {
+  const cache = getCache()
+
   if (cache && cache.plugins) {
     runPlugins(cache.plugins, 'clearCache')
   }
 
-  cache = {
+  setCache({
     // actions
     actions: {},
 
@@ -37,23 +38,10 @@ export function resetKeaCache () {
 
     // store
     store: undefined
-  }
+  })
 
   // activate the core plugin
   activatePlugin(corePlugin)
 }
 
-export function getCache () {
-  return cache
-}
-
-export function getReduxStore () {
-  return cache.store
-}
-
-export function attachStore (storeReference) {
-  if (cache.store) {
-    console.error('[KEA] Already attached to a store! Replacing old store! Be aware: this might lead to memory leaks in SSR and elsewhere!')
-  }
-  cache.store = storeReference
-}
+resetKeaCache()
