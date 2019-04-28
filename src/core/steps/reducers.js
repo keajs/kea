@@ -73,7 +73,7 @@ export function createReducers (logic, input) {
 function warnIfUndefinedActionCreator (object, property) {
   if (process.env.NODE_ENV !== 'production') {
     if (object.undefined !== undefined) {
-      console.warn(`A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
+      console.warn(`[KEA] A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
     }
   }
 }

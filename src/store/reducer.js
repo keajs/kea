@@ -53,7 +53,7 @@ export function attachReducer (path, reducer) {
         // if it's a function, assume it's a reducer and replacing it is fine
         // otherwise give an error
         } else if (typeof pointer[pathPart] !== 'function') {
-          console.error(`[KEA-LOGIC] Can not add reducer to "${path.join('.')}". There is something in the way:`, pointer[pathPart])
+          console.error(`[KEA] Can not add reducer to "${path.join('.')}". There is something in the way:`, pointer[pathPart])
           return
         }
       }

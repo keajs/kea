@@ -64,7 +64,7 @@ export function createConnect (logic, input) {
 // logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
 export function deconstructMapping (mapping) {
   if (mapping.length % 2 === 1) {
-    console.error(`[KEA-LOGIC] uneven mapping given to connect:`, mapping)
+    console.error(`[KEA] uneven mapping given to connect:`, mapping)
     console.trace()
     return null
   }
