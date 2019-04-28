@@ -36,7 +36,6 @@ export function convertPartialDynamicInput ({ input, plugins }) {
   }
 
   createConstants(logic, input)
-  runPlugins(logic.plugins, 'afterConstants', logic, input)
 
   return logic
 }
