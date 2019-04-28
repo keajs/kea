@@ -1,4 +1,4 @@
-import { createConstants } from './steps/constants'
+import { createConstants } from '../core/steps/constants'
 
 import { getCache } from '../cache'
 import { runPlugins } from '../plugins'
@@ -42,23 +42,18 @@ export function convertPartialDynamicInput ({ input, plugins }) {
 }
 
 function createBlankLogic ({ key, path, plugins, steps, props }) {
-  return {
+  let logic = {
     key,
     path,
     plugins,
     steps,
     props,
-    mounted: false,
-    connections: {},
-    constants: {},
-    actions: {},
-    defaults: {},
-    reducers: {},
-    reducerOptions: {},
-    reducer: undefined,
-    selectors: {},
-    propTypes: {}
+    mounted: false
   }
+
+  plugins.forEach(p => p.defaults && Object.assign(logic, p.defaults()))
+
+  return logic
 }
 
 function enhanceExistingLogic (logic, { props }) {

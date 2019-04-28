@@ -1,3 +1,5 @@
+import { addConnection } from '../shared/connect'
+
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
 
@@ -58,18 +60,6 @@ export function createConnect (logic, input) {
   }
 }
 
-export function addConnection (logic, otherLogic) {
-  if (!otherLogic.connections || Object.keys(otherLogic.connections).length === 0) {
-    return
-  }
-
-  Object.keys(otherLogic.connections).forEach(path => {
-    if (!logic.connections[path]) {
-      logic.connections[path] = otherLogic.connections[path]
-    }
-  })
-}
-
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
 // logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
 export function deconstructMapping (mapping) {
@@ -96,24 +86,4 @@ export function deconstructMapping (mapping) {
   }
 
   return response
-}
-
-export function hasConnectWithKey (connect) {
-  if (connect && connect.props) {
-    for (let i = 0; i < connect.props.length; i += 2) {
-      if (connect.props[i]._isKeaWithKey) {
-        return true
-      }
-    }
-  }
-
-  if (connect && connect.actions) {
-    for (let i = 0; i < connect.actions.length; i += 2) {
-      if (connect.actions[i]._isKeaWithKey) {
-        return true
-      }
-    }
-  }
-
-  return false
 }

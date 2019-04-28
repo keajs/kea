@@ -1,6 +1,6 @@
 export { kea, connect } from './kea'
 export { keaReducer, getStore, ATTACH_REDUCER, DETACH_REDUCER } from './store'
 export { activatePlugin } from './plugins'
-export { createAction } from './logic/steps/actions'
-export { addConnection } from './logic/steps/connect'
+export { createAction } from './core/shared/actions'
+export { addConnection } from './core/shared/connect'
 export { resetKeaCache, attachStore } from './cache'

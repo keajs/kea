@@ -53,9 +53,9 @@ export function activatePlugin (plugin, pluginTarget = getCache().plugins, steps
   if (plugin.steps) {
     for (const key of Object.keys(plugin.steps)) {
       if (stepsTarget[key]) {
-        stepsTarget.key.push(plugin.step)
+        stepsTarget[key].push(plugin.steps[key])
       } else {
-        stepsTarget.key = [plugin.step]
+        stepsTarget[key] = [plugin.steps[key]]
       }
     }
   }

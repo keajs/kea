@@ -1,4 +1,6 @@
-import { getDefaultSteps } from '../logic/steps'
+
+import corePlugin from '../core'
+import { activatePlugin } from '../plugins'
 
 let cache
 
@@ -20,7 +22,7 @@ export function resetKeaCache () {
 
     // plugins
     plugins: [],
-    steps: getDefaultSteps(),
+    steps: {},
 
     // mount
     mountPathCounter: {},
@@ -34,6 +36,9 @@ export function resetKeaCache () {
     // store
     store: undefined
   }
+
+  // activate the core plugin
+  activatePlugin(corePlugin)
 }
 
 export function getCache () {
