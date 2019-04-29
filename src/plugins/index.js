@@ -54,6 +54,14 @@ import { getCache } from '../cache/provider'
   ]
 */
 
+const reservedKeys = {
+  key: true,
+  path: true,
+  plugins: true,
+  props: true,
+  mounted: true
+}
+
 export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
   pluginTarget.activated.push(plugin)
 
@@ -71,7 +79,7 @@ export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
     const defaultKeys = Object.keys(plugin.defaults())
     for (const key of defaultKeys) {
       if (process.env.NODE_ENV !== 'production') {
-        if (pluginTarget.logicKeys[key]) {
+        if (pluginTarget.logicKeys[key] || reservedKeys[key]) {
           console.warn(`[KEA] Plugin "${plugin.name}" redefines logic key "${key}".`)
         }
       }
