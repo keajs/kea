@@ -529,3 +529,87 @@ test('defaults from input.defaults as object', () => {
 
   wrapper.unmount()
 })
+
+test('defaults from selector that returns an object', () => {
+  function SampleComponent ({ id, propsName, connectedName, directName, capitalizedName }) {
+    return (
+      <div>
+        <div className='id'>{id}</div>
+        <div className='propsName'>{propsName}</div>
+        <div className='connectedName'>{connectedName}</div>
+        <div className='directName'>{directName}</div>
+        <div className='capitalizedName'>{capitalizedName}</div>
+      </div>
+    )
+  }
+
+  const store = getStore()
+
+  const randomStore = kea({
+    actions: () => ({
+      updateObject: object => ({ object })
+    }),
+
+    reducers: ({ actions }) => ({
+      object: [{ propsName: 'henry', connectedName: 'george', directName: 'joe' }, PropTypes.object, {
+        [actions.updateObject]: (state, payload) => ({ ...state, ...payload.object })
+      }]
+    })
+  })
+
+  const singletonLogic = kea({
+    connect: {
+      props: [randomStore, ['object']],
+      actions: [randomStore, ['updateObject']]
+    },
+
+    defaults: ({ selectors }) => selectors.object,
+
+    reducers: ({ actions }) => ({
+      propsName: ['', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }],
+      connectedName: ['', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }],
+      directName: ['', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.propsName],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  const ConnectedComponent = singletonLogic(SampleComponent)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent />
+    </Provider>
+  )
+
+  expect(wrapper.find('.propsName').text()).toEqual('henry')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Henry')
+  expect(wrapper.find('.connectedName').text()).toEqual('george')
+  expect(wrapper.find('.directName').text()).toEqual('joe')
+
+  expect(store.getState()).toEqual({
+    kea: {
+      inline: {
+        1: { object: { propsName: 'henry', connectedName: 'george', directName: 'joe' } },
+        2: { propsName: 'henry', connectedName: 'george', directName: 'joe' }
+      }
+    },
+    scenes: {}
+  })
+
+  wrapper.unmount()
+})
