@@ -32,16 +32,28 @@ export function createReducers (logic, input) {
     const s = reducers[key]
     if (Array.isArray(s)) {
       // s = [ value, (type), (options), reducer ]
-      let value = s[0]
+      const initialValue = s[0]
       const reducer = s[s.length - 1]
       const type = typeof s[1] === 'function' ? s[1] : undefined
       const options = typeof s[s.length - 2] === 'object' ? s[s.length - 2] : undefined
+
+      let value
 
       // if we have a previously provided default value, use it
       if (typeof logic.defaults[key] !== 'undefined') {
         value = logic.defaults[key]
       } else {
-      // save as the default if nothing else is there
+        // there is a root default selector. use it and try to get the key, fallback to initialValue
+        if (typeof logic.defaults['*'] === 'function') {
+          value = (state, props) => {
+            const v = logic.defaults['*'](state, props)[key]
+            return typeof v === 'undefined' ? initialValue : typeof v === 'function' ? v(state, props) : v
+          }
+        } else {
+          value = initialValue
+        }
+
+        // save the given value as default if nothing else was given
         logic.defaults[key] = value
       }
 
