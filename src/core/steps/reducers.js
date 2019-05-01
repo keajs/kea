@@ -1,5 +1,3 @@
-import { getReduxStore } from '../../cache/provider'
-
 /*
   input.reducers = ({ actions, path, constants }) => ({
     duckId: [10, PropTypes.number, { persist: true }, {
