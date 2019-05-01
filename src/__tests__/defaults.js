@@ -14,14 +14,12 @@ beforeEach(() => {
   resetKeaCache()
 })
 
-test('defaults from props and selectors', () => {
+test('defaults from props for lazy', () => {
   function SampleComponent ({ id, propsName, connectedName, directName, capitalizedName }) {
     return (
       <div>
         <div className='id'>{id}</div>
         <div className='propsName'>{propsName}</div>
-        <div className='connectedName'>{connectedName}</div>
-        <div className='directName'>{directName}</div>
         <div className='capitalizedName'>{capitalizedName}</div>
       </div>
     )
@@ -29,26 +27,8 @@ test('defaults from props and selectors', () => {
 
   const store = getStore()
 
-  const randomStore = kea({
-    actions: ({ constants }) => ({
-      updateStoredName: storedName => ({ storedName })
-    }),
-
-    reducers: ({ actions }) => ({
-      storedName: ['storedName', PropTypes.string, {
-        [actions.updateStoredName]: (_, payload) => payload.storedName
-      }]
-    })
-  })
-
   const singletonLogic = kea({
-    // TODO: it must also work without requiring lazy here!
     options: { lazy: true },
-
-    connect: {
-      props: [randomStore, ['storedName']],
-      actions: [randomStore, ['updateStoredName']]
-    },
 
     path: () => ['scenes', 'dynamic'],
 
@@ -58,12 +38,6 @@ test('defaults from props and selectors', () => {
 
     reducers: ({ actions, constants, props, selectors }) => ({
       propsName: [props.defaultName, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }],
-      connectedName: [selectors.storedName, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }],
-      directName: [randomStore.selectors.storedName, PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }]
     }),
@@ -89,44 +63,32 @@ test('defaults from props and selectors', () => {
 
   expect(wrapper.find('.propsName').text()).toEqual('defaultName')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('storedName')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'storedName' } } },
-    scenes: { dynamic: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } }
-  })
-
-  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
-
-  expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } }
+    kea: {},
+    scenes: { dynamic: { propsName: 'defaultName' } }
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } }
+    kea: {},
+    scenes: { dynamic: { propsName: 'birb' } }
   })
 
   wrapper.render()
 
   expect(wrapper.find('.propsName').text()).toEqual('birb')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-  expect(wrapper.find('.connectedName').text()).toEqual('birb')
-  expect(wrapper.find('.directName').text()).toEqual('birb')
 
   wrapper.unmount()
 })
 
-test('defaults from input.defaults selector', () => {
-  function SampleComponent ({ id, propsName, connectedName, directName, capitalizedName }) {
+test('defaults from selectors', () => {
+  function SampleComponent ({ id, connectedName, directName, capitalizedName }) {
     return (
       <div>
         <div className='id'>{id}</div>
-        <div className='propsName'>{propsName}</div>
         <div className='connectedName'>{connectedName}</div>
         <div className='directName'>{directName}</div>
         <div className='capitalizedName'>{capitalizedName}</div>
@@ -149,9 +111,104 @@ test('defaults from input.defaults selector', () => {
   })
 
   const singletonLogic = kea({
-    // TODO: it must also work without requiring lazy here!
-    options: { lazy: true },
+    connect: {
+      props: [randomStore, ['storedName']],
+      actions: [randomStore, ['updateStoredName']]
+    },
 
+    path: () => ['scenes', 'dynamic'],
+
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions, constants, props, selectors }) => ({
+      connectedName: [selectors.storedName, PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }],
+      directName: [randomStore.selectors.storedName, PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.connectedName],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  const ConnectedComponent = singletonLogic(SampleComponent)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent id='12' defaultName='defaultName' />
+    </Provider>
+  )
+
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
+  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
+  expect(wrapper.find('.directName').text()).toEqual('storedName')
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'storedName' } } },
+    scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } }
+  })
+
+  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'birb' } } },
+    scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } }
+  })
+
+  store.dispatch(singletonLogic.actions.updateName('birb'))
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'birb' } } },
+    scenes: { dynamic: { connectedName: 'birb', directName: 'birb' } }
+  })
+
+  wrapper.render()
+
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
+  expect(wrapper.find('.connectedName').text()).toEqual('birb')
+  expect(wrapper.find('.directName').text()).toEqual('birb')
+
+  wrapper.unmount()
+})
+
+test('defaults from input.defaults selector', () => {
+  function SampleComponent ({ id, connectedName, directName, capitalizedName }) {
+    return (
+      <div>
+        <div className='id'>{id}</div>
+        <div className='connectedName'>{connectedName}</div>
+        <div className='directName'>{directName}</div>
+        <div className='capitalizedName'>{capitalizedName}</div>
+      </div>
+    )
+  }
+
+  const store = getStore()
+
+  const randomStore = kea({
+    actions: ({ constants }) => ({
+      updateStoredName: storedName => ({ storedName })
+    }),
+
+    reducers: ({ actions }) => ({
+      storedName: ['storedName', PropTypes.string, {
+        [actions.updateStoredName]: (_, payload) => payload.storedName
+      }]
+    })
+  })
+
+  const singletonLogic = kea({
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
@@ -165,19 +222,97 @@ test('defaults from input.defaults selector', () => {
     }),
 
     defaults: ({ selectors }) => (state, props) => ({ // using the selector syntax for the entire object
-      propsName: props.defaultName,
       connectedName: selectors.storedName(state), // gets a value
       directName: randomStore.selectors.storedName // gets passed as a selector
     }),
 
     reducers: ({ actions }) => ({
-      propsName: ['', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }],
       connectedName: ['', PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }],
       directName: ['', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+
+    selectors: ({ constants, selectors }) => ({
+      capitalizedName: [
+        () => [selectors.connectedName],
+        (name) => {
+          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  const ConnectedComponent = singletonLogic(SampleComponent)
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent id='12' defaultName='defaultName' />
+    </Provider>
+  )
+
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
+  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
+  expect(wrapper.find('.directName').text()).toEqual('storedName')
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'storedName' } } },
+    scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
+  })
+
+  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'birb' } } },
+    scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
+  })
+
+  store.dispatch(singletonLogic.actions.updateName('birb'))
+
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { storedName: 'birb' } } },
+    scenes: { dynamic: { 12: { connectedName: 'birb', directName: 'birb' } } }
+  })
+
+  wrapper.render()
+
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
+  expect(wrapper.find('.connectedName').text()).toEqual('birb')
+  expect(wrapper.find('.directName').text()).toEqual('birb')
+
+  wrapper.unmount()
+})
+
+test('defaults from props via input.defaults without selector', () => {
+  function SampleComponent ({ id, propsName, capitalizedName }) {
+    return (
+      <div>
+        <div className='id'>{id}</div>
+        <div className='propsName'>{propsName}</div>
+        <div className='capitalizedName'>{capitalizedName}</div>
+      </div>
+    )
+  }
+
+  const store = getStore()
+
+  const singletonLogic = kea({
+    // must set as lazy as "props.defaultName" will throw otherwise
+    options: { lazy: true },
+
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+
+    defaults: ({ selectors, props }) => ({
+      propsName: props.defaultName
+    }),
+
+    reducers: ({ actions }) => ({
+      propsName: ['', PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }]
     }),
@@ -203,44 +338,32 @@ test('defaults from input.defaults selector', () => {
 
   expect(wrapper.find('.propsName').text()).toEqual('defaultName')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('storedName')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'storedName' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } } }
-  })
-
-  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
-
-  expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'defaultName', connectedName: 'storedName', directName: 'storedName' } } }
+    kea: { inline: { 1: { propsName: 'defaultName' } } },
+    scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' } } },
-    scenes: { dynamic: { 12: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } } }
+    kea: { inline: { 1: { propsName: 'birb' } } },
+    scenes: {}
   })
 
   wrapper.render()
 
   expect(wrapper.find('.propsName').text()).toEqual('birb')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-  expect(wrapper.find('.connectedName').text()).toEqual('birb')
-  expect(wrapper.find('.directName').text()).toEqual('birb')
 
   wrapper.unmount()
 })
 
-test('defaults from input.defaults without selector', () => {
-  function SampleComponent ({ id, propsName, connectedName, directName, capitalizedName }) {
+test('defaults from selectors in input.defaults without selector', () => {
+  function SampleComponent ({ id, connectedName, directName, capitalizedName }) {
     return (
       <div>
         <div className='id'>{id}</div>
-        <div className='propsName'>{propsName}</div>
         <div className='connectedName'>{connectedName}</div>
         <div className='directName'>{directName}</div>
         <div className='capitalizedName'>{capitalizedName}</div>
@@ -263,9 +386,6 @@ test('defaults from input.defaults without selector', () => {
   })
 
   const singletonLogic = kea({
-    // TODO: it must also work without requiring lazy here!
-    options: { lazy: true },
-
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
@@ -276,15 +396,11 @@ test('defaults from input.defaults without selector', () => {
     }),
 
     defaults: ({ selectors, props }) => ({ // using the selector syntax for the entire object
-      propsName: props.defaultName,
       connectedName: selectors.storedName, // gets a value
       directName: 'george' // gets passed as a selector
     }),
 
     reducers: ({ actions }) => ({
-      propsName: ['', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }],
       connectedName: ['', PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }],
@@ -295,7 +411,7 @@ test('defaults from input.defaults without selector', () => {
 
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
-        () => [selectors.propsName],
+        () => [selectors.connectedName],
         (name) => {
           return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
         },
@@ -312,33 +428,31 @@ test('defaults from input.defaults without selector', () => {
     </Provider>
   )
 
-  expect(wrapper.find('.propsName').text()).toEqual('defaultName')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
   expect(wrapper.find('.connectedName').text()).toEqual('storedName')
   expect(wrapper.find('.directName').text()).toEqual('george')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'storedName' }, 2: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
+    kea: { inline: { 1: { storedName: 'storedName' }, 2: { connectedName: 'storedName', directName: 'george' } } },
     scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' }, 2: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
+    kea: { inline: { 1: { storedName: 'birb' }, 2: { connectedName: 'storedName', directName: 'george' } } },
     scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' }, 2: { propsName: 'birb', connectedName: 'birb', directName: 'birb' } } },
+    kea: { inline: { 1: { storedName: 'birb' }, 2: { connectedName: 'birb', directName: 'birb' } } },
     scenes: {}
   })
 
   wrapper.render()
 
-  expect(wrapper.find('.propsName').text()).toEqual('birb')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
   expect(wrapper.find('.connectedName').text()).toEqual('birb')
   expect(wrapper.find('.directName').text()).toEqual('birb')
@@ -366,10 +480,10 @@ test('defaults from input.defaults as object', () => {
       updateName: name => ({ name })
     }),
 
-    defaults: { // using the selector syntax for the entire object
+    defaults: {
       propsName: 'defaultName',
-      connectedName: 'storedName', // gets a value
-      directName: 'george' // gets passed as a selector
+      connectedName: 'storedName',
+      directName: 'george'
     },
 
     reducers: ({ actions }) => ({
