@@ -1,6 +1,6 @@
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 
-import { keaReducer } from './reducer'
+import { keaReducer, combineKeaReducers } from './reducer'
 import { activatePlugin, runPlugins } from '../plugins'
 import { getCache, attachStore } from '../cache'
 
@@ -47,7 +47,7 @@ export function getStore (opts = {}) {
   const finalCreateStore = composeEnchancer(...options.enhancers)(createStore)
 
   // combine reducers
-  const combinedReducers = combineReducers(options.reducers)
+  const combinedReducers = combineKeaReducers(options.reducers)
 
   // create store
   const store = finalCreateStore(combinedReducers, Object.assign({}, options.preloadedState))

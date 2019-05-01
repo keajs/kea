@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineKeaReducers } from '../../store/reducer'
 
 const emptyObject = {}
 
@@ -15,7 +15,7 @@ export function createReducer (logic, input) {
   }
 
   if (Object.keys(logic.reducers).length > 0) {
-    logic.reducer = combineReducers(logic.reducers)
+    logic.reducer = combineKeaReducers(logic.reducers)
   } else {
     logic.reducer = () => emptyObject
   }

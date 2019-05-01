@@ -21,8 +21,8 @@ export function keaReducer (pathStart = 'scenes', options = {}) {
     getCache().defaultReducerRoot = pathStart
   }
 
-  return (state = defaultState, action) => {
-    return rootReducers[pathStart] ? rootReducers[pathStart](state, action) : state
+  return (state = defaultState, action, fullState) => {
+    return rootReducers[pathStart] ? rootReducers[pathStart](state, action, fullState) : state
   }
 }
 
@@ -144,10 +144,10 @@ export function recursiveCreateReducer (treeNode) {
 // get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting.
 // Instead we'll simply discard the keys we don't need.
 // Please note that logic store reducers are still built with redux's combineReducers.
-function combineKeaReducers (reducers) {
+export function combineKeaReducers (reducers) {
   const reducerKeys = Object.keys(reducers)
 
-  return function combination (state = {}, action) {
+  return function combination (state = {}, action, fullState) {
     let stateChanged = Object.keys(state).length !== reducerKeys.length
     let nextState = {}
 
@@ -155,7 +155,7 @@ function combineKeaReducers (reducers) {
       const key = reducerKeys[i]
       const reducer = reducers[key]
       const previousKeyState = state[key]
-      const nextKeyState = reducer(previousKeyState, action)
+      const nextKeyState = reducer(previousKeyState, action, fullState || state)
       if (typeof nextKeyState === 'undefined') {
         throw new Error(`[KEA] Reducer "${key}" returned undefined for action "${action && action.type}"`)
       }

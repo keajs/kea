@@ -40,22 +40,11 @@ export function createReducers (logic, input) {
       // if we have a previously provided default value, use it
       if (typeof logic.defaults[key] !== 'undefined') {
         value = logic.defaults[key]
-      }
-
-      // if the value is a selector, select with it
-      if (typeof value === 'function') {
-        const store = getReduxStore()
-        if (store && store.getState) {
-          value = value(store && store.getState(), logic && logic.props)
-        } else {
-          console.error(`[KEA] Can not use default selector for reducer ${key} in ${logic.path.join('.')} before connecting to store`)
-        }
-      }
-
+      } else {
       // save as the default if nothing else is there
-      if (typeof logic.defaults[key] === 'undefined') {
         logic.defaults[key] = value
       }
+
       if (type) {
         logic.propTypes[key] = type
       }
@@ -63,7 +52,7 @@ export function createReducers (logic, input) {
         logic.reducerOptions[key] = options
       }
 
-      logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value)
+      logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
 
       warnIfUndefinedActionCreator(logic.reducers, key)
     }
@@ -79,8 +68,23 @@ function warnIfUndefinedActionCreator (object, property) {
 }
 
 // create reducer function from such an object { [action]: (state, payload) => state }
-function createMappingReducer (mapping, defaultValue) {
-  return (state = defaultValue, action) => {
+function createMappingReducer (mapping, defaultValue, key, logic) {
+  return (state, action, fullState) => {
+    if (typeof state === 'undefined') {
+      state = defaultValue
+
+      if (typeof state === 'function') {
+        if (fullState) {
+          state = defaultValue(fullState, logic.props)
+        } else {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.path.join('.')}"`)
+          }
+          state = undefined
+        }
+      }
+    }
+
     if (mapping[action.type]) {
       return mapping[action.type](state, action.payload, action.meta)
     } else {
