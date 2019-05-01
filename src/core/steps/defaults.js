@@ -28,7 +28,7 @@ export function createDefaults (logic, input) {
       if (store && store.getState) {
         defaults = defaultsSelector(store && store.getState(), logic && logic.props)
       } else {
-        console.error(`[KEA] Can not create defaults before a connection to the store is made`)
+        console.error(`[KEA] Can not create defaults before a connection to the store is made (${logic.path.join('.')})`)
       }
     } else {
       defaults = defaultsSelector
