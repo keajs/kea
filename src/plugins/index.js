@@ -44,6 +44,10 @@ import { getCache } from '../cache/provider'
       mounted (pathString, logic)
       unmounted (pathString, logic)
 
+      // when wrapping a React component
+      beforeWrapper (input, Klass)
+      afterWrapper (input, Klass, Kea)
+
       // Run after mounting and before rendering the component in React's scope (you can use hooks here)
       beforeRender (logic, props)
 

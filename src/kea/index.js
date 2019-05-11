@@ -17,6 +17,8 @@ export function kea (input) {
   const lazy = (input.options && input.options.lazy) || !!input.key || hasConnectWithKey(input.connect) || false
 
   const wrapper = (Klass) => {
+    runPlugins(plugins, 'beforeWrapper', input, Klass)
+
     // make this.actions work if it's a React.Component we're operating with
     injectActionsIntoClass(Klass)
 
@@ -29,7 +31,7 @@ export function kea (input) {
     // not using useRef here since we do it only once per component
     let injectPropTypes = !isStateless(Klass)
 
-    return function Kea (props) {
+    const Kea = function (props) {
       const logic = convertInputToLogic({ input, props, plugins })
 
       // inject proptypes to React.Component
@@ -60,6 +62,10 @@ export function kea (input) {
 
       return <Connect {...props} />
     }
+
+    runPlugins(plugins, 'afterWrapper', input, Klass, Kea)
+
+    return Kea
   }
 
   // TODO: legacy names. remove/change them?
