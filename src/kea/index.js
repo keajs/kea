@@ -74,12 +74,16 @@ export function kea (input) {
 
   if (input.key) {
     wrapper.withKey = keyCreator => {
-      const buildWithProps = props => {
-        const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins })
-        return Object.assign({}, wrapper, logic)
+      if (typeof keyCreator === 'function') {
+        const buildWithProps = props => {
+          const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins })
+          return Object.assign({}, wrapper, logic)
+        }
+        buildWithProps._isKeaWithKey = true
+        return buildWithProps
+      } else {
+        return wrapper.buildWithKey(keyCreator)
       }
-      buildWithProps._isKeaWithKey = true
-      return buildWithProps
     }
     wrapper.buildWithKey = (key) => {
       const logic = convertInputToLogic({ input, key, plugins })
@@ -110,7 +114,7 @@ export function kea (input) {
 
   if (input.key) {
     wrapper.mountWithKey = (key) => {
-      const logic = wrapper.build._mustBuild ? wrapper.buildWithKey(key) : wrapper
+      const logic = wrapper.buildWithKey(key)
       mountPaths(logic, plugins)
       return () => unmountPaths(logic, plugins, lazy)
     }
