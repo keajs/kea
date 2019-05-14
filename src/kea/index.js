@@ -108,6 +108,20 @@ export function kea (input) {
     Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   }
 
+  if (input.key) {
+    wrapper.mountWithKey = (key) => {
+      const logic = wrapper.build._mustBuild ? wrapper.buildWithKey(key) : wrapper
+      mountPaths(logic, plugins)
+      return () => unmountPaths(logic, plugins, lazy)
+    }
+  } else {
+    wrapper.mount = () => {
+      const logic = wrapper.build._mustBuild ? wrapper.build() : wrapper
+      mountPaths(logic, plugins)
+      return () => unmountPaths(logic, plugins, lazy)
+    }
+  }
+
   return wrapper
 }
 
