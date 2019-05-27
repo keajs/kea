@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 
 import { keaReducer, combineKeaReducers } from './reducer'
 import { activatePlugin, runPlugins } from '../plugins'
-import { getContext, attachStore } from '../context'
+import { getContext, attachReduxStore } from '../context'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
@@ -18,6 +18,18 @@ const defaultOptions = {
 }
 
 export function getStore (opts = {}) {
+  const context = getContext()
+
+  if (!context) {
+    console.error('[KEA] Can not create a store without being in a context')
+    return
+  }
+
+  if (context.store) {
+    console.error('[KEA] Already attached to a store! Exiting. Please reset the context before requesing a store')
+    return
+  }
+
   // clone options
   let options = Object.assign({}, defaultOptions, opts)
 
@@ -33,7 +45,7 @@ export function getStore (opts = {}) {
   })
 
   // run pre-hooks
-  runPlugins(getContext().plugins, 'beforeReduxStore', options)
+  runPlugins(context.plugins, 'beforeReduxStore', options)
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
@@ -55,10 +67,10 @@ export function getStore (opts = {}) {
   // give kea direct access to this store
   // we need this to dispatch hydration actions when new kea logic stores are
   // injected together with react components
-  attachStore(store)
+  attachReduxStore(store)
 
   // run post-hooks
-  runPlugins(getContext().plugins, 'afterReduxStore', options, store)
+  runPlugins(context.plugins, 'afterReduxStore', options, store)
 
   return store
 }
