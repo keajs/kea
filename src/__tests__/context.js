@@ -6,7 +6,6 @@ import { activatePlugin } from '../plugins';
 import { getContext, setContext, openContext, closeContext, resetContext, withContext } from '../context'
 
 beforeEach(() => {
-//   resetContext()
   closeContext()
 })
 
@@ -40,8 +39,9 @@ test('getting and setting works', () => {
     mountedLogic: {},
 
     // logic
-    inputPathCreators: new WeakMap(),
-    globalInputCounter: 0,
+    idWeakMap: new WeakMap(),
+    pathWeakMap: new WeakMap(),
+    inlinePathCounter: 0,
     logicCache: {},
 
     // store
@@ -107,7 +107,7 @@ test('context works with plugins', () => {
   closeContext()
   expect(getContext()).not.toBeDefined()
 
-  openContext({}, [testPlugin])
+  openContext({ plugins: [testPlugin] })
  
   expect(getContext()).toBeDefined()
   expect(getContext()).toMatchObject({
@@ -118,5 +118,35 @@ test('context works with plugins', () => {
       ]
     }
   })
-
 })
+
+// test('idWeakMap works as expected', () => {
+//   expect(getContext()).not.toBeDefined()
+
+//   openContext()
+//   expect(getContext()).toBeDefined()
+
+//   const { idWeakMap } = getContext()
+
+//   const input = {
+//     path: () => ['kea', 'misc', 'blue']
+//   }
+//   const logic = kea(input)
+//   expect(idWeakMap.get(input)).toBe('kea.misc.blue')
+
+//   const dynamicInput = {
+//     key: true,
+//     path: (key) => ['kea', 'misc', 'green', key]
+//   }
+//   const dynamicLogic = kea(dynamicInput)
+//   expect(idWeakMap.get(dynamicInput)).toBe('kea.misc.green.*')
+
+//   const pathlessInput1 = {}
+//   const pathlessLogic1 = kea(pathlessInput1)
+//   expect(idWeakMap.get(pathlessInput1)).toBe('kea.inline.1')
+
+//   const pathlessInput2 = {}
+//   const pathlessLogic2 = kea(pathlessInput2)
+//   expect(idWeakMap.get(pathlessInput2)).toBe('kea.inline.2')
+// })
+

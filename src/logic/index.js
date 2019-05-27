@@ -90,23 +90,36 @@ function getPathForInput (input, key) {
     return input.path(key)
   }
 
-  const { inputPathCreators } = getContext()
+  const { pathWeakMap } = getContext()
 
-  let pathCreator = inputPathCreators.get(input)
+  let pathCreator = pathWeakMap.get(input)
 
   if (pathCreator) {
     return pathCreator(key)
   }
 
-  const count = (++getContext().globalInputCounter).toString()
+  const count = (++getContext().inlinePathCounter).toString()
 
-  if (key) {
+  if (input.key) {
     pathCreator = (key) => ['kea', 'inline', count, key]
   } else {
     pathCreator = () => ['kea', 'inline', count]
   }
 
-  inputPathCreators.set(input, pathCreator)
+  pathWeakMap.set(input, pathCreator)
 
   return pathCreator(key)
+}
+
+export function getIdForInput (input) {
+  const { idWeakMap } = getContext()
+
+  let id = idWeakMap.get(input)
+
+  if (!id) {
+    id = getPathForInput(input, '*').join('.')
+    idWeakMap.set(input, id)
+  }
+
+  return id
 }
