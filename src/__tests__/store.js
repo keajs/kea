@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -26,7 +26,7 @@ class SampleComponent extends Component {
 }
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('getStore can be initalized with a preloaded state for non-kea reducers', () => {

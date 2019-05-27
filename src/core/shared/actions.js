@@ -1,9 +1,9 @@
-import { getCache } from '../../cache/provider'
+import { getContext } from '../../context'
 
 const isObject = (item) => typeof item === 'object' && !Array.isArray(item) && item !== null
 
 export function createAction (type, payloadCreator) {
-  const { actions: actionCache } = getCache()
+  const { actions: actionCache } = getContext()
 
   if (actionCache[type]) {
     return actionCache[type]

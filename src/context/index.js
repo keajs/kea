@@ -1,60 +1,104 @@
-let currentContext
+import corePlugin from '../core'
+import { activatePlugin, runPlugins } from '../plugins'
 
-/*
-  currentContext = {
-    meta: {
-      plugins: {
-        activated: [],
-        logicSteps: {},
-        logicKeys: {}
-      },
+let context
 
-      defaultReducerRoot: null,
-      reducerTree: {},
-      rootReducers: {},
+// this will create a default context
+resetContext()
 
-      mountPathCounter: {},
-      mountedLogic: {},
 
-      inputPathCreators: new WeakMap(),
-      inlineCounter: 0,
+export function getContext () {
+  return context
+}
 
-      store: undefined
-    },
-
-    context: {
-      logic: {
-        "scenes.something,index": {
-          ...
-        }
-      }
-    }
-  }
-
-*/
-
-export function openContext (previousContext = {}) {
-  currentContext = {
-    meta: {},
-    context: Object.assign({}, previousContext)
-  }
+export function setContext (newContext) {
+  context = newContext
 }
 
 export function closeContext () {
-  currentContext = undefined
-} 
+  if (context && context.plugins) {
+    runPlugins(context.plugins, 'beforeCloseContext')
+  }
 
-export function withContext (code, previousContext = {}) {
-  openContext(previousContext)
-  const returnValue = code()
-  closeContext()
+  context = undefined
 
-  return {
-    context: currentContext.context,
-    returnValue
+  if (context && context.plugins) {
+    runPlugins(context.plugins, 'afterCloseContext')
   }
 }
 
-export function getCurrentContext () {
-  return currentContext
+export function withContext (code, initData = {}) {
+  const oldContext = context
+
+  openContext(initData)
+  const returnValue = code(context)
+  closeContext()
+
+  return {
+    context: currentContext,
+    returnValue
+  }
+
+  context = oldContext
+}
+
+export function getReduxStore () {
+  return context.store
+}
+
+export function attachStore (storeReference) {
+  if (context.store) {
+    console.error('[KEA] Already attached to a store! Replacing old store! Be aware: this might lead to memory leaks in SSR and elsewhere!')
+  }
+  context.store = storeReference
+}
+
+
+export function openContext (initData) {
+  if (context) {
+    console.error("[KEA] Resetting context. This may lead to errors.")
+  }
+
+  // TODO: do something with initData
+  setContext({
+    // actions
+    actions: {},
+
+    // reducers
+    defaultReducerRoot: null,
+    reducerTree: {},
+    rootReducers: {},
+
+    // plugins
+    plugins: {
+      activated: [],
+      logicSteps: {},
+      logicKeys: {}
+    },
+
+    // mount
+    mountPathCounter: {},
+    mountedLogic: {},
+
+    // logic
+    inputPathCreators: new WeakMap(),
+    globalInputCounter: 0,
+    logicCache: {},
+
+    // store
+    store: undefined
+  })
+}
+
+export function resetContext () {
+  closeContext()
+
+  openContext()
+
+  if (context && context.plugins) {
+    runPlugins(context.plugins, 'afterContext')
+  }
+
+  // activate the core plugin
+  activatePlugin(corePlugin)
 }

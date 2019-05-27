@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 
 import { keaReducer, combineKeaReducers } from './reducer'
 import { activatePlugin, runPlugins } from '../plugins'
-import { getCache, attachStore } from '../cache'
+import { getContext, attachStore } from '../context'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
@@ -33,7 +33,7 @@ export function getStore (opts = {}) {
   })
 
   // run pre-hooks
-  runPlugins(getCache().plugins, 'beforeReduxStore', options)
+  runPlugins(getContext().plugins, 'beforeReduxStore', options)
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
@@ -58,7 +58,7 @@ export function getStore (opts = {}) {
   attachStore(store)
 
   // run post-hooks
-  runPlugins(getCache().plugins, 'afterReduxStore', options, store)
+  runPlugins(getContext().plugins, 'afterReduxStore', options, store)
 
   return store
 }

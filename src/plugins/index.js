@@ -1,4 +1,4 @@
-import { getCache } from '../cache/provider'
+import { getContext } from '../context'
 
 /*
   plugins = [
@@ -66,7 +66,7 @@ const reservedKeys = {
   mounted: true
 }
 
-export function activatePlugin (plugin, pluginTarget = getCache().plugins) {
+export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
   pluginTarget.activated.push(plugin)
 
   if (plugin.logicSteps) {
@@ -111,7 +111,7 @@ function copyPlugins (plugins) {
 }
 
 export function getLocalPlugins (input) {
-  let { plugins } = getCache()
+  let { plugins } = getContext()
 
   // return global (activated) plugins if no need to add local plugins
   if (!input.plugins || input.plugins.length === 0) {

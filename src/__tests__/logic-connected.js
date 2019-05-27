@@ -1,12 +1,12 @@
 /* global test, expect, beforeEach */
-import { kea, resetKeaCache, keaReducer } from '../index'
+import { kea, resetContext, keaReducer } from '../index'
 
 import { createStore, combineReducers } from 'redux'
 
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('connected props and actions get passed, reducers get added to the store', () => {

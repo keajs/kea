@@ -1,6 +1,6 @@
 /* global test, expect, beforeEach */
-import { kea, resetKeaCache } from '../index'
-import { getCache } from '../cache'
+import { kea, resetContext } from '../index'
+import { getContext } from '../context'
 import './helper/jsdom'
 import { configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
@@ -10,18 +10,18 @@ import { activatePlugin } from '../plugins';
 configure({ adapter: new Adapter() })
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('the core plugin is activated automatically', () => {
-  const { plugins } = getCache()
+  const { plugins } = getContext()
 
   expect(plugins.activated).toEqual([corePlugin])
   expect(Object.keys(plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
 })
 
 test('plugins add stpes', () => {
-  const { plugins } = getCache()
+  const { plugins } = getContext()
 
   const testPlugin = {
     name: 'test',

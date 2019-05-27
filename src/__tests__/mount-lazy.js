@@ -1,11 +1,11 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 
 import './helper/jsdom'
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('can mount lazy stores and have them connet to redux without react', () => {

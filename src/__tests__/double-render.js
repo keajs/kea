@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -11,7 +11,7 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('does not double render with the same props', () => {

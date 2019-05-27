@@ -1,6 +1,6 @@
 import { createConstants } from '../core/steps/constants'
 
-import { getCache } from '../cache'
+import { getContext } from '../context'
 import { runPlugins } from '../plugins'
 
 export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
@@ -13,7 +13,7 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
   const path = getPathForInput(input, key)
   const pathString = path.join('.')
 
-  const { logicCache } = getCache()
+  const { logicCache } = getContext()
 
   if (!logicCache[pathString]) {
     let logic = createBlankLogic({ key, path, plugins, props })
@@ -90,7 +90,7 @@ function getPathForInput (input, key) {
     return input.path(key)
   }
 
-  const { inputPathCreators } = getCache()
+  const { inputPathCreators } = getContext()
 
   let pathCreator = inputPathCreators.get(input)
 
@@ -98,7 +98,7 @@ function getPathForInput (input, key) {
     return pathCreator(key)
   }
 
-  const count = (++getCache().globalInputCounter).toString()
+  const count = (++getContext().globalInputCounter).toString()
 
   if (key) {
     pathCreator = (key) => ['kea', 'inline', count, key]

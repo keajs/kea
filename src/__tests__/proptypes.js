@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -52,7 +52,7 @@ class OtherComponent extends Component {
 }
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('inject proptypes to react component', () => {

@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -24,7 +24,7 @@ class SampleComponent extends Component {
 }
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('snapshots must match', () => {

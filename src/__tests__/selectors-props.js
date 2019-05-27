@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetKeaCache, getStore } from '../index'
+import { kea, resetContext, getStore } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -11,7 +11,7 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 class BookDetail extends Component {

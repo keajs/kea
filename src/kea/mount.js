@@ -1,10 +1,10 @@
 import { attachReducer, detachReducer } from '../store/reducer'
 import { runPlugins } from '../plugins'
 
-import { getCache } from '../cache'
+import { getContext } from '../context'
 
 export function mountPaths (logic, plugins) {
-  const { mountPathCounter, mountedLogic } = getCache()
+  const { mountPathCounter, mountedLogic } = getContext()
 
   Object.keys(logic.connections).forEach(path => {
     mountPathCounter[path] = (mountPathCounter[path] || 0) + 1
@@ -26,7 +26,7 @@ export function mountPaths (logic, plugins) {
 }
 
 export function unmountPaths (logic, plugins, lazy) {
-  const { mountPathCounter, mountedLogic } = getCache()
+  const { mountPathCounter, mountedLogic } = getContext()
 
   Object.keys(logic.connections).reverse().forEach(path => {
     mountPathCounter[path] = (mountPathCounter[path] || 0) - 1

@@ -1,4 +1,4 @@
-import { getReduxStore } from '../../cache/provider'
+import { getReduxStore } from '../../context'
 
 /*
   input.defaults = ({ actions, selectors }) => (state, props) => ({

@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetKeaCache } from '../index'
+import { kea, getStore, resetContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -40,7 +40,7 @@ class ActionComponent extends Component {
 }
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('singletons connect to react components', () => {

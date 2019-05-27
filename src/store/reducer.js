@@ -1,4 +1,4 @@
-import { getCache, getReduxStore } from '../cache'
+import { getContext, getReduxStore } from '../context'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
@@ -6,7 +6,7 @@ export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 const defaultState = {}
 
 function initRootReducerTree (pathStart) {
-  const { reducerTree } = getCache()
+  const { reducerTree } = getContext()
   if (!reducerTree[pathStart]) {
     reducerTree[pathStart] = {}
     regenerateRootReducer(pathStart)
@@ -14,11 +14,11 @@ function initRootReducerTree (pathStart) {
 }
 
 export function keaReducer (pathStart = 'scenes', options = {}) {
-  const { rootReducers } = getCache()
+  const { rootReducers } = getContext()
   initRootReducerTree(pathStart)
 
   if (options && options.default) {
-    getCache().defaultReducerRoot = pathStart
+    getContext().defaultReducerRoot = pathStart
   }
 
   return (state = defaultState, action, fullState) => {
@@ -27,12 +27,12 @@ export function keaReducer (pathStart = 'scenes', options = {}) {
 }
 
 export function firstReducerRoot () {
-  const { defaultReducerRoot, reducerTree } = getCache()
+  const { defaultReducerRoot, reducerTree } = getContext()
   return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
 export function attachReducer (path, reducer) {
-  const { reducerTree } = getCache()
+  const { reducerTree } = getContext()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -74,7 +74,7 @@ export function attachReducer (path, reducer) {
 }
 
 export function detachReducer (path) {
-  const { reducerTree } = getCache()
+  const { reducerTree } = getContext()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -113,7 +113,7 @@ export function detachReducer (path) {
 }
 
 export function regenerateRootReducer (pathStart) {
-  const { reducerTree, rootReducers } = getCache()
+  const { reducerTree, rootReducers } = getContext()
   const rootReducer = recursiveCreateReducer(reducerTree[pathStart])
 
   rootReducers[pathStart] = rootReducer

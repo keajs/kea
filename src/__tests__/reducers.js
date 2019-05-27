@@ -1,10 +1,10 @@
 /* global test, expect */
-import { kea, resetKeaCache } from '../index'
+import { kea, resetContext } from '../index'
 
 import PropTypes from 'prop-types'
 
 test('it converts reducer arrays correctly', () => {
-  resetKeaCache()
+  resetContext()
 
   const reducerFunction = state => state
 

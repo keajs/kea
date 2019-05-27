@@ -1,10 +1,10 @@
 /* global test, expect, beforeEach */
-import { kea, resetKeaCache, keaReducer } from '../index'
+import { kea, resetContext, keaReducer } from '../index'
 
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  resetKeaCache()
+  resetContext()
 })
 
 test('singleton logic has all the right properties', () => {
