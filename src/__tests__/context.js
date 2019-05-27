@@ -103,4 +103,20 @@ test('context works with plugins', () => {
   const logic = kea({})
 
   expect(logic.ranAfterConnect).toEqual(true)
+
+  closeContext()
+  expect(getContext()).not.toBeDefined()
+
+  openContext({}, [testPlugin])
+ 
+  expect(getContext()).toBeDefined()
+  expect(getContext()).toMatchObject({
+    plugins: {
+      activated: [
+        { name: 'core' },
+        { name: 'test' }
+      ]
+    }
+  })
+
 })
