@@ -47,6 +47,8 @@ export function openContext (options = {}) {
     inlinePathCounter: 0,
     logicCache: {},
 
+    state: {},
+
     // store
     store: undefined
   }

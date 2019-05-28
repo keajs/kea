@@ -80,8 +80,7 @@ export function kea (input) {
     wrapper.withKey = keyCreator => {
       if (typeof keyCreator === 'function') {
         const buildWithProps = props => {
-          const logic = convertInputToLogic({ input, key: keyCreator(props), props, plugins })
-          return Object.assign({}, wrapper, logic)
+          return convertInputToLogic({ input, key: keyCreator(props), props, plugins })
         }
         buildWithProps._isKeaWithKey = true
         return buildWithProps
@@ -90,10 +89,7 @@ export function kea (input) {
       }
     }
     
-    wrapper.buildWithKey = (key) => {
-      const logic = convertInputToLogic({ input, key, plugins })
-      return Object.assign({}, wrapper, logic)
-    }
+    wrapper.buildWithKey = (key) => convertInputToLogic({ input, key, plugins })
 
     wrapper.mountWithKey = (key) => {
       const logic = wrapper.buildWithKey(key)
@@ -103,38 +99,42 @@ export function kea (input) {
 
     Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   } else {
-    // TODO: move to context
+    // TODO: option to opt out of this proxying logic
+    const proxyFields = true
+
+    wrapper.mustBuild = () => {
+      const { state } = getContext()
+      const id = getIdForInput(input)
+
+      return !state[id] || !state[id].logic
+    }
 
     wrapper.build = (props) => {
-      wrapper.logic = convertInputToLogic({ input, plugins })
-      wrapper.build._mustBuild = false
-      return wrapper.logic
-    }
-    
-    wrapper.build._mustBuild = true
+      const { state } = getContext()
+      const id = getIdForInput(input)
+      
+      if (wrapper.mustBuild()) {
+        wrapper.logic = convertInputToLogic({ input, plugins })
+        state[id] = Object.assign(state[id] || {}, { logic: wrapper.logic })
+      }
+
+      return state[id].logic
+    }    
 
     wrapper.mount = () => {
-      if (wrapper.build._mustBuild) {
-        wrapper.build()
-      }
+      wrapper.build()
 
       mountPaths(wrapper.logic, plugins)
       return () => unmountPaths(wrapper.logic, plugins, lazy)
     }
 
-    wrapper.getLogic = () => {
-      if (wrapper.build._mustBuild) {
-        wrapper.build()
+    if (proxyFields) {
+      const { plugins: { logicKeys } } = getContext()
+      for (const key of Object.keys(logicKeys)) {
+        proxyFieldToLogic(wrapper, key)
       }
-      return wrapper.logic
+      proxyFieldToLogic(wrapper, 'path')
     }
-
-    // TODO: option to opt out of this proxying logic
-    const { plugins: { logicKeys } } = getContext()
-    for (const key of Object.keys(logicKeys)) {
-      proxyFieldToLogic(wrapper, key)
-    }
-    proxyFieldToLogic(wrapper, 'path')
   }
 
   if (!lazy) {
@@ -203,10 +203,7 @@ function injectActionsIntoClass (Klass) {
 function proxyFieldToLogic (wrapper, key) {
   Object.defineProperty(wrapper, key, {
     get: function actions () {
-      if (wrapper.build._mustBuild) {
-        wrapper.build()
-      }
-      return wrapper.logic[key]
+      return wrapper.build()[key]
     }
   })
 }
