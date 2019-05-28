@@ -344,7 +344,7 @@ test('defaults from props via input.defaults without selector', () => {
     scenes: {}
   })
 
-  store.dispatch(lazyLogic.logic.actions.updateName('birb'))
+  store.dispatch(lazyLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'birb' } } },

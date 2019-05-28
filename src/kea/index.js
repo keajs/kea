@@ -1,21 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
-import { convertInputToLogic, convertPartialDynamicInput } from '../logic/index'
+import { convertInputToLogic, convertPartialDynamicInput, getIdForInput } from '../logic'
 import { hasConnectWithKey } from '../core/shared/connect'
 import { attachReducer } from '../store/reducer'
+import { getContext } from '../context'
 
 import { getLocalPlugins, runPlugins } from '../plugins'
 
 import { mountPaths, unmountPaths } from './mount'
 
-export function kea (input) {
-  const plugins = getLocalPlugins(input)
-
-  runPlugins(plugins, 'beforeKea', input)
-
-  const lazy = (input.options && input.options.lazy) || !!input.key || hasConnectWithKey(input.connect) || false
-
+function createWrapperFunction (plugins, input, lazy) {
   const wrapper = (Klass) => {
     runPlugins(plugins, 'beforeWrapper', input, Klass)
 
@@ -23,7 +18,7 @@ export function kea (input) {
     injectActionsIntoClass(Klass)
 
     const Connect = reduxConnect(
-      mapStateToPropsCreator(input, plugins),
+      mapStateToPropsCreator(input, plugins), 
       mapDispatchToPropsCreator(input, plugins)
     )(Klass)
 
@@ -57,16 +52,25 @@ export function kea (input) {
       useEffect(() => () => unmountPaths(logic, plugins, lazy), [])
 
       // TODO: unmount & remount if path changed
-
       runPlugins(plugins, 'beforeRender', logic, props)
-
       return <Connect {...props} />
     }
 
     runPlugins(plugins, 'afterWrapper', input, Klass, Kea)
-
     return Kea
   }
+  
+  return wrapper
+}
+
+export function kea (input) {
+  const plugins = getLocalPlugins(input)
+
+  runPlugins(plugins, 'beforeKea', input)
+
+  const lazy = (input.options && input.options.lazy) || !!input.key || hasConnectWithKey(input.connect) || false
+
+  const wrapper = createWrapperFunction(plugins, input, lazy)
 
   // TODO: legacy names. remove/change them?
   wrapper._isKeaFunction = true
@@ -85,21 +89,50 @@ export function kea (input) {
         return wrapper.buildWithKey(keyCreator)
       }
     }
+    
     wrapper.buildWithKey = (key) => {
       const logic = convertInputToLogic({ input, key, plugins })
       return Object.assign({}, wrapper, logic)
     }
-  } else if (lazy) {
-    wrapper.build = () => {
+
+    wrapper.mountWithKey = (key) => {
+      const logic = wrapper.buildWithKey(key)
+      mountPaths(logic, plugins)
+      return () => unmountPaths(logic, plugins, lazy)
+    }
+  } else {
+    wrapper.build = (props) => {
       const logic = convertInputToLogic({ input, plugins })
       wrapper.build._mustBuild = false
       return Object.assign(wrapper, logic)
+      // const context = getContext()
+      // const id = getIdForInput(input)
+      // if (!context.builtLogic[id]) {
+      //   context.builtLogic[id] = convertInputToLogic({ input, plugins })
+      // }
+      // return context.builtLogic[id]
     }
+    
+    // TODO: move to context
     wrapper.build._mustBuild = true
+
+    wrapper.mount = () => {
+      const logic = wrapper.build()
+
+      mountPaths(logic, plugins)
+      return () => unmountPaths(logic, plugins, lazy)
+    }
+
+    // Object.defineProperty(wrapper, 'logic', {
+    //   get: function actions () {
+    //     return this.build()
+    //   }
+    // })
+
   }
 
   if (!lazy) {
-    const logic = convertInputToLogic({ input, plugins })
+    const logic = wrapper.build()
 
     // if we're in eager mode (!lazy), attach the reducer directly
     if (!lazy && logic.reducer && !logic.mounted) {
@@ -110,20 +143,6 @@ export function kea (input) {
     Object.assign(wrapper, logic)
   } else {
     Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
-  }
-
-  if (input.key) {
-    wrapper.mountWithKey = (key) => {
-      const logic = wrapper.buildWithKey(key)
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins, lazy)
-    }
-  } else {
-    wrapper.mount = () => {
-      const logic = wrapper.build._mustBuild ? wrapper.build() : wrapper
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins, lazy)
-    }
   }
 
   return wrapper
