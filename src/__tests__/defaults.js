@@ -299,7 +299,7 @@ test('defaults from props via input.defaults without selector', () => {
 
   const store = getStore()
 
-  const singletonLogic = kea({
+  const lazyLogic = kea({
     // must set as lazy as "props.defaultName" will throw otherwise
     options: { lazy: true },
 
@@ -328,7 +328,7 @@ test('defaults from props via input.defaults without selector', () => {
     })
   })
 
-  const ConnectedComponent = singletonLogic(SampleComponent)
+  const ConnectedComponent = lazyLogic(SampleComponent)
 
   const wrapper = mount(
     <Provider store={store}>
@@ -344,7 +344,7 @@ test('defaults from props via input.defaults without selector', () => {
     scenes: {}
   })
 
-  store.dispatch(singletonLogic.actions.updateName('birb'))
+  store.dispatch(lazyLogic.logic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'birb' } } },
