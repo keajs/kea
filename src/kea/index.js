@@ -42,7 +42,7 @@ function createWrapperFunction (plugins, input, lazy) {
 
         // give access to the logic to the return value
         if (lazy) {
-          Object.assign(wrapper, logic)
+          wrapper.logic = logic
         }
 
         mountPaths(logic, plugins)
@@ -100,35 +100,41 @@ export function kea (input) {
       mountPaths(logic, plugins)
       return () => unmountPaths(logic, plugins, lazy)
     }
+
+    Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   } else {
+    // TODO: move to context
+
     wrapper.build = (props) => {
-      const logic = convertInputToLogic({ input, plugins })
+      wrapper.logic = convertInputToLogic({ input, plugins })
       wrapper.build._mustBuild = false
-      return Object.assign(wrapper, logic)
-      // const context = getContext()
-      // const id = getIdForInput(input)
-      // if (!context.builtLogic[id]) {
-      //   context.builtLogic[id] = convertInputToLogic({ input, plugins })
-      // }
-      // return context.builtLogic[id]
+      return wrapper.logic
     }
     
-    // TODO: move to context
     wrapper.build._mustBuild = true
 
     wrapper.mount = () => {
-      const logic = wrapper.build()
+      if (wrapper.build._mustBuild) {
+        wrapper.build()
+      }
 
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins, lazy)
+      mountPaths(wrapper.logic, plugins)
+      return () => unmountPaths(wrapper.logic, plugins, lazy)
     }
 
-    // Object.defineProperty(wrapper, 'logic', {
-    //   get: function actions () {
-    //     return this.build()
-    //   }
-    // })
+    wrapper.getLogic = () => {
+      if (wrapper.build._mustBuild) {
+        wrapper.build()
+      }
+      return wrapper.logic
+    }
 
+    // TODO: option to opt out of this proxying logic
+    const { plugins: { logicKeys } } = getContext()
+    for (const key of Object.keys(logicKeys)) {
+      proxyFieldToLogic(wrapper, key)
+    }
+    proxyFieldToLogic(wrapper, 'path')
   }
 
   if (!lazy) {
@@ -139,10 +145,6 @@ export function kea (input) {
       attachReducer(logic.path, logic.reducer)
       logic.mounted = true
     }
-
-    Object.assign(wrapper, logic)
-  } else {
-    Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   }
 
   return wrapper
@@ -197,3 +199,15 @@ function injectActionsIntoClass (Klass) {
     }
   }
 }
+
+function proxyFieldToLogic (wrapper, key) {
+  Object.defineProperty(wrapper, key, {
+    get: function actions () {
+      if (wrapper.build._mustBuild) {
+        wrapper.build()
+      }
+      return wrapper.logic[key]
+    }
+  })
+}
+

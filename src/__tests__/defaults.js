@@ -208,7 +208,7 @@ test('defaults from input.defaults selector', () => {
     })
   })
 
-  const singletonLogic = kea({
+  const dynamicLogic = kea({
     connect: {
       props: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
@@ -246,7 +246,7 @@ test('defaults from input.defaults selector', () => {
     })
   })
 
-  const ConnectedComponent = singletonLogic(SampleComponent)
+  const ConnectedComponent = dynamicLogic(SampleComponent)
 
   const wrapper = mount(
     <Provider store={store}>
@@ -263,14 +263,14 @@ test('defaults from input.defaults selector', () => {
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
+  store.dispatch(dynamicLogic.withKey(12).actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(singletonLogic.actions.updateName('birb'))
+  store.dispatch(dynamicLogic.withKey(12).actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },

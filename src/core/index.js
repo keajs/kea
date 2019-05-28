@@ -19,6 +19,7 @@ export default {
     reducers: {},
     reducerOptions: {},
     reducer: undefined,
+    selector: undefined,
     selectors: {},
     propTypes: {}
   }),
