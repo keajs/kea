@@ -133,7 +133,7 @@ export function kea (input) {
     }
   }
 
-  if (getContext().autoMount) {
+  if (getContext().autoMount && wrapper.mount) {
     wrapper.mount()
   }
 
