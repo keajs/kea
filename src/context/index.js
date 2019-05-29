@@ -1,5 +1,6 @@
 import corePlugin from '../core'
 import { activatePlugin, runPlugins } from '../plugins'
+import { kea } from '../index'
 
 let context
 
@@ -16,7 +17,7 @@ export function setContext (newContext) {
 
 export function openContext (options = {}) {
   if (context) {
-    console.error("[KEA] overwriting already opened context. This may lead to errors.")
+    console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
   // TODO: do something with initData
@@ -43,6 +44,9 @@ export function openContext (options = {}) {
 
     // logic
     idWeakMap: new WeakMap(),
+    autoMount: options.autoMount || false,
+    inputs: options.inputs ? { ...options.inputs } : {},
+
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
     logicCache: {},
@@ -52,7 +56,7 @@ export function openContext (options = {}) {
     // store
     store: undefined
   }
-  
+
   setContext(newContext)
 
   activatePlugin(corePlugin)
@@ -64,7 +68,13 @@ export function openContext (options = {}) {
   }
 
   if (context && context.plugins) {
-    runPlugins(context.plugins, 'afterOpenContext')
+    runPlugins(context.plugins, 'afterOpenContext', context, options)
+  }
+
+  if (context.autoMount && context.inputs) {
+    for (const input of Object.values(context.inputs)) {
+      kea(input).mount && kea(input).mount()
+    }
   }
 }
 
@@ -88,15 +98,16 @@ export function withContext (code, options = {}) {
   const oldContext = context
 
   openContext(options)
+  const newContext = context
   const returnValue = code(context)
   closeContext()
 
+  context = oldContext
+
   return {
-    context: currentContext,
+    context: newContext,
     returnValue
   }
-
-  context = oldContext
 }
 
 export function getReduxStore () {

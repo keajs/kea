@@ -11,7 +11,7 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 beforeEach(() => {
-  resetContext()
+  resetContext({ autoMount: true })
 })
 
 class BookDetail extends Component {

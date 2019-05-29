@@ -11,10 +11,12 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 beforeEach(() => {
-  resetContext()
+  // resetContext()
 })
 
 test('eager logic loading works', () => {
+  resetContext({ autoMount: true })
+
   const store = getStore()
 
   const logic = kea({
@@ -92,6 +94,8 @@ test('eager logic loading works', () => {
 })
 
 test('lazy logic loading works', () => {
+  resetContext({ autoMount: false })
+
   const store = getStore()
 
   const logic = kea({

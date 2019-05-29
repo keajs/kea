@@ -110,6 +110,7 @@ function copyPlugins (plugins) {
   return copy
 }
 
+// TODO: this needs to be cached somehow! Right now rebuilds too often if using any local plugins!
 export function getLocalPlugins (input) {
   let { plugins } = getContext()
 
