@@ -18,7 +18,7 @@ function createWrapperFunction (input) {
     injectActionsIntoClass(Klass)
 
     if (getContext().debug) {
-      console.log('running kea wrapper', input.path())
+      console.log('running kea wrapper', getIdForInput(input))
     }
 
     const Connect = reduxConnect(
@@ -32,7 +32,7 @@ function createWrapperFunction (input) {
 
     const Kea = function (props) {
       if (getContext().debug) {
-        console.log('running kea', input.path())
+        console.log('running kea', getIdForInput(input))
       }
       const logic = convertInputToLogic({ input, props })
 
@@ -57,6 +57,9 @@ function createWrapperFunction (input) {
       runPlugins(plugins, 'beforeRender', logic, props)
       return <Connect {...props} />
     }
+
+    Kea._wrapper = wrapper
+    Kea._wrappedKlass = Klass
 
     runPlugins(plugins, 'afterWrapper', input, Klass, Kea)
     return Kea
@@ -153,7 +156,7 @@ export function connect (input) {
 
 const mapStateToPropsCreator = (input) => (state, ownProps) => {
   if (getContext().debug) {
-    console.log('running mapStateToPropsCreator', input.path())
+    console.log('running mapStateToPropsCreator', getIdForInput(input))
   }
   const logic = convertInputToLogic({ input, props: ownProps })
 
@@ -168,7 +171,7 @@ const mapStateToPropsCreator = (input) => (state, ownProps) => {
 
 const mapDispatchToPropsCreator = (input) => (dispatch, ownProps) => {
   if (getContext().debug) {
-    console.log('running mapDispatchToPropsCreator', input.path())
+    console.log('running mapDispatchToPropsCreator', getIdForInput(input))
   }
   const logic = convertInputToLogic({ input, props: ownProps })
 
