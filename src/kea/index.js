@@ -17,6 +17,10 @@ function createWrapperFunction (input) {
     // make this.actions work if it's a React.Component we're operating with
     injectActionsIntoClass(Klass)
 
+    if (getContext().debug) {
+      console.log('running kea wrapper', input.path())
+    }
+
     const Connect = reduxConnect(
       mapStateToPropsCreator(input),
       mapDispatchToPropsCreator(input)
@@ -27,6 +31,9 @@ function createWrapperFunction (input) {
     let injectPropTypes = !isStateless(Klass)
 
     const Kea = function (props) {
+      if (getContext().debug) {
+        console.log('running kea', input.path())
+      }
       const logic = convertInputToLogic({ input, props })
 
       // inject proptypes to React.Component
@@ -145,9 +152,13 @@ export function connect (input) {
 }
 
 const mapStateToPropsCreator = (input) => (state, ownProps) => {
+  if (getContext().debug) {
+    console.log('running mapStateToPropsCreator', input.path())
+  }
   const logic = convertInputToLogic({ input, props: ownProps })
 
   let resp = {}
+
   Object.entries(logic.selectors).forEach(([key, selector]) => {
     resp[key] = selector(state, ownProps)
   })
@@ -156,6 +167,9 @@ const mapStateToPropsCreator = (input) => (state, ownProps) => {
 }
 
 const mapDispatchToPropsCreator = (input) => (dispatch, ownProps) => {
+  if (getContext().debug) {
+    console.log('running mapDispatchToPropsCreator', input.path())
+  }
   const logic = convertInputToLogic({ input, props: ownProps })
 
   let actions = Object.assign({}, ownProps.actions)

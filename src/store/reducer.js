@@ -1,4 +1,4 @@
-import { getContext, getReduxStore } from '../context'
+import { getContext } from '../context'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
@@ -32,7 +32,7 @@ export function firstReducerRoot () {
 }
 
 export function attachReducer (path, reducer) {
-  const { reducerTree } = getContext()
+  const { reducerTree, attachStrategy, store, combinedReducers } = getContext()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -69,13 +69,20 @@ export function attachReducer (path, reducer) {
 
   regenerateRootReducer(pathStart)
 
-  const store = getReduxStore()
-  store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
+  if (attachStrategy === 'dispatch') {
+    store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
+  } else if (attachStrategy === 'replace') {
+    store && store.replaceReducer(combinedReducers)
+  }
 }
 
 export function detachReducer (path) {
-  const { reducerTree } = getContext()
+  const { reducerTree, detachStrategy, store, combinedReducers } = getContext()
   const pathStart = path[0]
+
+  if (detachStrategy === 'persist') {
+    return
+  }
 
   initRootReducerTree(pathStart)
 
@@ -107,8 +114,11 @@ export function detachReducer (path) {
   regenerateRootReducer(pathStart)
 
   if (detached) {
-    const store = getReduxStore()
-    store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
+    if (detachStrategy === 'dispatch') {
+      store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
+    } else if (detachStrategy === 'replace') {
+      store && store.replaceReducer(combinedReducers)
+    }
   }
 }
 

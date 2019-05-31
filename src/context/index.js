@@ -22,7 +22,11 @@ export function openContext (options = {}) {
 
   // TODO: do something with initData
 
+  const { inputs, plugins, ...otherOptions } = options
+
   const newContext = {
+    debug: false,
+
     // actions
     actions: {},
 
@@ -44,8 +48,8 @@ export function openContext (options = {}) {
 
     // logic
     idWeakMap: new WeakMap(),
-    autoMount: options.autoMount || false,
-    inputs: options.inputs ? { ...options.inputs } : {},
+    autoMount: false,
+    inputs: inputs ? { ...inputs } : {},
 
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
@@ -54,15 +58,20 @@ export function openContext (options = {}) {
     state: {},
 
     // store
-    store: undefined
+    store: undefined,
+    combinedReducers: undefined,
+    attachStrategy: 'dispatch',
+    detachStrategy: 'dispatch',
+
+    ...otherOptions
   }
 
   setContext(newContext)
 
   activatePlugin(corePlugin)
 
-  if (options.plugins) {
-    for (const plugin of options.plugins) {
+  if (plugins) {
+    for (const plugin of plugins) {
       activatePlugin(plugin)
     }
   }
@@ -108,15 +117,4 @@ export function withContext (code, options = {}) {
     context: newContext,
     returnValue
   }
-}
-
-export function getReduxStore () {
-  return context.store
-}
-
-export function attachReduxStore (store) {
-  if (context.store) {
-    console.error('[KEA] Already attached to a store! Replacing old store! Be aware: this might lead to memory leaks in SSR and elsewhere!')
-  }
-  context.store = store
 }
