@@ -1,5 +1,6 @@
 import corePlugin from '../core'
 import { activatePlugin, runPlugins } from '../plugins'
+import { kea } from '../index'
 
 let context
 
@@ -16,12 +17,16 @@ export function setContext (newContext) {
 
 export function openContext (options = {}) {
   if (context) {
-    console.error("[KEA] overwriting already opened context. This may lead to errors.")
+    console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
   // TODO: do something with initData
 
+  const { inputs, plugins, ...otherOptions } = options
+
   const newContext = {
+    debug: false,
+
     // actions
     actions: {},
 
@@ -43,6 +48,9 @@ export function openContext (options = {}) {
 
     // logic
     idWeakMap: new WeakMap(),
+    autoMount: false,
+    inputs: inputs ? { ...inputs } : {},
+
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
     logicCache: {},
@@ -51,21 +59,32 @@ export function openContext (options = {}) {
     state: {},
 
     // store
-    store: undefined
+    store: undefined,
+    combinedReducers: undefined,
+    attachStrategy: 'dispatch',
+    detachStrategy: 'dispatch',
+
+    ...otherOptions
   }
-  
+
   setContext(newContext)
 
   activatePlugin(corePlugin)
 
-  if (options.plugins) {
-    for (const plugin of options.plugins) {
+  if (plugins) {
+    for (const plugin of plugins) {
       activatePlugin(plugin)
     }
   }
 
   if (context && context.plugins) {
-    runPlugins(context.plugins, 'afterOpenContext')
+    runPlugins(context.plugins, 'afterOpenContext', context, options)
+  }
+
+  if (context.autoMount && context.inputs) {
+    for (const input of Object.values(context.inputs)) {
+      kea(input).mount && kea(input).mount()
+    }
   }
 }
 
@@ -89,24 +108,14 @@ export function withContext (code, options = {}) {
   const oldContext = context
 
   openContext(options)
+  const newContext = context
   const returnValue = code(context)
   closeContext()
 
+  context = oldContext
+
   return {
-    context: currentContext,
+    context: newContext,
     returnValue
   }
-
-  context = oldContext
-}
-
-export function getReduxStore () {
-  return context.store
-}
-
-export function attachReduxStore (store) {
-  if (context.store) {
-    console.error('[KEA] Already attached to a store! Replacing old store! Be aware: this might lead to memory leaks in SSR and elsewhere!')
-  }
-  context.store = store
 }

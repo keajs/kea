@@ -1,6 +1,6 @@
 {
   "name": "kea",
-  "version": "1.0.0-beta.18",
+  "version": "1.0.0-beta.22",
   "description": "Smart front-end architecture",
   "author": "Marius Andra",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "watch": "rollup -cw",
     "lint": "eslint src/**",
     "prepublish": "npm run build",
-    "start": "./node_modules/.bin/webpack-dev-server --history-api-fallback --hot --host 0.0.0.0 --port 4040",
+    "start": "npm run watch",
     "test": "BABEL_ENV=test jest"
   },
   "files": [

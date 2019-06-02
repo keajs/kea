@@ -6,7 +6,7 @@ import { createStore, combineReducers } from 'redux'
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  resetContext()
+  resetContext({ autoMount: true })
 })
 
 test('connected props and actions get passed, reducers get added to the store', () => {

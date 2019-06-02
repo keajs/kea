@@ -1,9 +1,9 @@
 import { createConstants } from '../core/steps/constants'
 
 import { getContext } from '../context'
-import { runPlugins } from '../plugins'
+import { runPlugins, getLocalPlugins } from '../plugins'
 
-export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
+export function convertInputToLogic ({ input, key: inputKey, props }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
@@ -16,6 +16,7 @@ export function convertInputToLogic ({ input, key: inputKey, props, plugins }) {
   const { logicCache } = getContext()
 
   if (!logicCache[pathString]) {
+    const plugins = getLocalPlugins(input)
     let logic = createBlankLogic({ key, path, plugins, props })
     applyInputToLogic(logic, input)
 

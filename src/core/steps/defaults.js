@@ -1,5 +1,3 @@
-import { getReduxStore } from '../../context'
-
 /*
   input.defaults = ({ actions, selectors }) => (state, props) => ({
     key1: selectors.something(state).key1,

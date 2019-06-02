@@ -84,19 +84,19 @@ test('connected lazy logic loading builds it', () => {
     </Provider>
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 2: { name: 'chirpy' }, 1: { description: 'default' } } }, scenes: {} })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.description').text()).toEqual('default')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 2: { name: 'chirpy' }, 1: { description: 'default' } } }, scenes: {} })
 
   store.dispatch(logic.actions.updateName('somename'))
   store.dispatch(connectedLogic.actions.updateDescription('new description'))
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 2: { name: 'somename' }, 1: { description: 'new description' } } }, scenes: {} })
 
   wrapper.render()
 

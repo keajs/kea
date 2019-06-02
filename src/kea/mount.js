@@ -25,7 +25,7 @@ export function mountPaths (logic, plugins) {
   })
 }
 
-export function unmountPaths (logic, plugins, lazy) {
+export function unmountPaths (logic, plugins) {
   const { mountPathCounter, mountedLogic } = getContext()
 
   Object.keys(logic.connections).reverse().forEach(path => {
@@ -35,7 +35,7 @@ export function unmountPaths (logic, plugins, lazy) {
       const connectedLogic = logic.connections[path]
       delete mountedLogic[path]
 
-      if (lazy && connectedLogic.reducer && connectedLogic.mounted) {
+      if (connectedLogic.reducer && connectedLogic.mounted) {
         // console.log('detached', mountPathCounter)
         detachReducer(connectedLogic.path, connectedLogic.reducer)
         connectedLogic.mounted = false
