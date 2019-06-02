@@ -134,6 +134,7 @@ export function kea (input) {
     }
 
     if (proxyFields) {
+      const plugins = getLocalPlugins(input)
       const { logicKeys } = plugins
       for (const key of Object.keys(logicKeys)) {
         proxyFieldToLogic(wrapper, key)
