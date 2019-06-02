@@ -46,6 +46,7 @@ export function openContext (options = {}) {
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
     logicCache: {},
+    proxyFields: true,
 
     state: {},
 

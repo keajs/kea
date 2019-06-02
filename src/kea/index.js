@@ -6,7 +6,7 @@ import { hasConnectWithKey } from '../core/shared/connect'
 import { attachReducer } from '../store/reducer'
 import { getContext } from '../context'
 
-import { getLocalPlugins, runPlugins } from '../plugins'
+import { getLocalPlugins, runPlugins, reservedProxiedKeys } from '../plugins'
 
 import { mountPaths, unmountPaths } from './mount'
 
@@ -99,8 +99,7 @@ export function kea (input) {
 
     Object.assign(wrapper, convertPartialDynamicInput({ input, plugins }))
   } else {
-    // TODO: option to opt out of this proxying logic
-    const proxyFields = true
+    const { proxyFields } = getContext()
 
     wrapper.mustBuild = () => {
       const { state } = getContext()
@@ -129,11 +128,13 @@ export function kea (input) {
     }
 
     if (proxyFields) {
-      const { plugins: { logicKeys } } = getContext()
+      const { logicKeys } = plugins
       for (const key of Object.keys(logicKeys)) {
         proxyFieldToLogic(wrapper, key)
       }
-      proxyFieldToLogic(wrapper, 'path')
+      for (const key of reservedProxiedKeys) {
+        proxyFieldToLogic(wrapper, key)
+      }
     }
   }
 

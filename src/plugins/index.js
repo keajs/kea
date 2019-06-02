@@ -66,6 +66,11 @@ const reservedKeys = {
   mounted: true
 }
 
+export const reservedProxiedKeys = [
+  'path',
+  'plugins'
+]
+
 export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
   pluginTarget.activated.push(plugin)
 
