@@ -24,7 +24,7 @@
     "build": "rollup -c",
     "watch": "rollup -cw",
     "lint": "eslint src/**",
-    "prepublish": "npm run build",
+    "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
     "test": "BABEL_ENV=test jest"
   },
