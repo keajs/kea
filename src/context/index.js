@@ -90,7 +90,7 @@ export function openContext (options = {}) {
 
 export function closeContext () {
   if (context && context.plugins) {
-    runPlugins(context.plugins, 'beforeCloseContext')
+    runPlugins(context.plugins, 'beforeCloseContext', context)
   }
 
   context = undefined
