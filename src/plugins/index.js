@@ -11,6 +11,8 @@ import { getContext } from '../context'
         key: {}
       }),
 
+      afterOpenContext (context, options)
+
       // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
       beforeReduxStore (options)
 
@@ -52,7 +54,7 @@ import { getContext } from '../context'
       beforeRender (logic, props)
 
       // Run when we are removing kea from the system, e.g. when cleaning up after tests
-      clearCache ()
+      beforeCloseContext (context)
     },
     ...
   ]
