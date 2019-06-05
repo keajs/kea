@@ -18,6 +18,7 @@ export function createAction (type, payloadCreator) {
         : { value: payloadCreator }
   })
   action.toString = () => type
+  action._isKeaAction = true
 
   actionCache[type] = action
 
