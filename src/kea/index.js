@@ -35,7 +35,8 @@ function createWrapperFunction (input) {
         console.log('running kea', getIdForInput(input))
       }
 
-      const logic = buildLogic({ input, props })
+      // TODO: any better way to get it?
+      const logic = buildLogic({ input, props, extendedInputs: wrapper._extendWith })
 
       // inject proptypes to React.Component
       if (injectPropTypes && logic.propTypes) {
@@ -79,10 +80,19 @@ export function kea (input) {
   wrapper._isKeaFunction = true
   wrapper._isKeaSingleton = !input.key
 
+  wrapper._extendWith = []
+  wrapper.extend = (extendedInput) => {
+    if (!input.key && !wrapper.mustBuild()) {
+      throw new Error('[KEA] Can not extend logic once it has been built!')
+    }
+    wrapper._extendWith.push(extendedInput)
+    return wrapper
+  }
+
   if (input.key) {
     wrapper.withKey = keyCreator => {
       if (typeof keyCreator === 'function') {
-        const buildWithProps = props => buildLogic({ input, key: keyCreator(props), props })
+        const buildWithProps = props => buildLogic({ input, key: keyCreator(props), props, extendedInputs: wrapper._extendWith })
         buildWithProps._isKeaWithKey = true
         return buildWithProps
       } else {
@@ -90,7 +100,7 @@ export function kea (input) {
       }
     }
 
-    wrapper.buildWithKey = (key) => buildLogic({ input, key })
+    wrapper.buildWithKey = (key) => buildLogic({ input, key, extendedInputs: wrapper._extendWith })
 
     wrapper.mountWithKey = (key) => {
       const plugins = getLocalPlugins(input)
@@ -111,20 +121,6 @@ export function kea (input) {
       return !state[id] || !state[id].logic
     }
 
-    wrapper.extend = (extendedInput) => {
-      if (!wrapper.mustBuild()) {
-        throw new Error('[KEA] Can not extend logic once it has been built!')
-      }
-
-      if (!wrapper.extend._extendedInputs) {
-        wrapper.extend._extendedInputs = []
-      }
-
-      wrapper.extend._extendedInputs.push(extendedInput)
-
-      return wrapper
-    }
-
     wrapper.build = (props) => {
       const { state } = getContext()
       const id = getIdForInput(input)
@@ -133,10 +129,7 @@ export function kea (input) {
         return state[id].logic
       }
 
-      const logic = buildLogic({
-        input,
-        extendedInputs: wrapper.extend && wrapper.extend._extendedInputs
-      })
+      const logic = buildLogic({ input, extendedInputs: wrapper._extendWith })
 
       state[id] = state[id] ? { ...state[id], logic } : { logic }
 
@@ -178,6 +171,7 @@ const mapStateToPropsCreator = (input) => (state, ownProps) => {
   if (getContext().debug) {
     console.log('running mapStateToPropsCreator', getIdForInput(input))
   }
+  // TODO: any better way to get it?
   const logic = buildLogic({ input, props: ownProps })
 
   let resp = {}
@@ -193,6 +187,7 @@ const mapDispatchToPropsCreator = (input) => (dispatch, ownProps) => {
   if (getContext().debug) {
     console.log('running mapDispatchToPropsCreator', getIdForInput(input))
   }
+  // TODO: any better way to get it?
   const logic = buildLogic({ input, props: ownProps })
 
   let actions = Object.assign({}, ownProps.actions)

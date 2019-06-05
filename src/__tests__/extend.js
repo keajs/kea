@@ -1,9 +1,7 @@
 /* global test, expect, beforeEach */
 import { kea } from '../index'
 import './helper/jsdom'
-import corePlugin from '../core'
-import { activatePlugin } from '../plugins';
-import { getContext, setContext, openContext, closeContext, resetContext, withContext } from '../context'
+import { resetContext } from '../context'
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
@@ -28,7 +26,7 @@ test('can not extend after having been built', () => {
   }).toThrowError('[KEA] Can not extend logic once it has been built!')
 })
 
-test('can extend actions', () => {
+test('can extend with .extend', () => {
   const logic = kea({
     actions: () => ({
       doit: true
@@ -44,7 +42,7 @@ test('can extend actions', () => {
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
 })
 
-test('can extend inline', () => {
+test('can extend with inline .extend', () => {
   const logic = kea({
     actions: () => ({
       doit: true
@@ -56,6 +54,85 @@ test('can extend inline', () => {
   })
 
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('can extend with extend: []', () => {
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    }),
+    extend: [
+      {
+        actions: () => ({
+          domore: true
+        })
+      }
+    ]
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('can extend multiple times with .extend', () => {
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    })
+  })
+
+  logic.extend({
+    actions: () => ({
+      domore: true
+    })
+  })
+
+  logic.extend({
+    actions: () => ({
+      doevenmore: true
+    })
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+})
+
+test('can extend multiple times with inline .extend', () => {
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    })
+  }).extend({
+    actions: () => ({
+      domore: true
+    })
+  }).extend({
+    actions: () => ({
+      doevenmore: true
+    })
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+})
+
+test('can extend multiple times with extend: []', () => {
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    }),
+    extend: [
+      {
+        actions: () => ({
+          domore: true
+        })
+      },
+      {
+        actions: () => ({
+          doevenmore: true
+        })
+      }
+    ]
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
 test('can extend in plugins in beforeBuild', () => {
@@ -126,8 +203,41 @@ test('can extend in plugins in afterBuild', () => {
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
 })
 
-test('extending singleton logic merges the right properties', () => {
-  const oneResponse = kea({
+test('can extend dynamic logic with extend:[]', () => {
+  const logic = kea({
+    key: props => props.id,
+    path: key => ['scenes', 'something', key],
+    actions: () => ({
+      doit: true
+    }),
+    extend: [{
+      actions: () => ({
+        domore: true
+      })
+    }]
+  })
+
+  expect(Object.keys(logic.withKey(123).actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('can extend dynamic logic with .extend', () => {
+  const logic = kea({
+    key: props => props.id,
+    path: key => ['scenes', 'something', key],
+    actions: () => ({
+      doit: true
+    })
+  }).extend({
+    actions: () => ({
+      domore: true
+    })
+  })
+
+  expect(Object.keys(logic.withKey(123).actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('extending logic merges the right properties', () => {
+  const logic = kea({
     path: () => ['scenes', 'homepage', 'index'],
     constants: () => [
       'SOMETHING',
@@ -183,15 +293,15 @@ test('extending singleton logic merges the right properties', () => {
   })
 
   // check generic
-  expect(oneResponse._isKeaFunction).toBe(true)
-  expect(oneResponse._isKeaSingleton).toBe(true)
-  expect(oneResponse.path).toEqual(['scenes', 'homepage', 'index'])
-  expect(Object.keys(oneResponse.connections)).toEqual(['scenes.homepage.index'])
-  expect(oneResponse.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_BLUE: 'SOMETHING_BLUE', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+  expect(logic._isKeaFunction).toBe(true)
+  expect(logic._isKeaSingleton).toBe(true)
+  expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
+  expect(Object.keys(logic.connections)).toEqual(['scenes.homepage.index'])
+  expect(logic.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_BLUE: 'SOMETHING_BLUE', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
   // actions
-  expect(Object.keys(oneResponse.actions)).toEqual(['updateName', 'updateDescription'])
-  const { updateName, updateDescription } = oneResponse.actions
+  expect(Object.keys(logic.actions)).toEqual(['updateName', 'updateDescription'])
+  const { updateName, updateDescription } = logic.actions
   expect(typeof updateDescription).toBe('function')
   expect(updateDescription.toString()).toBe('update description (homepage.index)')
   expect(updateDescription('desc desc')).toEqual({ payload: { description: 'desc desc' }, type: updateDescription.toString() })
@@ -199,43 +309,43 @@ test('extending singleton logic merges the right properties', () => {
   // reducers
   const defaultValues = { name: 'chirpy', description: '' }
   const state = { scenes: { homepage: { index: defaultValues } } }
-  expect(Object.keys(oneResponse.reducers).sort()).toEqual(['description', 'name'])
+  expect(Object.keys(logic.reducers).sort()).toEqual(['description', 'name'])
 
-  expect(oneResponse.reducers).toHaveProperty('name')
-  expect(oneResponse.reducers).toHaveProperty('description')
-  expect(oneResponse.propTypes.name).toEqual(PropTypes.string)
-  expect(oneResponse.defaults.name).toEqual('chirpy')
+  expect(logic.reducers).toHaveProperty('name')
+  expect(logic.reducers).toHaveProperty('description')
+  expect(logic.propTypes.name).toEqual(PropTypes.string)
+  expect(logic.defaults.name).toEqual('chirpy')
 
-  const nameReducer = oneResponse.reducers.name
+  const nameReducer = logic.reducers.name
   expect(nameReducer).toBeDefined()
   expect(nameReducer('', updateName('newName'))).toBe('newName')
 
   // TODO: add defaults and propTypes
 
-  expect(oneResponse.reducers).not.toHaveProperty('capitalizedName')
-  expect(oneResponse.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
-  expect(oneResponse.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
+  expect(logic.reducers).not.toHaveProperty('capitalizedName')
+  expect(logic.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
+  expect(logic.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
 
   // big reducer
-  expect(typeof oneResponse.reducer).toBe('function')
-  expect(oneResponse.reducer({}, { type: 'random action' })).toEqual(defaultValues)
-  expect(oneResponse.reducer({ description: 'desc desc', name: 'something' }, { type: 'random action' })).toEqual({ description: 'desc desc', name: 'something' })
+  expect(typeof logic.reducer).toBe('function')
+  expect(logic.reducer({}, { type: 'random action' })).toEqual(defaultValues)
+  expect(logic.reducer({ description: 'desc desc', name: 'something' }, { type: 'random action' })).toEqual({ description: 'desc desc', name: 'something' })
 
-  expect(oneResponse.reducer({ description: 'desc desc', name: 'something' }, updateName('newName'))).toEqual({ description: 'desc desc', name: 'newName' })
+  expect(logic.reducer({ description: 'desc desc', name: 'something' }, updateName('newName'))).toEqual({ description: 'desc desc', name: 'newName' })
 
   // selectors
-  expect(Object.keys(oneResponse.selectors).sort()).toEqual(['capitalizedName', 'description', 'name', 'upperCaseDescription', 'upperCaseName'])
-  expect(oneResponse.selectors.name(state)).toEqual('chirpy')
-  expect(oneResponse.selectors.capitalizedName(state)).toEqual('Chirpy')
-  expect(oneResponse.selectors.upperCaseName(state)).toEqual('CHIRPY')
+  expect(Object.keys(logic.selectors).sort()).toEqual(['capitalizedName', 'description', 'name', 'upperCaseDescription', 'upperCaseName'])
+  expect(logic.selectors.name(state)).toEqual('chirpy')
+  expect(logic.selectors.capitalizedName(state)).toEqual('Chirpy')
+  expect(logic.selectors.upperCaseName(state)).toEqual('CHIRPY')
 
   const defaultValues2 = { name: 'chirpy', description: 'tsk tsk' }
   const state2 = { scenes: { homepage: { index: defaultValues2 } } }
-  expect(oneResponse.reducer({ description: 'tsk tsk', name: 'something' }, updateName('newName'))).toEqual({ description: 'tsk tsk', name: 'newName' })
+  expect(logic.reducer({ description: 'tsk tsk', name: 'something' }, updateName('newName'))).toEqual({ description: 'tsk tsk', name: 'newName' })
 
-  expect(oneResponse.selectors.description(state2)).toEqual('tsk tsk')
-  expect(oneResponse.selectors.upperCaseDescription(state2)).toEqual('TSK TSK')
+  expect(logic.selectors.description(state2)).toEqual('tsk tsk')
+  expect(logic.selectors.upperCaseDescription(state2)).toEqual('TSK TSK')
 
   // root selector
-  expect(oneResponse.selector(state)).toEqual(defaultValues)
+  expect(logic.selector(state)).toEqual(defaultValues)
 })
