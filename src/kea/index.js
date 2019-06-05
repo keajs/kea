@@ -133,6 +133,12 @@ export function kea (input) {
       return () => unmountPaths(logic, plugins)
     }
 
+    wrapper.extend = () => {
+      if (!wrapper.mustBuild()) {
+        throw new Error('[KEA] Can not extend logic once it has been built!')
+      }
+    }
+
     if (proxyFields) {
       const plugins = getLocalPlugins(input)
       const { logicKeys } = plugins
@@ -216,4 +222,3 @@ function proxyFieldToLogic (wrapper, key) {
     }
   })
 }
-
