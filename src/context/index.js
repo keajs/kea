@@ -27,9 +27,6 @@ export function openContext (options = {}) {
   const newContext = {
     debug: false,
 
-    // actions
-    actions: {},
-
     // reducers
     defaultReducerRoot: null,
     reducerTree: {},

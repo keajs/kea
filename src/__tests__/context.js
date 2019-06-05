@@ -17,9 +17,6 @@ test('getting and setting works', () => {
   expect(getContext()).toBeDefined()
 
   expect(getContext()).toMatchObject({
-    // actions
-    actions: {},
-
     // reducers
     defaultReducerRoot: null,
     reducerTree: {},
@@ -57,7 +54,7 @@ test('context works with plugins', () => {
   expect(getContext()).not.toBeDefined()
 
   openContext()
- 
+
   expect(getContext()).toBeDefined()
 
   const { plugins } = getContext()
@@ -108,7 +105,7 @@ test('context works with plugins', () => {
   expect(getContext()).not.toBeDefined()
 
   openContext({ plugins: [testPlugin] })
- 
+
   expect(getContext()).toBeDefined()
   expect(getContext()).toMatchObject({
     plugins: {
