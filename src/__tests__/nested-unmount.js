@@ -83,3 +83,87 @@ test('updating state to remove logic from react unmounts neatly', () => {
 
   wrapper.unmount()
 })
+
+test('swapping out connected logic gives the right state', () => {
+  const store = getStore()
+
+  const outerLogic = kea({
+    actions: () => ({
+      showEdit: true,
+      hideEdit: true,
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, props, key }) => ({
+      editShown: [false, PropTypes.bool, {
+        [actions.showEdit]: () => true,
+        [actions.hideEdit]: () => false
+      }],
+      name: ['Bob', PropTypes.string, {
+        [actions.updateName]: (_, payload) => payload.name
+      }]
+    })
+  })
+
+  const editLogic = kea({
+    connect: {
+      props: [outerLogic, ['name']],
+      actions: [outerLogic, ['updateName', 'hideEdit']]
+    }
+  })
+
+  const EditComponent = ({ name, actions: { updateName, hideEdit } }) => (
+    <div>
+      <div className='name'>{name}</div>
+      <button className='save-and-close' onClick={() => { updateName('George'); hideEdit() }}>hide</button>
+    </div>
+  )
+
+  const ConnectedEditComponent = editLogic(EditComponent)
+
+  const showLogic = kea({
+    connect: {
+      props: [outerLogic, ['name']]
+    }
+  })
+
+  const ShowComponent = ({ name }) => (
+    <div>
+      <div className='name'>{name}</div>
+    </div>
+  )
+
+  const ConnectedShowComponent = showLogic(ShowComponent)
+
+  const OuterComponent = ({ editShown, actions: { showEdit } }) => (
+    <div>
+      <div className='edit-shown'>{editShown ? 'true' : 'false'}</div>
+      <div className='edit-show'><button onClick={showEdit}>show</button></div>
+      <div className='edit-div'>{editShown ? <ConnectedEditComponent /> : <ConnectedShowComponent />}</div>
+    </div>
+  )
+
+  const ConnectedOuterComponent = outerLogic(OuterComponent)
+
+  // start
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedOuterComponent />
+    </Provider>
+  )
+
+  expect(wrapper.find('.edit-shown').text()).toEqual('false')
+  expect(wrapper.find('.name').text()).toEqual('Bob')
+
+  wrapper.find('.edit-show button').simulate('click')
+
+  expect(wrapper.find('.edit-shown').text()).toEqual('true')
+  expect(wrapper.find('.name').text()).toEqual('Bob')
+
+  wrapper.find('.save-and-close').simulate('click')
+
+  expect(wrapper.find('.edit-shown').text()).toEqual('false')
+  expect(wrapper.find('.name').text()).toEqual('George')
+
+  wrapper.unmount()
+})
