@@ -21,10 +21,55 @@ function createWrapperFunction (input) {
       console.log('running kea wrapper', getIdForInput(input))
     }
 
-    const Connect = reduxConnect(
-      mapStateToPropsCreator(input),
-      mapDispatchToPropsCreator(input)
-    )(Klass)
+    let isUnmounting = false
+    let lastState
+
+    const createConnect = reduxConnect(
+      (state, ownProps) => {
+        if (getContext().debug) {
+          console.log('running mapStateToPropsCreator', getIdForInput(input))
+        }
+
+        // At the moment when we unmount and detach from redux, react-redux will still be subscribed to the store
+        // and will run this function to see if anything changed. Since we are detached from the store, all
+        // selectors of this logic will crash. To avoid this, cache and return the last state.
+        // Nothing will be rendered anywa.
+        if (isUnmounting) {
+          return lastState
+        }
+
+        // TODO: any better way to get it?
+        const logic = buildLogic({ input, props: ownProps })
+
+        let resp = {}
+        Object.entries(logic.selectors).forEach(([key, selector]) => {
+          resp[key] = selector(state, ownProps)
+        })
+
+        lastState = resp
+
+        return resp
+      },
+      (dispatch, ownProps) => {
+        if (getContext().debug) {
+          console.log('running mapDispatchToPropsCreator', getIdForInput(input))
+        }
+        // TODO: any better way to get it?
+        const logic = buildLogic({ input, props: ownProps })
+
+        let actions = Object.assign({}, ownProps.actions)
+
+        Object.entries(logic.actions).forEach(([key, action]) => {
+          actions[key] = (...args) => dispatch(action(...args))
+        })
+
+        return {
+          dispatch: dispatch,
+          actions: actions
+        }
+      }
+    )
+    const Connect = createConnect(Klass)
 
     // inject proptypes into the class if it's a React.Component
     // not using useRef here since we do it only once per component
@@ -32,7 +77,7 @@ function createWrapperFunction (input) {
 
     const Kea = function (props) {
       if (getContext().debug) {
-        console.log('running kea', getIdForInput(input))
+        console.log('render kea', getIdForInput(input))
       }
 
       // TODO: any better way to get it?
@@ -53,7 +98,18 @@ function createWrapperFunction (input) {
       }
 
       // unmount paths when component gets removed
-      useEffect(() => () => unmountPaths(logic, plugins), [])
+      useEffect(() => {
+        isUnmounting = false
+        return () => {
+          // set this as mapStateToProps can still run even if we have detached from redux
+          isUnmounting = true
+          unmountPaths(logic, plugins)
+        }
+      }, [])
+
+      if (getContext().debug) {
+        console.log('before render connect', getIdForInput(input))
+      }
 
       // TODO: unmount & remount if path changed
       runPlugins(plugins, 'beforeRender', logic, props)
@@ -165,41 +221,6 @@ export function kea (input) {
 
 export function connect (input) {
   return kea({ connect: input })
-}
-
-const mapStateToPropsCreator = (input) => (state, ownProps) => {
-  if (getContext().debug) {
-    console.log('running mapStateToPropsCreator', getIdForInput(input))
-  }
-  // TODO: any better way to get it?
-  const logic = buildLogic({ input, props: ownProps })
-
-  let resp = {}
-
-  Object.entries(logic.selectors).forEach(([key, selector]) => {
-    resp[key] = selector(state, ownProps)
-  })
-
-  return resp
-}
-
-const mapDispatchToPropsCreator = (input) => (dispatch, ownProps) => {
-  if (getContext().debug) {
-    console.log('running mapDispatchToPropsCreator', getIdForInput(input))
-  }
-  // TODO: any better way to get it?
-  const logic = buildLogic({ input, props: ownProps })
-
-  let actions = Object.assign({}, ownProps.actions)
-
-  Object.entries(logic.actions).forEach(([key, action]) => {
-    actions[key] = (...args) => dispatch(action(...args))
-  })
-
-  return {
-    dispatch: dispatch,
-    actions: actions
-  }
 }
 
 function isStateless (Component) {
