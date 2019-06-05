@@ -22,7 +22,10 @@ import { getContext } from '../context'
       // Run before we start doing anything
       beforeKea (input)
 
-      // before the steps to convert input into logic
+      // before the steps to build the logic
+      beforeBuild (logic, input)
+
+      // before the steps to convert input into logic (also run once per .extend())
       beforeLogic (logic, input)
 
       // either add new steps or add after effects for existing steps
@@ -39,10 +42,13 @@ import { getContext } from '../context'
         // or add your own steps with custom names here and other plugins can then extend them
       }
 
-      // after the steps to convert input into logic
+      // after the steps to convert input into logic (also run once per .extend())
       afterLogic (logic, inpput)
 
-      // Run when a logic store is mounted/unmounted in React
+      // after the steps to build the logic
+      afterBuild (logic, input)
+
+      // Run after a logic store is mounted/unmounted in React
       mounted (pathString, logic)
       unmounted (pathString, logic)
 

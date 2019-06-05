@@ -3,7 +3,7 @@ import { createConstants } from '../core/steps/constants'
 import { getContext } from '../context'
 import { runPlugins, getLocalPlugins } from '../plugins'
 
-export function convertInputToLogic ({ input, key: inputKey, props, extendedInputs }) {
+export function buildLogic ({ input, key: inputKey, props, extendedInputs }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
@@ -19,12 +19,16 @@ export function convertInputToLogic ({ input, key: inputKey, props, extendedInpu
     const plugins = getLocalPlugins(input)
     let logic = createBlankLogic({ key, path, plugins, props })
 
+    runPlugins(logic.plugins, 'beforeBuild', logic, input)
+
     applyInputToLogic(logic, input)
 
-    input.extend && input.extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
-    extendedInputs && extendedInputs.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
+    const extend = (input.extend || []).concat(logic.extend || []).concat(extendedInputs || [])
+    extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
     logicCache[pathString] = logic
+
+    runPlugins(logic.plugins, 'afterBuild', logic, input)
   } else {
     enhanceExistingLogic(logicCache[pathString], { props })
   }

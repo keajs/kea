@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
-import { convertInputToLogic, convertPartialDynamicInput, getIdForInput } from '../logic'
+import { buildLogic, convertPartialDynamicInput, getIdForInput } from '../logic'
 import { getContext } from '../context'
 
 import { getLocalPlugins, runPlugins, reservedProxiedKeys } from '../plugins'
@@ -34,7 +34,8 @@ function createWrapperFunction (input) {
       if (getContext().debug) {
         console.log('running kea', getIdForInput(input))
       }
-      const logic = convertInputToLogic({ input, props })
+
+      const logic = buildLogic({ input, props })
 
       // inject proptypes to React.Component
       if (injectPropTypes && logic.propTypes) {
@@ -81,7 +82,7 @@ export function kea (input) {
   if (input.key) {
     wrapper.withKey = keyCreator => {
       if (typeof keyCreator === 'function') {
-        const buildWithProps = props => convertInputToLogic({ input, key: keyCreator(props), props })
+        const buildWithProps = props => buildLogic({ input, key: keyCreator(props), props })
         buildWithProps._isKeaWithKey = true
         return buildWithProps
       } else {
@@ -89,7 +90,7 @@ export function kea (input) {
       }
     }
 
-    wrapper.buildWithKey = (key) => convertInputToLogic({ input, key })
+    wrapper.buildWithKey = (key) => buildLogic({ input, key })
 
     wrapper.mountWithKey = (key) => {
       const plugins = getLocalPlugins(input)
@@ -132,8 +133,11 @@ export function kea (input) {
         return state[id].logic
       }
 
-      // console.log(`building ${id}`)
-      const logic = convertInputToLogic({ input, extendedInputs: wrapper.extend && wrapper.extend._extendedInputs })
+      const logic = buildLogic({
+        input,
+        extendedInputs: wrapper.extend && wrapper.extend._extendedInputs
+      })
+
       state[id] = state[id] ? { ...state[id], logic } : { logic }
 
       return logic
@@ -174,7 +178,7 @@ const mapStateToPropsCreator = (input) => (state, ownProps) => {
   if (getContext().debug) {
     console.log('running mapStateToPropsCreator', getIdForInput(input))
   }
-  const logic = convertInputToLogic({ input, props: ownProps })
+  const logic = buildLogic({ input, props: ownProps })
 
   let resp = {}
 
@@ -189,7 +193,7 @@ const mapDispatchToPropsCreator = (input) => (dispatch, ownProps) => {
   if (getContext().debug) {
     console.log('running mapDispatchToPropsCreator', getIdForInput(input))
   }
-  const logic = convertInputToLogic({ input, props: ownProps })
+  const logic = buildLogic({ input, props: ownProps })
 
   let actions = Object.assign({}, ownProps.actions)
 
