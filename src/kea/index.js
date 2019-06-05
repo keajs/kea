@@ -17,19 +17,11 @@ function createWrapperFunction (input) {
     // make this.actions work if it's a React.Component we're operating with
     injectActionsIntoClass(Klass)
 
-    if (getContext().debug) {
-      console.log('running kea wrapper', getIdForInput(input))
-    }
-
     let isUnmounting = false
     let lastState
 
     const createConnect = reduxConnect(
       (state, ownProps) => {
-        if (getContext().debug) {
-          console.log('running mapStateToPropsCreator', getIdForInput(input))
-        }
-
         // At the moment when we unmount and detach from redux, react-redux will still be subscribed to the store
         // and will run this function to see if anything changed. Since we are detached from the store, all
         // selectors of this logic will crash. To avoid this, cache and return the last state.
@@ -51,9 +43,6 @@ function createWrapperFunction (input) {
         return resp
       },
       (dispatch, ownProps) => {
-        if (getContext().debug) {
-          console.log('running mapDispatchToPropsCreator', getIdForInput(input))
-        }
         // TODO: any better way to get it?
         const logic = buildLogic({ input, props: ownProps })
 
@@ -76,10 +65,6 @@ function createWrapperFunction (input) {
     let injectPropTypes = !isStateless(Klass)
 
     const Kea = function (props) {
-      if (getContext().debug) {
-        console.log('render kea', getIdForInput(input))
-      }
-
       // TODO: any better way to get it?
       const logic = buildLogic({ input, props, extendedInputs: wrapper._extendWith })
 
@@ -106,10 +91,6 @@ function createWrapperFunction (input) {
           unmountPaths(logic, plugins)
         }
       }, [])
-
-      if (getContext().debug) {
-        console.log('before render connect', getIdForInput(input))
-      }
 
       // TODO: unmount & remount if path changed
       runPlugins(plugins, 'beforeRender', logic, props)
