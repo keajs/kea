@@ -58,9 +58,73 @@ test('can extend inline', () => {
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
 })
 
-// test('can extend in plugins', () => {
+test('can extend in plugins in beforeBuild', () => {
+  const testPlugin = {
+    name: 'testPlugin',
+    beforeBuild (logic, input) {
+      logic.extend({
+        actions: () => ({
+          domore: true
+        })
+      })
+    }
+  }
 
-// })
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    }),
+    plugins: [testPlugin]
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('can extend in plugins in logicSteps', () => {
+  const testPlugin = {
+    name: 'testPlugin',
+    logicSteps: {
+      defaults (logic, input) {
+        logic.extend({
+          actions: () => ({
+            domore: true
+          })
+        })
+      }
+    }
+  }
+
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    }),
+    plugins: [testPlugin]
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+})
+
+test('can extend in plugins in afterBuild', () => {
+  const testPlugin = {
+    name: 'testPlugin',
+    afterBuild (logic, input) {
+      logic.extend({
+        actions: () => ({
+          domore: true
+        })
+      })
+    }
+  }
+
+  const logic = kea({
+    actions: () => ({
+      doit: true
+    }),
+    plugins: [testPlugin]
+  })
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+})
 
 test('extending singleton logic merges the right properties', () => {
   const oneResponse = kea({
