@@ -22,7 +22,7 @@ export function createActions (logic, input) {
   const payloadCreators = input.actions(input)
 
   Object.keys(payloadCreators).forEach(key => {
-    if (payloadCreators[key]._isKeaAction) {
+    if (typeof payloadCreators[key] === 'function' && payloadCreators[key]._isKeaAction) {
       logic.actions[key] = payloadCreators[key]
     } else {
       logic.actions[key] = createAction(createActionType(key, path), payloadCreators[key])

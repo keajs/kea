@@ -15,16 +15,17 @@ test('actions work the right way', () => {
       updateName: name => ({ name }),
       actionWithBool: true,
       actionWithInteger: 12,
+      actionWithNull: null,
       manualAction: createAction('custom_type', a => a)
-    }),
+    })
   })
 
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(logic.actions).sort()).toEqual(
-    ['actionWithBool', 'actionWithInteger', 'manualAction', 'updateName']
+    ['actionWithBool', 'actionWithInteger', 'actionWithNull', 'manualAction', 'updateName']
   )
-  
-  const { actionWithBool, actionWithInteger, manualAction, updateName } = logic.actions
+
+  const { actionWithBool, actionWithInteger, actionWithNull, manualAction, updateName } = logic.actions
 
   expect(typeof updateName).toBe('function')
   expect(updateName.toString()).toBe('update name (homepage.index)')
@@ -38,9 +39,11 @@ test('actions work the right way', () => {
   expect(actionWithInteger.toString()).toBe('action with integer (homepage.index)')
   expect(actionWithInteger()).toEqual({ payload: { value: 12 }, type: actionWithInteger.toString() })
 
+  expect(typeof actionWithNull).toBe('function')
+  expect(actionWithNull.toString()).toBe('action with null (homepage.index)')
+  expect(actionWithNull()).toEqual({ payload: { value: null }, type: actionWithNull.toString() })
+
   expect(typeof manualAction).toBe('function')
   expect(manualAction.toString()).toBe('custom_type')
   expect(manualAction({ key: 'newname' })).toEqual({ payload: { key: 'newname' }, type: manualAction.toString() })
-
-
 })
