@@ -83,13 +83,11 @@ function createWrapperFunction (input) {
       }
 
       // unmount paths when component gets removed
-      useEffect(() => {
+      useEffect(() => () => {
+        // set this as mapStateToProps can still run even if we have detached from redux
+        isUnmounting = true
+        unmountPaths(logic, plugins)
         isUnmounting = false
-        return () => {
-          // set this as mapStateToProps can still run even if we have detached from redux
-          isUnmounting = true
-          unmountPaths(logic, plugins)
-        }
       }, [])
 
       // TODO: unmount & remount if path changed
