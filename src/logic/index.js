@@ -23,14 +23,10 @@ export function buildLogic ({ input, key: inputKey, props, extendedInputs }) {
 
     applyInputToLogic(logic, input)
 
-    const extend = (input.extend || []).concat(logic._extendWith || []).concat(extendedInputs || [])
-    logic._extendWith = []
-
+    const extend = (input.extend || []).concat(extendedInputs || [])
     extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
     runPlugins(logic.plugins, 'afterBuild', logic, input)
-
-    logic._extendWith.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
     logicCache[pathString] = logic
   } else {
@@ -57,8 +53,7 @@ function createBlankLogic ({ key, path, plugins, props }) {
     path,
     plugins,
     props,
-    extend: input => logic._extendWith.push(input),
-    _extendWith: [],
+    extend: input => applyInputToLogic(logic, input),
     mounted: false
   }
 

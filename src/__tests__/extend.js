@@ -162,11 +162,13 @@ test('can extend in plugins in logicSteps', () => {
     name: 'testPlugin',
     logicSteps: {
       defaults (logic, input) {
-        logic.extend({
-          actions: () => ({
-            domore: true
+        if (!logic.actions.domore) {
+          logic.extend({
+            actions: () => ({
+              domore: true
+            })
           })
-        })
+        }
       }
     }
   }
