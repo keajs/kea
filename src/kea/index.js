@@ -110,6 +110,20 @@ export function kea (input) {
       return !state[id] || !state[id].logic
     }
 
+    wrapper.extend = (extendedInput) => {
+      if (!wrapper.mustBuild()) {
+        throw new Error('[KEA] Can not extend logic once it has been built!')
+      }
+
+      if (!wrapper.extend._extendedInputs) {
+        wrapper.extend._extendedInputs = []
+      }
+
+      wrapper.extend._extendedInputs.push(extendedInput)
+
+      return wrapper
+    }
+
     wrapper.build = (props) => {
       const { state } = getContext()
       const id = getIdForInput(input)
@@ -119,7 +133,7 @@ export function kea (input) {
       }
 
       // console.log(`building ${id}`)
-      const logic = convertInputToLogic({ input })
+      const logic = convertInputToLogic({ input, extendedInputs: wrapper.extend && wrapper.extend._extendedInputs })
       state[id] = state[id] ? { ...state[id], logic } : { logic }
 
       return logic
@@ -131,12 +145,6 @@ export function kea (input) {
 
       mountPaths(logic, plugins)
       return () => unmountPaths(logic, plugins)
-    }
-
-    wrapper.extend = () => {
-      if (!wrapper.mustBuild()) {
-        throw new Error('[KEA] Can not extend logic once it has been built!')
-      }
     }
 
     if (proxyFields) {

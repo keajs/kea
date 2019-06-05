@@ -65,7 +65,8 @@ const reservedKeys = {
   path: true,
   plugins: true,
   props: true,
-  mounted: true
+  mounted: true,
+  extend: true
 }
 
 export const reservedProxiedKeys = [

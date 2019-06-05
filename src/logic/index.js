@@ -3,7 +3,7 @@ import { createConstants } from '../core/steps/constants'
 import { getContext } from '../context'
 import { runPlugins, getLocalPlugins } from '../plugins'
 
-export function convertInputToLogic ({ input, key: inputKey, props }) {
+export function convertInputToLogic ({ input, key: inputKey, props, extendedInputs }) {
   const key = inputKey || (props && input.key ? input.key(props) : null)
 
   if (!key && input.key) {
@@ -18,9 +18,11 @@ export function convertInputToLogic ({ input, key: inputKey, props }) {
   if (!logicCache[pathString]) {
     const plugins = getLocalPlugins(input)
     let logic = createBlankLogic({ key, path, plugins, props })
+
     applyInputToLogic(logic, input)
 
-    input.merge && input.merge.forEach(merge => applyInputToLogic(logic, merge))
+    input.extend && input.extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
+    extendedInputs && extendedInputs.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
     logicCache[pathString] = logic
   } else {
@@ -47,6 +49,7 @@ function createBlankLogic ({ key, path, plugins, props }) {
     path,
     plugins,
     props,
+    extend: [],
     mounted: false
   }
 
