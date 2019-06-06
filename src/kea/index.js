@@ -17,7 +17,7 @@ function createWrapperFunction (input) {
     // make this.actions work if it's a React.Component we're operating with
     injectActionsIntoClass(Klass)
 
-    let isUnmounting = false
+    let isUnmounting = {}
     let lastState
 
     const createConnect = reduxConnect(
@@ -26,7 +26,7 @@ function createWrapperFunction (input) {
         // and will run this function to see if anything changed. Since we are detached from the store, all
         // selectors of this logic will crash. To avoid this, cache and return the last state.
         // Nothing will be rendered anywa.
-        if (isUnmounting) {
+        if (isUnmounting[input.key ? input.key(ownProps) : '*']) {
           return lastState
         }
 
@@ -85,9 +85,10 @@ function createWrapperFunction (input) {
       // unmount paths when component gets removed
       useEffect(() => () => {
         // set this as mapStateToProps can still run even if we have detached from redux
-        isUnmounting = true
+        const key = input.key ? input.key(props) : '*'
+        isUnmounting[key] = true
         unmountPaths(logic, plugins)
-        isUnmounting = false
+        delete isUnmounting[key]
       }, [])
 
       // TODO: unmount & remount if path changed
