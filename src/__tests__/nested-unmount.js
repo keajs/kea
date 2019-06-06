@@ -5,7 +5,7 @@ import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
-import { Provider } from 'react-redux'
+import { Provider, batch } from 'react-redux'
 import Adapter from 'enzyme-adapter-react-16'
 
 configure({ adapter: new Adapter() })
@@ -306,6 +306,7 @@ test('it also works with dynamic logic (without reducers)', () => {
       elements: [{}, PropTypes.object, {
         [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
         [actions.updateAllNames]: (state, payload) => {
+          console.log('reducer for update all names')
           let newState = {}
           Object.keys(state).forEach(key => {
             newState[key] = { ...state[key], name: payload.name }
@@ -314,7 +315,10 @@ test('it also works with dynamic logic (without reducers)', () => {
         }
       }],
       deletedElements: [{}, PropTypes.object, {
-        [actions.removeElementById]: (state, payload) => ({ ...state, [payload.id]: true })
+        [actions.removeElementById]: (state, payload) => {
+          console.log('reducer for removeElementById')
+          return ({ ...state, [payload.id]: true })
+        }
       }],
       counter: [0, PropTypes.number, {
         [actions.increment]: (state) => state + 1
@@ -348,14 +352,50 @@ test('it also works with dynamic logic (without reducers)', () => {
       <span className='id'>{id}</span>
       <span className='name'>{name}</span>
       <button className='remove-and-rename-all' onClick={() => {
-        removeElementById(id)
-        updateAllNames('new')
-        increment()
+        // with or without batch, there's no difference
+        batch(() => {
+          // this calls mapStateToProps on everything:
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.container
+
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.element.1
+
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.element.2
+
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.element.3
+
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.element.4
+
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.element.5
+
+          console.log('running removeElementById(id)')
+          removeElementById(id)
+
+          // this calls mapStateToProps on just the container:
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.container
+
+          console.log('running updateAllNames(new)')
+          updateAllNames('new')
+
+          // this calls mapStateToProps on just the container:
+          // console.log src/kea/index.js:25
+          // mapStateToProps scenes.container
+          console.log('running increment')
+          increment()
+
+          console.log('done with actions')
+        })
       }}>remove</button>
     </li>
   ))
 
-  const ElementList = containerLogic(({ counter, elements, deletedElements, actions: { increment, removeElementById, addElement } }) => (
+  const ElementList = containerLogic(({ counter, elements, deletedElements, actions: { increment, addElement } }) => (
     <div>
       <div>
         <button id='add' onClick={() => {
@@ -395,10 +435,12 @@ test('it also works with dynamic logic (without reducers)', () => {
   expect(wrapper.find('.name').map(a => a.text())).toEqual(['first', 'second', 'third', 'fourth', 'fifth'])
   expect(wrapper.find('#increment').text()).toEqual('1')
 
-  // click to remove #2 and change the name of all to 'new
+  // click to remove #2 and change the name of all to 'new'
+  console.log('! clicking the remove and rename all button')
   wrapper.find('#element-2 .remove-and-rename-all').simulate('click')
 
   expect(wrapper.find('#increment').text()).toEqual('2')
+  console.log(store.getState().scenes.container.elements)
   expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
 
   // increment to refresh the page
