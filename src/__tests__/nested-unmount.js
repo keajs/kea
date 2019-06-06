@@ -168,7 +168,7 @@ test('swapping out connected logic gives the right state', () => {
   wrapper.unmount()
 })
 
-test('it also works with dynamic logic', () => {
+test('it also works with dynamic logic (with reducers)', () => {
   const store = getStore()
 
   const containerLogic = kea({
@@ -209,6 +209,130 @@ test('it also works with dynamic logic', () => {
 
     key: props => props.id,
     path: (key) => ['scenes', 'element', key],
+
+    // this is the only line that is different in the 2 tests
+    reducers: () => ({}),
+
+    selectors: ({ selectors }) => ({
+      element: [
+        () => [selectors.elements, (_, props) => props.id],
+        (elements, id) => elements[id],
+        PropTypes.object
+      ]
+    })
+  })
+
+  const Element = elementLogic(({ id, element: { name }, actions: { removeElementById, updateAllNames, increment } }) => (
+    <li id={`element-${id}`}>
+      <span className='id'>{id}</span>
+      <span className='name'>{name}</span>
+      <button className='remove-and-rename-all' onClick={() => {
+        removeElementById(id)
+        updateAllNames('new')
+        increment()
+      }}>remove</button>
+    </li>
+  ))
+
+  const ElementList = containerLogic(({ counter, elements, deletedElements, actions: { increment, removeElementById, addElement } }) => (
+    <div>
+      <div>
+        <button id='add' onClick={() => {
+          sampleElements.forEach(element => {
+            addElement(element)
+          })
+          increment()
+        }}>add</button>
+        <button id='increment' onClick={increment}>{ counter }</button>
+      </div>
+      <ul>
+        {Object.values(elements).map(({ id }) => !deletedElements[id] ? <Element key={id} id={id} /> : null)}
+      </ul>
+    </div>
+  ))
+
+  const sampleElements = [
+    { id: '1', name: 'first' },
+    { id: '2', name: 'second' },
+    { id: '3', name: 'third' },
+    { id: '4', name: 'fourth' },
+    { id: '5', name: 'fifth' }
+  ]
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <ElementList />
+    </Provider>
+  )
+
+  expect(wrapper.find('.name').map(a => a.text())).toEqual([])
+  expect(wrapper.find('#increment').text()).toEqual('0')
+
+  // click to add elements
+  wrapper.find('#add').simulate('click')
+
+  expect(wrapper.find('.name').map(a => a.text())).toEqual(['first', 'second', 'third', 'fourth', 'fifth'])
+  expect(wrapper.find('#increment').text()).toEqual('1')
+
+  // click to remove #2 and change the name of all to 'new
+  wrapper.find('#element-2 .remove-and-rename-all').simulate('click')
+
+  expect(wrapper.find('#increment').text()).toEqual('2')
+  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
+
+  // increment to refresh the page
+  wrapper.find('#increment').simulate('click')
+
+  expect(wrapper.find('#increment').text()).toEqual('3')
+  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
+
+  wrapper.unmount()
+})
+
+test('it also works with dynamic logic (without reducers)', () => {
+  const store = getStore()
+
+  const containerLogic = kea({
+    path: () => ['scenes', 'container'],
+
+    actions: () => ({
+      increment: true,
+      removeElementById: (id) => ({ id }),
+      addElement: (element) => ({ element }),
+      updateAllNames: (name) => ({ name })
+    }),
+
+    reducers: ({ actions }) => ({
+      elements: [{}, PropTypes.object, {
+        [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
+        [actions.updateAllNames]: (state, payload) => {
+          let newState = {}
+          Object.keys(state).forEach(key => {
+            newState[key] = { ...state[key], name: payload.name }
+          })
+          return newState
+        }
+      }],
+      deletedElements: [{}, PropTypes.object, {
+        [actions.removeElementById]: (state, payload) => ({ ...state, [payload.id]: true })
+      }],
+      counter: [0, PropTypes.number, {
+        [actions.increment]: (state) => state + 1
+      }]
+    })
+  })
+
+  const elementLogic = kea({
+    connect: {
+      props: [containerLogic, ['elements']],
+      actions: [containerLogic, ['removeElementById', 'updateAllNames', 'increment']]
+    },
+
+    key: props => props.id,
+    path: (key) => ['scenes', 'element', key],
+
+    // this is the only line that is different in the 2 tests
+    // reducers: () => ({}),
 
     selectors: ({ selectors }) => ({
       element: [
