@@ -28,8 +28,11 @@ export function openContext (options = {}) {
     debug: false,
 
     // reducers
-    reducerTree: {},
-    rootReducers: {},
+    reducers: {
+      tree: {},
+      roots: {},
+      combined: undefined
+    },
 
     // plugins
     plugins: {
@@ -56,7 +59,6 @@ export function openContext (options = {}) {
 
     // store
     store: undefined,
-    combinedReducers: undefined,
     attachStrategy: 'dispatch',
     detachStrategy: 'dispatch',
 

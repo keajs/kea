@@ -65,11 +65,11 @@ export function getStore (opts = {}) {
   const finalCreateStore = composeEnchancer(...options.enhancers)(createStore)
 
   // combine reducers
-  const combinedReducers = combineKeaReducers(options.reducers)
-  context.combinedReducers = combinedReducers
+  const combined = combineKeaReducers(options.reducers)
+  context.reducers.combined = combined
 
   // create store
-  const store = finalCreateStore(combinedReducers, Object.assign({}, options.preloadedState))
+  const store = finalCreateStore(combined, Object.assign({}, options.preloadedState))
   context.store = store
 
   // run post-hooks

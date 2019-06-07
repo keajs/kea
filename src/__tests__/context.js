@@ -18,8 +18,11 @@ test('getting and setting works', () => {
 
   expect(getContext()).toMatchObject({
     // reducers
-    reducerTree: {},
-    rootReducers: {},
+    reducers: {
+      tree: {},
+      roots: {},
+      combined: undefined
+    },
 
     // plugins
     plugins: {

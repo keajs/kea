@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, getStore, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -166,6 +166,8 @@ test('swapping out connected logic gives the right state', () => {
   expect(wrapper.find('.name').text()).toEqual('George')
 
   wrapper.unmount()
+
+  console.log(getContext())
 })
 
 test('it also works with dynamic logic (with reducers)', () => {

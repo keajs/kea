@@ -6,29 +6,29 @@ export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 const defaultState = {}
 
 function initRootReducerTree (pathStart) {
-  const { reducerTree } = getContext()
-  if (!reducerTree[pathStart]) {
-    reducerTree[pathStart] = {}
+  const { reducers: { tree } } = getContext()
+  if (!tree[pathStart]) {
+    tree[pathStart] = {}
     regenerateRootReducer(pathStart)
   }
 }
 
 export function keaReducer (pathStart = 'scenes') {
-  const { rootReducers } = getContext()
+  const { reducers: { roots } } = getContext()
   initRootReducerTree(pathStart)
 
   return (state = defaultState, action, fullState) => {
-    return rootReducers[pathStart] ? rootReducers[pathStart](state, action, fullState) : state
+    return roots[pathStart] ? roots[pathStart](state, action, fullState) : state
   }
 }
 
 export function attachReducer (path, reducer) {
-  const { reducerTree, attachStrategy, store, combinedReducers } = getContext()
+  const { reducers: { tree, combined }, attachStrategy, store } = getContext()
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
 
-  let pointer = reducerTree
+  let pointer = tree
 
   for (let i = 0; i < path.length; i++) {
     const pathPart = path[i]
@@ -63,12 +63,12 @@ export function attachReducer (path, reducer) {
   if (attachStrategy === 'dispatch') {
     store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
   } else if (attachStrategy === 'replace') {
-    store && store.replaceReducer(combinedReducers)
+    store && store.replaceReducer(combined)
   }
 }
 
 export function detachReducer (path) {
-  const { reducerTree, detachStrategy, store, combinedReducers } = getContext()
+  const { reducers: { tree, combined }, detachStrategy, store } = getContext()
   const pathStart = path[0]
 
   if (detachStrategy === 'persist') {
@@ -77,7 +77,7 @@ export function detachReducer (path) {
 
   initRootReducerTree(pathStart)
 
-  let pointer = reducerTree
+  let pointer = tree
 
   let detached = false
 
@@ -108,16 +108,14 @@ export function detachReducer (path) {
     if (detachStrategy === 'dispatch') {
       store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
     } else if (detachStrategy === 'replace') {
-      store && store.replaceReducer(combinedReducers)
+      store && store.replaceReducer(combined)
     }
   }
 }
 
 export function regenerateRootReducer (pathStart) {
-  const { reducerTree, rootReducers } = getContext()
-  const rootReducer = recursiveCreateReducer(reducerTree[pathStart])
-
-  rootReducers[pathStart] = rootReducer
+  const { reducers: { tree, roots } } = getContext()
+  roots[pathStart] = recursiveCreateReducer(tree[pathStart])
 }
 
 export function recursiveCreateReducer (treeNode) {
