@@ -33,11 +33,12 @@ export function openContext (options = {}) {
       logicKeys: {}
     },
 
-    // input
-    inputs: {},
-    inputIds: new Map(),
-    inlinePathCreators: new Map(),
-    inlinePathCounter: 0,
+    input: {
+      inputs: {},
+      inputIds: new Map(),
+      inlinePathCreators: new Map(),
+      inlinePathCounter: 0
+    },
 
     build: {
       // TODO: clean up the difference between cache & built!

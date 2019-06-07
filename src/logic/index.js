@@ -98,7 +98,7 @@ function getPathForInput (input, key) {
     return input.path(key)
   }
 
-  const { inlinePathCreators } = getContext()
+  const { input: { inlinePathCreators } } = getContext()
 
   let pathCreator = inlinePathCreators.get(input)
 
@@ -106,7 +106,7 @@ function getPathForInput (input, key) {
     return pathCreator(key)
   }
 
-  const count = (++getContext().inlinePathCounter).toString()
+  const count = (++getContext().input.inlinePathCounter).toString()
 
   if (input.key) {
     pathCreator = (key) => ['kea', 'inline', count, key]
@@ -120,7 +120,7 @@ function getPathForInput (input, key) {
 }
 
 export function getInputId (input) {
-  const { inputIds } = getContext()
+  const { input: { inputIds } } = getContext()
 
   let id = inputIds.get(input)
 

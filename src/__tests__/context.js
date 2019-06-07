@@ -25,11 +25,12 @@ test('getting and setting works', () => {
       // logicKeys: {}
     },
 
-    // input
-    inputs: {},
-    inputIds: new Map(),
-    inlinePathCreators: new Map(),
-    inlinePathCounter: 0,
+    input: {
+      inputs: {},
+      inputIds: new Map(),
+      inlinePathCreators: new Map(),
+      inlinePathCounter: 0
+    },
 
     build: {
       cache: {},
@@ -135,7 +136,7 @@ test('inputIds works as expected', () => {
   openContext()
   expect(getContext()).toBeDefined()
 
-  const { inputIds } = getContext()
+  const { input: { inputIds } } = getContext()
 
   const input = {
     path: () => ['kea', 'misc', 'blue']

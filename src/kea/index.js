@@ -108,7 +108,7 @@ function createWrapperFunction (input) {
 
 export function kea (input) {
   const id = getInputId(input)
-  getContext().inputs[id] = input
+  getContext().input.inputs[id] = input
 
   const wrapper = createWrapperFunction(input)
 
