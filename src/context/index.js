@@ -26,24 +26,13 @@ export function openContext (options = {}) {
 
   const newContext = {
     debug: false,
-
-    // reducers
-    reducers: {
-      tree: {},
-      roots: {},
-      combined: undefined
-    },
-
+    
     // plugins
     plugins: {
       activated: [],
       logicSteps: {},
       logicKeys: {}
     },
-
-    // mount
-    mountPathCounter: {},
-    mountedLogic: {},
 
     // input
     inputs: inputs ? { ...inputs } : {},
@@ -54,6 +43,17 @@ export function openContext (options = {}) {
     // logic
     logicCache: {},
     state: {},
+
+    // mount
+    mountPathCounter: {},
+    mountedLogic: {},
+
+    // reducers
+    reducers: {
+      tree: {},
+      roots: {},
+      combined: undefined
+    },
 
     // store
     store: undefined,

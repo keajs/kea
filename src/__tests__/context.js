@@ -17,13 +17,6 @@ test('getting and setting works', () => {
   expect(getContext()).toBeDefined()
 
   expect(getContext()).toMatchObject({
-    // reducers
-    reducers: {
-      tree: {},
-      roots: {},
-      combined: undefined
-    },
-
     // plugins
     plugins: {
       activated: [
@@ -32,10 +25,6 @@ test('getting and setting works', () => {
     //   logicSteps: {},
     //   logicKeys: {}
     },
-
-    // mount
-    mountPathCounter: {},
-    mountedLogic: {},
 
     // input
     inputs: {},
@@ -46,6 +35,17 @@ test('getting and setting works', () => {
     // logic
     logicCache: {},
     state: {},
+
+    // mount
+    mountPathCounter: {},
+    mountedLogic: {},
+
+    // reducers
+    reducers: {
+      tree: {},
+      roots: {},
+      combined: undefined
+    },
 
     // store
     store: undefined
