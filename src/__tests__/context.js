@@ -37,11 +37,15 @@ test('getting and setting works', () => {
     mountPathCounter: {},
     mountedLogic: {},
 
-    // logic
-    inputIds: new WeakMap(),
-    pathWeakMap: new WeakMap(),
+    // input
+    inputs: {},
+    inputIds: new Map(),
+    inlinePathCreators: new Map(),
     inlinePathCounter: 0,
+
+    // logic
     logicCache: {},
+    state: {},
 
     // store
     store: undefined

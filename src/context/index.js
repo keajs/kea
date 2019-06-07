@@ -45,14 +45,14 @@ export function openContext (options = {}) {
     mountPathCounter: {},
     mountedLogic: {},
 
-    // logic
+    // input
     inputs: inputs ? { ...inputs } : {},
     inputIds: new Map(),
-
-    pathWeakMap: new WeakMap(),
+    inlinePathCreators: new Map(),
     inlinePathCounter: 0,
-    logicCache: {},
 
+    // logic
+    logicCache: {},
     state: {},
 
     // store

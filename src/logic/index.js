@@ -98,9 +98,9 @@ function getPathForInput (input, key) {
     return input.path(key)
   }
 
-  const { pathWeakMap } = getContext()
+  const { inlinePathCreators } = getContext()
 
-  let pathCreator = pathWeakMap.get(input)
+  let pathCreator = inlinePathCreators.get(input)
 
   if (pathCreator) {
     return pathCreator(key)
@@ -114,7 +114,7 @@ function getPathForInput (input, key) {
     pathCreator = () => ['kea', 'inline', count]
   }
 
-  pathWeakMap.set(input, pathCreator)
+  inlinePathCreators.set(input, pathCreator)
 
   return pathCreator(key)
 }
