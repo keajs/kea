@@ -13,9 +13,9 @@ export function buildLogic ({ input, key: inputKey, props, extendedInputs }) {
   const path = getPathForInput(input, key)
   const pathString = path.join('.')
 
-  const { logicCache } = getContext()
+  const { build: { cache } } = getContext()
 
-  if (!logicCache[pathString]) {
+  if (!cache[pathString]) {
     const plugins = getLocalPlugins(input)
     let logic = createBlankLogic({ key, path, plugins, props })
 
@@ -28,12 +28,12 @@ export function buildLogic ({ input, key: inputKey, props, extendedInputs }) {
 
     runPlugins(logic.plugins, 'afterBuild', logic, input)
 
-    logicCache[pathString] = logic
+    cache[pathString] = logic
   } else {
-    enhanceExistingLogic(logicCache[pathString], { props })
+    enhanceExistingLogic(cache[pathString], { props })
   }
 
-  return logicCache[pathString]
+  return cache[pathString]
 }
 
 export function convertPartialDynamicInput ({ input, plugins }) {

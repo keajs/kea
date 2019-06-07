@@ -151,23 +151,23 @@ export function kea (input) {
     const { options: { proxyFields } } = getContext()
 
     wrapper.mustBuild = () => {
-      const { state } = getContext()
+      const { build: { built } } = getContext()
       const id = getInputId(input)
 
-      return !state[id] || !state[id].logic
+      return !built[id] || !built[id].logic
     }
 
     wrapper.build = (props) => {
-      const { state } = getContext()
+      const { build: { built } } = getContext()
       const id = getInputId(input)
 
-      if (state[id] && state[id].logic) {
-        return state[id].logic
+      if (built[id] && built[id].logic) {
+        return built[id].logic
       }
 
       const logic = buildLogic({ input, extendedInputs: wrapper._extendWith })
 
-      state[id] = state[id] ? { ...state[id], logic } : { logic }
+      built[id] = built[id] ? { ...built[id], logic } : { logic }
 
       return logic
     }

@@ -17,13 +17,12 @@ test('getting and setting works', () => {
   expect(getContext()).toBeDefined()
 
   expect(getContext()).toMatchObject({
-    // plugins
     plugins: {
       activated: [
         { name: 'core' }
       ],
-    //   logicSteps: {},
-    //   logicKeys: {}
+      // logicSteps: {},
+      // logicKeys: {}
     },
 
     // input
@@ -32,27 +31,24 @@ test('getting and setting works', () => {
     inlinePathCreators: new Map(),
     inlinePathCounter: 0,
 
-    // logic
-    logicCache: {},
-    state: {},
+    build: {
+      cache: {},
+      built: {}
+    },
 
-    // mount
     mount: {
       counter: {},
       mounted: {}
     },
 
-    // reducers
     reducers: {
       tree: {},
       roots: {},
       combined: undefined
     },
 
-    // store
     store: undefined,
 
-    // options
     options: {
       autoMount: false,
       proxyFields: true,

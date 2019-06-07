@@ -27,7 +27,6 @@ export function openContext (options = {}) {
   const newContext = {
     debug: false,
     
-    // plugins
     plugins: {
       activated: [],
       logicSteps: {},
@@ -40,27 +39,26 @@ export function openContext (options = {}) {
     inlinePathCreators: new Map(),
     inlinePathCounter: 0,
 
-    // logic
-    logicCache: {},
-    state: {},
+    build: {
+      // TODO: clean up the difference between cache & built!
+      // TODO: how to clear memory of dynamic stores?
+      cache: {},
+      built: {},
+    },
 
-    // mount
     mount: {
       counter: {},
       mounted: {}
     },
 
-    // reducers
     reducers: {
       tree: {},
       roots: {},
       combined: undefined
     },
 
-    // store
     store: undefined,
 
-    // options
     options: {
       autoMount: false,
       proxyFields: true,
