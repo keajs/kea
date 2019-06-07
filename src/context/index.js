@@ -28,7 +28,6 @@ export function openContext (options = {}) {
     debug: false,
 
     // reducers
-    defaultReducerRoot: null,
     reducerTree: {},
     rootReducers: {},
 

@@ -13,22 +13,13 @@ function initRootReducerTree (pathStart) {
   }
 }
 
-export function keaReducer (pathStart = 'scenes', options = {}) {
+export function keaReducer (pathStart = 'scenes') {
   const { rootReducers } = getContext()
   initRootReducerTree(pathStart)
-
-  if (options && options.default) {
-    getContext().defaultReducerRoot = pathStart
-  }
 
   return (state = defaultState, action, fullState) => {
     return rootReducers[pathStart] ? rootReducers[pathStart](state, action, fullState) : state
   }
-}
-
-export function firstReducerRoot () {
-  const { defaultReducerRoot, reducerTree } = getContext()
-  return defaultReducerRoot || Object.keys(reducerTree)[0]
 }
 
 export function attachReducer (path, reducer) {

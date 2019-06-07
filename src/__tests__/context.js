@@ -18,7 +18,6 @@ test('getting and setting works', () => {
 
   expect(getContext()).toMatchObject({
     // reducers
-    defaultReducerRoot: null,
     reducerTree: {},
     rootReducers: {},
 
