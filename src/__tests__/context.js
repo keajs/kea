@@ -51,6 +51,7 @@ test('getting and setting works', () => {
     store: undefined,
 
     options: {
+      debug: false,
       autoMount: false,
       proxyFields: true,
       attachStrategy: 'dispatch',

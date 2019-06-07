@@ -25,8 +25,6 @@ export function openContext (options = {}) {
   const { inputs, plugins, ...otherOptions } = options
 
   const newContext = {
-    debug: false,
-    
     plugins: {
       activated: [],
       logicSteps: {},
@@ -61,6 +59,7 @@ export function openContext (options = {}) {
     store: undefined,
 
     options: {
+      debug: false,    
       autoMount: false,
       proxyFields: true,
       attachStrategy: 'dispatch',

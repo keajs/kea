@@ -121,6 +121,9 @@ export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
 
 // run plugins with this key with the rest of the arguments
 export function runPlugins (plugins, key, ...args) {
+  if (getContext().options.debug) {
+    console.log(`[KEA] Event: ${key}`, { args })
+  }
   plugins && plugins.activated.forEach(p => p[key] && p[key](...args))
 }
 
