@@ -47,9 +47,8 @@
     "opencollective": "^1.0.3"
   },
   "peerDependencies": {
-    "prop-types": "*",
-    "react": "*",
-    "react-redux": ">= 5",
+    "react": ">= 16.8",
+    "react-redux": ">= 7",
     "redux": ">= 3",
     "reselect": ">= 2"
   },
