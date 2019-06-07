@@ -46,19 +46,21 @@ export function openContext (options = {}) {
     mountedLogic: {},
 
     // logic
-    idWeakMap: new WeakMap(),
-    autoMount: false,
     inputs: inputs ? { ...inputs } : {},
+    inputIds: new Map(),
 
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
     logicCache: {},
-    proxyFields: true,
 
     state: {},
 
     // store
     store: undefined,
+
+    // options
+    autoMount: false,
+    proxyFields: true,
     attachStrategy: 'dispatch',
     detachStrategy: 'dispatch',
 
@@ -79,9 +81,10 @@ export function openContext (options = {}) {
     runPlugins(context.plugins, 'afterOpenContext', context, options)
   }
 
-  if (context.autoMount && context.inputs) {
+  if (context.inputs) {
     for (const input of Object.values(context.inputs)) {
-      kea(input).mount && kea(input).mount()
+      const logic = kea(input)
+      context.autoMount && logic.mount && logic.mount()
     }
   }
 }

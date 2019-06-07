@@ -119,14 +119,14 @@ function getPathForInput (input, key) {
   return pathCreator(key)
 }
 
-export function getIdForInput (input) {
-  const { idWeakMap } = getContext()
+export function getInputId (input) {
+  const { inputIds } = getContext()
 
-  let id = idWeakMap.get(input)
+  let id = inputIds.get(input)
 
   if (!id) {
     id = getPathForInput(input, '*').join('.')
-    idWeakMap.set(input, id)
+    inputIds.set(input, id)
   }
 
   return id

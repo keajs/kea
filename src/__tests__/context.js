@@ -38,7 +38,7 @@ test('getting and setting works', () => {
     mountedLogic: {},
 
     // logic
-    idWeakMap: new WeakMap(),
+    inputIds: new WeakMap(),
     pathWeakMap: new WeakMap(),
     inlinePathCounter: 0,
     logicCache: {},
@@ -119,33 +119,33 @@ test('context works with plugins', () => {
   })
 })
 
-// test('idWeakMap works as expected', () => {
-//   expect(getContext()).not.toBeDefined()
+test('inputIds works as expected', () => {
+  expect(getContext()).not.toBeDefined()
 
-//   openContext()
-//   expect(getContext()).toBeDefined()
+  openContext()
+  expect(getContext()).toBeDefined()
 
-//   const { idWeakMap } = getContext()
+  const { inputIds } = getContext()
 
-//   const input = {
-//     path: () => ['kea', 'misc', 'blue']
-//   }
-//   const logic = kea(input)
-//   expect(idWeakMap.get(input)).toBe('kea.misc.blue')
+  const input = {
+    path: () => ['kea', 'misc', 'blue']
+  }
+  const logic = kea(input)
+  expect(inputIds.get(input)).toBe('kea.misc.blue')
 
-//   const dynamicInput = {
-//     key: true,
-//     path: (key) => ['kea', 'misc', 'green', key]
-//   }
-//   const dynamicLogic = kea(dynamicInput)
-//   expect(idWeakMap.get(dynamicInput)).toBe('kea.misc.green.*')
+  const dynamicInput = {
+    key: true,
+    path: (key) => ['kea', 'misc', 'green', key]
+  }
+  const dynamicLogic = kea(dynamicInput)
+  expect(inputIds.get(dynamicInput)).toBe('kea.misc.green.*')
 
-//   const pathlessInput1 = {}
-//   const pathlessLogic1 = kea(pathlessInput1)
-//   expect(idWeakMap.get(pathlessInput1)).toBe('kea.inline.1')
+  const pathlessInput1 = {}
+  const pathlessLogic1 = kea(pathlessInput1)
+  expect(inputIds.get(pathlessInput1)).toBe('kea.inline.1')
 
-//   const pathlessInput2 = {}
-//   const pathlessLogic2 = kea(pathlessInput2)
-//   expect(idWeakMap.get(pathlessInput2)).toBe('kea.inline.2')
-// })
+  const pathlessInput2 = {}
+  const pathlessLogic2 = kea(pathlessInput2)
+  expect(inputIds.get(pathlessInput2)).toBe('kea.inline.2')
+})
 

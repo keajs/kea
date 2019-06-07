@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
-import { buildLogic, convertPartialDynamicInput, getIdForInput } from '../logic'
+import { buildLogic, convertPartialDynamicInput, getInputId } from '../logic'
 import { getContext } from '../context'
 
 import { getLocalPlugins, runPlugins, reservedProxiedKeys } from '../plugins'
@@ -107,7 +107,7 @@ function createWrapperFunction (input) {
 }
 
 export function kea (input) {
-  const id = getIdForInput(input)
+  const id = getInputId(input)
   getContext().inputs[id] = input
 
   const wrapper = createWrapperFunction(input)
@@ -152,14 +152,14 @@ export function kea (input) {
 
     wrapper.mustBuild = () => {
       const { state } = getContext()
-      const id = getIdForInput(input)
+      const id = getInputId(input)
 
       return !state[id] || !state[id].logic
     }
 
     wrapper.build = (props) => {
       const { state } = getContext()
-      const id = getIdForInput(input)
+      const id = getInputId(input)
 
       if (state[id] && state[id].logic) {
         return state[id].logic
