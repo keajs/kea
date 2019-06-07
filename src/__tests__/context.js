@@ -48,7 +48,15 @@ test('getting and setting works', () => {
     },
 
     // store
-    store: undefined
+    store: undefined,
+
+    // options
+    options: {
+      autoMount: false,
+      proxyFields: true,
+      attachStrategy: 'dispatch',
+      detachStrategy: 'dispatch'
+    }    
   })
 
   closeContext()

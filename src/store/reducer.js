@@ -23,7 +23,12 @@ export function keaReducer (pathStart = 'scenes') {
 }
 
 export function attachReducer (path, reducer) {
-  const { reducers: { tree, combined }, attachStrategy, store } = getContext()
+  const { 
+    reducers: { tree, combined }, 
+    options: { attachStrategy }, 
+    store 
+  } = getContext()
+  
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -68,7 +73,12 @@ export function attachReducer (path, reducer) {
 }
 
 export function detachReducer (path) {
-  const { reducers: { tree, combined }, detachStrategy, store } = getContext()
+  const { 
+    reducers: { tree, combined }, 
+    options: { detachStrategy }, 
+    store 
+  } = getContext()
+  
   const pathStart = path[0]
 
   if (detachStrategy === 'persist') {

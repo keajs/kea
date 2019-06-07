@@ -148,7 +148,7 @@ export function kea (input) {
 
     Object.assign(wrapper, convertPartialDynamicInput({ input }))
   } else {
-    const { proxyFields } = getContext()
+    const { options: { proxyFields } } = getContext()
 
     wrapper.mustBuild = () => {
       const { state } = getContext()
@@ -192,9 +192,7 @@ export function kea (input) {
     }
   }
 
-  if (getContext().autoMount && wrapper.mount) {
-    wrapper.mount()
-  }
+  getContext().options.autoMount && wrapper.mount && wrapper.mount()
 
   return wrapper
 }

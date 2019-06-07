@@ -35,7 +35,7 @@ export function openContext (options = {}) {
     },
 
     // input
-    inputs: inputs ? { ...inputs } : {},
+    inputs: {},
     inputIds: new Map(),
     inlinePathCreators: new Map(),
     inlinePathCounter: 0,
@@ -59,12 +59,14 @@ export function openContext (options = {}) {
     store: undefined,
 
     // options
-    autoMount: false,
-    proxyFields: true,
-    attachStrategy: 'dispatch',
-    detachStrategy: 'dispatch',
+    options: {
+      autoMount: false,
+      proxyFields: true,
+      attachStrategy: 'dispatch',
+      detachStrategy: 'dispatch',
 
-    ...otherOptions
+      ...otherOptions
+    }
   }
 
   setContext(newContext)
@@ -81,11 +83,9 @@ export function openContext (options = {}) {
     runPlugins(context.plugins, 'afterOpenContext', context, options)
   }
 
-  if (context.inputs) {
-    for (const input of Object.values(context.inputs)) {
-      const logic = kea(input)
-      context.autoMount && logic.mount && logic.mount()
-    }
+  if (inputs) {
+    context.inputs = { ...inputs }
+    Object.values(context.inputs).forEach(kea) // call kea(input) for all inputs
   }
 }
 
