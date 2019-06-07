@@ -1,4 +1,5 @@
 import { getContext } from '../context'
+import { runPlugins } from '../plugins'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
@@ -22,7 +23,8 @@ export function keaReducer (pathStart = 'scenes') {
   }
 }
 
-export function attachReducer (path, reducer) {
+export function attachReducer (logic) {
+  const { path, reducer } = logic
   const { 
     reducers: { tree, combined }, 
     options: { attachStrategy }, 
@@ -65,14 +67,22 @@ export function attachReducer (path, reducer) {
 
   regenerateRootReducer(pathStart)
 
-  if (attachStrategy === 'dispatch') {
-    store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
-  } else if (attachStrategy === 'replace') {
-    store && store.replaceReducer(combined)
+  if (attachStrategy === 'dispatch' || attachStrategy === 'replace') {
+    runPlugins(logic.plugins, 'beforeAttach', logic)
+
+    if (attachStrategy === 'dispatch') {
+      store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
+    } else if (attachStrategy === 'replace') {
+      store && store.replaceReducer(combined)
+    }
+
+    runPlugins(logic.plugins, 'afterAttach', logic)
   }
 }
 
-export function detachReducer (path) {
+export function detachReducer (logic) {
+  const { path } = logic
+
   const { 
     reducers: { tree, combined }, 
     options: { detachStrategy }, 
@@ -115,10 +125,16 @@ export function detachReducer (path) {
   regenerateRootReducer(pathStart)
 
   if (detached) {
-    if (detachStrategy === 'dispatch') {
-      store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
-    } else if (detachStrategy === 'replace') {
-      store && store.replaceReducer(combined)
+    if (detachStrategy === 'dispatch' || detachStrategy === 'replace') {
+      runPlugins(logic.plugins, 'beforeDetach', logic)
+  
+      if (detachStrategy === 'dispatch') {
+        store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
+      } else if (detachStrategy === 'replace') {
+        store && store.replaceReducer(combined)
+      }
+
+      runPlugins(logic.plugins, 'afterDetach', logic)
     }
   }
 }

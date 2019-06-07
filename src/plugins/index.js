@@ -11,6 +11,7 @@ import { getContext } from '../context'
         key: {}
       }),
 
+      // Run after creating a new context, before plugins and inputs are applied
       afterOpenContext (context, options)
 
       // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
@@ -48,9 +49,21 @@ import { getContext } from '../context'
       // after the steps to build the logic
       afterBuild (logic, input)
 
-      // Run after a logic store is mounted/unmounted in React
-      mounted (pathString, logic)
-      unmounted (pathString, logic)
+      // Run before/after a logic store is mounted in React
+      beforeMount (pathString, logic)
+      afterMount (pathString, logic)
+
+      // Run before/after a reducer is attached to Redux
+      beforeAttach (pathString, logic)
+      afterAttach (pathString, logic)
+
+      // Run before/after a logic store is unmounted in React
+      beforeUnmount (pathString, logic)
+      afterUnmount (pathString, logic)
+
+      // Run before/after a reducer is detached frm Redux
+      beforeDetach (pathString, logic)
+      afterDetach (pathString, logic)
 
       // when wrapping a React component
       beforeWrapper (input, Klass)
@@ -108,7 +121,7 @@ export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
 
 // run plugins with this key with the rest of the arguments
 export function runPlugins (plugins, key, ...args) {
-  plugins.activated.forEach(p => p[key] && p[key](...args))
+  plugins && plugins.activated.forEach(p => p[key] && p[key](...args))
 }
 
 // make a murky deep copy of the plugins object

@@ -21,7 +21,7 @@ test('detaches from a simple state', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 1])
+  detachReducer({ path: ['scenes', 'something', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(1)
@@ -42,13 +42,13 @@ test('detaches from a state with 2 reducers', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 1])
+  detachReducer({ path: ['scenes', 'something', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: { something: { 2: reducer2 } } })
   expect(dispatched.length).toEqual(1)
   expect(dispatched[0].type).toEqual(DETACH_REDUCER)
 
-  detachReducer(['scenes', 'something', 2])
+  detachReducer({ path: ['scenes', 'something', 2] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(2)
@@ -69,13 +69,13 @@ test('detaches from a state with 2 nested reducers, part 1', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 'bla', 2])
+  detachReducer({ path: ['scenes', 'something', 'bla', 2] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: { something: { 1: reducer1 } } })
   expect(dispatched.length).toEqual(1)
   expect(dispatched[0].type).toEqual(DETACH_REDUCER)
 
-  detachReducer(['scenes', 'something', 1])
+  detachReducer({ path: ['scenes', 'something', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(2)
@@ -96,13 +96,13 @@ test('detaches from a state with 2 nested reducers, part 1', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 'bla', 2])
+  detachReducer({ path: ['scenes', 'something', 'bla', 2] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: { something: { cat: { 1: reducer1 } } } })
   expect(dispatched.length).toEqual(1)
   expect(dispatched[0].type).toEqual(DETACH_REDUCER)
 
-  detachReducer(['scenes', 'something', 'cat', 1])
+  detachReducer({ path: ['scenes', 'something', 'cat', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(2)
@@ -122,7 +122,7 @@ test('detaches from a state with a low reducer', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something'])
+  detachReducer({ path: ['scenes', 'something'] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(1)
@@ -143,13 +143,13 @@ test('cleans up a nested tree, vol 1', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 'bla', 'moo', 2])
+  detachReducer({ path: ['scenes', 'something', 'bla', 'moo', 2] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: { something: { cat: { foo: { bar: { 1: reducer1 } } } } } })
   expect(dispatched.length).toEqual(1)
   expect(dispatched[0].type).toEqual(DETACH_REDUCER)
 
-  detachReducer(['scenes', 'something', 'cat', 'foo', 'bar', 1])
+  detachReducer({ path: ['scenes', 'something', 'cat', 'foo', 'bar', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(2)
@@ -170,13 +170,13 @@ test('cleans up a nested tree, vol 2', () => {
     dispatch: (action) => dispatched.push(action)
   }
 
-  detachReducer(['scenes', 'something', 'cat', 'foo', 'bar', 1])
+  detachReducer({ path: ['scenes', 'something', 'cat', 'foo', 'bar', 1] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: { something: { bla: { moo: { 2: reducer2 } } } } })
   expect(dispatched.length).toEqual(1)
   expect(dispatched[0].type).toEqual(DETACH_REDUCER)
 
-  detachReducer(['scenes', 'something', 'bla', 'moo', 2])
+  detachReducer({ path: ['scenes', 'something', 'bla', 'moo', 2] })
 
   expect(getContext().reducers.tree).toEqual({ scenes: {} })
   expect(dispatched.length).toEqual(2)

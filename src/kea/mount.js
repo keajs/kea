@@ -6,19 +6,20 @@ import { getContext } from '../context'
 export function mountPaths (logic, plugins) {
   const { mount: { counter, mounted } } = getContext()
 
-  for (const path of Object.keys(logic.connections)) {
-    counter[path] = (counter[path] || 0) + 1
-    if (counter[path] === 1) {
-      // console.log('mounting', path)
-      const connectedLogic = logic.connections[path]
+  for (const pathString of Object.keys(logic.connections)) {
+    counter[pathString] = (counter[pathString] || 0) + 1
+    if (counter[pathString] === 1) {
+      const connectedLogic = logic.connections[pathString]
 
-      mounted[path] = connectedLogic
+      runPlugins(plugins, 'beforeMount', pathString, connectedLogic)
+
+      mounted[pathString] = connectedLogic
 
       if (connectedLogic.reducer) {
-        attachReducer(connectedLogic.path, connectedLogic.reducer)
+        attachReducer(connectedLogic)
       }
 
-      runPlugins(plugins, 'mounted', path, connectedLogic)
+      runPlugins(plugins, 'afterMount', pathString, connectedLogic)
     }
   }
 }
@@ -26,20 +27,21 @@ export function mountPaths (logic, plugins) {
 export function unmountPaths (logic, plugins) {
   const { mount: { counter, mounted } } = getContext()
 
-  for (const path of Object.keys(logic.connections).reverse()) {
-    counter[path] = (counter[path] || 0) - 1
-    if (counter[path] === 0) {
-      // console.log('unmounting', path)
-      const connectedLogic = logic.connections[path]
+  for (const pathString of Object.keys(logic.connections).reverse()) {
+    counter[pathString] = (counter[pathString] || 0) - 1
+    if (counter[pathString] === 0) {
+      const connectedLogic = logic.connections[pathString]
 
-      delete mounted[path]
-      delete counter[path]
+      runPlugins(plugins, 'beforeUnmount', pathString, connectedLogic)
+
+      delete mounted[pathString]
+      delete counter[pathString]
 
       if (connectedLogic.reducer) {
-        detachReducer(connectedLogic.path, connectedLogic.reducer)
+        detachReducer(connectedLogic)
       }
 
-      runPlugins(plugins, 'unmounted', path, connectedLogic)
+      runPlugins(plugins, 'afterUnmount', pathString, connectedLogic)
     }
   }
 }
