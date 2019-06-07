@@ -4,44 +4,42 @@ import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 
 export function mountPaths (logic, plugins) {
-  const { mountPathCounter, mountedLogic } = getContext()
+  const { mount: { counter, mounted } } = getContext()
 
-  Object.keys(logic.connections).forEach(path => {
-    mountPathCounter[path] = (mountPathCounter[path] || 0) + 1
-    if (mountPathCounter[path] === 1) {
+  for (const path of Object.keys(logic.connections)) {
+    counter[path] = (counter[path] || 0) + 1
+    if (counter[path] === 1) {
       // console.log('mounting', path)
       const connectedLogic = logic.connections[path]
-      mountedLogic[path] = connectedLogic
 
-      // attach reducer to redux if not already attached
-      if (connectedLogic.reducer && !connectedLogic.mounted) {
-        // console.log('attached', mountPathCounter)
+      mounted[path] = connectedLogic
+
+      if (connectedLogic.reducer) {
         attachReducer(connectedLogic.path, connectedLogic.reducer)
-        connectedLogic.mounted = true
       }
 
       runPlugins(plugins, 'mounted', path, connectedLogic)
     }
-  })
+  }
 }
 
 export function unmountPaths (logic, plugins) {
-  const { mountPathCounter, mountedLogic } = getContext()
+  const { mount: { counter, mounted } } = getContext()
 
-  Object.keys(logic.connections).reverse().forEach(path => {
-    mountPathCounter[path] = (mountPathCounter[path] || 0) - 1
-    if (mountPathCounter[path] === 0) {
+  for (const path of Object.keys(logic.connections).reverse()) {
+    counter[path] = (counter[path] || 0) - 1
+    if (counter[path] === 0) {
       // console.log('unmounting', path)
       const connectedLogic = logic.connections[path]
-      delete mountedLogic[path]
 
-      if (connectedLogic.reducer && connectedLogic.mounted) {
-        // console.log('detached', mountPathCounter)
+      delete mounted[path]
+      delete counter[path]
+
+      if (connectedLogic.reducer) {
         detachReducer(connectedLogic.path, connectedLogic.reducer)
-        connectedLogic.mounted = false
       }
 
       runPlugins(plugins, 'unmounted', path, connectedLogic)
     }
-  })
+  }
 }

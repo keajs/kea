@@ -37,8 +37,10 @@ test('getting and setting works', () => {
     state: {},
 
     // mount
-    mountPathCounter: {},
-    mountedLogic: {},
+    mount: {
+      counter: {},
+      mounted: {}
+    },
 
     // reducers
     reducers: {

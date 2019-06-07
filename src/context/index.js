@@ -45,8 +45,10 @@ export function openContext (options = {}) {
     state: {},
 
     // mount
-    mountPathCounter: {},
-    mountedLogic: {},
+    mount: {
+      counter: {},
+      mounted: {}
+    },
 
     // reducers
     reducers: {
