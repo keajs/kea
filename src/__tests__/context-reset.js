@@ -10,7 +10,7 @@ import Adapter from 'enzyme-adapter-react-16'
 
 configure({ adapter: new Adapter() })
 
-test('should even work if we reset the context when rendering', () => {
+test.skip('should even work if we reset the context when rendering', () => {
   // resetContext()
 
   // const store = getStore()
@@ -89,7 +89,7 @@ test('should even work if we reset the context when rendering', () => {
   // expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'somename' } } })
 })
 
-test('lazy logic loading works', () => {
+test.skip('lazy logic loading works', () => {
   // resetContext({ autoMount: false })
 
   // const store = getStore()
