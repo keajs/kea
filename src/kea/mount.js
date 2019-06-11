@@ -3,7 +3,7 @@ import { runPlugins } from '../plugins'
 
 import { getContext } from '../context'
 
-export function mountPaths (logic, plugins) {
+export function mountPaths (logic, plugins = getContext().plugins) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections)) {
@@ -24,7 +24,7 @@ export function mountPaths (logic, plugins) {
   }
 }
 
-export function unmountPaths (logic, plugins) {
+export function unmountPaths (logic, plugins = getContext().plugins) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections).reverse()) {
