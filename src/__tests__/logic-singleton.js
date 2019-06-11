@@ -69,8 +69,6 @@ test('singleton logic has all the right properties', () => {
   expect(nameReducer).toBeDefined()
   expect(nameReducer('', updateName('newName'))).toBe('newName')
 
-  // TODO: add defaults and propTypes
-
   expect(response.reducers).not.toHaveProperty('capitalizedName')
   expect(response.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
   expect(response.defaults).not.toHaveProperty('capitalizedName', 'chirpy')

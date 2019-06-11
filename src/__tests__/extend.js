@@ -322,8 +322,6 @@ test('extending logic merges the right properties', () => {
   expect(nameReducer).toBeDefined()
   expect(nameReducer('', updateName('newName'))).toBe('newName')
 
-  // TODO: add defaults and propTypes
-
   expect(logic.reducers).not.toHaveProperty('capitalizedName')
   expect(logic.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
   expect(logic.defaults).not.toHaveProperty('capitalizedName', 'chirpy')

@@ -26,7 +26,6 @@ test('can use withkey for actions and props', () => {
     }),
 
     reducers: ({ actions, props, key }) => ({
-      // TODO: support with props.something here
       name: [props.defaultName, PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }]
