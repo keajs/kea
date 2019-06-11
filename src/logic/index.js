@@ -53,8 +53,7 @@ function createBlankLogic ({ key, path, plugins, props }) {
     path,
     plugins,
     props,
-    extend: input => applyInputToLogic(logic, input),
-    mounted: false
+    extend: input => applyInputToLogic(logic, input)
   }
 
   plugins.activated.forEach(p => p.defaults && Object.assign(logic, p.defaults()))

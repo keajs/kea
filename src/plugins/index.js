@@ -84,7 +84,6 @@ const reservedKeys = {
   path: true,
   plugins: true,
   props: true,
-  mounted: true,
   extend: true
 }
 
