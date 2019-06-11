@@ -166,8 +166,6 @@ test('swapping out connected logic gives the right state', () => {
   expect(wrapper.find('.name').text()).toEqual('George')
 
   wrapper.unmount()
-
-  console.log(getContext())
 })
 
 test('it also works with dynamic logic (with reducers)', () => {
