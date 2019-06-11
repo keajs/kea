@@ -28,8 +28,9 @@ export function openContext (options = {}) {
   const newContext = {
     plugins: {
       activated: [],
-      logicSteps: {},
-      logicKeys: {}
+      buildSteps: {},
+      events: {},
+      logicFields: {}
     },
 
     input: {

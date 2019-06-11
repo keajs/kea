@@ -74,7 +74,7 @@ function applyInputToLogic (logic, input) {
   // Let's call all plugins that want to hook into this moment.
   runPlugins(logic.plugins, 'beforeLogic', logic, input)
 
-  const steps = logic.plugins.logicSteps
+  const steps = logic.plugins.buildSteps
 
   for (const step of Object.keys(steps)) {
     for (const func of steps[step]) {

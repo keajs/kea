@@ -21,8 +21,9 @@ test('getting and setting works', () => {
       activated: [
         { name: 'core' }
       ],
-      // logicSteps: {},
-      // logicKeys: {}
+      // buildSteps: {},
+      // logicFields: {},
+      // events: {}
     },
 
     input: {
@@ -79,7 +80,7 @@ test('context works with plugins', () => {
       ranAfterConnect: false
     }),
 
-    logicSteps: {
+    buildSteps: {
       connect (logic, input) {
         logic.ranAfterConnect = true
       }
@@ -105,9 +106,9 @@ test('context works with plugins', () => {
     }
   })
 
-  expect(Object.keys(getContext().plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
+  expect(Object.keys(getContext().plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
 
-  expect(getContext().plugins.logicSteps.connect).toEqual([ corePlugin.logicSteps.connect, testPlugin.logicSteps.connect ])
+  expect(getContext().plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect, testPlugin.buildSteps.connect ])
 
   // const logic = kea({ options:{lazy:true}})
   const logic = kea({})

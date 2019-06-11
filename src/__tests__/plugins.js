@@ -17,10 +17,10 @@ test('the core plugin is activated automatically', () => {
   const { plugins } = getContext()
 
   expect(plugins.activated).toEqual([corePlugin])
-  expect(Object.keys(plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
+  expect(Object.keys(plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
 })
 
-test('plugins add stpes', () => {
+test('plugins add build steps', () => {
   const { plugins } = getContext()
 
   const testPlugin = {
@@ -30,7 +30,7 @@ test('plugins add stpes', () => {
       ranAfterConnect: false
     }),
 
-    logicSteps: {
+    buildSteps: {
       connect (logic, input) {
         logic.ranAfterConnect = true
       }
@@ -40,11 +40,41 @@ test('plugins add stpes', () => {
   activatePlugin(testPlugin)
 
   expect(plugins.activated).toEqual([corePlugin, testPlugin])
-  expect(Object.keys(plugins.logicSteps)).toEqual(Object.keys(corePlugin.logicSteps))
+  expect(Object.keys(plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
 
-  expect(plugins.logicSteps.connect).toEqual([ corePlugin.logicSteps.connect, testPlugin.logicSteps.connect ])
+  expect(plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect, testPlugin.buildSteps.connect ])
 
   const logic = kea({})
 
   expect(logic.ranAfterConnect).toEqual(true)
+})
+
+test('plugins add events', () => {
+  const { plugins } = getContext()
+
+  const testPlugin = {
+    name: 'test',
+
+    defaults: () => ({
+      ranAfterBuild: false
+    }),
+
+    events: {
+      afterBuild (logic, input) {
+        logic.ranAfterBuild = true
+      }
+    }
+  }
+
+  activatePlugin(testPlugin)
+
+  expect(plugins.activated).toEqual([corePlugin, testPlugin])
+  expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
+
+  expect(plugins.events.afterBuild).toEqual([ testPlugin.events.afterBuild ])
+
+  const logic = kea({})
+  logic.build()
+
+  expect(logic.ranAfterBuild).toEqual(true)
 })

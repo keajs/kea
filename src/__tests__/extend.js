@@ -138,12 +138,14 @@ test('can extend multiple times with extend: []', () => {
 test('can extend in plugins in beforeBuild', () => {
   const testPlugin = {
     name: 'testPlugin',
-    beforeBuild (logic, input) {
-      logic.extend({
-        actions: () => ({
-          domore: true
+    events: {
+      beforeBuild (logic, input) {
+        logic.extend({
+          actions: () => ({
+            domore: true
+          })
         })
-      })
+      }
     }
   }
 
@@ -157,10 +159,10 @@ test('can extend in plugins in beforeBuild', () => {
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
 })
 
-test('can extend in plugins in logicSteps', () => {
+test('can extend in plugins in buildSteps', () => {
   const testPlugin = {
     name: 'testPlugin',
-    logicSteps: {
+    buildSteps: {
       defaults (logic, input) {
         if (!logic.actions.domore) {
           logic.extend({
@@ -186,12 +188,14 @@ test('can extend in plugins in logicSteps', () => {
 test('can extend in plugins in afterBuild', () => {
   const testPlugin = {
     name: 'testPlugin',
-    afterBuild (logic, input) {
-      logic.extend({
-        actions: () => ({
-          domore: true
+    events: {
+      afterBuild (logic, input) {
+        logic.extend({
+          actions: () => ({
+            domore: true
+          })
         })
-      })
+      }
     }
   }
 

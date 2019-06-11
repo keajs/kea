@@ -11,26 +11,8 @@ import { getContext } from '../context'
         key: {}
       }),
 
-      // Run after creating a new context, before plugins and inputs are applied
-      afterOpenContext (context, options)
-
-      // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
-      beforeReduxStore (options)
-
-      // Run after the redux store is created.
-      afterReduxStore (options, store)
-
-      // Run before we start doing anything
-      beforeKea (input)
-
-      // before the steps to build the logic
-      beforeBuild (logic, input)
-
-      // before the steps to convert input into logic (also run once per .extend())
-      beforeLogic (logic, input)
-
       // either add new steps or add after effects for existing steps
-      logicSteps: {
+      buildSteps: {
         // steps from core that you can extend
         connect (logic, input)
         constants (logic, input)
@@ -43,39 +25,58 @@ import { getContext } from '../context'
         // or add your own steps with custom names here and other plugins can then extend them
       }
 
-      // after the steps to convert input into logic (also run once per .extend())
-      afterLogic (logic, inpput)
+      events: {
+        // Run after creating a new context, before plugins and inputs are applied
+        afterOpenContext (context, options)
 
-      // after the steps to build the logic
-      afterBuild (logic, input)
+        // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
+        beforeReduxStore (options)
 
-      // Run before/after a logic store is mounted in React
-      beforeMount (pathString, logic)
-      afterMount (pathString, logic)
+        // Run after the redux store is created.
+        afterReduxStore (options, store)
 
-      // Run before/after a reducer is attached to Redux
-      beforeAttach (pathString, logic)
-      afterAttach (pathString, logic)
+        // Run before we start doing anything
+        beforeKea (input)
 
-      // Run before/after a logic store is unmounted in React
-      beforeUnmount (pathString, logic)
-      afterUnmount (pathString, logic)
+        // before the steps to build the logic
+        beforeBuild (logic, input)
 
-      // Run before/after a reducer is detached frm Redux
-      beforeDetach (pathString, logic)
-      afterDetach (pathString, logic)
+        // before the steps to convert input into logic (also run once per .extend())
+        beforeLogic (logic, input)
 
-      // when wrapping a React component
-      beforeWrapper (input, Klass)
-      afterWrapper (input, Klass, Kea)
+        // after the steps to convert input into logic (also run once per .extend())
+        afterLogic (logic, input)
 
-      // Run after mounting and before rendering the component in React's scope (you can use hooks here)
-      beforeRender (logic, props)
+        // after the steps to build the logic
+        afterBuild (logic, input)
 
-      // Run when we are removing kea from the system, e.g. when cleaning up after tests
-      beforeCloseContext (context)
-    },
-    ...
+        // Run before/after a logic store is mounted in React
+        beforeMount (pathString, logic)
+        afterMount (pathString, logic)
+
+        // Run before/after a reducer is attached to Redux
+        beforeAttach (pathString, logic)
+        afterAttach (pathString, logic)
+
+        // Run before/after a logic store is unmounted in React
+        beforeUnmount (pathString, logic)
+        afterUnmount (pathString, logic)
+
+        // Run before/after a reducer is detached frm Redux
+        beforeDetach (pathString, logic)
+        afterDetach (pathString, logic)
+
+        // when wrapping a React component
+        beforeWrapper (input, Klass)
+        afterWrapper (input, Klass, Kea)
+
+        // Run after mounting and before rendering the component in React's scope (you can use hooks here)
+        beforeRender (logic, props)
+
+        // Run when we are removing kea from the system, e.g. when cleaning up after tests
+        beforeCloseContext (context)
+      }
+    }
   ]
 */
 
@@ -93,27 +94,42 @@ export const reservedProxiedKeys = [
 ]
 
 export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
+  const { name } = plugin
+
+  if (!name) {
+    throw new Error('[KEA] Tried to activate a plugin without a name!')
+  }
+
   pluginTarget.activated.push(plugin)
 
-  if (plugin.logicSteps) {
-    for (const key of Object.keys(plugin.logicSteps)) {
-      if (pluginTarget.logicSteps[key]) {
-        pluginTarget.logicSteps[key].push(plugin.logicSteps[key])
+  if (plugin.buildSteps) {
+    for (const key of Object.keys(plugin.buildSteps)) {
+      if (pluginTarget.buildSteps[key]) {
+        pluginTarget.buildSteps[key].push(plugin.buildSteps[key])
       } else {
-        pluginTarget.logicSteps[key] = [plugin.logicSteps[key]]
+        pluginTarget.buildSteps[key] = [plugin.buildSteps[key]]
       }
     }
   }
 
   if (plugin.defaults) {
-    const defaultKeys = Object.keys(plugin.defaults())
-    for (const key of defaultKeys) {
+    const fields = Object.keys(plugin.defaults())
+    for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
-        if (pluginTarget.logicKeys[key] || reservedKeys[key]) {
-          console.warn(`[KEA] Plugin "${plugin.name}" redefines logic key "${key}".`)
+        if (pluginTarget.logicFields[key] || reservedKeys[key]) {
+          console.error(`[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${pluginTarget.logicFields[key] || 'core'}`)
         }
       }
-      pluginTarget.logicKeys[key] = true
+      pluginTarget.logicFields[key] = plugin.name
+    }
+  }
+
+  if (plugin.events) {
+    for (const key of Object.keys(plugin.events)) {
+      if (!pluginTarget.events[key]) {
+        pluginTarget.events[key] = []
+      }
+      pluginTarget.events[key].push(plugin.events[key])
     }
   }
 }
@@ -121,20 +137,24 @@ export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
 // run plugins with this key with the rest of the arguments
 export function runPlugins (plugins, key, ...args) {
   if (getContext().options.debug) {
-    console.log(`[KEA] Event: ${key}`, { args })
+    console.log(`[KEA] Event: ${key}`, ...args)
   }
-  plugins && plugins.activated.forEach(p => p[key] && p[key](...args))
+  plugins && plugins.events[key] && plugins.events[key].forEach(p => p(...args))
 }
 
 // make a murky deep copy of the plugins object
 function copyPlugins (plugins) {
   let copy = {
     activated: [...plugins.activated],
-    logicSteps: {},
-    logicKeys: Object.assign({}, plugins.logicKeys)
+    buildSteps: {},
+    events: {},
+    logicFields: Object.assign({}, plugins.logicFields)
   }
-  for (let key of Object.keys(plugins.logicSteps)) {
-    copy.logicSteps[key] = [...plugins.logicSteps[key]]
+  for (let key of Object.keys(plugins.buildSteps)) {
+    copy.buildSteps[key] = [...plugins.buildSteps[key]]
+  }
+  for (let key of Object.keys(plugins.events)) {
+    copy.events[key] = [...plugins.events[key]]
   }
   return copy
 }
