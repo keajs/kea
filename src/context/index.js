@@ -39,7 +39,6 @@ export function openContext (options = {}) {
     },
 
     build: {
-      // TODO: how to clear memory of dynamic stores?
       cache: {},
     },
 
