@@ -1,6 +1,7 @@
 import corePlugin from '../core'
 import { activatePlugin, runPlugins } from '../plugins'
 import { kea } from '../index'
+import { getStore } from '../store'
 
 let context
 
@@ -22,7 +23,7 @@ export function openContext (options = {}) {
 
   // TODO: do something with initData
 
-  const { inputs, plugins, ...otherOptions } = options
+  const { inputs, plugins, createStore, ...otherOptions } = options
 
   const newContext = {
     plugins: {
@@ -80,10 +81,16 @@ export function openContext (options = {}) {
     runPlugins(context.plugins, 'afterOpenContext', context, options)
   }
 
+  if (createStore) {
+    getStore(typeof createStore === 'object' ? createStore : {})
+  }
+
   if (inputs) {
     context.inputs = { ...inputs }
     Object.values(context.inputs).forEach(kea) // call kea(input) for all inputs
   }
+
+  return context
 }
 
 export function closeContext () {
@@ -99,7 +106,7 @@ export function resetContext (options = {}) {
     closeContext()
   }
 
-  openContext(options)
+  return openContext(options)
 }
 
 export function withContext (code, options = {}) {

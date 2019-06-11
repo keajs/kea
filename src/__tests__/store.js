@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, getStore, resetContext, getContext } from '../index'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -98,4 +98,24 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   })
 
   wrapper.unmount()
+})
+
+test('can use createStore on resetContext', () => {
+  const context = resetContext({
+    createStore: true
+  })
+
+  expect(context).toBe(getContext())
+  expect(context.store).toBeDefined()
+  expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'scenes'])
+
+  const secondContext = resetContext({
+    createStore: {
+      paths: ['kea', 'scenes', 'parrots']
+    }
+  })
+
+  expect(secondContext).toBe(getContext())
+  expect(secondContext.store).toBeDefined()
+  expect(Object.keys(secondContext.store.getState()).sort()).toEqual(['kea', 'parrots', 'scenes'])
 })
