@@ -43,8 +43,8 @@ test('singleton logic has all the right properties', () => {
   })
 
   // check generic
-  expect(response._isKeaFunction).toBe(true)
-  expect(response._isKeaSingleton).toBe(true)
+  expect(response._isKea).toBe(true)
+  expect(response._isKeaWithKey).toBe(false)
   expect(response.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(response.connections)).toEqual(['scenes.homepage.index'])
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
@@ -119,8 +119,8 @@ test('it is not a singleton if there is a key', () => {
   })
 
   // check generic
-  expect(response._isKeaFunction).toBe(true)
-  expect(response._isKeaSingleton).toBe(false)
+  expect(response._isKea).toBe(true)
+  expect(response._isKeaWithKey).toBe(true)
   expect(response.path).not.toBeDefined()
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 

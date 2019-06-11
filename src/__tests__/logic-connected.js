@@ -65,8 +65,8 @@ test('connected props and actions get passed, reducers get added to the store', 
     }
   })
 
-  expect(secondLogic._isKeaFunction).toBe(true)
-  expect(secondLogic._isKeaSingleton).toBe(true)
+  expect(secondLogic._isKea).toBe(true)
+  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.connections).sort()).toEqual(['scenes.homepage.first', 'scenes.homepage.second'])
   expect(Object.keys(secondLogic.actions)).toEqual(['updateName'])
@@ -96,8 +96,8 @@ test('connected props and actions get passed, reducers get added to the store', 
     })
   })
 
-  expect(thirdLogic._isKeaFunction).toBe(true)
-  expect(thirdLogic._isKeaSingleton).toBe(true)
+  expect(thirdLogic._isKea).toBe(true)
+  expect(thirdLogic._isKeaWithKey).toBe(false)
   expect(thirdLogic.path).toEqual(['scenes', 'homepage', 'third'])
   expect(Object.keys(thirdLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
   expect(Object.keys(thirdLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -128,8 +128,8 @@ test('connected props and actions get passed, reducers get added to the store', 
     }
   })
 
-  expect(fourthLogic._isKeaFunction).toBe(true)
-  expect(fourthLogic._isKeaSingleton).toBe(true)
+  expect(fourthLogic._isKea).toBe(true)
+  expect(fourthLogic._isKeaWithKey).toBe(false)
   expect(fourthLogic.path).toBeDefined()
   expect(Object.keys(fourthLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
   expect(Object.keys(fourthLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -185,8 +185,8 @@ test('connected props can be used as selectors', () => {
     })
   })
 
-  expect(secondLogic._isKeaFunction).toBe(true)
-  expect(secondLogic._isKeaSingleton).toBe(true)
+  expect(secondLogic._isKea).toBe(true)
+  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -225,8 +225,8 @@ test('can get everything with *', () => {
     }
   })
 
-  expect(secondLogic._isKeaFunction).toBe(true)
-  expect(secondLogic._isKeaSingleton).toBe(true)
+  expect(secondLogic._isKea).toBe(true)
+  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['everything', 'name'])

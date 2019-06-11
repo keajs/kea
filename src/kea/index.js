@@ -112,9 +112,8 @@ export function kea (input) {
 
   const wrapper = createWrapperFunction(input)
 
-  // TODO: legacy names. remove/change them?
-  wrapper._isKeaFunction = true
-  wrapper._isKeaSingleton = !input.key
+  wrapper._isKea = true
+  wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
   wrapper._extendWith = []
   wrapper.extend = (extendedInput) => {
@@ -129,7 +128,7 @@ export function kea (input) {
     wrapper.withKey = keyCreator => {
       if (typeof keyCreator === 'function') {
         const buildWithProps = props => buildLogic({ input, key: keyCreator(props), props, extendedInputs: wrapper._extendWith })
-        buildWithProps._isKeaWithKey = true
+        buildWithProps._isKeaBuildWithProps = true
         return buildWithProps
       } else {
         return wrapper.buildWithKey(keyCreator)

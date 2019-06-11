@@ -295,8 +295,8 @@ test('extending logic merges the right properties', () => {
   })
 
   // check generic
-  expect(logic._isKeaFunction).toBe(true)
-  expect(logic._isKeaSingleton).toBe(true)
+  expect(logic._isKea).toBe(true)
+  expect(logic._isKeaWithKey).toBe(false)
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(logic.connections)).toEqual(['scenes.homepage.index'])
   expect(logic.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_BLUE: 'SOMETHING_BLUE', SOMETHING_ELSE: 'SOMETHING_ELSE' })
