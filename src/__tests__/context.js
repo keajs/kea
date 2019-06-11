@@ -33,8 +33,7 @@ test('getting and setting works', () => {
     },
 
     build: {
-      cache: {},
-      built: {}
+      cache: {}
     },
 
     mount: {

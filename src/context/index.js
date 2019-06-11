@@ -39,10 +39,8 @@ export function openContext (options = {}) {
     },
 
     build: {
-      // TODO: clean up the difference between cache & built!
       // TODO: how to clear memory of dynamic stores?
       cache: {},
-      built: {},
     },
 
     mount: {
