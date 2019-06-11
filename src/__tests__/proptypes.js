@@ -159,3 +159,46 @@ test('get connected proptyes', () => {
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
 })
+
+test('also works without proptypes', () => {
+  const store = getStore()
+  const logic = kea({
+    actions: () => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      something: ['bla'],
+      somethingElse: ['bla', {}],
+      somethingMore: ['bla', {
+        [actions.doSomething]: () => 'asd'
+      }],
+      evenMoreThings: ['whoop', { something: true }, {
+        [actions.doSomething]: () => 'boop'
+      }]
+    }),
+    selectors: ({ selectors }) => ({
+      summary: [
+        () => [selectors.somethingMore],
+        (somethingMore) => somethingMore.toUpperCase()
+      ]
+    })
+  })
+
+  logic.mount()
+
+  expect(logic.propTypes).toEqual({})
+
+  expect(logic.selectors.something(store.getState())).toEqual('bla')
+  expect(logic.selectors.somethingElse(store.getState())).toEqual('bla')
+  expect(logic.selectors.somethingMore(store.getState())).toEqual('bla')
+  expect(logic.selectors.evenMoreThings(store.getState())).toEqual('whoop')
+  expect(logic.selectors.summary(store.getState())).toEqual('BLA')
+
+  store.dispatch(logic.actions.doSomething())
+
+  expect(logic.selectors.something(store.getState())).toEqual('bla')
+  expect(logic.selectors.somethingElse(store.getState())).toEqual('bla')
+  expect(logic.selectors.somethingMore(store.getState())).toEqual('asd')
+  expect(logic.selectors.evenMoreThings(store.getState())).toEqual('boop')
+  expect(logic.selectors.summary(store.getState())).toEqual('ASD')
+})
