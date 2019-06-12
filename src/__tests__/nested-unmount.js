@@ -168,6 +168,7 @@ test('swapping out connected logic gives the right state', () => {
   wrapper.unmount()
 })
 
+// TODO: This works with react-redux 7.0, but fails with 7.1
 test('it also works with dynamic logic (with reducers)', () => {
   const store = getStore()
 
@@ -292,7 +293,9 @@ test('it also works with dynamic logic (with reducers)', () => {
 // TODO: This seems to be a bug or misunderstanding on how react-redux's subscriptions work.
 // Somehow the nested connect components' mapStateToProps gets only called once if we
 // run multiple actions in an onClick(() => { ... })
-test.skip('it also works with dynamic logic (without reducers)', () => {
+
+// TODO: This fails with react-redux 7.0 and 7.1
+test('it also works with dynamic logic (without reducers)', () => {
   const store = getStore()
 
   const containerLogic = kea({
