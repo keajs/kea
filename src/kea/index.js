@@ -218,7 +218,7 @@ function injectActionsIntoClass (Klass) {
 
 function proxyFieldToLogic (wrapper, key) {
   Object.defineProperty(wrapper, key, {
-    get: function actions () {
+    get: function () {
       return wrapper.build()[key]
     }
   })
