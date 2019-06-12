@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
 import Adapter from 'enzyme-adapter-react-16'
+import { act } from 'react-dom/test-utils'
 
 configure({ adapter: new Adapter() })
 
@@ -50,8 +51,6 @@ test('props hook works', () => {
     const { name, capitalizedName, upperCaseName } = useProps(logic)
     const { updateName } = useActions(logic)
 
-    console.log({ name, capitalizedName, upperCaseName })
-
     countRendered += 1
 
     return (
@@ -67,19 +66,21 @@ test('props hook works', () => {
 
   expect(countRendered).toEqual(0)
 
-  const wrapper = mount(
-    <Provider store={getContext().store}>
-      <SampleComponent id={12} />
-    </Provider>
-  )
+  let wrapper
+
+  act(() => {
+    wrapper = mount(
+      <Provider store={getContext().store}>
+        <SampleComponent id={12} />
+      </Provider>
+    )
+  })
 
   expect(countRendered).toEqual(1)
-  // console.log src/__tests__/hooks.js:53
-  //   { name: 'chirpy',
-  //     capitalizedName: 'Chirpy',
-  //     upperCaseName: 'CHIRPY' }
 
-  store.dispatch({ type: 'nothing', payload: { } })
+  act(() => {
+    store.dispatch({ type: 'nothing', payload: { } })
+  })
   expect(countRendered).toEqual(1)
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -89,30 +90,26 @@ test('props hook works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
-  store.dispatch(logic.actions.updateName('somename'))
+  act(() => {
+    store.dispatch(logic.actions.updateName('somename'))
+  })
 
   expect(countRendered).toEqual(2)
-  // console.log src/__tests__/hooks.js:53
-  //   { name: 'somename',
-  //     capitalizedName: 'Somename',
-  //     upperCaseName: 'SOMENAME' }
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
   expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
 
-  // this is to test that countRendered doesn't increase if the selector values don't change
-  // uncommenting this makes no difference to the error below
-  store.dispatch(logic.actions.updateName('somename'))
+  act(() => {
+    store.dispatch(logic.actions.updateName('somename'))
+  })
   expect(countRendered).toEqual(2)
 
-  store.dispatch(logic.actions.updateName('somename3'))
+  act(() => {
+    store.dispatch(logic.actions.updateName('somename3'))
+  })
   expect(countRendered).toEqual(3)
-  // console.log src/__tests__/hooks.js:53
-  //   { name: 'somename',  // !!! should be 'somename3'
-  //     capitalizedName: 'Somename3',
-  //     upperCaseName: 'SOMENAME3' }
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
 
