@@ -110,8 +110,8 @@ test('props hook works', () => {
   store.dispatch(logic.actions.updateName('somename3'))
   expect(countRendered).toEqual(3)
   // console.log src/__tests__/hooks.js:53
-  //   { name: 'somename3',
-  //     capitalizedName: 'Somename', // !!!
+  //   { name: 'somename',  // !!! should be 'somename3'
+  //     capitalizedName: 'Somename3',
   //     upperCaseName: 'SOMENAME3' }
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
