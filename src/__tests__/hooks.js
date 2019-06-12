@@ -47,7 +47,7 @@ test('props hook works', () => {
   let countRendered = 0
 
   function SampleComponent ({ id }) {
-    const { name, capitalizedName, upperCaseName } = useProps(logic)
+    const { capitalizedName, name, upperCaseName } = useProps(logic)
     const { updateName } = useActions(logic)
 
     console.log({ name, capitalizedName, upperCaseName })
@@ -74,6 +74,10 @@ test('props hook works', () => {
   )
 
   expect(countRendered).toEqual(1)
+  // console.log src/__tests__/hooks.js:53
+  //   { name: 'chirpy',
+  //     capitalizedName: 'Chirpy',
+  //     upperCaseName: 'CHIRPY' }
 
   store.dispatch({ type: 'nothing', payload: { } })
   expect(countRendered).toEqual(1)
@@ -86,13 +90,29 @@ test('props hook works', () => {
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
   store.dispatch(logic.actions.updateName('somename'))
-  expect(countRendered).toEqual(2)
 
+  expect(countRendered).toEqual(2)
+  // console.log src/__tests__/hooks.js:53
+  //   { name: 'somename',
+  //     capitalizedName: 'Somename',
+  //     upperCaseName: 'SOMENAME' }
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('somename')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
+
+  // this is to test that countRendered doesn't increase if the selector values don't change
+  // uncommenting this makes no difference to the error below
   store.dispatch(logic.actions.updateName('somename'))
   expect(countRendered).toEqual(2)
 
   store.dispatch(logic.actions.updateName('somename3'))
   expect(countRendered).toEqual(3)
+  // console.log src/__tests__/hooks.js:53
+  //   { name: 'somename3',
+  //     capitalizedName: 'Somename', // !!!
+  //     upperCaseName: 'SOMENAME3' }
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
 
@@ -100,7 +120,7 @@ test('props hook works', () => {
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename3')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3') // FAILS
   expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME3')
 
   wrapper.unmount()
