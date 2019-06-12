@@ -5,13 +5,17 @@ import { mountPaths, unmountPaths } from '../kea/mount'
 export function useProps(logic) {
   useMountedLogic(logic)
 
-  let response = {}
+  return useMemo(() => {
+    let response = {}
   
-  for (const key of Object.keys(logic.selectors)) {
-    response[key] = useSelector(logic.selectors[key])
-  }
+    for (const key of Object.keys(logic.selectors)) {
+      Object.defineProperty(response, key, {
+        get: () => useSelector(logic.selectors[key])
+      })
+    }
 
-  return response
+    return response
+  }, [])
 }
 
 export function useActions(logic) {
@@ -38,17 +42,3 @@ export function useMountedLogic(logic) {
   }
   useEffect(() => () => unmountPaths(logic), [])
 }
-
-// import { bindActionCreators } from 'redux'
-// import { useDispatch } from 'react-redux'
-// import { useMemo } from 'react'
-
-// export function useActions(actions, deps) {
-//   const dispatch = useDispatch()
-//   return useMemo(() => {
-//     if (Array.isArray(actions)) {
-//       return actions.map(a => bindActionCreators(a, dispatch))
-//     }
-//     return bindActionCreators(actions, dispatch)
-//   }, deps ? [dispatch, ...deps] : deps)
-// }
