@@ -47,7 +47,7 @@ test('props hook works', () => {
   let countRendered = 0
 
   function SampleComponent ({ id }) {
-    const { capitalizedName, name, upperCaseName } = useProps(logic)
+    const { name, capitalizedName, upperCaseName } = useProps(logic)
     const { updateName } = useActions(logic)
 
     console.log({ name, capitalizedName, upperCaseName })

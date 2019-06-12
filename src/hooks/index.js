@@ -4,29 +4,18 @@ import { useSelector, useDispatch } from 'react-redux'
 export function useProps (logic) {
   useMountedLogic(logic)
 
-  let response = {}
+  return useMemo(() => {
+    let response = {}
 
-  for (const key of Object.keys(logic.selectors)) {
-    response[key] = useSelector(logic.selectors[key])
-  }
+    for (const key of Object.keys(logic.selectors)) {
+      Object.defineProperty(response, key, {
+        get: () => useSelector(logic.selectors[key])
+      })
+    }
 
-  return response
+    return response
+  }, [])
 }
-// export function useProps (logic) {
-//   useMountedLogic(logic)
-
-//   return useMemo(() => {
-//     let response = {}
-
-//     for (const key of Object.keys(logic.selectors)) {
-//       Object.defineProperty(response, key, {
-//         get: () => useSelector(logic.selectors[key])
-//       })
-//     }
-
-//     return response
-//   }, [])
-// }
 
 export function useActions (logic) {
   useMountedLogic(logic)
