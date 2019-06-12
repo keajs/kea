@@ -4,6 +4,14 @@
 [![Backers on Open Collective](https://opencollective.com/kea/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/kea/sponsors/badge.svg)](#sponsors)
 
+## NB! Work in progress
+
+This branch (`master`) contains work in progress towards version 1.0. The documentation below has not been updated for the latest changes, but reflects the state at the latest pre-1.0 version, 0.28.7.
+
+[Click here](https://github.com/keajs/kea/tree/stable-0.28) to see the code for that version.
+
+Otherwise, feel free to experiment with the pre 1.0 beta version.
+
 
 ![Kea Logo](https://kea.js.org/img/logo.svg)
 
