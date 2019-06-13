@@ -6,7 +6,7 @@
 
 ## Status
 
-Kea 1.0 is a complete rewrite of what came before, adding several new features while retaining the bundle size.
+Kea 1.0 is a complete rewrite of what came before, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-beta.31).
 
 The latest beta (`1.0.0-beta.31`) is already very usable, but will still go through a bit of refactoring and performance tuning before the first RC is out. There is a bit of work still to be done with hooks as well.
 
