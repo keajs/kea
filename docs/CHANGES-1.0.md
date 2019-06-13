@@ -10,7 +10,9 @@ Kea 1.0 is a complete rewrite of what came before, adding several new features w
 
 The latest beta (`1.0.0-beta.31`) is already very usable, but will still go through a bit of refactoring and performance tuning before the first RC is out. There is a bit of work still to be done with hooks as well.
 
-Here are some of the changes.
+Here is a description of some of the changes.
+
+Follow along in [this issue](https://github.com/keajs/kea/issues/98) to be informed about progress.
 
 ## What changed?
 
