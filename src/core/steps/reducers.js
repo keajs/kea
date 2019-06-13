@@ -88,7 +88,7 @@ function createMappingReducer (mapping, defaultValue, key, logic) {
           state = defaultValue(fullState, logic.props)
         } else {
           if (process.env.NODE_ENV !== 'production') {
-            console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.path.join('.')}"`)
+            console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.pathString}"`)
           }
           state = undefined
         }

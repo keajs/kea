@@ -44,8 +44,7 @@ export function unmountPaths (logic, plugins = getContext().plugins) {
       runPlugins(plugins, 'afterUnmount', pathString, connectedLogic)
 
       if (typeof logic.key !== 'undefined') {
-        const pathString = logic.path.join('.')
-        clearBuildCache(pathString)
+        clearBuildCache(logic.pathString)
       }
     }
   }

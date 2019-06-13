@@ -83,6 +83,7 @@ import { getContext } from '../context'
 const reservedKeys = {
   key: true,
   path: true,
+  pathString: true,
   plugins: true,
   props: true,
   extend: true
@@ -90,7 +91,9 @@ const reservedKeys = {
 
 export const reservedProxiedKeys = [
   'path',
-  'plugins'
+  'pathString',
+  'plugins',
+  'props'
 ]
 
 export function activatePlugin (plugin, pluginTarget = getContext().plugins) {

@@ -27,8 +27,7 @@ test('getting and setting works', () => {
     },
 
     input: {
-      inputs: {},
-      inputIds: new Map(),
+      inputs: [],
       inlinePathCreators: new Map(),
       inlinePathCounter: 0
     },
@@ -131,7 +130,8 @@ test('context works with plugins', () => {
   })
 })
 
-test('inputIds works as expected', () => {
+// TODO: inputIds are removed, but we should test inlinePathCreators
+test.skip('inputIds works as expected', () => {
   expect(getContext()).not.toBeDefined()
 
   openContext()

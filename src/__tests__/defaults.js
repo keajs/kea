@@ -433,21 +433,21 @@ test('defaults from selectors in input.defaults without selector', () => {
   expect(wrapper.find('.directName').text()).toEqual('george')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'storedName' }, 2: { connectedName: 'storedName', directName: 'george' } } },
+    kea: { inline: { 2: { storedName: 'storedName' }, 1: { connectedName: 'storedName', directName: 'george' } } },
     scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' }, 2: { connectedName: 'storedName', directName: 'george' } } },
+    kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'storedName', directName: 'george' } } },
     scenes: {}
   })
 
   store.dispatch(singletonLogic.actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { storedName: 'birb' }, 2: { connectedName: 'birb', directName: 'birb' } } },
+    kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'birb', directName: 'birb' } } },
     scenes: {}
   })
 
@@ -604,8 +604,8 @@ test('defaults from selector that returns an object', () => {
   expect(store.getState()).toEqual({
     kea: {
       inline: {
-        1: { object: { propsName: 'henry', connectedName: 'george', directName: 'joe' } },
-        2: { propsName: 'henry', connectedName: 'george', directName: 'joe' }
+        1: { propsName: 'henry', connectedName: 'george', directName: 'joe' },
+        2: { object: { propsName: 'henry', connectedName: 'george', directName: 'joe' } }
       }
     },
     scenes: {}

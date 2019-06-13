@@ -34,8 +34,7 @@ export function openContext (options = {}) {
     },
 
     input: {
-      inputs: {},
-      inputIds: new Map(),
+      inputs: [],
       inlinePathCreators: new Map(),
       inlinePathCounter: 0
     },
@@ -87,8 +86,8 @@ export function openContext (options = {}) {
   }
 
   if (inputs) {
-    context.inputs = { ...inputs }
-    Object.values(context.inputs).forEach(kea) // call kea(input) for all inputs
+    context.inputs = [ ...inputs ]
+    context.inputs.forEach(kea) // call kea(input) for all inputs
   }
 
   return context
