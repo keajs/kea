@@ -111,6 +111,57 @@ function createWrapperFunction (input) {
   return wrapper
 }
 
+/*
+  Initialize logic and create a wrapper function that can be used to apply this
+  logic onto React components.
+
+  const logic = kea(input)
+
+  The wrapper will delegate all the fields of the logic onto the logic itself
+  and define a few functions to manipulate the logic's state on the context (e.g mounting)
+
+  NB! This list is a work in progress and will still change
+
+  Constants:
+
+  - logic._isKea
+  - logic._isKeaWithKey
+
+  Functions defined on all wrappers:
+
+  - logic.extend
+
+  Functions defined on wrappers with keys:
+
+  - logic.withKey
+  - logic.buildWithKey
+  - logic.mountWithKey
+
+  Functions defined on wrappers without keys:
+
+  - logic.isBuilt
+  - logic.build
+  - logic.mount
+
+  Delegated fields on wrappers without keys:
+
+  - logic.path
+  - logic.pathString
+  - logic.plugins
+  - logic.props
+
+  - logic.connections
+  - logic.constants
+  - logic.actions
+  - logic.defaults
+  - logic.reducers
+  - logic.reducerOptions
+  - logic.reducer
+  - logic.selector
+  - logic.selectors
+  - logic.propTypes
+
+*/
 export function kea (input) {
   // TODO: this might not be needed
   storeInputOnContext(input)
