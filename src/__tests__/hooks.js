@@ -15,7 +15,7 @@ beforeEach(() => {
   resetContext({ createStore: true })
 })
 
-test('props hook works', () => {
+test('useProps and useActions hooks works', () => {
   const store = getContext().store
   const logic = kea({
     path: () => ['scenes', 'hooky'],
@@ -59,7 +59,7 @@ test('props hook works', () => {
         <div className='name'>{name}</div>
         <div className='capitalizedName'>{capitalizedName}</div>
         <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className='updateName' onClick={() => updateName('bob')}>updateName</div>
       </div>
     )
   }
@@ -113,12 +113,20 @@ test('props hook works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
 
-  wrapper.render()
-
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('somename3')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3') // FAILS
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3')
   expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME3')
+
+  act(() => {
+    wrapper.find('.updateName').simulate('click')
+  })
+  expect(countRendered).toEqual(4)
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('bob')
+  expect(wrapper.find('.capitalizedName').text()).toEqual('Bob')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('BOB')
 
   wrapper.unmount()
 })
