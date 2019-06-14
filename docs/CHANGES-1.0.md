@@ -251,7 +251,7 @@ Kea now keeps track of what logic is currently in use (rendered on the screen) a
 
 This greatly helps plugin authors. For example `kea-saga` needed to integrate this tracking itself, greatly increasing the complexity of the code... and relying on dark magic to make it work. 
 
-Now for example to start or stop sagas when a component mounts, it just integrates the plugin hooks `afterMounted(pathString, logic)` and `afterUnmount(pathString, logic)`.
+Now for example to start or stop sagas when a component mounts, it just integrates the plugin hooks `afterMount(pathString, logic)` and `afterUnmount(pathString, logic)`.
 
 ### Preloaded state not supported for kea reducers
 
