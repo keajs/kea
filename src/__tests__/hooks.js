@@ -130,3 +130,5 @@ test('useProps and useActions hooks works', () => {
 
   wrapper.unmount()
 })
+
+// TODO: test for hooks with props

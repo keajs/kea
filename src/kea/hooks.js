@@ -34,6 +34,7 @@ export function useActions (logic, props) {
 }
 
 export function useMountedLogic (logic, props) {
+  // TODO: guard agains changing the key
   const unmount = useRef(undefined)
   if (!unmount.current) {
     unmount.current = logic.mount(props)
