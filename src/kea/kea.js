@@ -24,6 +24,7 @@ import { mountPaths, unmountPaths } from './mount'
   Default:
 
   - logic(Component) === logic.wrap(Component) 
+  - TODO: logic(props) === logic.build(props)
 
   Constants:
 
@@ -121,8 +122,7 @@ export function kea (input) {
 
     wrapper.isBuilt = (props) => {
       const { build: { cache } } = getContext()
-      const key = props && input.key ? input.key(props) : undefined
-      const pathString = getPathStringForInput(input, key)
+      const pathString = getPathStringForInput(input, props)
 
       return !!cache[pathString]
     }
