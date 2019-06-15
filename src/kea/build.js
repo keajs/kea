@@ -19,6 +19,7 @@ export function buildLogic ({ input, path, key, props, extendedInputs }) {
 
 function createBlankLogic ({ key, path, plugins, props }) {
   let logic = {
+    _isBuiltLogic: true,
     key,
     path,
     pathString: path.join('.'),

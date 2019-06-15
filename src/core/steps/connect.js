@@ -27,7 +27,7 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.actions)
 
     response.forEach(([otherLogic, from, to]) => {
-      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps) {
+      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps || otherLogic._isBuiltLogic) {
         let logicToConenct = otherLogic._isKeaBuildWithProps ? otherLogic(logic.props) : otherLogic
         if (logicToConenct.build && !logicToConenct.isBuilt()) {
           logicToConenct = logicToConenct.build()
@@ -44,7 +44,7 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.props)
 
     response.forEach(([otherLogic, from, to]) => {
-      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps) {
+      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps || otherLogic._isBuiltLogic) {
         let logicToConenct = otherLogic._isKeaBuildWithProps ? otherLogic(logic.props) : otherLogic
         if (logicToConenct.build && !logicToConenct.isBuilt()) {
           logicToConenct = logicToConenct.build()

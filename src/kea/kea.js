@@ -36,15 +36,8 @@ import { mountPaths, unmountPaths } from './mount'
   - logic.wrap(Component)
   - logic.extend(input)
 
-  Functions defined on wrappers with keys:
-
-  - logic.withKey(key || props => key)
-  - logic.buildWithKey(key)
-
-  Functions defined on wrappers without keys:
-
-  - logic.isBuilt(props)
   - logic.build(props)
+  - logic.isBuilt(props)
   - logic.mount(props)
 
   Delegated fields on wrappers without keys:
@@ -81,12 +74,19 @@ export function kea (input) {
 
   wrapper._extendWith = []
   wrapper.extend = (extendedInput) => {
-    // TODO: update for props on isBuilt
+    // TODO: update for props on isBuilt.... use isAnyBuilt?
     if (!input.key && wrapper.isBuilt()) {
       throw new Error('[KEA] Can not extend logic once it has been built!')
     }
     wrapper._extendWith.push(extendedInput)
     return wrapper
+  }
+
+  wrapper.isBuilt = (props) => {
+    const { build: { cache } } = getContext()
+    const pathString = getPathStringForInput(input, props)
+
+    return !!cache[pathString]
   }
 
   wrapper.build = (props) => {
@@ -101,23 +101,7 @@ export function kea (input) {
     return () => unmountPaths(logic, plugins)
   }
 
-
-
   if (input.key) {
-    wrapper.buildWithKey = (key) => {
-      return getBuiltLogic({ input, key, extendedInputs: wrapper._extendWith })
-    }
-
-    wrapper.withKey = keyCreator => {
-      if (typeof keyCreator === 'function') {
-        const buildWithProps = props => getBuiltLogic({ input, key: keyCreator(props), props, extendedInputs: wrapper._extendWith })
-        buildWithProps._isKeaBuildWithProps = true
-        return buildWithProps
-      } else {
-        return wrapper.buildWithKey(keyCreator)
-      }
-    }
-
     // TODO: this is a bit silly...
     if (input.constants) {
       wrapper.constants = {}
@@ -125,13 +109,6 @@ export function kea (input) {
     }  
   } else {
     const { options: { proxyFields } } = getContext()
-
-    wrapper.isBuilt = (props) => {
-      const { build: { cache } } = getContext()
-      const pathString = getPathStringForInput(input, props)
-
-      return !!cache[pathString]
-    }
 
     if (proxyFields) {
       const plugins = getLocalPlugins(input)

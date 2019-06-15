@@ -95,7 +95,7 @@ test('can mount lazy stores with keys and have them connet to redux without reac
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'chirpy' } } } })
 
-  store.dispatch(logic.withKey('testKey').actions.updateName('somename'))
+  store.dispatch(logic.build({ id: 'testKey' }).actions.updateName('somename'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'somename' } } } })
 
