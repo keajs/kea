@@ -21,7 +21,7 @@ export function createConnect (logic, input) {
     return
   }
 
-  const connect = typeof input.connect === 'function' ? input.connect(logic) : input.connect
+  const connect = typeof input.connect === 'function' ? input.connect(logic.props) : input.connect
 
   if (connect.actions) {
     const response = deconstructMapping(connect.actions)

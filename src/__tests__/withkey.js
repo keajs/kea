@@ -33,13 +33,12 @@ test('can use withkey for actions and props', () => {
   })
 
   const connectedLogic = kea({
-    // we pass on both id and connectedName here through props
-    connect: ({ props }) => ({
+    connect: ({ id, defaultName }) => ({
       props: [
-        dynamicLogic(props), ['name']
+        dynamicLogic({ id, defaultName }), ['name']
       ],
       actions: [
-        dynamicLogic(props), ['updateName']
+        dynamicLogic({ id, defaultName }), ['updateName']
       ]
     })
   })
