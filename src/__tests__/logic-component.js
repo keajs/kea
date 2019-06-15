@@ -419,7 +419,7 @@ test('dynamic reducer initial props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bird' } } } })
 
-  store.dispatch(dynamicLogic.buildWithKey(12).actions.updateName('birb'))
+  store.dispatch(dynamicLogic.build({ id: 12 }).actions.updateName('birb'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
 

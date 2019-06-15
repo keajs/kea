@@ -82,6 +82,7 @@ export function kea (input) {
 
   wrapper._extendWith = []
   wrapper.extend = (extendedInput) => {
+    // TODO: update for props on isBuilt
     if (!input.key && wrapper.isBuilt()) {
       throw new Error('[KEA] Can not extend logic once it has been built!')
     }
@@ -89,6 +90,20 @@ export function kea (input) {
     return wrapper
   }
 
+  wrapper.build = (props) => {
+    return getBuiltLogic({ input, props, extendedInputs: wrapper._extendWith })
+  }
+  
+  wrapper.mount = (props) => {
+    const logic = wrapper.build(props)
+    const plugins = getLocalPlugins(input)
+
+    mountPaths(logic, plugins)
+    return () => unmountPaths(logic, plugins)
+  }
+
+
+  
   if (input.key) {
     wrapper.buildWithKey = (key) => {
       return getBuiltLogic({ input, key, extendedInputs: wrapper._extendWith })
@@ -125,18 +140,6 @@ export function kea (input) {
       const pathString = getPathStringForInput(input, props)
 
       return !!cache[pathString]
-    }
-
-    wrapper.build = (props) => {
-      return getBuiltLogic({ input, extendedInputs: wrapper._extendWith, props })
-    }
-    
-    wrapper.mount = (props) => {
-      const logic = wrapper.build(props)
-      const plugins = getLocalPlugins(input)
-
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins)
     }
 
     if (proxyFields) {
