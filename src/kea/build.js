@@ -1,7 +1,7 @@
 import { runPlugins, getLocalPlugins } from '../plugins'
 
 // builds logic. does not check if it's built or already on the context
-export function buildLogic ({ input, path, key, props, extendedInputs }) {
+export function buildLogic ({ input, path, key, props, inputExtensions }) {
   const plugins = getLocalPlugins(input)
   let logic = createBlankLogic({ key, path, plugins, props })
 
@@ -9,7 +9,7 @@ export function buildLogic ({ input, path, key, props, extendedInputs }) {
 
   applyInputToLogic(logic, input)
 
-  const extend = (input.extend || []).concat(extendedInputs || [])
+  const extend = (input.extend || []).concat(inputExtensions || [])
   extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
   runPlugins(logic.plugins, 'afterBuild', logic, input)

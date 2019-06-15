@@ -34,11 +34,12 @@ import { mountPaths, unmountPaths } from './mount'
   Functions defined on all wrappers:
 
   - logic.wrap(Component)
-  - logic.extend(input)
 
   - logic.build(props)
   - logic.isBuilt(props)
   - logic.mount(props)
+
+  - logic.extend(input)
 
   Delegated fields on wrappers without keys:
 
@@ -93,7 +94,7 @@ export function kea (input) {
   }
 
   wrapper.build = (props) => {
-    return getBuiltLogic({ input, props, extendedInputs: wrapper._extendWith })
+    return getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
   }
   
   wrapper.mount = (props) => {
@@ -195,7 +196,7 @@ function createWrapFunction (input, wrapper) {
 
     const Kea = function (props) {
       // TODO: any better way to get it?
-      const logic = getBuiltLogic({ input, props, extendedInputs: wrapper._extendWith })
+      const logic = getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
 
       // inject proptypes to React.Component
       if (injectPropTypes && logic.propTypes) {
