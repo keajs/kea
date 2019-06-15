@@ -21,8 +21,10 @@ export function createConnect (logic, input) {
     return
   }
 
-  if (input.connect.actions) {
-    const response = deconstructMapping(input.connect.actions)
+  const connect = typeof input.connect === 'function' ? input.connect(logic) : input.connect
+
+  if (connect.actions) {
+    const response = deconstructMapping(connect.actions)
 
     response.forEach(([otherLogic, from, to]) => {
       if (otherLogic._isKea || otherLogic._isKeaBuildWithProps) {
@@ -38,8 +40,8 @@ export function createConnect (logic, input) {
     })
   }
 
-  if (input.connect.props) {
-    const response = deconstructMapping(input.connect.props)
+  if (connect.props) {
+    const response = deconstructMapping(connect.props)
 
     response.forEach(([otherLogic, from, to]) => {
       if (otherLogic._isKea || otherLogic._isKeaBuildWithProps) {
