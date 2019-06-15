@@ -14,7 +14,8 @@ import { addConnection } from '../shared/connect'
   logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
   logic.selectors = { chicken: (state) => state.scenes.farm }
 
-  // TODO: should we rename connect.props to connect.selectors ?
+  // TODO: should we rename connect.props to connect.selectors or something else?
+  // react gets the result as props... but we have "props" to mean something else...
 */
 export function createConnect (logic, input) {
   if (!input.connect) {
@@ -27,13 +28,12 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.actions)
 
     response.forEach(([otherLogic, from, to]) => {
-      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps || otherLogic._isBuiltLogic) {
-        let logicToConenct = otherLogic._isKeaBuildWithProps ? otherLogic(logic.props) : otherLogic
-        if (logicToConenct.build && !logicToConenct.isBuilt()) {
-          logicToConenct = logicToConenct.build()
+      if (otherLogic._isKea || otherLogic._isBuiltLogic) {
+        if (otherLogic.build && !otherLogic.isBuilt()) {
+          otherLogic = otherLogic.build()
         }
-        addConnection(logic, logicToConenct)
-        logic.actions[to] = logicToConenct.actions[from]
+        addConnection(logic, otherLogic)
+        logic.actions[to] = otherLogic.actions[from]
       } else {
         logic.actions[to] = otherLogic[from]
       }
@@ -44,16 +44,15 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.props)
 
     response.forEach(([otherLogic, from, to]) => {
-      if (otherLogic._isKea || otherLogic._isKeaBuildWithProps || otherLogic._isBuiltLogic) {
-        let logicToConenct = otherLogic._isKeaBuildWithProps ? otherLogic(logic.props) : otherLogic
-        if (logicToConenct.build && !logicToConenct.isBuilt()) {
-          logicToConenct = logicToConenct.build()
+      if (otherLogic._isKea || otherLogic._isBuiltLogic) {
+        if (otherLogic.build && !otherLogic.isBuilt()) {
+          otherLogic = otherLogic.build()
         }
-        addConnection(logic, logicToConenct)
-        logic.selectors[to] = from === '*' ? logicToConenct.selector : logicToConenct.selectors[from]
+        addConnection(logic, otherLogic)
+        logic.selectors[to] = from === '*' ? otherLogic.selector : otherLogic.selectors[from]
 
-        if (from !== '*' && typeof logicToConenct.propTypes[from] !== 'undefined') {
-          logic.propTypes[to] = logicToConenct.propTypes[from]
+        if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
+          logic.propTypes[to] = otherLogic.propTypes[from]
         }
       } else {
         logic.selectors[to] = from === '*' ? otherLogic : (state, props) => otherLogic(state, props)[from]
