@@ -21,6 +21,10 @@ import { mountPaths, unmountPaths } from './mount'
 
   NB! This list is a work in progress and will still change
 
+  Default:
+
+  - logic(Component) === logic.wrap(Component) 
+
   Constants:
 
   - logic._isKea
@@ -28,19 +32,20 @@ import { mountPaths, unmountPaths } from './mount'
 
   Functions defined on all wrappers:
 
-  - logic.extend
+  - logic.wrap(Component)
+  - logic.extend(input)
 
   Functions defined on wrappers with keys:
 
-  - logic.withKey
-  - logic.buildWithKey
-  - logic.mountWithKey
+  - logic.withKey(key || props => key)
+  - logic.buildWithKey(key)
+  - logic.mountWithKey(key)
 
   Functions defined on wrappers without keys:
 
-  - logic.isBuilt
-  - logic.build
-  - logic.mount
+  - logic.isBuilt(props)
+  - logic.build(props)
+  - logic.mount(props)
 
   Delegated fields on wrappers without keys:
 
@@ -65,10 +70,14 @@ export function kea (input) {
   // TODO: this might not be needed
   storeInputOnContext(input)
 
-  const wrapper = createWrapperFunction(input)
+  const wrapper = function (args) {
+    return wrapper.wrap(args)
+  }
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
+
+  wrapper.wrap = createWrapFunction(input, wrapper)
 
   wrapper._extendWith = []
   wrapper.extend = (extendedInput) => {
@@ -151,8 +160,8 @@ export function connect (input) {
   return kea({ connect: input })
 }
 
-function createWrapperFunction (input) {
-  const wrapper = (Klass) => {
+function createWrapFunction (input, wrapper) {
+  return (Klass) => {
     const plugins = getLocalPlugins(input)
 
     runPlugins(plugins, 'beforeWrapper', input, Klass)
@@ -248,8 +257,6 @@ function createWrapperFunction (input) {
     runPlugins(plugins, 'afterWrapper', input, Klass, Kea)
     return Kea
   }
-
-  return wrapper
 }
 
 function isStateless (Component) {
