@@ -33,12 +33,13 @@ test('can use withkey for actions and props', () => {
   })
 
   const connectedLogic = kea({
+    // we pass on both id and connectedName here through props
     connect: ({ props }) => ({
       props: [
-        dynamicLogic.build(props), ['name']
+        dynamicLogic(props), ['name']
       ],
       actions: [
-        dynamicLogic.build(props), ['updateName']
+        dynamicLogic(props), ['updateName']
       ]
     })
   })
@@ -63,7 +64,7 @@ test('can use withkey for actions and props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'defaultName' } } } })
 
-  store.dispatch(dynamicLogic.build({ id: 12 }).actions.updateName('birb'))
+  store.dispatch(dynamicLogic({ id: 12 }).actions.updateName('birb'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
 

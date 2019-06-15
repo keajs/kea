@@ -261,14 +261,14 @@ test('defaults from input.defaults selector', () => {
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(dynamicLogic.build({ id: 12 }).actions.updateStoredName('birb'))
+  store.dispatch(dynamicLogic({ id: 12 }).actions.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(dynamicLogic.build({ id: 12 }).actions.updateName('birb'))
+  store.dispatch(dynamicLogic({ id: 12 }).actions.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },

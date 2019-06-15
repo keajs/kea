@@ -24,7 +24,7 @@ import { mountPaths, unmountPaths } from './mount'
   Default:
 
   - logic(Component) === logic.wrap(Component) 
-  - TODO: logic(props) === logic.build(props)
+  - logic(props) === logic.build(props)
 
   Constants:
 
@@ -64,6 +64,9 @@ export function kea (input) {
   storeInputOnContext(input)
 
   const wrapper = function (args) {
+    if (typeof args === 'object' || typeof args === 'undefined') {
+      return wrapper.build(args)
+    }
     return wrapper.wrap(args)
   }
 

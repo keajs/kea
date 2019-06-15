@@ -223,7 +223,7 @@ test('can extend dynamic logic with extend:[]', () => {
     }]
   })
 
-  expect(Object.keys(logic.build({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend dynamic logic with .extend', () => {
@@ -239,7 +239,7 @@ test('can extend dynamic logic with .extend', () => {
     })
   })
 
-  expect(Object.keys(logic.build({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('extending logic merges the right properties', () => {
