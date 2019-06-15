@@ -145,22 +145,19 @@ function createWrapFunction (input, wrapper) {
     injectActionsIntoClass(Klass)
 
     let isUnmounting = {}
-    let lastState
-
-    // TODO: why is isUnmounting with a key, but lastState without?
-    // it seems to work, but why?
+    let lastState = {}
 
     const createConnect = reduxConnect(
       (state, ownProps) => {
         // At the moment when we unmount and detach from redux, react-redux will still be subscribed to the store
         // and will run this function to see if anything changed. Since we are detached from the store, all
         // selectors of this logic will crash. To avoid this, cache and return the last state.
-        // Nothing will be rendered anywa.
-        if (isUnmounting[input.key ? input.key(ownProps) : '*']) {
-          return lastState
+        // Nothing will be rendered anyway.
+        const key = input.key ? input.key(ownProps) : '*'
+        if (isUnmounting[key]) {
+          return lastState[key]
         }
 
-        // TODO: any better way to get it?
         const logic = getBuiltLogic({ input, props: ownProps })
 
         let resp = {}
@@ -168,12 +165,11 @@ function createWrapFunction (input, wrapper) {
           resp[key] = selector(state, ownProps)
         })
 
-        lastState = resp
+        lastState[key] = resp
 
         return resp
       },
       (dispatch, ownProps) => {
-        // TODO: any better way to get it?
         const logic = getBuiltLogic({ input, props: ownProps })
 
         let actions = Object.assign({}, ownProps.actions)
@@ -195,8 +191,12 @@ function createWrapFunction (input, wrapper) {
     let injectPropTypes = !isStateless(Klass)
 
     const Kea = function (props) {
-      // TODO: any better way to get it?
       const logic = getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
+      const pathString = useRef(logic.pathString)
+
+      if (pathString.current !== logic.pathString) {
+        throw new Error(`Changing the logic's key after rendering is not supported. From: ${pathString.current}, to: ${logic.pathString}.`)
+      }
 
       // inject proptypes to React.Component
       if (injectPropTypes && logic.propTypes) {
@@ -219,9 +219,9 @@ function createWrapFunction (input, wrapper) {
         isUnmounting[key] = true
         unmountPaths(logic, plugins)
         delete isUnmounting[key]
+        delete lastState[key]
       }, [])
 
-      // TODO: unmount & remount if path changed
       runPlugins(plugins, 'beforeRender', logic, props)
       return <Connect {...props} />
     }
