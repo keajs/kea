@@ -28,8 +28,6 @@ test('defaults from props for lazy', () => {
   const store = getStore()
 
   const singletonLogic = kea({
-    options: { lazy: true },
-
     path: () => ['scenes', 'dynamic'],
 
     actions: ({ constants }) => ({
@@ -300,9 +298,6 @@ test('defaults from props via input.defaults without selector', () => {
   const store = getStore()
 
   const lazyLogic = kea({
-    // must set as lazy as "props.defaultName" will throw otherwise
-    options: { lazy: true },
-
     actions: ({ constants }) => ({
       updateName: name => ({ name })
     }),

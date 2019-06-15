@@ -20,7 +20,6 @@ test('eager logic loading works', () => {
   const store = getStore()
 
   const logic = kea({
-    options: { lazy: false },
     path: () => ['scenes', 'eager'],
     actions: ({ constants }) => ({
       updateName: name => ({ name })
@@ -99,7 +98,6 @@ test('lazy logic loading works', () => {
   const store = getStore()
 
   const logic = kea({
-    options: { lazy: true },
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
       updateName: name => ({ name })

@@ -12,7 +12,6 @@ test('can mount lazy stores and have them connet to redux without react', () => 
   const store = getStore()
 
   const logic = kea({
-    options: { lazy: true },
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
       updateName: name => ({ name })
@@ -61,7 +60,6 @@ test('can mount lazy stores with keys and have them connet to redux without reac
   const store = getStore()
 
   const logic = kea({
-    options: { lazy: true },
     key: props => props.id,
     path: (key) => ['scenes', 'lazy', key],
     actions: ({ constants }) => ({
