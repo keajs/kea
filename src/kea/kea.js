@@ -96,14 +96,6 @@ export function kea (input) {
   wrapper.build = (props) => {
     return getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
   }
-  
-  wrapper.mount = (props) => {
-    const logic = wrapper.build(props)
-    const plugins = getLocalPlugins(input)
-
-    mountPaths(logic, plugins)
-    return () => unmountPaths(logic, plugins)
-  }
 
   if (input.key) {
     // TODO: this is a bit silly...

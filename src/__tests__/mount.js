@@ -8,7 +8,7 @@ beforeEach(() => {
   resetContext()
 })
 
-test('can mount lazy stores and have them connet to redux without react', () => {
+test('can mount stores and have them connect to redux without react', () => {
   const store = getStore()
 
   const logic = kea({
@@ -56,7 +56,7 @@ test('can mount lazy stores and have them connet to redux without react', () => 
   expect(store.getState()).toEqual({ kea: {}, scenes: {} })
 })
 
-test('can mount lazy stores with keys and have them connet to redux without react', () => {
+test('can mount stores with keys and have them connet to redux without react', () => {
   const store = getStore()
 
   const logic = kea({
@@ -91,7 +91,7 @@ test('can mount lazy stores with keys and have them connet to redux without reac
   // nothing yet in the store
   expect(store.getState()).toEqual({ kea: {}, scenes: {} })
 
-  const unmount = logic.mount({ id: 'testKey' })
+  const unmount = logic({ id: 'testKey' }).mount()
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'chirpy' } } } })
 

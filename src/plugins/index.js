@@ -93,7 +93,8 @@ export const reservedProxiedKeys = [
   'path',
   'pathString',
   'plugins',
-  'props'
+  'props',
+  'mount'
 ]
 
 export function activatePlugin (plugin, pluginTarget = getContext().plugins) {

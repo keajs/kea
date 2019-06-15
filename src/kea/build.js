@@ -1,4 +1,5 @@
 import { runPlugins, getLocalPlugins } from '../plugins'
+import { mountPaths, unmountPaths } from './mount'
 
 // builds logic. does not check if it's built or already on the context
 export function buildLogic ({ input, path, key, props, inputExtensions }) {
@@ -25,7 +26,11 @@ function createBlankLogic ({ key, path, plugins, props }) {
     pathString: path.join('.'),
     plugins,
     props,
-    extend: input => applyInputToLogic(logic, input)
+    extend: input => applyInputToLogic(logic, input),
+    mount: () => {
+      mountPaths(logic, plugins)
+      return () => unmountPaths(logic, plugins)
+    }
   }
 
   plugins.activated.forEach(p => p.defaults && Object.assign(logic, p.defaults()))
