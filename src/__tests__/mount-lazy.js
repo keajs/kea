@@ -62,7 +62,7 @@ test('can mount lazy stores with keys and have them connet to redux without reac
 
   const logic = kea({
     options: { lazy: true },
-    key: true,
+    key: props => props.id,
     path: (key) => ['scenes', 'lazy', key],
     actions: ({ constants }) => ({
       updateName: name => ({ name })
@@ -93,7 +93,7 @@ test('can mount lazy stores with keys and have them connet to redux without reac
   // nothing yet in the store
   expect(store.getState()).toEqual({ kea: {}, scenes: {} })
 
-  const unmount = logic.mountWithKey('testKey')
+  const unmount = logic.mount({ id: 'testKey' })
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'chirpy' } } } })
 

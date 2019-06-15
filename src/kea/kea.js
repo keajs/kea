@@ -40,7 +40,6 @@ import { mountPaths, unmountPaths } from './mount'
 
   - logic.withKey(key || props => key)
   - logic.buildWithKey(key)
-  - logic.mountWithKey(key)
 
   Functions defined on wrappers without keys:
 
@@ -103,7 +102,7 @@ export function kea (input) {
   }
 
 
-  
+
   if (input.key) {
     wrapper.buildWithKey = (key) => {
       return getBuiltLogic({ input, key, extendedInputs: wrapper._extendWith })
@@ -117,14 +116,6 @@ export function kea (input) {
       } else {
         return wrapper.buildWithKey(keyCreator)
       }
-    }
-
-    wrapper.mountWithKey = (key) => {
-      const plugins = getLocalPlugins(input)
-      const logic = wrapper.buildWithKey(key)
-
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins)
     }
 
     // TODO: this is a bit silly...
