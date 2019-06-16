@@ -149,6 +149,8 @@ test('can extend in plugins in beforeBuild', () => {
     }
   }
 
+  resetContext({ plugins: [testPlugin] })
+
   const logic = kea({
     actions: () => ({
       doit: true
@@ -175,6 +177,8 @@ test('can extend in plugins in buildSteps', () => {
     }
   }
 
+  resetContext({ plugins: [testPlugin] })
+
   const logic = kea({
     actions: () => ({
       doit: true
@@ -198,6 +202,8 @@ test('can extend in plugins in afterBuild', () => {
       }
     }
   }
+
+  resetContext({ plugins: [testPlugin] })
 
   const logic = kea({
     actions: () => ({

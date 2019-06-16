@@ -3,7 +3,7 @@ import { runPlugins } from '../plugins'
 
 import { getContext } from '../context'
 
-export function mountPaths (logic, plugins = getContext().plugins) {
+export function mountPaths (logic) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections)) {
@@ -11,7 +11,7 @@ export function mountPaths (logic, plugins = getContext().plugins) {
     if (counter[pathString] === 1) {
       const connectedLogic = logic.connections[pathString]
 
-      runPlugins(plugins, 'beforeMount', pathString, connectedLogic)
+      runPlugins('beforeMount', pathString, connectedLogic)
 
       mounted[pathString] = connectedLogic
 
@@ -19,12 +19,12 @@ export function mountPaths (logic, plugins = getContext().plugins) {
         attachReducer(connectedLogic)
       }
 
-      runPlugins(plugins, 'afterMount', pathString, connectedLogic)
+      runPlugins('afterMount', pathString, connectedLogic)
     }
   }
 }
 
-export function unmountPaths (logic, plugins = getContext().plugins) {
+export function unmountPaths (logic) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections).reverse()) {
@@ -32,7 +32,7 @@ export function unmountPaths (logic, plugins = getContext().plugins) {
     if (counter[pathString] === 0) {
       const connectedLogic = logic.connections[pathString]
 
-      runPlugins(plugins, 'beforeUnmount', pathString, connectedLogic)
+      runPlugins('beforeUnmount', pathString, connectedLogic)
 
       delete mounted[pathString]
       delete counter[pathString]
@@ -41,7 +41,7 @@ export function unmountPaths (logic, plugins = getContext().plugins) {
         detachReducer(connectedLogic)
       }
 
-      runPlugins(plugins, 'afterUnmount', pathString, connectedLogic)
+      runPlugins('afterUnmount', pathString, connectedLogic)
 
       if (typeof logic.key !== 'undefined') {
         clearBuildCache(logic.pathString)

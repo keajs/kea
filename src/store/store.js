@@ -51,7 +51,7 @@ export function getStore (opts = {}) {
   })
 
   // run pre-hooks
-  runPlugins(context.plugins, 'beforeReduxStore', options)
+  runPlugins('beforeReduxStore', options)
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
@@ -73,7 +73,7 @@ export function getStore (opts = {}) {
   context.store = store
 
   // run post-hooks
-  runPlugins(context.plugins, 'afterReduxStore', options, store)
+  runPlugins('afterReduxStore', options, store)
 
   return store
 }

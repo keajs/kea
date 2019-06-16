@@ -4,7 +4,7 @@ import { connect as reduxConnect } from 'react-redux'
 import { getContext } from '../context'
 
 import { createConstants } from '../core/steps/constants'
-import { getLocalPlugins, runPlugins, reservedProxiedKeys } from '../plugins'
+import { runPlugins, reservedProxiedKeys } from '../plugins'
 
 import { getBuiltLogic } from './logic'
 import { getPathStringForInput } from './path'
@@ -45,7 +45,6 @@ import { mountPaths, unmountPaths } from './mount'
 
   - logic.path
   - logic.pathString
-  - logic.plugins
   - logic.props
 
   - logic.connections
@@ -101,11 +100,9 @@ export function kea (input) {
       createConstants(wrapper, input)
     }  
   } else {
-    const { options: { proxyFields } } = getContext()
+    const { options: { proxyFields }, plugins: { logicFields } } = getContext()
 
     if (proxyFields) {
-      const plugins = getLocalPlugins(input)
-      const { logicFields } = plugins
       for (const key of Object.keys(logicFields)) {
         proxyFieldToLogic(wrapper, key)
       }
@@ -126,9 +123,7 @@ export function connect (input) {
 
 function createWrapFunction (input, wrapper) {
   return (Klass) => {
-    const plugins = getLocalPlugins(input)
-
-    runPlugins(plugins, 'beforeWrapper', input, Klass)
+    runPlugins('beforeWrapper', input, Klass)
 
     // make this.actions work if it's a React.Component we're operating with
     injectActionsIntoClass(Klass)
@@ -198,7 +193,7 @@ function createWrapFunction (input, wrapper) {
       if (firstRender.current) {
         firstRender.current = false
 
-        mountPaths(logic, plugins)
+        mountPaths(logic)
       }
 
       // unmount paths when component gets removed
@@ -206,19 +201,19 @@ function createWrapFunction (input, wrapper) {
         // set this as mapStateToProps can still run even if we have detached from redux
         const key = input.key ? input.key(props) : '*'
         isUnmounting[key] = true
-        unmountPaths(logic, plugins)
+        unmountPaths(logic)
         delete isUnmounting[key]
         delete lastState[key]
       }, [])
 
-      runPlugins(plugins, 'beforeRender', logic, props)
+      runPlugins('beforeRender', logic, props)
       return <Connect {...props} />
     }
 
     Kea._wrapper = wrapper
     Kea._wrappedKlass = Klass
 
-    runPlugins(plugins, 'afterWrapper', input, Klass, Kea)
+    runPlugins('afterWrapper', input, Klass, Kea)
     return Kea
   }
 }

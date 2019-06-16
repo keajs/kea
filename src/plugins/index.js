@@ -84,7 +84,6 @@ const reservedKeys = {
   key: true,
   path: true,
   pathString: true,
-  plugins: true,
   props: true,
   extend: true
 }
@@ -92,26 +91,26 @@ const reservedKeys = {
 export const reservedProxiedKeys = [
   'path',
   'pathString',
-  'plugins',
   'props',
   'mount'
 ]
 
-export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
+export function activatePlugin (plugin) {
+  const { plugins } = getContext()
   const { name } = plugin
 
   if (!name) {
     throw new Error('[KEA] Tried to activate a plugin without a name!')
   }
 
-  pluginTarget.activated.push(plugin)
+  plugins.activated.push(plugin)
 
   if (plugin.buildSteps) {
     for (const key of Object.keys(plugin.buildSteps)) {
-      if (pluginTarget.buildSteps[key]) {
-        pluginTarget.buildSteps[key].push(plugin.buildSteps[key])
+      if (plugins.buildSteps[key]) {
+        plugins.buildSteps[key].push(plugin.buildSteps[key])
       } else {
-        pluginTarget.buildSteps[key] = [plugin.buildSteps[key]]
+        plugins.buildSteps[key] = [plugin.buildSteps[key]]
       }
     }
   }
@@ -120,65 +119,29 @@ export function activatePlugin (plugin, pluginTarget = getContext().plugins) {
     const fields = Object.keys(plugin.defaults())
     for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
-        if (pluginTarget.logicFields[key] || reservedKeys[key]) {
-          console.error(`[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${pluginTarget.logicFields[key] || 'core'}`)
+        if (plugins.logicFields[key] || reservedKeys[key]) {
+          console.error(`[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
         }
       }
-      pluginTarget.logicFields[key] = plugin.name
+      plugins.logicFields[key] = plugin.name
     }
   }
 
   if (plugin.events) {
     for (const key of Object.keys(plugin.events)) {
-      if (!pluginTarget.events[key]) {
-        pluginTarget.events[key] = []
+      if (!plugins.events[key]) {
+        plugins.events[key] = []
       }
-      pluginTarget.events[key].push(plugin.events[key])
+      plugins.events[key].push(plugin.events[key])
     }
   }
 }
 
 // run plugins with this key with the rest of the arguments
-export function runPlugins (plugins, key, ...args) {
-  if (getContext().options.debug) {
+export function runPlugins (key, ...args) {
+  const { plugins, options: { debug } } = getContext()
+  if (debug) {
     console.log(`[KEA] Event: ${key}`, ...args)
   }
   plugins && plugins.events[key] && plugins.events[key].forEach(p => p(...args))
-}
-
-// make a murky deep copy of the plugins object
-function copyPlugins (plugins) {
-  let copy = {
-    activated: [...plugins.activated],
-    buildSteps: {},
-    events: {},
-    logicFields: Object.assign({}, plugins.logicFields)
-  }
-  for (let key of Object.keys(plugins.buildSteps)) {
-    copy.buildSteps[key] = [...plugins.buildSteps[key]]
-  }
-  for (let key of Object.keys(plugins.events)) {
-    copy.events[key] = [...plugins.events[key]]
-  }
-  return copy
-}
-
-// TODO: this needs to be cached somehow! Right now rebuilds too often if using any local plugins!
-export function getLocalPlugins (input) {
-  let { plugins } = getContext()
-
-  // return global (activated) plugins if no need to add local plugins
-  if (!input.plugins || input.plugins.length === 0) {
-    return plugins
-  }
-
-  // otherwise copy the global plugins...
-  let localPlugins = copyPlugins(plugins)
-
-  // and add all the local ones
-  for (let plugin of input.plugins) {
-    activatePlugin(plugin, localPlugins)
-  }
-
-  return localPlugins
 }

@@ -68,7 +68,7 @@ export function attachReducer (logic) {
   regenerateRootReducer(pathStart)
 
   if (attachStrategy === 'dispatch' || attachStrategy === 'replace') {
-    runPlugins(logic.plugins, 'beforeAttach', logic)
+    runPlugins('beforeAttach', logic)
 
     if (attachStrategy === 'dispatch') {
       store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
@@ -76,7 +76,7 @@ export function attachReducer (logic) {
       store && store.replaceReducer(combined)
     }
 
-    runPlugins(logic.plugins, 'afterAttach', logic)
+    runPlugins('afterAttach', logic)
   }
 }
 
@@ -126,7 +126,7 @@ export function detachReducer (logic) {
 
   if (detached) {
     if (detachStrategy === 'dispatch' || detachStrategy === 'replace') {
-      runPlugins(logic.plugins, 'beforeDetach', logic)
+      runPlugins('beforeDetach', logic)
   
       if (detachStrategy === 'dispatch') {
         store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
@@ -134,7 +134,7 @@ export function detachReducer (logic) {
         store && store.replaceReducer(combined)
       }
 
-      runPlugins(logic.plugins, 'afterDetach', logic)
+      runPlugins('afterDetach', logic)
     }
   }
 }

@@ -76,9 +76,7 @@ export function openContext (options = {}) {
     }
   }
 
-  if (context && context.plugins) {
-    runPlugins(context.plugins, 'afterOpenContext', context, options)
-  }
+  runPlugins('afterOpenContext', newContext, options)
 
   if (createStore) {
     getStore(typeof createStore === 'object' ? createStore : {})
@@ -88,8 +86,8 @@ export function openContext (options = {}) {
 }
 
 export function closeContext () {
-  if (context && context.plugins) {
-    runPlugins(context.plugins, 'beforeCloseContext', context)
+  if (context) {
+    runPlugins('beforeCloseContext', context)
   }
 
   context = undefined

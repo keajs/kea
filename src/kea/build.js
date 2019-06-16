@@ -1,39 +1,45 @@
-import { runPlugins, getLocalPlugins } from '../plugins'
+import { runPlugins } from '../plugins'
 import { mountPaths, unmountPaths } from './mount'
+import { getContext } from '../context'
 
 // builds logic. does not check if it's built or already on the context
 export function buildLogic ({ input, path, key, props, inputExtensions }) {
-  const plugins = getLocalPlugins(input)
-  let logic = createBlankLogic({ key, path, plugins, props })
+  let logic = createBlankLogic({ key, path, props })
 
-  runPlugins(logic.plugins, 'beforeBuild', logic, input)
+  runPlugins('beforeBuild', logic, input)
 
   applyInputToLogic(logic, input)
 
   const extend = (input.extend || []).concat(inputExtensions || [])
   extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
 
-  runPlugins(logic.plugins, 'afterBuild', logic, input)
+  runPlugins('afterBuild', logic, input)
 
   return logic
 }
 
-function createBlankLogic ({ key, path, plugins, props }) {
+function createBlankLogic ({ key, path, props }) {
   let logic = {
     _isBuiltLogic: true,
     key,
     path,
     pathString: path.join('.'),
-    plugins,
     props,
     extend: input => applyInputToLogic(logic, input),
     mount: () => {
-      mountPaths(logic, plugins)
-      return () => unmountPaths(logic, plugins)
+      mountPaths(logic)
+      return () => unmountPaths(logic)
     }
   }
 
-  plugins.activated.forEach(p => p.defaults && Object.assign(logic, p.defaults()))
+  const { plugins } = getContext()
+
+  for (const plugin of plugins.activated) {
+    if (plugin.defaults) {
+      const defaults = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
+      Object.assign(logic, defaults)
+    }
+  }
 
   return logic
 }
@@ -44,12 +50,12 @@ function applyInputToLogic (logic, input) {
   // In the end this object will be returned as `const logic = kea(input)`
 
   // Let's call all plugins that want to hook into this moment.
-  runPlugins(logic.plugins, 'beforeLogic', logic, input)
+  runPlugins('beforeLogic', logic, input)
 
-  const steps = logic.plugins.buildSteps
+  const { plugins: { buildSteps } } = getContext()
 
-  for (const step of Object.keys(steps)) {
-    for (const func of steps[step]) {
+  for (const step of Object.keys(buildSteps)) {
+    for (const func of buildSteps[step]) {
       func(logic, input)
     }
   }
@@ -59,7 +65,7 @@ function applyInputToLogic (logic, input) {
     logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   */
   logic.connections[logic.pathString] = logic
-  runPlugins(logic.plugins, 'afterLogic', logic, input)
+  runPlugins('afterLogic', logic, input)
 
   return logic
 }
