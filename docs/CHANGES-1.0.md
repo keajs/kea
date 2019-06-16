@@ -123,6 +123,12 @@ Until we have better documentation, the [plugins/index.js](https://github.com/ke
 
 I'm excited to see what you can come up with.
 
+#### Removed local plugins
+
+All plugins must now be defined on the context. You can no longer define individual plugins that run only on one logic store. `kea({ plugins: [doMagic] })` is thus no longer allowed.
+
+Instead, the recommended approach is to define all your plugins on the context and use only activate them if the input matches certain conditions (e.g. there is a `takeEvery` function defined).
+
 ### Default values via selectors
 
 You may now use *`selectors` as default values* in reducers and they will be used when the logic mounts. Using `props` here will work as well.
@@ -309,6 +315,43 @@ This is no longer necessary.
 Now all actions created by every individual keyed logic are unique and **`action.payload.key` doesn't exist anymore**.
 
 This does mean that you can't share actions between keyed logic like you could before. If you still need actions that are common to all instances of one keyed logic, create them in a separate `kea({})` call and connect to them from your keyed logic.
+
+### Direct access to constants no longer supported on keyed logic
+
+This still works:
+
+```js
+const logic = kea({
+  constants: () => ['SOMETHING', 'BLABLA']
+})
+
+logic.constants == { SOMETHING: 'SOMETHING', BLABLA: 'BLABLA' }
+```
+
+This used to work, but is no longer supported:
+
+```js
+const logic = kea({
+  key: props => props.id,
+  constants: () => ['SOMETHING', 'BLABLA']
+})
+
+logic.constants == undefined
+```
+
+You may still use constants from within the logic in dynamic logic, for example with reducers:
+
+```js
+const logic = kea({
+  key: props => props.id,
+  constants: () => ['SOMETHING', 'BLABLA'],
+  reducers: ({ constants }) => ({
+    bla: [contants.SOMETHING, { ... }]
+  })
+})
+```
+
+Simply you can no longer directly access constants on unbuilt keyed logic as a property.
 
 ### Removed `selectors.root`
 

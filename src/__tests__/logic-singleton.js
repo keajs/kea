@@ -122,7 +122,7 @@ test('it is not a singleton if there is a key', () => {
   expect(response._isKea).toBe(true)
   expect(response._isKeaWithKey).toBe(true)
   expect(response.path).not.toBeDefined()
-  expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+  expect(response.constants).not.toBeDefined()
 
   // actions
   expect(response.actions).not.toBeDefined()

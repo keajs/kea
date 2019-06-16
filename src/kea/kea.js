@@ -1,6 +1,5 @@
 import { getContext } from '../context'
 
-import { createConstants } from '../core/steps/constants'
 import { reservedProxiedKeys } from '../plugins'
 
 import { getBuiltLogic } from './logic'
@@ -78,13 +77,7 @@ export function kea (input) {
     return getBuiltLogic(wrapper.inputs, props)
   }
 
-  if (input.key) {
-    // TODO: this is a bit silly...
-    if (input.constants) {
-      wrapper.constants = {}
-      createConstants(wrapper, input)
-    }  
-  } else {
+  if (!input.key) {
     const { options: { proxyFields }, plugins: { logicFields } } = getContext()
 
     if (proxyFields) {
