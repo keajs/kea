@@ -32,7 +32,6 @@ function buildLogic ({ inputs, path, key, props }) {
   let logic = createBlankLogic({ key, path, props })
   setLogicDefaults(logic)
 
-  // TODO: add all inputs to events or fix some other way
   runPlugins('beforeBuild', logic, inputs)
 
   for (const input of inputs) {
