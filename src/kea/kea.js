@@ -4,7 +4,7 @@ import { createConstants } from '../core/steps/constants'
 import { reservedProxiedKeys } from '../plugins'
 
 import { getBuiltLogic } from './logic'
-import { wrapComponent } from './wrap'
+import { wrapComponent } from '../react/wrap'
 /*
   Initialize logic and create a wrapper function that can be used to apply this
   logic onto React components.

@@ -3,9 +3,6 @@ import { connect as reduxConnect } from 'react-redux'
 
 import { runPlugins } from '../plugins'
 
-import { getBuiltLogic } from './logic'
-import { mountPaths, unmountPaths } from './mount'
-
 export function wrapComponent (Component, wrapper) {
   const { inputs } = wrapper
   const input = inputs[0]
@@ -28,7 +25,7 @@ export function wrapComponent (Component, wrapper) {
         return lastState[key]
       }
 
-      const logic = getBuiltLogic(inputs, props)
+      const logic = wrapper.build(props)
 
       let resp = {}
       Object.entries(logic.selectors).forEach(([key, selector]) => {
@@ -40,7 +37,7 @@ export function wrapComponent (Component, wrapper) {
       return resp
     },
     (dispatch, props) => {
-      const logic = getBuiltLogic(inputs, props)
+      const logic = wrapper.build(props)
 
       let actions = Object.assign({}, props.actions)
 
@@ -61,7 +58,7 @@ export function wrapComponent (Component, wrapper) {
   let injectPropTypes = !isStateless(Component)
 
   const Kea = function (props) {
-    const logic = getBuiltLogic(inputs, props)
+    const logic = wrapper.build(props)
     const pathString = useRef(logic.pathString)
 
     if (pathString.current !== logic.pathString) {
@@ -75,11 +72,9 @@ export function wrapComponent (Component, wrapper) {
     }
 
     // mount paths only on first render
-    const firstRender = useRef(true)
-    if (firstRender.current) {
-      firstRender.current = false
-
-      mountPaths(logic)
+    const unmount = useRef(undefined)
+    if (!unmount.current) {
+      unmount.current = logic.mount()
     }
 
     // unmount paths when component gets removed
@@ -87,9 +82,10 @@ export function wrapComponent (Component, wrapper) {
       // set this as mapStateToProps can still run even if we have detached from redux
       const key = input.key ? input.key(props) : '*'
       isUnmounting[key] = true
-      unmountPaths(logic)
+      unmount.current(logic)
       delete isUnmounting[key]
       delete lastState[key]
+      unmount.current = undefined
     }, [])
 
     runPlugins('beforeRender', logic, props)
