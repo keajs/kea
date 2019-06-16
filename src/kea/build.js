@@ -7,6 +7,7 @@ export function buildLogic ({ inputs, path, key, props }) {
   const input = inputs[0]
   let logic = createBlankLogic({ key, path, props })
 
+  // TODO: add all inputs or fix some other way
   runPlugins('beforeBuild', logic, input)
 
   for (const input of inputs) {
