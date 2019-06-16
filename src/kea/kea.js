@@ -61,9 +61,6 @@ import { mountPaths, unmountPaths } from './mount'
 
 */
 export function kea (input) {
-  // TODO: this might not be needed
-  storeInputOnContext(input)
-
   const wrapper = function (args) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
@@ -252,8 +249,4 @@ function proxyFieldToLogic (wrapper, key) {
       return wrapper.build()[key]
     }
   })
-}
-
-function storeInputOnContext (input) {
-  getContext().input.inputs.push(input)
 }

@@ -23,7 +23,7 @@ export function openContext (options = {}) {
 
   // TODO: do something with initData
 
-  const { inputs, plugins, createStore, ...otherOptions } = options
+  const { plugins, createStore, ...otherOptions } = options
 
   const newContext = {
     plugins: {
@@ -34,7 +34,6 @@ export function openContext (options = {}) {
     },
 
     input: {
-      inputs: [],
       inlinePathCreators: new Map(),
       inlinePathCounter: 0
     },
@@ -83,11 +82,6 @@ export function openContext (options = {}) {
 
   if (createStore) {
     getStore(typeof createStore === 'object' ? createStore : {})
-  }
-
-  if (inputs) {
-    context.inputs = [ ...inputs ]
-    context.inputs.forEach(kea) // call kea(input) for all inputs
   }
 
   return context

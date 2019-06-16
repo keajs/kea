@@ -27,7 +27,6 @@ test('getting and setting works', () => {
     },
 
     input: {
-      inputs: [],
       inlinePathCreators: new Map(),
       inlinePathCounter: 0
     },
