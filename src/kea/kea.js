@@ -20,7 +20,6 @@ import { mountPaths, unmountPaths } from './mount'
   and define a few functions to manipulate the logic's state on the context (e.g mounting)
 
   NB! This list is a work in progress and will still change
-
   Default:
 
   - logic(Component) === logic.wrap(Component) 
@@ -31,15 +30,15 @@ import { mountPaths, unmountPaths } from './mount'
   - logic._isKea
   - logic._isKeaWithKey
 
-  Functions defined on all wrappers:
+  Functions defined on wrappers:
 
   - logic.wrap(Component)
-
   - logic.build(props)
-  - logic.isBuilt(props)
-  - logic.mount(props)
-
   - logic.extend(input)
+
+  Functions on built logic:
+
+  - logic.mount(props)
 
   Delegated fields on wrappers without keys:
 
@@ -70,27 +69,20 @@ export function kea (input) {
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
-  wrapper.wrap = createWrapFunction(input, wrapper)
+  wrapper.inputs = [input]
+  wrapper.wrap = createWrapFunction(wrapper)
 
-  wrapper._extendWith = []
   wrapper.extend = (extendedInput) => {
-    // TODO: update for props on isBuilt.... use isAnyBuilt?
-    if (!input.key && wrapper.isBuilt()) {
-      throw new Error('[KEA] Can not extend logic once it has been built!')
-    }
-    wrapper._extendWith.push(extendedInput)
+    // // TODO: update for props on isBuilt.... use isAnyBuilt?
+    // if (!input.key && wrapper.isBuilt()) {
+    //   throw new Error('[KEA] Can not extend logic once it has been built!')
+    // }
+    wrapper.inputs.push(extendedInput)
     return wrapper
   }
 
-  wrapper.isBuilt = (props) => {
-    const { build: { cache } } = getContext()
-    const pathString = getPathStringForInput(input, props)
-
-    return !!cache[pathString]
-  }
-
   wrapper.build = (props) => {
-    return getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
+    return getBuiltLogic(wrapper.inputs, props)
   }
 
   if (input.key) {
@@ -121,8 +113,11 @@ export function connect (input) {
   return kea({ connect: input })
 }
 
-function createWrapFunction (input, wrapper) {
+function createWrapFunction (wrapper) {
+  const { inputs } = wrapper
+
   return (Klass) => {
+    const input = inputs[0]
     runPlugins('beforeWrapper', input, Klass)
 
     // make this.actions work if it's a React.Component we're operating with
@@ -132,31 +127,31 @@ function createWrapFunction (input, wrapper) {
     let lastState = {}
 
     const createConnect = reduxConnect(
-      (state, ownProps) => {
+      (state, props) => {
         // At the moment when we unmount and detach from redux, react-redux will still be subscribed to the store
         // and will run this function to see if anything changed. Since we are detached from the store, all
         // selectors of this logic will crash. To avoid this, cache and return the last state.
         // Nothing will be rendered anyway.
-        const key = input.key ? input.key(ownProps) : '*'
+        const key = input.key ? input.key(props) : '*'
         if (isUnmounting[key]) {
           return lastState[key]
         }
 
-        const logic = getBuiltLogic({ input, props: ownProps })
+        const logic = getBuiltLogic(inputs, props)
 
         let resp = {}
         Object.entries(logic.selectors).forEach(([key, selector]) => {
-          resp[key] = selector(state, ownProps)
+          resp[key] = selector(state, props)
         })
 
         lastState[key] = resp
 
         return resp
       },
-      (dispatch, ownProps) => {
-        const logic = getBuiltLogic({ input, props: ownProps })
+      (dispatch, props) => {
+        const logic = getBuiltLogic(inputs, props)
 
-        let actions = Object.assign({}, ownProps.actions)
+        let actions = Object.assign({}, props.actions)
 
         Object.entries(logic.actions).forEach(([key, action]) => {
           actions[key] = (...args) => dispatch(action(...args))
@@ -175,7 +170,7 @@ function createWrapFunction (input, wrapper) {
     let injectPropTypes = !isStateless(Klass)
 
     const Kea = function (props) {
-      const logic = getBuiltLogic({ input, props, inputExtensions: wrapper._extendWith })
+      const logic = getBuiltLogic(inputs, props)
       const pathString = useRef(logic.pathString)
 
       if (pathString.current !== logic.pathString) {

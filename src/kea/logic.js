@@ -3,10 +3,11 @@ import { getContext } from '../context'
 import { getPathForInput } from './path'
 import { buildLogic } from './build'
 
-export function getBuiltLogic ({ input, props, inputExtensions }) {
+export function getBuiltLogic (inputs, props) {
+  const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
-  if (!key && input.key) {
+  if (input.key && typeof key === 'undefined') {
     throw new Error('[KEA] Must have key to build logic')
   }
 
@@ -17,14 +18,10 @@ export function getBuiltLogic ({ input, props, inputExtensions }) {
   const { build: { cache } } = getContext()
 
   if (!cache[pathString]) {
-    cache[pathString] = buildLogic({ input, path, key, props, inputExtensions })
+    cache[pathString] = buildLogic({ inputs, path, key, props })
   } else {
-    addPropsToLogic(cache[pathString], props)
+    cache[pathString].props = props
   }
 
   return cache[pathString]
-}
-
-export function addPropsToLogic (logic, props) {
-  logic.props = props
 }

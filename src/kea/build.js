@@ -3,15 +3,20 @@ import { mountPaths, unmountPaths } from './mount'
 import { getContext } from '../context'
 
 // builds logic. does not check if it's built or already on the context
-export function buildLogic ({ input, path, key, props, inputExtensions }) {
+export function buildLogic ({ inputs, path, key, props }) {
+  const input = inputs[0]
   let logic = createBlankLogic({ key, path, props })
 
   runPlugins('beforeBuild', logic, input)
 
-  applyInputToLogic(logic, input)
-
-  const extend = (input.extend || []).concat(inputExtensions || [])
-  extend.forEach(extendedInput => applyInputToLogic(logic, extendedInput))
+  for (const input of inputs) {
+    applyInputToLogic(logic, input)
+    if (input.extend) {
+      for (const input of input.extend) {
+        applyInputToLogic(logic, input)
+      }    
+    }
+  }
 
   runPlugins('afterBuild', logic, input)
 
