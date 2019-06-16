@@ -2,7 +2,7 @@ import { getContext } from '../context'
 
 import { reservedProxiedKeys } from '../plugins'
 
-import { getBuiltLogic } from './logic'
+import { getBuiltLogic } from './build'
 import { wrapComponent } from '../react/wrap'
 /*
   Initialize logic and create a wrapper function that can be used to apply this

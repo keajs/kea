@@ -1,9 +1,34 @@
 import { runPlugins } from '../plugins'
-import { mountPaths, unmountPaths } from './mount'
 import { getContext } from '../context'
 
+import { mountPaths, unmountPaths } from './mount'
+import { getPathForInput } from './path'
+
+export function getBuiltLogic (inputs, props) {
+  const input = inputs[0]
+  const key = props && input.key ? input.key(props) : undefined
+
+  if (input.key && typeof key === 'undefined') {
+    throw new Error('[KEA] Must have key to build logic')
+  }
+
+  // get a path for the input, even if no path was manually specified in the input
+  const path = getPathForInput(input, props)
+  const pathString = path.join('.')
+
+  const { build: { cache } } = getContext()
+
+  if (!cache[pathString]) {
+    cache[pathString] = buildLogic({ inputs, path, key, props })
+  } else {
+    cache[pathString].props = props
+  }
+
+  return cache[pathString]
+}
+
 // builds logic. does not check if it's built or already on the context
-export function buildLogic ({ inputs, path, key, props }) {
+function buildLogic ({ inputs, path, key, props }) {
   let logic = createBlankLogic({ key, path, props })
   setLogicDefaults(logic)
 
