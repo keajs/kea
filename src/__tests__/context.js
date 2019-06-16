@@ -129,34 +129,37 @@ test('context works with plugins', () => {
   })
 })
 
-// TODO: inputIds are removed, but we should test inlinePathCreators
-test.skip('inputIds works as expected', () => {
+test('inlinePathCreators work as expected', () => {
   expect(getContext()).not.toBeDefined()
 
   openContext()
   expect(getContext()).toBeDefined()
 
-  const { input: { inputIds } } = getContext()
+  const { input: { inlinePathCreators } } = getContext()
 
   const input = {
     path: () => ['kea', 'misc', 'blue']
   }
-  const logic = kea(input)
-  expect(inputIds.get(input)).toBe('kea.misc.blue')
+  kea(input).build()
+  expect(inlinePathCreators.get(input)).not.toBeDefined()
 
   const dynamicInput = {
-    key: true,
+    key: props => props.id,
     path: (key) => ['kea', 'misc', 'green', key]
   }
-  const dynamicLogic = kea(dynamicInput)
-  expect(inputIds.get(dynamicInput)).toBe('kea.misc.green.*')
+  kea(dynamicInput).build({ id: 12 })
+  expect(inlinePathCreators.get(dynamicInput)).not.toBeDefined()
 
   const pathlessInput1 = {}
-  const pathlessLogic1 = kea(pathlessInput1)
-  expect(inputIds.get(pathlessInput1)).toBe('kea.inline.1')
+  kea(pathlessInput1).build()
+  expect(inlinePathCreators.get(pathlessInput1)().join('.')).toBe('kea.inline.1')
 
   const pathlessInput2 = {}
-  const pathlessLogic2 = kea(pathlessInput2)
-  expect(inputIds.get(pathlessInput2)).toBe('kea.inline.2')
+  kea(pathlessInput2).build()
+  expect(inlinePathCreators.get(pathlessInput2)().join('.')).toBe('kea.inline.2')
+
+  const keyNoPathInput2 = { key: props => props.id }
+  kea(keyNoPathInput2).build({ id: 12 })
+  expect(inlinePathCreators.get(keyNoPathInput2)(12).join('.')).toBe('kea.inline.3.12')
 })
 
