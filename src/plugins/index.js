@@ -38,8 +38,8 @@ import { getContext } from '../context'
         // Run before we start doing anything
         beforeKea (input)
 
-        // before the steps to build the logic
-        beforeBuild (logic, input)
+        // before the steps to build the logic (gets an array of inputs from kea(input).extend(input))
+        beforeBuild (logic, inputs)
 
         // before the steps to convert input into logic (also run once per .extend())
         beforeLogic (logic, input)
@@ -48,7 +48,7 @@ import { getContext } from '../context'
         afterLogic (logic, input)
 
         // after the steps to build the logic
-        afterBuild (logic, input)
+        afterBuild (logic, inputs)
 
         // Run before/after a logic store is mounted in React
         beforeMount (pathString, logic)
@@ -85,6 +85,10 @@ const reservedKeys = {
   path: true,
   pathString: true,
   props: true,
+  
+  wrap: true,
+  build: true,
+  mount: true,
   extend: true
 }
 

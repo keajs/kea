@@ -64,17 +64,15 @@ export function kea (input) {
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
   wrapper.inputs = [input]
+  
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
+  wrapper.build = props => getBuiltLogic(wrapper.inputs, props)
 
   wrapper.extend = (extendedInput) => {
     // TODO: complain if extending something that is mounted
     // TODO: extend directly if already built
     wrapper.inputs.push(extendedInput)
     return wrapper
-  }
-
-  wrapper.build = (props) => {
-    return getBuiltLogic(wrapper.inputs, props)
   }
 
   if (!input.key) {
@@ -88,9 +86,9 @@ export function kea (input) {
         proxyFieldToLogic(wrapper, key)
       }
     }
-  }
 
-  getContext().options.autoMount && wrapper.mount && wrapper.mount()
+    getContext().options.autoMount && wrapper.mount && wrapper.mount()
+  }
 
   return wrapper
 }
