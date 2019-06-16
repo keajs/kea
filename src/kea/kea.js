@@ -68,10 +68,8 @@ export function kea (input) {
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
 
   wrapper.extend = (extendedInput) => {
-    // // TODO: update for props on isBuilt.... use isAnyBuilt?
-    // if (!input.key && wrapper.isBuilt()) {
-    //   throw new Error('[KEA] Can not extend logic once it has been built!')
-    // }
+    // TODO: complain if extending something that is mounted
+    // TODO: extend directly if already built
     wrapper.inputs.push(extendedInput)
     return wrapper
   }

@@ -8,7 +8,7 @@ beforeEach(() => {
   resetContext()
 })
 
-test('can not extend after having been built', () => {
+test.skip('can not extend when mounted', () => {
   const logic = kea({
     actions: () => ({
       doit: true
