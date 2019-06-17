@@ -16,7 +16,7 @@ beforeEach(() => {
 })
 
 test('useProps and useActions hooks works', () => {
-  const store = getContext().store
+  const { store } = getContext()
   const logic = kea({
     path: () => ['scenes', 'hooky'],
     actions: () => ({
@@ -131,4 +131,70 @@ test('useProps and useActions hooks works', () => {
   wrapper.unmount()
 })
 
-// TODO: test for hooks with props
+test('useProps and useActions hooks accept logic built with props', () => {
+  const { store } = getContext()
+  const logic = kea({
+    key: props => props.id,
+    path: key => ['scenes', 'hooky', key],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, props }) => ({
+      name: [props.defaultName, PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+    selectors: ({ selectors }) => ({
+      upperCaseName: [
+        () => [selectors.name],
+        (name) => {
+          return name.toUpperCase()
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+
+  function SampleComponent ({ id }) {
+    const innerLogic = logic({ id, defaultName: 'brad' }) 
+
+    const { name, upperCaseName } = useProps(innerLogic)
+    const { updateName } = useActions(innerLogic)
+
+    return (
+      <div>
+        <div className='id'>{id}</div>
+        <div className='name'>{name}</div>
+        <div className='upperCaseName'>{upperCaseName}</div>
+        <div className='updateName' onClick={() => updateName('eva')}>updateName</div>
+      </div>
+    )
+  }
+
+  let wrapper
+
+  act(() => {
+    wrapper = mount(
+      <Provider store={getContext().store}>
+        <SampleComponent id={12} />
+      </Provider>
+    )
+  })
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('brad')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+
+  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'brad' } } } })
+
+  act(() => {
+    wrapper.find('.updateName').simulate('click')
+  })
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('eva')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('EVA')
+
+  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'eva' } } } })
+})

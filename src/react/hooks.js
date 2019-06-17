@@ -1,8 +1,8 @@
 import { useMemo, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-export function useProps (logic, props) {
-  useMountedLogic(logic, props)
+export function useProps (logic) {
+  useMountedLogic(logic)
 
   return useMemo(() => {
     let response = {}
@@ -17,8 +17,8 @@ export function useProps (logic, props) {
   }, [])
 }
 
-export function useActions (logic, props) {
-  useMountedLogic(logic, props)
+export function useActions (logic) {
+  useMountedLogic(logic)
 
   const dispatch = useDispatch()
 
@@ -33,11 +33,12 @@ export function useActions (logic, props) {
   }, [dispatch])
 }
 
-export function useMountedLogic (logic, props) {
+export function useMountedLogic (logic) {
   // TODO: guard agains changing the key
   const unmount = useRef(undefined)
   if (!unmount.current) {
-    unmount.current = logic.mount(props)
+    unmount.current = logic.mount()
   }
+  
   useEffect(() => unmount.current, [])
 }
