@@ -14,7 +14,7 @@ export function useProps (logic) {
     }
 
     return response
-  }, [])
+  }, [logic.pathString])
 }
 
 export function useActions (logic) {
@@ -30,13 +30,19 @@ export function useActions (logic) {
     }
 
     return response
-  }, [dispatch])
+  }, [dispatch, logic.pathString])
 }
 
 export function useMountedLogic (logic) {
-  // TODO: guard agains changing the key
   const unmount = useRef(undefined)
+  const pathString = useRef(logic.pathString)
+
   if (!unmount.current) {
+    unmount.current = logic.mount()
+  }
+
+  if (pathString !== logic.pathString) {
+    unmount.current()
     unmount.current = logic.mount()
   }
   

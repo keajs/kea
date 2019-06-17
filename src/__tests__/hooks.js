@@ -167,7 +167,7 @@ test('useProps and useActions hooks accept logic built with props', () => {
         <div className='id'>{id}</div>
         <div className='name'>{name}</div>
         <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={() => updateName('eva')}>updateName</div>
+        <div className='updateName' onClick={() => updateName('fred')}>updateName</div>
       </div>
     )
   }
@@ -193,8 +193,127 @@ test('useProps and useActions hooks accept logic built with props', () => {
   })
 
   expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('eva')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('EVA')
+  expect(wrapper.find('.name').text()).toEqual('fred')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'eva' } } } })
+  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'fred' } } } })
+})
+
+test('can change key/path of logic once it has been accessed in a hook', () => {
+  const { store } = getContext()
+  const logic = kea({
+    key: props => props.id,
+    path: key => ['scenes', 'hooky', key],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, props }) => ({
+      name: [props.defaultName, PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    }),
+    selectors: ({ selectors }) => ({
+      upperCaseName: [
+        () => [selectors.name],
+        (name) => {
+          return name.toUpperCase()
+        },
+        PropTypes.string
+      ]
+    })
+  })
+
+  function SampleComponent ({ id }) {
+    const innerLogic = logic({ id, defaultName: 'brad' }) 
+
+    const { name, upperCaseName } = useProps(innerLogic)
+    const { updateName } = useActions(innerLogic)
+
+    return (
+      <div>
+        <div className='id'>{id}</div>
+        <div className='name'>{name}</div>
+        <div className='upperCaseName'>{upperCaseName}</div>
+        <div className='updateName' onClick={() => updateName('fred')}>updateName</div>
+      </div>
+    )
+  }
+
+  const togglerLogic = kea({
+    path: () => ['scenes', 'toggler'],
+    actions: () => ({
+      next: true
+    }),
+    reducers: ({ actions }) => ({
+      id: [12, {
+        [actions.next]: state => state + 1
+      }]
+    })
+  })
+
+  function TogglerComponent () {
+    const { id } = useProps(togglerLogic)
+    const { next } = useActions(togglerLogic)
+
+    return (
+      <div>
+        <SampleComponent id={id} />
+        <button className='next' onClick={next}>next</button>
+      </div>
+    )
+  }
+
+  let wrapper
+
+  act(() => {
+    wrapper = mount(
+      <Provider store={getContext().store}>
+        <TogglerComponent />
+      </Provider>
+    )
+  })
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('brad')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+
+  expect(store.getState()).toEqual({ 
+    kea: {}, 
+    scenes: { 
+      hooky: { 12: { name: 'brad' } },
+      toggler: { id: 12 }
+    }
+  })
+
+  act(() => {
+    wrapper.find('.updateName').simulate('click')
+  })
+
+  expect(wrapper.find('.id').text()).toEqual('12')
+  expect(wrapper.find('.name').text()).toEqual('fred')
+  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+
+  expect(store.getState()).toEqual({ 
+    kea: {}, 
+    scenes: { 
+      hooky: { 12: { name: 'fred' } },
+      toggler: { id: 12 }
+    }
+  })
+
+  act(() => {
+    wrapper.find('.next').simulate('click')
+  })
+
+  expect(wrapper.find('.id').text()).toEqual('13')
+  // expect(wrapper.find('.name').text()).toEqual('brad')
+  // expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+
+  expect(store.getState()).toEqual({ 
+    kea: {}, 
+    scenes: { 
+      hooky: { 13: { name: 'brad' } },
+      toggler: { id: 13 }
+    }
+  })
 })
