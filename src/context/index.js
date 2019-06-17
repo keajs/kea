@@ -21,9 +21,7 @@ export function openContext (options = {}) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  // TODO: do something with initData
-
-  const { plugins, createStore, ...otherOptions } = options
+  const { plugins, createStore, defaults, ...otherOptions } = options
 
   const newContext = {
     plugins: {
@@ -35,7 +33,8 @@ export function openContext (options = {}) {
 
     input: {
       inlinePathCreators: new Map(),
-      inlinePathCounter: 0
+      inlinePathCounter: 0,
+      defaults: defaults || undefined
     },
 
     build: {
@@ -59,6 +58,7 @@ export function openContext (options = {}) {
       debug: false,    
       autoMount: false,
       proxyFields: true,
+      flatDefaults: false,
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch',
 

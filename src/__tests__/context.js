@@ -28,7 +28,8 @@ test('getting and setting works', () => {
 
     input: {
       inlinePathCreators: new Map(),
-      inlinePathCounter: 0
+      inlinePathCounter: 0,
+      defaults: undefined
     },
 
     build: {
@@ -52,6 +53,7 @@ test('getting and setting works', () => {
       debug: false,
       autoMount: false,
       proxyFields: true,
+      flatDefaults: false,
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch'
     }    
@@ -163,3 +165,103 @@ test('inlinePathCreators work as expected', () => {
   expect(inlinePathCreators.get(keyNoPathInput2)(12).join('.')).toBe('kea.inline.3.12')
 })
 
+test('nested context defaults work', () => {
+  const { store } = resetContext({
+    defaults: {
+      scenes: { testy: { key: 'value', name: 'alfred', thisIs: 'missing' } }
+    },
+    createStore: true
+  })
+
+  expect(store.getState()).toEqual({
+    kea: {}, scenes: {}
+  })
+
+  const logic = kea({
+    path: () => ['scenes', 'testy'],
+    reducers: () => ({
+      key: ['noValue', {}],
+      name: ['batman', {}]
+    })
+  })
+
+  expect(store.getState()).toEqual({
+    kea: {}, scenes: {}
+  })
+
+  logic.mount()
+
+  expect(store.getState()).toEqual({
+    kea: {}, 
+    scenes: { testy: { key: 'value', name: 'alfred' } }
+  })
+
+  const logic2 = kea({
+    path: () => ['scenes', 'noDefaults'],
+    reducers: () => ({
+      key: ['noValue', {}],
+      name: ['batman', {}]
+    })
+  })
+
+  logic2.mount()
+
+  expect(store.getState()).toEqual({
+    kea: {}, 
+    scenes: { 
+      testy: { key: 'value', name: 'alfred' },
+      noDefaults: { key: 'noValue', name: 'batman' } 
+    }
+  })
+})
+
+test('flat context defaults work', () => {
+  const { store } = resetContext({
+    defaults: {
+      'scenes.testy': { key: 'value', name: 'alfred', thisIs: 'missing' }
+    },
+    flatDefaults: true,
+    createStore: true
+  })
+
+  expect(store.getState()).toEqual({
+    kea: {}, scenes: {}
+  })
+
+  const logic = kea({
+    path: () => ['scenes', 'testy'],
+    reducers: () => ({
+      key: ['noValue', {}],
+      name: ['batman', {}]
+    })
+  })
+
+  expect(store.getState()).toEqual({
+    kea: {}, scenes: {}
+  })
+
+  logic.mount()
+
+  expect(store.getState()).toEqual({
+    kea: {}, 
+    scenes: { testy: { key: 'value', name: 'alfred' } }
+  })
+
+  const logic2 = kea({
+    path: () => ['scenes', 'noDefaults'],
+    reducers: () => ({
+      key: ['noValue', {}],
+      name: ['batman', {}]
+    })
+  })
+
+  logic2.mount()
+
+  expect(store.getState()).toEqual({
+    kea: {}, 
+    scenes: { 
+      testy: { key: 'value', name: 'alfred' },
+      noDefaults: { key: 'noValue', name: 'batman' } 
+    }
+  })
+})
