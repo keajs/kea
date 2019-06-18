@@ -32,7 +32,7 @@ export function createConnect (logic, input) {
       if (otherLogic._isKea) {
         otherLogic = otherLogic(props)
       }
-      if (otherLogic._isBuiltLogic) {
+      if (otherLogic._isKeaBuild) {
         addConnection(logic, otherLogic)
         logic.actions[to] = otherLogic.actions[from]
       } else {
@@ -48,7 +48,7 @@ export function createConnect (logic, input) {
       if (otherLogic._isKea) {
         otherLogic = otherLogic(props)
       }
-      if (otherLogic._isBuiltLogic) {
+      if (otherLogic._isKeaBuild) {
         addConnection(logic, otherLogic)
         logic.selectors[to] = from === '*' ? otherLogic.selector : otherLogic.selectors[from]
 

@@ -56,7 +56,7 @@ function buildLogic ({ inputs, path, key, props }) {
 
 function createBlankLogic ({ key, path, props }) {
   let logic = {
-    _isBuiltLogic: true,
+    _isKeaBuild: true,
     key,
     path,
     pathString: path.join('.'),

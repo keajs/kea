@@ -5,12 +5,15 @@ import { reservedProxiedKeys } from '../plugins'
 import { getBuiltLogic } from './build'
 import { wrapComponent } from '../react/wrap'
 /*
-  const logic = kea(input)
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
   it around React components.
 
-  Default:
+  Logic Wrapper:
+
+  - const logic = kea(input)
+
+  Default behaviour (see below for explanations):
 
   - logic()          === logic.build()
   - logic(props)     === logic.build(props)
@@ -22,12 +25,17 @@ import { wrapComponent } from '../react/wrap'
   - logic.build(props)    # build logic; optionally using props
   - logic.extend(input)   # add more input; does not alter already built logic
 
+
+  Built Logic:
+
+  - builtLogic = logic(props) = logic.build(props)
+
   Functions on built logic:
 
   - builtLogic.mount()         # mount the logic and return a function to unmount
   - builtLogic.mount(callback) # mount, run callback and unmount immediately
 
-  Core fields on built logic:
+  Fields on built logic (core plugin):
 
   - builtLogic.path
   - builtLogic.pathString
@@ -44,8 +52,6 @@ import { wrapComponent } from '../react/wrap'
   - builtLogic.selectors
   - builtLogic.propTypes
 
-  - builtLogic._isBuiltLogic === true
-
   NB! If your input does not have a key, all the builtLogic fields can be directly
       accessed with logic.field (e.g. logic.actions). All these fields are
       automatically passed through logic.build(), so:
@@ -60,12 +66,14 @@ import { wrapComponent } from '../react/wrap'
   PS! Building logic is a fast operation. If we have already built the logic for the
       corresponding input and key combination (the key is derived from props), it
       will just be returned from the cache and connected with the new props. 
-      So feel free to call logic(props) as often as you need to.
+      Feel free to call logic(props) as often as you need to.
 
-  Constants:
+  Constants on logic wrappers and built logic:
 
-  - logic._isKea        # true always
-  - logic._isKeaWithKey # true if input has a `key` field
+  - logic._isKea           # true if logic wrapper
+  - logic._isKeaWithKey    # true if input has a `key` field
+
+  - builtLogic._isKeaBuild # true if built logic
 
 */
 export function kea (input) {
