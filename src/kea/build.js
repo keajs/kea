@@ -72,7 +72,6 @@ function createBlankLogic ({ key, path, props }) {
             unmountLogic(logic)
             return value
           })
-          // TODO: catch block
         }
 
         unmountLogic(logic)
