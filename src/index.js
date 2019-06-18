@@ -1,5 +1,5 @@
 export { kea, connect } from './kea'
-export { useProps, useActions, useMountedLogic } from './react/hooks'
+export { useProps, useAllProps, useActions, useMountedLogic, useKea } from './react/hooks'
 
 export { resetContext, openContext, closeContext, getContext } from './context'
 export { keaReducer, getStore, ATTACH_REDUCER, DETACH_REDUCER } from './store'

@@ -1,6 +1,12 @@
 import { useMemo, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { kea } from '../kea/kea'
+
+export function useKea (input, deps = []) {
+  return useMemo(() => kea(input), deps)
+}
+
 export function useProps (logic) {
   useMountedLogic(logic)
 
@@ -15,6 +21,17 @@ export function useProps (logic) {
 
     return response
   }, [logic.pathString])
+}
+
+export function useAllProps (logic) {
+  useMountedLogic(logic)
+
+  let response = {}
+  for (const key of Object.keys(logic.selectors)) {
+    response[key] = useSelector(logic.selectors[key])
+  }
+
+  return response
 }
 
 export function useActions (logic) {
