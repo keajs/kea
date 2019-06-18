@@ -143,3 +143,87 @@ test('can mount with callback', () => {
   // nothing in the store after unmounting
   expect(store.getState()).toEqual({ kea: {}, scenes: {} })
 })
+
+test('can mount with a promise', async () => {
+  const store = getStore()
+
+  const logic = kea({
+    path: () => ['scenes', 'lazy'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  // nothing yet in the store
+  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+
+  let callbackRan = false
+
+  const response = await logic.mount(() => {
+    return new Promise((resolve, reject) => {
+      expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
+
+      store.dispatch(logic.actions.updateName('somename'))
+    
+      expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
+      
+      callbackRan = true
+
+      resolve(5)
+    })
+  })
+
+  expect(callbackRan).toEqual(true)
+  expect(response).toEqual(5)
+
+  // nothing in the store after unmounting
+  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+})
+
+test('can mount with a async/await', async () => {
+  const store = getStore()
+
+  const logic = kea({
+    path: () => ['scenes', 'lazy'],
+    actions: ({ constants }) => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions, constants }) => ({
+      name: ['chirpy', PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  // nothing yet in the store
+  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+
+  let callbackRan = false
+
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+  const response = await logic.mount(async () => {
+    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
+
+    store.dispatch(logic.actions.updateName('somename'))
+
+    await delay(50)
+
+    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
+    
+    callbackRan = true
+
+    return 5
+  })
+
+  expect(callbackRan).toEqual(true)
+  expect(response).toEqual(5)
+
+  // nothing in the store after unmounting
+  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+})

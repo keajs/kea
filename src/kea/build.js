@@ -67,7 +67,13 @@ function createBlankLogic ({ key, path, props }) {
       if (callback) {
         const response = callback(logic)
 
-        // TODO: what if response is a promise? wait for it before unmounting!
+        if (response && response.then && typeof response.then === 'function') {
+          return response.then(value => {
+            unmountLogic(logic)
+            return value
+          })
+          // TODO: catch block
+        }
 
         unmountLogic(logic)
         return response
