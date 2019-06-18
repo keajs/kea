@@ -1,7 +1,7 @@
 import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 
-import { mountPaths, unmountPaths } from './mount'
+import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 
 export function getBuiltLogic (inputs, props) {
@@ -63,8 +63,8 @@ function createBlankLogic ({ key, path, props }) {
     props,
     extend: input => applyInputToLogic(logic, input),
     mount: () => {
-      mountPaths(logic)
-      return () => unmountPaths(logic)
+      mountLogic(logic)
+      return () => unmountLogic(logic)
     }
   }
 
