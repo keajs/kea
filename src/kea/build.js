@@ -62,8 +62,16 @@ function createBlankLogic ({ key, path, props }) {
     pathString: path.join('.'),
     props,
     extend: input => applyInputToLogic(logic, input),
-    mount: () => {
+    mount: (callback) => {
       mountLogic(logic)
+      if (callback) {
+        const response = callback(logic)
+
+        // TODO: what if response is a promise? wait for it before unmounting!
+
+        unmountLogic(logic)
+        return response
+      }
       return () => unmountLogic(logic)
     }
   }
