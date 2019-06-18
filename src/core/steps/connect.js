@@ -13,9 +13,6 @@ import { addConnection } from '../shared/connect'
   logic.connections = { 'scenes.farm': farmSceneLogic }
   logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
   logic.selectors = { chicken: (state) => state.scenes.farm }
-
-  // TODO: should we rename connect.props to connect.selectors or something else?
-  // react gets the result as props... but we have "props" to mean something else...
 */
 export function createConnect (logic, input) {
   if (!input.connect) {
