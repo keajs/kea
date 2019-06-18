@@ -7,6 +7,9 @@ Once we react 1.0 all deprecations will be removed and the project will switch t
 
 ## Uncommitted
 
+## 1.0.0-rc.1 - 2019-06-18
+There are too many changes to list here. See [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md) for a complete overview!
+
 ## 0.28.0 - 2018-02-07
 ### New feature
 - Added `logic.withKey(params => params.id)` that you can use to connect dynamic components. See [this comment](https://github.com/keajs/kea/issues/72#issuecomment-363857072) for more details.

@@ -4,13 +4,13 @@
 [![Backers on Open Collective](https://opencollective.com/kea/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/kea/sponsors/badge.svg)](#sponsors)
 
-## NB! Work in progress
+## NB! Work in progress... and already very usable.
 
-This branch (`master`) contains work in progress towards version 1.0. The documentation below has not been updated for the latest changes, but reflects the state at the latest pre-1.0 version, 0.28.7.
+This branch (`master`) contains work in progress towards version 1.0. The documentation below has not been updated for the latest changes, but reflects the state at the latest pre-1.0 version, 0.28.7. [Click here](https://github.com/keajs/kea/tree/stable-0.28) to see that version.
 
-[Click here](https://github.com/keajs/kea/tree/stable-0.28) to see the code for that version.
+The latest versions `1.0.0-rc.1` is already completely usable, if just a bit sparsely documented.
 
-Otherwise, feel free to experiment with the pre 1.0 beta version.
+See [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md) for a complete overview of what changed in 1.0 including instructions on how to install the latest version. Share your feedback [here](https://github.com/keajs/kea/issues/98).
 
 
 ![Kea Logo](https://kea.js.org/img/logo.svg)
