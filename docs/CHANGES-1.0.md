@@ -1,18 +1,28 @@
+**Updated 2019/06/18 with changes for `1.0.0-rc.1`**
+
 **Updated 2019/06/13 with changes for `1.0.0-beta.31`**
 
 **Updated 2019/04/28 with changes for `1.0.0-beta.15`**
+
+# What is Kea?
+
+If you're new to Kea, read this document for an introduction: _What is Kea and why you should be excited about it!_. (**TODO**)
+
+It describes what is Kea from first principles. Thus if you have never heard of Kea before, it's a good place to start. If you are already using Kea, check it out anyway, as it explains what makes the 1.0 release so special.
+
+Read below to see what changed compared to 0.28.7 in order to upgrade your apps.
 
 # Kea 1.0 changes
 
 ## Status
 
-Kea 1.0 is a complete rewrite of what came before, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-beta.31).
+Kea 1.0 is a *complete rewrite* of 0.28, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-rc.1).
 
-The latest beta (`1.0.0-beta.31`) is already very usable, but will still go through a bit of refactoring and performance tuning before the first RC is out. There is a bit of work still to be done with hooks as well.
+There are *almost* no breaking changes in the API for `kea()` and `connect()` calls. Most of the user facing changes have to do with the setup of Kea and with the plugin architecture. 
 
-Here is a description of some of the changes.
+Oh, and we have hooks now! :tada:
 
-Follow along in [this issue](https://github.com/keajs/kea/issues/98) to be informed about progress.
+Follow along in [this issue](https://github.com/keajs/kea/issues/98) to be informed about progress towards 1.0-FINAL.
 
 ## What changed?
 
@@ -30,7 +40,7 @@ const logic = kea({
   })
 })
 
-function NameComponent (props) {
+function NameComponent () {
   const { name } = useProps(logic)
   const { updateName } = useActions(logic)
 
@@ -43,13 +53,50 @@ function NameComponent (props) {
 }
 ```
 
-That's all there is to it. 
+That's all there is to it. No more magic strings inside `connect({ props: [] })`. Just destructure what you get from `useProps` and `useActions` and you're done.
 
-The logic is automatically mounted and unmounted with the component when you access it through hooks.
+Since these are hooks, you should follow the [rules of hooks](https://reactjs.org/docs/hooks-rules.html) and only define them at the top of your component.
 
-Currently we don't support hooks with keyed logic. That will change with one of the next beta releases.
+In addition, you **must** directly destructure what `getProps(logic)` returns and not store it in an object to use later. To do that, use `getAllProps(logic)` instead. See below for details.
 
-### Lazy logic by default
+Using hooks, the logic is automatically mounted and unmounted together with your component.
+
+#### Additional hooks
+
+In addition to `useProps` and `useActions` there are 3 other Hooks:
+
+* `useMountedLogic(logic)` - if you want to mount/unmount a logic manually with your component without fetching any props/actions from it, use this. An example use case is to start/stop sagas with your component. Combine it with `useKea` below for inline sagas!
+
+* `useAllProps(logic)` - the default `useProps` hook can **only** be used to destructure the props when getting them like in the example above. If you need to store all the props of a logic in an object for use later, use `const props = useAllProps(logic)` instead. This is because `useProps` actually returns [getters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) that call `react-redux`'s [useSelector](https://react-redux.js.org/next/api/hooks#useselector) under the hood.
+
+* `useKea(input, deps = [])` - calling `const logic = kea(input)` inside a React function will create a new logic every render, forgetting the state of the old one. That's not what you want. Use `const logic = useKea(input)` instead if you want to define new logic inside your functional component.
+
+```js
+function NameComponent () {
+  const logic = useKea({
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      name: ['Bob', {
+        [actions.updateName]: (_, payload) => payload.name
+      }]
+    })
+  })
+
+  const { name } = useProps(logic)
+  const { updateName } = useActions(logic)
+
+  return (
+    <div>
+      <div>Name: {name}</div>
+      <button onClick={() => updateName('George')}>Change</button>
+    </div>
+  )
+}
+```
+
+### Lazy logic
 
 In `0.28`, when you called `logic = kea({})`, we would immediately build the actions, reducers, selectors, sagas, etc and directly attach the logic to the Redux store. We would also never clean up after a logic was no longer in use, except for stopping sagas when components unmounted.
 
@@ -57,9 +104,11 @@ This system has been completely revamped.
 
 Kea's logic is now lazy by default. We automatically mount it when wrapping React components or use the hooks above... and we clean up after.
 
-### Context
+### Setup changes
 
-If you call `logic = kea({})`, we now store very little on the `logic` variable itself. Instead it keeps all its data on a context. A blank context is automatically created when you import `kea`, however sometimes you want more control and need to tweak the context directly. For example to add plugins, initial data, etc.
+#### Context
+
+If you call `logic = kea({})`, we now store very little on the `logic` variable (called a logic wrapper) itself. Instead we keeps all data on a separate context. A blank default context is automatically created when you import `kea`. However you probably want more control and have to tweak the context directly. For example to add plugins, defaults, etc.
 
 The best way it do it is to call `resetContext` at the top of your app.
 
@@ -72,11 +121,19 @@ resetContext({
 
 This greatly helps with server side rendering, as you have just one command to call to clean the cache for the next render.
 
-### getStore() is no longer needed
+#### getStore() is no longer needed
 
 Previously you initialized kea when creating the redux store with `getStore()` or even manually. Now kea is initalized with the context, so we could even build a redux store right then.
 
-Just pass `createStore: { /* true or arguments for getStore if any */ }` to `resetContext` and then in your `<App />` you can just do:
+Just do:
+
+```js
+resetContext({
+  createStore: { /* `true` or arguments for the old getStore if any */ }
+})
+```
+
+and then in your `<App />` fetch the store from the context:
 
 ```js
 function App ({ children }) {
@@ -88,6 +145,21 @@ function App ({ children }) {
   )
 )
 ```
+
+You can still use `getStore()` like before, just move the `plugins` key to `resetContext`.
+
+If you were setting up the store manually and attaching `keaReducer`s to it, place it after creation on Kea's context with:
+
+```js
+getContext().store = store
+```
+
+#### New setup instructions
+
+This means that to setup kea, all you need to do is:
+
+1. Call `resetContext()` somewhere high up in your app with all the plugins and options that you need. It no longer needs to be before the `kea()` calls, just before you start to render.
+2. Get the `store` from `getContext()` and pass it to react-redux's `<Provider>` that wraps your `<App />`.
 
 ### Everything is a plugin
 
@@ -113,13 +185,13 @@ logic.reducer = function() {}
 logic.selectors = { ... }
 ```
 
-This logic is then connected with redux and the data is passed on to your React components when requested.
+This logic is then attached to redux and the data is passed on to your React components when requested.
 
-It is now built in a completely extendable way. In fact, the core of kea itself is now implemented [as a plugin](https://github.com/keajs/kea/blob/master/src/core/index.js).
+This build process is now completely extendable. In fact, the core of kea itself is now implemented [as a plugin](https://github.com/keajs/kea/blob/master/src/core/index.js).
 
 You may create plugins that inject functionality between any of the build steps (`actions`, `selectors`, etc), define your own build steps that other plugins can then hook up to (`sagas`, `listeners`)... and listen in to any other kea event (`afterBuild`, `afterMount`, `afterOpenContext`, `beforeRender`, etc)
 
-Until we have better documentation, the [plugins/index.js](https://github.com/keajs/kea/blob/master/src/plugins/index.js) serves as the source of truth for this.
+Until we have better documentation, the [plugins/index.js](https://github.com/keajs/kea/blob/master/src/plugins/index.js) file serves as the source of truth for this.
 
 I'm excited to see what you can come up with.
 
@@ -127,9 +199,166 @@ I'm excited to see what you can come up with.
 
 All plugins must now be defined on the context. You can no longer define individual plugins that run only on one logic store. `kea({ plugins: [doMagic] })` is thus no longer allowed.
 
-Instead, the recommended approach is to define all your plugins on the context and use only activate them if the input matches certain conditions (e.g. there is a `takeEvery` function defined).
+Instead, the recommended approach is to define all your plugins on the context and use only activate them if the input matches certain conditions (e.g. a `takeEvery` function is defined on the input).
 
-### Default values via selectors
+### Build with props (replaces `logic.withKey`)
+
+**TL;DR:** Use `logic(props)` to build keyed logic with custom props. This operation is fast and you can do it as much as you like.
+
+Long version:
+
+Assuming you have a logic with a key:
+
+```js
+const faqLogic = kea({
+  key: props => props.id,
+  path: (key) => ['scenes', 'faq', id],
+  actions: () => ({
+    show: true,
+    hide: true,
+  }),
+  reducers: ({ actions }) => ({
+    isVisible: [false, {
+      [actions.show]: () => true,
+      [actions.hide]: () => false
+    }]
+  })
+})
+```
+
+*(See the point "Much much simpler dynamic/keyed logic" below if you're wondering where did `payload.key === key` go from the reducer...)*
+
+Let's build a `FaqComponent` that gets its fields its parent, but wants to show/hide itself dynamically:
+
+```js
+function FaqComponent ({ title, body, isVisible, actions: { show, hide } }) {
+  return (
+    <div>
+      <h1>{title}</h1>
+      {isVisible && <div>{body}</div>}
+      <button onClick={isVisible ? hide : show}>]
+        {isVisible ? 'Hide' : 'Show'}
+      </button>
+    </div>
+  )
+}
+const ConnectedFaqComponent = logic(FaqComponent)
+
+function AllFaqs () {
+  const faqs = [ /* { id, title, body }, ... */ ]
+
+  return (
+    <div>
+      {faqs.map(faq => (
+        <ConnectedFaqComponent key={id} {...faq} />
+      ))}
+    </div>
+  )
+}
+```
+
+This works. With hooks the same code looks like this:
+
+```js
+function FaqComponent ({ id, title, body }) {
+  const builtLogic = logic({ id }) // this is new!
+
+  const { isVisible } = useProps(builtLogic)
+  const { show, hide } = useActions(builtLogic)
+
+ return (
+    <div>
+      <h1>{title}</h1>
+      {isVisible && <div>{body}</div>}
+      <button onClick={isVisible ? hide : show}>]
+        {isVisible ? 'Hide' : 'Show'}
+      </button>
+    </div>
+  )
+}
+
+function AllFaqs () {
+  const faqs = [ /* { id, title, body }, ... */ ]
+
+  return (
+    <div>
+      {faqs.map(faq => (
+        <FaqComponent key={id} {...faq} />
+      ))}
+    </div>
+  )
+}
+```
+
+Passing props to `logic` builds it with those props attached. If your logic uses keys to initialize different versions based on the props, this is how you now do it.
+
+In addition to the props that are used to create the key, you can pass whichever other props
+and they will be accesible from within the logic itself, for example as default values to reducers:
+
+
+```js
+const faqLogic = kea({
+  key: props => props.id,
+  path: (key) => ['scenes', 'faq', id],
+  actions: () => ({
+    show: true,
+    hide: true,
+    editTitle: title => ({ title })
+  }),
+  reducers: ({ actions, props }) => ({
+    isVisible: [false, {
+      [actions.show]: () => true,
+      [actions.hide]: () => false
+    }],
+    title: [props.title || '', { // defaults to the title in the props
+      [actions.editTitle]: (_, payload) => payload.title
+    }]
+  })
+})
+```
+
+### Connect can be a function
+
+If you need to connect to logic with a key, you can now use the `{ connect: props => ({ }) }` format of connect:
+
+```js
+const faqImageLogic = kea({
+  connect: ({ id }) => ({
+    props: [
+      faqLogic({ id }), ['isVisible']
+    ]
+  }),
+  // other logic for the image...
+})
+
+function RawFaqImage ({ id, title, isVisible }) {
+  if (!isVisible) {
+    return null
+  }
+  return <img src={`/img/${id}.jpg`} alt={title} />
+}
+
+const FaqImage = faqImageLogic(RawFaqImage)
+
+function AllFaqs () {
+  const faqs = [ /* { id, title, body }, ... */ ]
+
+  return (
+    <div>
+      {faqs.map(faq => (
+        <>
+          <FaqImage key={id} {...faq} />
+          <FaqComponent key={id} {...faq} />
+        </>
+      ))}
+    </div>
+  )
+}
+```
+
+### New defaults API
+
+#### Default values via selectors on reducers
 
 You may now use *`selectors` as default values* in reducers and they will be used when the logic mounts. Using `props` here will work as well.
 
@@ -149,7 +378,7 @@ You may now use *`selectors` as default values* in reducers and they will be use
   })
 ```
 
-### Defaults with a new interface
+#### Defaults with a new interface
 
 You may also **optionally** define defaults for reducers using a new syntax:
 
@@ -196,6 +425,47 @@ Defaults defined via `defaults` hold priority to those defined as the first argu
 
 You still need to define some default value (and optionally a proptype) inside reducers. You can just now overwrite them with other data as needed with the `defaults` api.
 
+#### Defaults on the context (deprecating preloadedState for kea)
+
+To define defaults on the context, use the `defaults` key and an optional `flatDefaults` boolean:
+
+```js
+resetContext({
+  defaults: {
+    scenes: {
+      sceneName: {
+        index: {
+          key1: 'value1',
+          key2: 'value2',
+          key3: 'value3'
+        }
+      }
+    }
+  }
+})
+```
+
+or 
+
+```js
+resetContext({
+  defaults: {
+    'scenes.sceneName.index': {
+      key1: 'value1',
+      key2: 'value2',
+      key3: 'value3'
+    }
+  },
+  flatDefaults: true
+})
+```
+
+For a while kea has supported passing the `preloadedState` key to `getStore()` in order to initialize the state.
+
+Because logic is now lazy by default, we can't rely on what was in the Redux to still be there when the logic mounts. 
+
+Preloaded state for non-kea reducers (e.g. `router`) will still work without issues.
+
 ### Extend logic
 
 Up until a logic has been built and mounted, you can extend it:
@@ -229,7 +499,7 @@ Object.keys(logic.reducers) == ['counter', 'negativeCouter']
 
 Logic can also be extended like this from within certain events in plugins.
 
-### Use without React
+### Use (mount) without React
 
 If you have set up a kea context and connected to Redux, you can use kea without React.
 
@@ -251,6 +521,40 @@ const state = logic.selectors.getValue(store.getState())
 unmount()
 ```
 
+For keyed logic, you need to add a build step:
+
+```js
+const { store } = getContext()
+
+const logic = kea({ key: ({ id }) => id, /* some actions and reducers */})
+
+const builtLogic = logic({ id: 12 })
+
+const unmount = builtLogic.mount()
+
+store.dispatch(builtLogic.actions.someAction('value'))
+const state = builtLogic.selectors.getValue(store.getState())
+
+unmount()
+```
+
+Alternatively pass a callback to `mount(callback)` to execute it and unmount directly:
+
+```js
+const { store } = getContext()
+
+const logic = kea({ key: ({ id }) => id, /* some actions and reducers */})
+
+const result = logic({ id: 12 }).mount(builtLogic => {
+  store.dispatch(builtLogic.actions.someAction('value'))
+  const state = builtLogic.selectors.getValue(store.getState())
+
+  return state
+})
+```
+
+This callback can even be `async`.
+
 ### Track mounting and un-mounting of logic stores internally
 
 Kea now keeps track of what logic is currently in use (rendered on the screen) and which is not.
@@ -258,18 +562,6 @@ Kea now keeps track of what logic is currently in use (rendered on the screen) a
 This greatly helps plugin authors. For example `kea-saga` needed to integrate this tracking itself, greatly increasing the complexity of the code... and relying on dark magic to make it work. 
 
 Now for example to start or stop sagas when a component mounts, it just integrates the plugin hooks `afterMount(pathString, logic)` and `afterUnmount(pathString, logic)`.
-
-### Preloaded state not supported for kea reducers
-
-For a while kea has supported passing the `preloadedState` key to `getStore()` in order to initialize the state.
-
-Because of the new way we track mounting and unmounting of logic in `1.0.0-beta.14`, we can no longer rely on using `preloadedState` to inject defaults into kea logic. Instead you must use the new `defaults` key as described above.
-
-Preloaded state for non-kea reducers (so `router` in the example above) will still work without issues.
-
-It is however possible to initialise the defaults for logic based on data given to `preloadedState` with [a simple plugin](https://gist.github.com/mariusandra/770901945874dacd4fea3ab4cdf9b7d5).
-
-We might have support for setting defaults on the context without a plugin. Stay tuned.
 
 ### Much much simpler dynamic/keyed logic
 
@@ -378,7 +670,7 @@ These are in incubation for now and will be released soon. Either with 1.0 or so
 
 #### kea-next
 
-Next.js will be an officially first class citizen with Kea 1.0. I'm porting the [https://kea.js.org/](kea.js.org) website over to it.
+Next.js will be an officially first class citizen with Kea 1.0. I'm porting the [https://kea.js.org/](kea.js.org) website over to it. See [this repository](https://github.com/keajs/kea-next-test/) and its issue for the current status.
 
 #### kea-listeners
 
@@ -421,7 +713,7 @@ Built with `kea-listeners`, `kea-router` acts as a bridge between `kea`, `react-
   })
 ```
 
-It's pretty crude at this point. Proper pattern matching will come later.
+It's pretty crude at this point and might come out post 1.0. Proper pattern matching will come later.
 
 #### kea-immer
 
@@ -449,17 +741,17 @@ This is a WIP. Specify `{ immer: true }` to add mutation to your reducers:
 
 ### Old plugins upgraded
 
-`kea-saga`, `kea-thunk` and `kea-localstorage` have been upgraded to work with the latest 1.0 beta.
+`kea-saga`, `kea-thunk` and `kea-localstorage` have been upgraded to work with the latest 1.0 RC.
 
 ### Many edge case bugs are solved
 
-You don't want to know :D
+You don't want to know :).
 
 ## How to test?
 
 Make sure you're running `react-redux` version 7.1 or later and `react` version `16.8.3` or later.
 
-Upgrade all your packages to the latest beta versions:
+Upgrade all your packages to the latest RC (kea) or beta (plugins) versions:
 
 - kea: ![kea](https://img.shields.io/npm/v/kea/beta.svg)
 - kea-saga: ![kea](https://img.shields.io/npm/v/kea-saga/beta.svg)
