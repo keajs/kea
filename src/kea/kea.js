@@ -5,51 +5,67 @@ import { reservedProxiedKeys } from '../plugins'
 import { getBuiltLogic } from './build'
 import { wrapComponent } from '../react/wrap'
 /*
-  Initialize logic and create a wrapper function that can be used to apply this
-  logic onto React components.
-
   const logic = kea(input)
 
-  The wrapper will delegate all the fields of the logic onto the logic itself
-  and define a few functions to manipulate the logic's state on the context (e.g mounting)
+  Initializes logic and creates a wrapper that can be used to mount the logic or wrap
+  it around React components.
 
-  NB! This list is a work in progress and will still change
   Default:
 
+  - logic()          === logic.build()
+  - logic(props)     === logic.build(props)
   - logic(Component) === logic.wrap(Component) 
-  - logic(props) === logic.build(props)
-
-  Constants:
-
-  - logic._isKea
-  - logic._isKeaWithKey
 
   Functions defined on wrappers:
 
-  - logic.wrap(Component)
-  - logic.build(props)
-  - logic.extend(input)
+  - logic.wrap(Component) # wrap around a React component
+  - logic.build(props)    # build logic; optionally using props
+  - logic.extend(input)   # add more input; does not alter already built logic
 
   Functions on built logic:
 
-  - logic.mount(props)
+  - builtLogic.mount()         # mount the logic and return a function to unmount
+  - builtLogic.mount(callback) # mount, run callback and unmount immediately
 
-  Delegated fields on wrappers without keys:
+  Core fields on built logic:
 
-  - logic.path
-  - logic.pathString
-  - logic.props
+  - builtLogic.path
+  - builtLogic.pathString
+  - builtLogic.props
 
-  - logic.connections
-  - logic.constants
-  - logic.actions
-  - logic.defaults
-  - logic.reducers
-  - logic.reducerOptions
-  - logic.reducer
-  - logic.selector
-  - logic.selectors
-  - logic.propTypes
+  - builtLogic.connections
+  - builtLogic.constants
+  - builtLogic.actions
+  - builtLogic.defaults
+  - builtLogic.reducers
+  - builtLogic.reducerOptions
+  - builtLogic.reducer
+  - builtLogic.selector
+  - builtLogic.selectors
+  - builtLogic.propTypes
+
+  - builtLogic._isBuiltLogic === true
+
+  NB! If your input does not have a key, all the builtLogic fields can be directly
+      accessed with logic.field (e.g. logic.actions). All these fields are
+      automatically passed through logic.build(), so:
+
+      logic.actions === logic().actions === logic.build().actions
+
+      If your input has a key, you must build it with props before you can access
+      its fields:
+
+      logic(props).actions === logic.build(props).actions
+
+  PS! Building logic is a fast operation. If we have already built the logic for the
+      corresponding input and key combination (the key is derived from props), it
+      will just be returned from the cache and connected with the new props. 
+      So feel free to call logic(props) as often as you need to.
+
+  Constants:
+
+  - logic._isKea        # true always
+  - logic._isKeaWithKey # true if input has a `key` field
 
 */
 export function kea (input) {
@@ -69,8 +85,6 @@ export function kea (input) {
   wrapper.build = props => getBuiltLogic(wrapper.inputs, props)
 
   wrapper.extend = (extendedInput) => {
-    // TODO: complain if extending something that is mounted
-    // TODO: extend directly if already built
     wrapper.inputs.push(extendedInput)
     return wrapper
   }
