@@ -37,8 +37,8 @@ function buildLogic ({ inputs, path, key, props }) {
   for (const input of inputs) {
     applyInputToLogic(logic, input)
     if (input.extend) {
-      for (const input of input.extend) {
-        applyInputToLogic(logic, input)
+      for (const innerInput of input.extend) {
+        applyInputToLogic(logic, innerInput)
       }    
     }
   }
