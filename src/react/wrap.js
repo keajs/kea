@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
+import { getPathStringForInput } from '../kea/path'
 import { runPlugins } from '../plugins'
 
 export function wrapComponent (Component, wrapper) {
@@ -20,9 +21,10 @@ export function wrapComponent (Component, wrapper) {
       // and will run this function to see if anything changed. Since we are detached from the store, all
       // selectors of this logic will crash. To avoid this, cache and return the last state.
       // Nothing will be rendered anyway.
-      const key = input.key ? input.key(props) : '*'
-      if (isUnmounting[key]) {
-        return lastState[key]
+      const pathString = getPathStringForInput(input, props)
+
+      if (isUnmounting[pathString]) {
+        return lastState[pathString]
       }
 
       const logic = wrapper.build(props)
@@ -32,7 +34,7 @@ export function wrapComponent (Component, wrapper) {
         resp[key] = selector(state, props)
       })
 
-      lastState[key] = resp
+      lastState[pathString] = resp
 
       return resp
     },
@@ -61,10 +63,6 @@ export function wrapComponent (Component, wrapper) {
     const logic = wrapper.build(props)
     const pathString = useRef(logic.pathString)
 
-    if (pathString.current !== logic.pathString) {
-      throw new Error(`Changing the logic's key after rendering is not supported. From: ${pathString.current}, to: ${logic.pathString}.`)
-    }
-
     // inject proptypes to React.Component
     if (injectPropTypes && logic.propTypes) {
       injectPropTypes = false
@@ -80,13 +78,25 @@ export function wrapComponent (Component, wrapper) {
     // unmount paths when component gets removed
     useEffect(() => () => {
       // set this as mapStateToProps can still run even if we have detached from redux
-      const key = input.key ? input.key(props) : '*'
-      isUnmounting[key] = true
-      unmount.current(logic)
-      delete isUnmounting[key]
-      delete lastState[key]
-      unmount.current = undefined
+      isUnmounting[pathString.current] = true
+      unmount.current()
+      delete isUnmounting[pathString.current]
+      delete lastState[pathString.current]
     }, [])
+
+    // unmount and remount if logic path changed
+    if (pathString.current !== logic.pathString) {
+      // set this as mapStateToProps can still run even if we have detached from redux
+      isUnmounting[pathString.current] = true
+      unmount.current()
+
+      unmount.current = logic.mount()
+
+      delete isUnmounting[pathString.current]
+      delete lastState[pathString.current]
+
+      pathString.current = logic.pathString
+    }
 
     runPlugins('beforeRender', logic, props)
     return <Connect {...props} />
