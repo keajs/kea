@@ -93,3 +93,23 @@ test('connecting to something that does not exist gives an error', () => {
     }).build()
   }).toThrow("[KEA] Logic \"kea.inline.7\" can not connect to string to request action \"notThere\"")
 })
+
+test('reducers with undefined actions throw', () => {
+  const { store } = getContext()
+
+  const logic = kea({
+    actions: ({}) => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      thingie: [false, {
+        [actions.doSomething]: () => true,
+        [actions.nope]: () => false
+      }]
+    })
+  })
+
+  expect(() => {
+    logic.build()
+  }).toThrow("[KEA] Logic \"kea.inline.1\" reducer \"thingie\" is waiting for an action that is undefined: [do something (kea.inline.1), undefined]")
+})

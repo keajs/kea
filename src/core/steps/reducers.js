@@ -63,22 +63,18 @@ export function createReducers (logic, input) {
       }
 
       logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
-
-      warnIfUndefinedActionCreator(logic.reducers, key)
-    }
-  }
-}
-
-function warnIfUndefinedActionCreator (object, property) {
-  if (process.env.NODE_ENV !== 'production') {
-    if (object.undefined !== undefined) {
-      console.warn(`[KEA] A reducer with the property "${property}" is waiting for an action where its key is not defined.`)
     }
   }
 }
 
 // create reducer function from such an object { [action]: (state, payload) => state }
 function createMappingReducer (mapping, defaultValue, key, logic) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (typeof mapping.undefined !== 'undefined') {
+      throw new Error(`[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`)
+    }
+  }
+
   return (state, action, fullState) => {
     if (typeof state === 'undefined') {
       state = defaultValue
