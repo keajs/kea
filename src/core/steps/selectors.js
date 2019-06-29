@@ -38,6 +38,13 @@ export function createSelectors (logic, input) {
       logic.propTypes[key] = type
     }
 
+    if (process.env.NODE_ENV !== 'production') {
+      if (args.filter(a => typeof a !== 'function').length > 0) {
+        const msg = `[KEA] Logic "${logic.pathString}", selector "${key}" has incorrect input: [${args.map(a => typeof a).join(', ')}].`
+        throw new Error(msg)
+      }
+    }
+
     builtSelectors[key] = createSelector(...args, func)
     logic.selectors[key] = builtSelectors[key]
   })
