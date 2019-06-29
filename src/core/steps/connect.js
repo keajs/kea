@@ -26,6 +26,11 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.actions)
 
     response.forEach(([otherLogic, from, to]) => {
+      if (process.env.NODE_ENV !== 'production') {
+        if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
+          throw new Error(`[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request action "${from}"`)
+        }
+      }
       if (otherLogic._isKea) {
         otherLogic = otherLogic(props)
       }
@@ -35,6 +40,12 @@ export function createConnect (logic, input) {
       } else {
         logic.actions[to] = otherLogic[from]
       }
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (typeof logic.selectors[to] === 'undefined') {
+          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
+        }
+      }
     })
   }
 
@@ -42,6 +53,12 @@ export function createConnect (logic, input) {
     const response = deconstructMapping(connect.props)
 
     response.forEach(([otherLogic, from, to]) => {
+      if (process.env.NODE_ENV !== 'production') {
+        if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
+          throw new Error(`[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request prop "${from}"`)
+        }
+      }
+
       if (otherLogic._isKea) {
         otherLogic = otherLogic(props)
       }
@@ -54,6 +71,12 @@ export function createConnect (logic, input) {
         }
       } else {
         logic.selectors[to] = from === '*' ? otherLogic : (state, props) => otherLogic(state, props)[from]
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (typeof logic.selectors[to] === 'undefined') {
+          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to prop "${from}" returns 'undefined'`)
+        }
       }
     })
   }
