@@ -558,6 +558,10 @@ test('defaults from selector that returns an object', () => {
       actions: [randomStore, ['updateObject']]
     },
 
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
     defaults: ({ selectors }) => selectors.object,
 
     reducers: ({ actions }) => ({
