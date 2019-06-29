@@ -42,7 +42,7 @@ export function createConnect (logic, input) {
       }
 
       if (process.env.NODE_ENV !== 'production') {
-        if (typeof logic.selectors[to] === 'undefined') {
+        if (typeof logic.actions[to] === 'undefined') {
           throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
         }
       }
