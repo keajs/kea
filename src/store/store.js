@@ -7,7 +7,9 @@ import { getContext } from '../context'
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
 
-const defaultOptions = {
+// this must be a function as we need new objects every time
+// otherwise it could happen that the "middleware" array gets mutated on the default
+const defaultOptions = () => ({
   paths: ['kea', 'scenes'],
   reducers: {},
   preloadedState: undefined,
@@ -15,7 +17,7 @@ const defaultOptions = {
   compose: reduxDevToolsCompose,
   enhancers: [],
   plugins: []
-}
+})
 
 export function getStore (opts = {}) {
   const context = getContext()
@@ -31,7 +33,7 @@ export function getStore (opts = {}) {
   }
 
   // clone options
-  let options = Object.assign({}, defaultOptions, opts)
+  let options = Object.assign({}, defaultOptions(), opts)
 
   if (process.env.NODE_ENV !== 'production') {
     if (options.plugins.length > 0) {
