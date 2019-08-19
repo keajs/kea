@@ -6,6 +6,7 @@ import { createReducers } from './steps/reducers'
 import { createReducer } from './steps/reducer'
 import { createReducerSelectors } from './steps/reducer-selectors'
 import { createSelectors } from './steps/selectors'
+import { createValues } from './steps/values'
 
 // core plugin
 export default {
@@ -21,6 +22,7 @@ export default {
     reducer: undefined,
     selector: undefined,
     selectors: {},
+    values: {},
     propTypes: {}
   }),
 
@@ -32,6 +34,7 @@ export default {
     reducers: createReducers,
     reducer: createReducer,
     reducerSelectors: createReducerSelectors,
-    selectors: createSelectors
+    selectors: createSelectors,
+    values: createValues
   }
 }
