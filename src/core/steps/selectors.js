@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect'
-import { getContext } from '../../context'
-
-const getStoreState = () => getContext().store.getState()
+import { getStoreState } from '../../context'
 
 /*
   input.selectors = ({ selectors }) => ({

@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect'
-import { getContext } from '../../context'
-
-const getStoreState = () => getContext().store.getState()
+import { getStoreState } from '../../context'
 
 export function createValues (logic, input) {
   if (Object.keys(logic.selectors).length === 0) {

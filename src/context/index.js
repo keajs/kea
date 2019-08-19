@@ -12,6 +12,8 @@ export function getContext () {
   return context
 }
 
+export const getStoreState = () => getContext().store.getState()
+
 export function setContext (newContext) {
   context = newContext
 }
