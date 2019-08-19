@@ -1,4 +1,7 @@
 import { createSelector } from 'reselect'
+import { getContext } from '../../context'
+
+const getStoreState = () => getContext().store.getState()
 
 /*
   logic.reducers = { duckId: function () {} }
@@ -12,7 +15,7 @@ export function createReducerSelectors (logic, input) {
     return
   }
 
-  logic.selector = state => pathSelector(logic.path, state)
+  logic.selector = (state = getStoreState()) => pathSelector(logic.path, state)
 
   Object.keys(logic.reducers).forEach(key => {
     logic.selectors[key] = createSelector(logic.selector, state => state[key])

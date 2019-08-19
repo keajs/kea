@@ -1,4 +1,7 @@
 import { createSelector } from 'reselect'
+import { getContext } from '../../context'
+
+const getStoreState = () => getContext().store.getState()
 
 /*
   input.selectors = ({ selectors }) => ({
@@ -45,7 +48,7 @@ export function createSelectors (logic, input) {
       }
     }
 
-    builtSelectors[key] = createSelector(...args, func)
+    builtSelectors[key] = (state = getStoreState(), props = logic.props) => createSelector(...args, func)(state, props)
     logic.selectors[key] = builtSelectors[key]
   })
 }
