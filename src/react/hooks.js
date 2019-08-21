@@ -7,7 +7,7 @@ export function useKea (input, deps = []) {
   return useMemo(() => kea(input), deps)
 }
 
-export function useProps (logic) {
+export function useValues (logic) {
   useMountedLogic(logic)
 
   return useMemo(() => {
@@ -23,7 +23,7 @@ export function useProps (logic) {
   }, [logic.pathString])
 }
 
-export function useAllProps (logic) {
+export function useAllValues (logic) {
   useMountedLogic(logic)
 
   let response = {}

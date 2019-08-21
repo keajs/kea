@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, useProps, useAllProps, useActions, useKea, getContext, resetContext } from '../index'
+import { kea, useValues, useAllValues, useActions, useKea, getContext, resetContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -15,7 +15,7 @@ beforeEach(() => {
   resetContext({ createStore: true })
 })
 
-test('useProps and useActions hooks works', () => {
+test('useValues and useActions hooks works', () => {
   const { store } = getContext()
   const logic = kea({
     path: () => ['scenes', 'hooky'],
@@ -48,7 +48,7 @@ test('useProps and useActions hooks works', () => {
   let countRendered = 0
 
   function SampleComponent ({ id }) {
-    const { name, capitalizedName, upperCaseName } = useProps(logic)
+    const { name, capitalizedName, upperCaseName } = useValues(logic)
     const { updateName } = useActions(logic)
 
     countRendered += 1
@@ -131,7 +131,7 @@ test('useProps and useActions hooks works', () => {
   wrapper.unmount()
 })
 
-test('useProps and useActions hooks accept logic built with props', () => {
+test('useValues and useActions hooks accept logic built with props', () => {
   const { store } = getContext()
   const logic = kea({
     key: props => props.id,
@@ -159,7 +159,7 @@ test('useProps and useActions hooks accept logic built with props', () => {
   function SampleComponent ({ id }) {
     const innerLogic = logic({ id, defaultName: 'brad' }) 
 
-    const { name, upperCaseName } = useProps(innerLogic)
+    const { name, upperCaseName } = useValues(innerLogic)
     const { updateName } = useActions(innerLogic)
 
     return (
@@ -226,7 +226,7 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
   function SampleComponent ({ id }) {
     const innerLogic = logic({ id, defaultName: 'brad' }) 
 
-    const { name, upperCaseName } = useProps(innerLogic)
+    const { name, upperCaseName } = useValues(innerLogic)
     const { updateName } = useActions(innerLogic)
 
     return (
@@ -252,7 +252,7 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
   })
 
   function TogglerComponent () {
-    const { id } = useProps(togglerLogic)
+    const { id } = useValues(togglerLogic)
     const { next } = useActions(togglerLogic)
 
     return (
@@ -345,7 +345,7 @@ test('can define logic inline with useKea', () => {
     })
     const innerLogic = logic({ id, defaultName: 'brad' }) 
 
-    const { name, upperCaseName } = useProps(innerLogic)
+    const { name, upperCaseName } = useValues(innerLogic)
     const { updateName } = useActions(innerLogic)
 
     return (
@@ -371,7 +371,7 @@ test('can define logic inline with useKea', () => {
       })
     })
   
-    const { id } = useProps(togglerLogic)
+    const { id } = useValues(togglerLogic)
     const { next } = useActions(togglerLogic)
 
     return (
@@ -437,7 +437,7 @@ test('can define logic inline with useKea', () => {
   })
 })
 
-test('can get all props with useAllPropss', () => {
+test('can get all props with useAllValuess', () => {
   const { store } = getContext()
   const logic = kea({
     key: props => props.id,
@@ -464,7 +464,7 @@ test('can get all props with useAllPropss', () => {
   function SampleComponent ({ id }) {
     const innerLogic = logic({ id, defaultName: 'brad' }) 
 
-    const allProps = useAllProps(innerLogic)
+    const allProps = useAllValues(innerLogic)
 
     const { name, upperCaseName } = allProps
 
@@ -499,7 +499,7 @@ test('can get all props with useAllPropss', () => {
   })
 
   function TogglerComponent () {
-    const { id } = useProps(togglerLogic)
+    const { id } = useValues(togglerLogic)
     const { next } = useActions(togglerLogic)
 
     return (

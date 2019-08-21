@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, useProps, useActions, getContext, resetContext } from '../index'
+import { kea, useValues, useActions, getContext, resetContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -65,7 +65,7 @@ test('can change key/path of logic once it has been wrapped', () => {
   })
 
   function TogglerComponent () {
-    const { id } = useProps(togglerLogic)
+    const { id } = useValues(togglerLogic)
     const { next } = useActions(togglerLogic)
 
     return (

@@ -41,7 +41,7 @@ const logic = kea({
 })
 
 function NameComponent () {
-  const { name } = useProps(logic)
+  const { name } = useValues(logic)
   const { updateName } = useActions(logic)
 
   return (
@@ -53,7 +53,7 @@ function NameComponent () {
 }
 ```
 
-That's all there is to it. No more magic strings inside `connect({ props: [] })`. Just destructure what you get from `useProps` and `useActions` and you're done.
+That's all there is to it. No more magic strings inside `connect({ props: [] })`. Just destructure what you get from `useValues` and `useActions` and you're done.
 
 Since these are hooks, you should follow the [rules of hooks](https://reactjs.org/docs/hooks-rules.html) and only define them at the top of your component.
 
@@ -63,11 +63,11 @@ Using hooks, the logic is automatically mounted and unmounted together with your
 
 #### Additional hooks
 
-In addition to `useProps` and `useActions` there are 3 other Hooks:
+In addition to `useValues` and `useActions` there are 3 other Hooks:
 
 * `useMountedLogic(logic)` - if you want to mount/unmount a logic manually with your component without fetching any props/actions from it, use this. An example use case is to start/stop sagas with your component. Combine it with `useKea` below for inline sagas!
 
-* `useAllProps(logic)` - the default `useProps` hook can **only** be used to destructure the props when getting them like in the example above. If you need to store all the props of a logic in an object for use later, use `const props = useAllProps(logic)` instead. This is because `useProps` actually returns [getters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) that call `react-redux`'s [useSelector](https://react-redux.js.org/next/api/hooks#useselector) under the hood.
+* `useAllValues(logic)` - the default `useValues` hook can **only** be used to destructure the values when getting them like in the example above. If you need to store all the values of a logic in an object for use later, use `const values = useAllValues(logic)` instead. This is because `useValues` actually returns [getters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) that call `react-redux`'s [useSelector](https://react-redux.js.org/next/api/hooks#useselector) hook under the hood.
 
 * `useKea(input, deps = [])` - calling `const logic = kea(input)` inside a React function will create a new logic every render, forgetting the state of the old one. That's not what you want. Use `const logic = useKea(input)` instead if you want to define new logic inside your functional component.
 
@@ -84,7 +84,7 @@ function NameComponent () {
     })
   })
 
-  const { name } = useProps(logic)
+  const { name } = useValues(logic)
   const { updateName } = useActions(logic)
 
   return (
@@ -263,7 +263,7 @@ This works. With hooks the same code looks like this:
 function FaqComponent ({ id, title, body }) {
   const builtLogic = logic({ id }) // this is new!
 
-  const { isVisible } = useProps(builtLogic)
+  const { isVisible } = useValues(builtLogic)
   const { show, hide } = useActions(builtLogic)
 
  return (
