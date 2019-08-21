@@ -107,7 +107,7 @@ test('swapping out connected logic gives the right state', () => {
 
   const editLogic = kea({
     connect: {
-      props: [outerLogic, ['name']],
+      values: [outerLogic, ['name']],
       actions: [outerLogic, ['updateName', 'hideEdit']]
     }
   })
@@ -123,7 +123,7 @@ test('swapping out connected logic gives the right state', () => {
 
   const showLogic = kea({
     connect: {
-      props: [outerLogic, ['name']]
+      values: [outerLogic, ['name']]
     }
   })
 
@@ -204,7 +204,7 @@ test('it also works with dynamic logic (with reducers)', () => {
 
   const elementLogic = kea({
     connect: {
-      props: [containerLogic, ['elements']],
+      values: [containerLogic, ['elements']],
       actions: [containerLogic, ['removeElementById', 'updateAllNames', 'increment']]
     },
 
@@ -329,7 +329,7 @@ test('it also works with dynamic logic (without reducers)', () => {
 
   const elementLogic = kea({
     connect: {
-      props: [containerLogic, ['elements']],
+      values: [containerLogic, ['elements']],
       actions: [containerLogic, ['removeElementById', 'updateAllNames', 'increment']]
     },
 

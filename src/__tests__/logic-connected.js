@@ -55,7 +55,7 @@ test('connected props and actions get passed, reducers get added to the store', 
           'updateName'
         ]
       ],
-      props: [
+      values: [
         firstLogic, [
           'name',
           'capitalizedName',
@@ -83,7 +83,7 @@ test('connected props and actions get passed, reducers get added to the store', 
           'updateName'
         ]
       ],
-      props: [
+      values: [
         firstLogic, [
           'name',
           'capitalizedName',
@@ -118,7 +118,7 @@ test('connected props and actions get passed, reducers get added to the store', 
           'updateNameAgain'
         ]
       ],
-      props: [
+      values: [
         firstLogic, [
           'name',
           'capitalizedName',
@@ -159,7 +159,7 @@ test('connected props can be used as selectors', () => {
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      props: [
+      values: [
         firstLogic, [
           'name'
         ]
@@ -217,7 +217,7 @@ test('can get everything with *', () => {
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      props: [
+      values: [
         firstLogic, [
           'name',
           '* as everything'
@@ -300,7 +300,7 @@ test('have it in the store only if there is a reducer', () => {
   kea({
     path: (key) => ['scenes', 'homepage', 'connect'],
     connect: {
-      props: [
+      values: [
         logic2, ['name']
       ]
     }
@@ -309,7 +309,7 @@ test('have it in the store only if there is a reducer', () => {
   kea({
     path: (key) => ['scenes', 'homepage', 'connectActions'],
     connect: {
-      props: [
+      values: [
         logic2, ['name']
       ]
     },
@@ -321,7 +321,7 @@ test('have it in the store only if there is a reducer', () => {
   kea({
     path: (key) => ['scenes', 'homepage', 'connectReducer'],
     connect: {
-      props: [
+      values: [
         logic2, ['name']
       ]
     },
@@ -338,7 +338,7 @@ test('have it in the store only if there is a reducer', () => {
   kea({
     path: (key) => ['scenes', 'homepage', 'connectSelector'],
     connect: {
-      props: [
+      values: [
         logic2, ['name']
       ]
     },

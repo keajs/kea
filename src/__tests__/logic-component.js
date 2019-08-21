@@ -194,7 +194,7 @@ test('connected props can be used as selectors', () => {
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      props: [
+      values: [
         firstLogic, [
           'name'
         ]
@@ -355,7 +355,7 @@ test('can select with regular', () => {
 
   const connectedLogic = kea({
     connect: {
-      props: [
+      values: [
         logic, ['name'],
         (state) => state.random, ['some']
       ]

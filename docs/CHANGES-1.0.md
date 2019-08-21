@@ -391,7 +391,7 @@ If you need to connect to logic with a key, you can now use the `{ connect: prop
 ```js
 const faqImageLogic = kea({
   connect: ({ id }) => ({
-    props: [
+    values: [
       faqLogic({ id }), ['isVisible']
     ]
   }),
@@ -727,7 +727,7 @@ to this:
 
 ```js
 kea({
-  connect: { props: [logic, '* as root'] }
+  connect: { values: [logic, '* as root'] }
 })
 ```
 

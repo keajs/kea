@@ -30,7 +30,7 @@ test('connect works as an object', () => {
 
   const logic = kea({
     connect: {
-      props: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']]
     },
 
     actions: () => ({
@@ -117,7 +117,7 @@ test('connect works as a function', () => {
 
   const logic = kea({
     connect: () => ({
-      props: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']]
     }),
 
     actions: () => ({
@@ -205,7 +205,7 @@ test('props cascade when connecting', () => {
 
   const logic = kea({
     connect: {
-      props: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']]
     },
 
     actions: () => ({

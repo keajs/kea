@@ -113,7 +113,7 @@ test('get connected proptyes', () => {
 
   const singletonLogic = kea({
     connect: {
-      props: [otherLogic, ['connectedReducer']]
+      values: [otherLogic, ['connectedReducer']]
     },
 
     path: () => ['scenes', 'something'],

@@ -1,7 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getStore } from '../index'
-
-import PropTypes from 'prop-types'
+import { kea, resetContext, getContext } from '../index'
 
 beforeEach(() => {
   resetContext({ createStore: true })

@@ -110,7 +110,7 @@ test('defaults from selectors', () => {
 
   const singletonLogic = kea({
     connect: {
-      props: [randomStore, ['storedName']],
+      values: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
 
@@ -208,7 +208,7 @@ test('defaults from input.defaults selector', () => {
 
   const dynamicLogic = kea({
     connect: {
-      props: [randomStore, ['storedName']],
+      values: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
 
@@ -382,7 +382,7 @@ test('defaults from selectors in input.defaults without selector', () => {
 
   const singletonLogic = kea({
     connect: {
-      props: [randomStore, ['storedName']],
+      values: [randomStore, ['storedName']],
       actions: [randomStore, ['updateStoredName']]
     },
 
@@ -554,7 +554,7 @@ test('defaults from selector that returns an object', () => {
 
   const singletonLogic = kea({
     connect: {
-      props: [randomStore, ['object']],
+      values: [randomStore, ['object']],
       actions: [randomStore, ['updateObject']]
     },
 

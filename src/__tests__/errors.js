@@ -48,7 +48,7 @@ test('connecting to something that does not exist gives an error', () => {
   expect(() => {
     kea({
       connect: {
-        props: [undefined, ['notThere']]
+        values: [undefined, ['notThere']]
       }
     }).build()
   }).toThrow("[KEA] Logic \"kea.inline.2\" can not connect to undefined to request prop \"notThere\"")
@@ -56,7 +56,7 @@ test('connecting to something that does not exist gives an error', () => {
   expect(() => {
     kea({
       connect: {
-        props: [logic, ['notThere']]
+        values: [logic, ['notThere']]
       }
     }).build()
   }).toThrow("[KEA] Logic \"kea.inline.3\", connecting to prop \"notThere\" returns 'undefined'")
@@ -64,7 +64,7 @@ test('connecting to something that does not exist gives an error', () => {
   expect(() => {
     kea({
       connect: {
-        props: ['haha', ['notThere']]
+        values: ['haha', ['notThere']]
       }
     }).build()
   }).toThrow("[KEA] Logic \"kea.inline.4\" can not connect to string to request prop \"notThere\"")
