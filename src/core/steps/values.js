@@ -11,7 +11,8 @@ export function createValues (logic, input) {
       Object.defineProperty(logic.values, key, {
         get: function () {
           return logic.selectors[key](getStoreState(), logic.props)
-        }
+        },
+        enumerable: true
       })
     }
   }
