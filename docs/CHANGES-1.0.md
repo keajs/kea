@@ -16,7 +16,7 @@ Read below to see what changed compared to 0.28.7 in order to upgrade your apps.
 
 ## Status
 
-Kea 1.0 is a *complete rewrite* of 0.28, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-rc.1).
+Kea 1.0 is a *complete rewrite* of 0.28, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-rc.3).
 
 There are *almost* no breaking changes in the API for `kea()` and `connect()` calls. Most of the user facing changes have to do with the setup of Kea and with the plugin architecture. 
 
@@ -26,7 +26,74 @@ Follow along in [this issue](https://github.com/keajs/kea/issues/98) to be infor
 
 ## What changed?
 
+### Breaking: logic.actions are bound automatically (from `1.0.0-rc.4`)
+
+If you `connect` to actions in your components, use then via hooks or use an auto-binding side effect library like kea-thunk, nothing changes for you.
+
+However if you access `logic.actions` directly and do this, you need to refactor your code a bit:
+
+```js
+const logic = kea({ actions: () => ({ doSomething: true }) })
+
+// somewhere later in the code:
+store.dispatch(logic.actions.doSomething())
+```
+
+Starting with `1.0.0-rc.4`, this would call the `doSomething` action twice. That's because `logic.actions.doSomething` already runs `dispatch()` itself... and dispatch returns the action that was dispatched.
+
+The correct way is to just run the action without dispatching or dispatch the raw `logic.actionCreators.doSomething`:
+
+```js
+const logic = kea({ actions: () => ({ doSomething: true }) })
+
+// the following two lines are identical:
+logic.actions.doSomething()
+store.dispatch(logic.actionCreators.doSomething())
+```
+
+To recap, nothing changes if you just `connect` to actions and use them in your components, use hooks or if you use a library that automatically binds the action creators, like `kea-thunk`. 
+
+The only breaking changes happen if you import a logic and use its `.actions` object directly.
+
+
+### Selectors have store.getState() as the default param (from `1.0.0-rc.3`)
+
+If you are used to using `logic.selectors` directly, 
+
+```js
+const logic = kea({ ... })
+
+// the following lines return identical values
+logic.selectors.someValue(store.getState())
+logic.selectors.someValue()
+```
+
+### Values (from `1.0.0-rc.3`)
+
+If you're only using react components or hooks, this does not apply to you.
+
+To reduce even more boilerplate, you can now use `logic.values` to get the state of the logic's values at this moment.
+
+```js
+const logic = kea({ ... })
+
+// the following lines return identical values
+logic.selectors.someValue(store.getState())
+logic.selectors.someValue()
+logic.values.someValue
+```
+
+The methods inside logic.values are actually getters, so they will be different every time when called.
+
+### Renaming: connect.props -> connect.values (from `1.0.0-rc.4`)
+
+Using `connect({ props: [] })` made sense when the connection was then directly passed to a react component as props. However with the introduction of the `values` object above and the `useValues` hook below, it makes sense to use the same term also in connect. 
+
+So, starting from `1.0.0-rc.4`, you should use `connect({ values: [] })` instead. Using `props` here will still work. It will get deprecation warnings in 1.1 and be removed in 2.0.
+
 ### Hooks.
+
+NB! Since `props` mean something different for kea and react in functional components, the previous `useProps` and `useAllProps` hooks have been renamed `useValues` and `useAllValues` in `1.0.0-rc.4`.
 
 ```js
 const logic = kea({
@@ -57,7 +124,7 @@ That's all there is to it. No more magic strings inside `connect({ props: [] })`
 
 Since these are hooks, you should follow the [rules of hooks](https://reactjs.org/docs/hooks-rules.html) and only define them at the top of your component.
 
-In addition, you **must** directly destructure what `getProps(logic)` returns and not store it in an object to use later. To do that, use `getAllProps(logic)` instead. See below for details.
+In addition, you **must** directly destructure what `useValues(logic)` returns and not store it in an object to use later. To do that, use `useAllValues(logic)` instead. See below for details.
 
 Using hooks, the logic is automatically mounted and unmounted together with your component.
 
