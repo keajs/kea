@@ -1,37 +1,21 @@
-import { createAction } from '../shared/actions'
-
-const toSpaces = (key) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
+import { getContext } from '../../context'
 
 /*
-  input.actions = ({ path, constants }) => ({
-    setDuckId: (duckId) => ({ duckId })
-  })
+  logic.actionCreators == {
+    setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
+  }
 
   ... converts to:
 
-  logic.actions == {
-    setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
+  logic.actions = {
+    setDuckId: (duckId) => dispatch(logic.actionCreators.setDuckId(duckId))
   }
 */
+
 export function createActions (logic, input) {
-  if (!input.actions) {
-    return
-  }
-
-  const path = logic.path
-  const payloadCreators = input.actions(logic)
-
-  Object.keys(payloadCreators).forEach(key => {
-    if (typeof payloadCreators[key] === 'function' && payloadCreators[key]._isKeaAction) {
-      logic.actions[key] = payloadCreators[key]
-    } else {
-      logic.actions[key] = createAction(createActionType(key, path), payloadCreators[key])
-    }
+  Object.keys(logic.actionCreators).forEach(key => {
+    const action = logic.actionCreators[key]
+    logic.actions[key] = (...inp) => getContext().store.dispatch(action(...inp))
+    logic.actions[key].toString = () => logic.actionCreators[key].toString()
   })
-}
-
-export function createActionType (key, path) {
-  // remove 'scenes.' from the path
-  const pathString = (path[0] === 'scenes' ? path.slice(1) : path).join('.')
-  return `${toSpaces(key)} (${pathString})`
 }

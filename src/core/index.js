@@ -1,5 +1,6 @@
 import { createConnect } from './steps/connect'
 import { createConstants } from './steps/constants'
+import { createActionCreators } from './steps/action-creators'
 import { createActions } from './steps/actions'
 import { createDefaults } from './steps/defaults'
 import { createReducers } from './steps/reducers'
@@ -15,6 +16,7 @@ export default {
   defaults: () => ({
     connections: {},
     constants: {},
+    actionCreators: {},
     actions: {},
     defaults: {},
     reducers: {},
@@ -29,6 +31,7 @@ export default {
   buildSteps: {
     connect: createConnect,
     constants: createConstants,
+    actionCreators: createActionCreators,
     actions: createActions,
     defaults: createDefaults,
     reducers: createReducers,

@@ -4,14 +4,14 @@ import { addConnection } from '../shared/connect'
   Copy the connect'ed logic stores' selectors and actions into this object
 
   input.connect = {
-    props: [farmSceneLogic, ['chicken']],
+    values: [farmSceneLogic, ['chicken']],
     actions: [farmSceneLogic, ['setChicken']]
   }
 
   ... converts to:
 
   logic.connections = { 'scenes.farm': farmSceneLogic }
-  logic.actions = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
+  logic.actionCreators = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
   logic.selectors = { chicken: (state) => state.scenes.farm }
 */
 export function createConnect (logic, input) {
@@ -36,21 +36,21 @@ export function createConnect (logic, input) {
       }
       if (otherLogic._isKeaBuild) {
         addConnection(logic, otherLogic)
-        logic.actions[to] = otherLogic.actions[from]
+        logic.actionCreators[to] = otherLogic.actionCreators[from]
       } else {
-        logic.actions[to] = otherLogic[from]
+        logic.actionCreators[to] = otherLogic[from]
       }
 
       if (process.env.NODE_ENV !== 'production') {
-        if (typeof logic.actions[to] === 'undefined') {
+        if (typeof logic.actionCreators[to] === 'undefined') {
           throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
         }
       }
     })
   }
 
-  if (connect.props) {
-    const response = deconstructMapping(connect.props)
+  if (connect.values || connect.props) {
+    const response = deconstructMapping(connect.values || connect.props)
 
     response.forEach(([otherLogic, from, to]) => {
       if (process.env.NODE_ENV !== 'production') {

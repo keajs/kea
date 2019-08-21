@@ -75,7 +75,7 @@ test('eager logic loading works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'chirpy' } } })
 
-  store.dispatch(logic.actions.updateName('somename'))
+  logic.actions.updateName('somename')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'somename' } } })
 
@@ -153,7 +153,7 @@ test('lazy logic loading works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-  store.dispatch(logic.actions.updateName('somename'))
+  logic.actions.updateName('somename')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
 

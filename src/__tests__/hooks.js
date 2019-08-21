@@ -91,7 +91,7 @@ test('useProps and useActions hooks works', () => {
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
   act(() => {
-    store.dispatch(logic.actions.updateName('somename'))
+    logic.actions.updateName('somename')
   })
 
   expect(countRendered).toEqual(2)
@@ -102,12 +102,12 @@ test('useProps and useActions hooks works', () => {
   expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
 
   act(() => {
-    store.dispatch(logic.actions.updateName('somename'))
+    logic.actions.updateName('somename')
   })
   expect(countRendered).toEqual(2)
 
   act(() => {
-    store.dispatch(logic.actions.updateName('somename3'))
+    logic.actions.updateName('somename3')
   })
   expect(countRendered).toEqual(3)
 

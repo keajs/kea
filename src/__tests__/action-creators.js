@@ -8,7 +8,7 @@ beforeEach(() => {
   resetContext()
 })
 
-test('actions work the right way', () => {
+test('action creators work the right way', () => {
   const logic = kea({
     path: () => ['scenes', 'homepage', 'index'],
     actions: ({ constants }) => ({
@@ -25,7 +25,7 @@ test('actions work the right way', () => {
     ['actionWithBool', 'actionWithInteger', 'actionWithNull', 'manualAction', 'updateName']
   )
 
-  const { actionWithBool, actionWithInteger, actionWithNull, manualAction, updateName } = logic.actions
+  const { actionWithBool, actionWithInteger, actionWithNull, manualAction, updateName } = logic.actionCreators
 
   expect(typeof updateName).toBe('function')
   expect(updateName.toString()).toBe('update name (homepage.index)')

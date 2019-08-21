@@ -40,12 +40,7 @@ export function wrapComponent (Component, wrapper) {
     },
     (dispatch, props) => {
       const logic = wrapper.build(props)
-
-      let actions = Object.assign({}, props.actions)
-
-      Object.entries(logic.actions).forEach(([key, action]) => {
-        actions[key] = (...args) => dispatch(action(...args))
-      })
+      const actions = Object.assign({}, props.actions, logic.actions)
 
       return {
         dispatch: dispatch,

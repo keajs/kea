@@ -67,7 +67,7 @@ test('defaults from props for lazy', () => {
     scenes: { dynamic: { propsName: 'defaultName' } }
   })
 
-  store.dispatch(singletonLogic.actions.updateName('birb'))
+  singletonLogic.actions.updateName('birb')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -157,14 +157,14 @@ test('defaults from selectors', () => {
     scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } }
   })
 
-  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
+  store.dispatch(singletonLogic.actionCreators.updateStoredName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
     scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } }
   })
 
-  store.dispatch(singletonLogic.actions.updateName('birb'))
+  singletonLogic.actions.updateName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
@@ -261,14 +261,14 @@ test('defaults from input.defaults selector', () => {
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(dynamicLogic({ id: 12 }).actions.updateStoredName('birb'))
+  dynamicLogic({ id: 12 }).actions.updateStoredName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
     scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } }
   })
 
-  store.dispatch(dynamicLogic({ id: 12 }).actions.updateName('birb'))
+  store.dispatch(dynamicLogic({ id: 12 }).actionCreators.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { storedName: 'birb' } } },
@@ -339,7 +339,7 @@ test('defaults from props via input.defaults without selector', () => {
     scenes: {}
   })
 
-  store.dispatch(lazyLogic.actions.updateName('birb'))
+  lazyLogic.actions.updateName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'birb' } } },
@@ -432,14 +432,14 @@ test('defaults from selectors in input.defaults without selector', () => {
     scenes: {}
   })
 
-  store.dispatch(singletonLogic.actions.updateStoredName('birb'))
+  singletonLogic.actions.updateStoredName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'storedName', directName: 'george' } } },
     scenes: {}
   })
 
-  store.dispatch(singletonLogic.actions.updateName('birb'))
+  store.dispatch(singletonLogic.actionCreators.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'birb', directName: 'birb' } } },

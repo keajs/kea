@@ -83,13 +83,13 @@ test('does not double render with the same props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-  store.dispatch(logic.actions.updateName('somename'))
+  store.dispatch(logic.actionCreators.updateName('somename'))
   expect(countRendered).toEqual(2)
 
-  store.dispatch(logic.actions.updateName('somename'))
+  logic.actions.updateName('somename')
   expect(countRendered).toEqual(2)
 
-  store.dispatch(logic.actions.updateName('somename3'))
+  store.dispatch(logic.actionCreators.updateName('somename3'))
   expect(countRendered).toEqual(3)
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename3' } } })

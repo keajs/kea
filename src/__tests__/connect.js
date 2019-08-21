@@ -83,8 +83,8 @@ test('connect works as an object', () => {
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
 
-  store.dispatch(logic.actions.updateName('somename'))
-  store.dispatch(connectedLogic.actions.updateDescription('new description'))
+  logic.actions.updateName('somename')
+  connectedLogic.actions.updateDescription('new description')
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
 
@@ -170,8 +170,8 @@ test('connect works as a function', () => {
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
 
-  store.dispatch(logic.actions.updateName('somename'))
-  store.dispatch(connectedLogic.actions.updateDescription('new description'))
+  store.dispatch(logic.actionCreators.updateName('somename'))
+  store.dispatch(connectedLogic.actionCreators.updateDescription('new description'))
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
 
@@ -256,8 +256,8 @@ test('props cascade when connecting', () => {
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy-12')
   expect(wrapper.find('.description').text()).toEqual('this is a bird')
 
-  store.dispatch(logic.actions.updateName('somename'))
-  store.dispatch(connectedLogic.actions.updateDescription('new description'))
+  logic.actions.updateName('somename')
+  connectedLogic.actions.updateDescription('new description')
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
 

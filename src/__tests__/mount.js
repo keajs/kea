@@ -46,7 +46,7 @@ test('can mount stores and have them connect to redux without react', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-  store.dispatch(logic.actions.updateName('somename'))
+  store.dispatch(logic.actionCreators.updateName('somename'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
 
@@ -95,7 +95,7 @@ test('can mount stores with keys and have them connet to redux without react', (
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'chirpy' } } } })
 
-  store.dispatch(logic({ id: 'testKey' }).actions.updateName('somename'))
+  store.dispatch(logic({ id: 'testKey' }).actionCreators.updateName('somename'))
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { testKey: { name: 'somename' } } } })
 
@@ -128,7 +128,7 @@ test('can mount with callback', () => {
   const response = logic.mount(() => {
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-    store.dispatch(logic.actions.updateName('somename'))
+    logic.actions.updateName('somename')
   
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
     
@@ -168,7 +168,7 @@ test('can mount with a promise', async () => {
     return new Promise((resolve, reject) => {
       expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-      store.dispatch(logic.actions.updateName('somename'))
+      store.dispatch(logic.actionCreators.updateName('somename'))
     
       expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
       
@@ -210,7 +210,7 @@ test('can mount with a async/await', async () => {
   const response = await logic.mount(async () => {
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-    store.dispatch(logic.actions.updateName('somename'))
+    logic.actions.updateName('somename')
 
     await delay(50)
 

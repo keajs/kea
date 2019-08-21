@@ -42,8 +42,8 @@ export function useActions (logic) {
   return useMemo(() => {
     let response = {}
 
-    for (const key of Object.keys(logic.actions)) {
-      response[key] = (...args) => dispatch(logic.actions[key](...args))
+    for (const key of Object.keys(logic.actionCreators)) {
+      response[key] = (...args) => dispatch(logic.actionCreators[key](...args))
     }
 
     return response

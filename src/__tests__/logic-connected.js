@@ -1,12 +1,12 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, keaReducer } from '../index'
+import { kea, resetContext, keaReducer, getContext } from '../index'
 
 import { createStore, combineReducers } from 'redux'
 
 import PropTypes from 'prop-types'
 
 beforeEach(() => {
-  resetContext({ autoMount: true })
+  resetContext({ autoMount: true, createStore: true })
 })
 
 test('connected props and actions get passed, reducers get added to the store', () => {
@@ -142,9 +142,7 @@ test('connected props and actions get passed, reducers get added to the store', 
 })
 
 test('connected props can be used as selectors', () => {
-  const store = createStore(combineReducers({
-    scenes: keaReducer('scenes')
-  }))
+  const { store } = getContext()
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
@@ -191,9 +189,12 @@ test('connected props can be used as selectors', () => {
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
 
-  store.dispatch(firstLogic.actions.updateName('derpy'))
+  firstLogic.actions.updateName('derpy')
+
   expect(secondLogic.selectors.capitalizedName(store.getState())).toBe('Derpy')
   expect(secondLogic.selectors.upperCaseName(store.getState())).toBe('DERPY')
+  expect(secondLogic.values.capitalizedName).toBe('Derpy')
+  expect(secondLogic.values.upperCaseName).toBe('DERPY')
 })
 
 test('can get everything with *', () => {
@@ -231,8 +232,8 @@ test('can get everything with *', () => {
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['everything', 'name'])
 
-  store.dispatch(firstLogic.actions.updateName('derpy'))
-  expect(secondLogic.selectors.everything(store.getState())).toEqual({ name: 'derpy' })
+  firstLogic.actions.updateName('derpy')
+  expect(secondLogic.values.everything).toEqual({ name: 'derpy' })
 })
 
 test('have it in the store only if there is a reducer', () => {

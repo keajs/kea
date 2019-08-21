@@ -194,11 +194,17 @@ test('also works without proptypes', () => {
   expect(logic.selectors.evenMoreThings(store.getState())).toEqual('whoop')
   expect(logic.selectors.summary(store.getState())).toEqual('BLA')
 
-  store.dispatch(logic.actions.doSomething())
+  store.dispatch(logic.actionCreators.doSomething())
 
   expect(logic.selectors.something(store.getState())).toEqual('bla')
   expect(logic.selectors.somethingElse(store.getState())).toEqual('bla')
   expect(logic.selectors.somethingMore(store.getState())).toEqual('asd')
   expect(logic.selectors.evenMoreThings(store.getState())).toEqual('boop')
   expect(logic.selectors.summary(store.getState())).toEqual('ASD')
+
+  expect(logic.values.something).toEqual('bla')
+  expect(logic.values.somethingElse).toEqual('bla')
+  expect(logic.values.somethingMore).toEqual('asd')
+  expect(logic.values.evenMoreThings).toEqual('boop')
+  expect(logic.values.summary).toEqual('ASD')
 })
