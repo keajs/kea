@@ -58,10 +58,11 @@ export function useMountedLogic (logic) {
     unmount.current = logic.mount()
   }
 
-  if (pathString !== logic.pathString) {
+  if (pathString.current !== logic.pathString) {
     unmount.current()
     unmount.current = logic.mount()
+    pathString.current = logic.pathString
   }
-  
+
   useEffect(() => unmount.current, [])
 }
