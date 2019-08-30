@@ -43,9 +43,6 @@
     ],
     "testEnvironment": "node"
   },
-  "dependencies": {
-    "opencollective": "^1.0.3"
-  },
   "peerDependencies": {
     "react": ">= 16.8",
     "react-redux": ">= 7",
@@ -101,10 +98,5 @@
     "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-node-resolve": "^4.2.3",
     "size-limit": "^1.1.2"
-  },
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/kea",
-    "logo": "https://opencollective.com/opencollective/logo.txt"
   }
 }
