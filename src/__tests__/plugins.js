@@ -78,3 +78,34 @@ test('plugins add events', () => {
 
   expect(logic.ranAfterBuild).toEqual(true)
 })
+
+test('function plugins work', () => {
+  const { plugins } = getContext()
+
+  const testPluginContents = {
+    name: 'test',
+
+    defaults: () => ({
+      ranAfterBuild: false
+    }),
+
+    events: {
+      afterBuild (logic, input) {
+        logic.ranAfterBuild = true
+      }
+    }
+  }
+  const testPlugin = () => testPluginContents
+
+  activatePlugin(testPlugin)
+
+  expect(plugins.activated).toEqual([corePlugin, testPluginContents])
+  expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
+
+  expect(plugins.events.afterBuild).toEqual([ testPluginContents.events.afterBuild ])
+
+  const logic = kea({})
+  logic.build()
+
+  expect(logic.ranAfterBuild).toEqual(true)
+})

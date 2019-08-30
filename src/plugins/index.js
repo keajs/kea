@@ -85,7 +85,7 @@ const reservedKeys = {
   path: true,
   pathString: true,
   props: true,
-  
+
   wrap: true,
   build: true,
   mount: true,
@@ -99,7 +99,9 @@ export const reservedProxiedKeys = [
   'mount'
 ]
 
-export function activatePlugin (plugin) {
+export function activatePlugin (pluginToActivate) {
+  const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
+
   const { plugins } = getContext()
   const { name } = plugin
 
