@@ -70,8 +70,6 @@ logic.selectors.someValue()
 
 ### Values (from `1.0.0-rc.3`)
 
-If you're only using react components or hooks, this does not apply to you.
-
 To reduce even more boilerplate, you can now use `logic.values` to get the state of the logic's values at this moment.
 
 ```js
@@ -84,6 +82,24 @@ logic.values.someValue
 ```
 
 The methods inside logic.values are actually getters, so they will be different every time when called.
+
+Values are great to use with [kea-listeners](https://github.com/keajs/kea-listeners):
+
+```js
+kea({
+  listeners: ({ actions, values }) => ({
+    // action that conditionally calls another action
+    [actions.openUrl]: ({ url }) => { 
+      // get the value from the reducer 'url'
+      const currentUrl = values.url
+
+      if (url !== currentUrl) {
+        actions.reallyOpenTheUrl(url)
+      }
+    }
+  })
+})
+```
 
 ### Renaming: connect.props -> connect.values (from `1.0.0-rc.4`)
 
