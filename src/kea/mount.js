@@ -43,9 +43,7 @@ export function unmountLogic (logic) {
 
       runPlugins('afterUnmount', pathString, connectedLogic)
 
-      if (typeof logic.key !== 'undefined') {
-        clearBuildCache(logic.pathString)
-      }
+      clearBuildCache(pathString)
     }
   }
 }
