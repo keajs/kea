@@ -54,20 +54,20 @@ import { getContext } from '../context'
         afterBuild (logic, inputs)
 
         // Run before/after a logic store is mounted in React
-        beforeMount (pathString, logic)
-        afterMount (pathString, logic)
+        beforeMount (logic)
+        afterMount (logic)
 
         // Run before/after a reducer is attached to Redux
-        beforeAttach (pathString, logic)
-        afterAttach (pathString, logic)
+        beforeAttach (logic)
+        afterAttach (logic)
 
         // Run before/after a logic store is unmounted in React
-        beforeUnmount (pathString, logic)
-        afterUnmount (pathString, logic)
+        beforeUnmount (logic)
+        afterUnmount (logic)
 
         // Run before/after a reducer is detached frm Redux
-        beforeDetach (pathString, logic)
-        afterDetach (pathString, logic)
+        beforeDetach (logic)
+        afterDetach (logic)
 
         // when wrapping a React component
         beforeWrapper (input, Klass)

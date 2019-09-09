@@ -11,8 +11,8 @@ export function mountLogic (logic) {
     if (counter[pathString] === 1) {
       const connectedLogic = logic.connections[pathString]
 
-      runPlugins('beforeMount', pathString, connectedLogic)
-      logic.events && logic.events.beforeMount && logic.events.beforeMount()
+      runPlugins('beforeMount', connectedLogic)
+      connectedLogic.events.beforeMount && connectedLogic.events.beforeMount()
 
       mounted[pathString] = connectedLogic
 
@@ -20,8 +20,8 @@ export function mountLogic (logic) {
         attachReducer(connectedLogic)
       }
 
-      runPlugins('afterMount', pathString, connectedLogic)
-      logic.events && logic.events.afterMount && logic.events.afterMount()
+      runPlugins('afterMount', connectedLogic)
+      connectedLogic.events.afterMount && connectedLogic.events.afterMount()
     }
   }
 }
@@ -34,8 +34,8 @@ export function unmountLogic (logic) {
     if (counter[pathString] === 0) {
       const connectedLogic = logic.connections[pathString]
 
-      runPlugins('beforeUnmount', pathString, connectedLogic)
-      logic.events && logic.events.beforeUnmount && logic.events.beforeUnmount()
+      runPlugins('beforeUnmount', connectedLogic)
+      connectedLogic.events.beforeUnmount && connectedLogic.events.beforeUnmount()
 
       delete mounted[pathString]
       delete counter[pathString]
@@ -44,8 +44,8 @@ export function unmountLogic (logic) {
         detachReducer(connectedLogic)
       }
 
-      runPlugins('afterUnmount', pathString, connectedLogic)
-      logic.events && logic.events.afterUnmount && logic.events.afterUnmount()
+      runPlugins('afterUnmount', connectedLogic)
+      connectedLogic.events.afterUnmount && connectedLogic.events.afterUnmount()
 
       clearBuildCache(pathString)
     }

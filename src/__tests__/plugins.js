@@ -155,7 +155,7 @@ test('can use logic.cache to store things', () => {
       afterLogic (logic) {
         logic.cache.whatever = true
       },
-      afterMount (_, logic) {
+      afterMount (logic) {
         checkedAfterMount = logic.cache.whatever
       }
     }

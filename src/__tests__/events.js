@@ -18,16 +18,16 @@ test('runs before and after mount events', () => {
       afterLogic (logic) {
         actions.push('plugin.afterLogic')
       },
-      beforeMount (_, logic) {
+      beforeMount (logic) {
         actions.push('plugin.beforeMount')
       },
-      afterMount (_, logic) {
+      afterMount (logic) {
         actions.push('plugin.afterMount')
       },
-      beforeUnmount (_, logic) {
+      beforeUnmount (logic) {
         actions.push('plugin.beforeUnmount')
       },
-      afterUnmount (_, logic) {
+      afterUnmount (logic) {
         actions.push('plugin.afterUnmount')
       }
     }
@@ -35,9 +35,30 @@ test('runs before and after mount events', () => {
 
   activatePlugin(testPlugin)
 
-  const logic = kea({
-    path: () => ['scenes', 'events'],
+  const connectedLogic = kea({
+    reducers: () => ({
+      value: [true]
+    }),
+    events: () => ({
+      beforeMount () {
+        actions.push('connectedLogic.beforeMount')
+      },
+      afterMount () {
+        actions.push('connectedLogic.afterMount')
+      },
+      beforeUnmount () {
+        actions.push('connectedLogic.beforeUnmount')
+      },
+      afterUnmount () {
+        actions.push('connectedLogic.afterUnmount')
+      }
+    })
+  })
 
+  const logic = kea({
+    connect: {
+      values: [connectedLogic, ['value']]
+    },
     events: () => ({
       beforeMount () {
         actions.push('logic.beforeMount')
@@ -60,6 +81,13 @@ test('runs before and after mount events', () => {
 
   expect(actions).toEqual([
     'plugin.afterLogic',
+    'plugin.afterLogic',
+
+    'plugin.beforeMount',
+    'connectedLogic.beforeMount',
+    'plugin.afterMount',
+    'connectedLogic.afterMount',
+
     'plugin.beforeMount',
     'logic.beforeMount',
     'plugin.afterMount',
@@ -70,13 +98,26 @@ test('runs before and after mount events', () => {
 
   expect(actions).toEqual([
     'plugin.afterLogic',
+    'plugin.afterLogic',
+
+    'plugin.beforeMount',
+    'connectedLogic.beforeMount',
+    'plugin.afterMount',
+    'connectedLogic.afterMount',
+
     'plugin.beforeMount',
     'logic.beforeMount',
     'plugin.afterMount',
     'logic.afterMount',
+
     'plugin.beforeUnmount',
     'logic.beforeUnmount',
     'plugin.afterUnmount',
-    'logic.afterUnmount'
+    'logic.afterUnmount',
+
+    'plugin.beforeUnmount',
+    'connectedLogic.beforeUnmount',
+    'plugin.afterUnmount',
+    'connectedLogic.afterUnmount'
   ])
 })
