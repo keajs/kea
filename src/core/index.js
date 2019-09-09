@@ -8,12 +8,14 @@ import { createReducer } from './steps/reducer'
 import { createReducerSelectors } from './steps/reducer-selectors'
 import { createSelectors } from './steps/selectors'
 import { createValues } from './steps/values'
+import { createEvents } from './steps/events'
 
 // core plugin
 export default {
   name: 'core',
 
   defaults: () => ({
+    cache: {},
     connections: {},
     constants: {},
     actionCreators: {},
@@ -25,7 +27,8 @@ export default {
     selector: undefined,
     selectors: {},
     values: {},
-    propTypes: {}
+    propTypes: {},
+    events: {}
   }),
 
   buildSteps: {
@@ -38,6 +41,7 @@ export default {
     reducer: createReducer,
     reducerSelectors: createReducerSelectors,
     selectors: createSelectors,
-    values: createValues
+    values: createValues,
+    events: createEvents
   }
 }

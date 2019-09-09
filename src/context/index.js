@@ -30,7 +30,8 @@ export function openContext (options = {}) {
       activated: [],
       buildSteps: {},
       events: {},
-      logicFields: {}
+      logicFields: {},
+      contexts: {}
     },
 
     input: {
@@ -40,7 +41,7 @@ export function openContext (options = {}) {
     },
 
     build: {
-      cache: {},
+      cache: {}
     },
 
     mount: {
@@ -57,7 +58,7 @@ export function openContext (options = {}) {
     store: undefined,
 
     options: {
-      debug: false,    
+      debug: false,
       autoMount: false,
       proxyFields: true,
       flatDefaults: false,
@@ -72,13 +73,13 @@ export function openContext (options = {}) {
 
   activatePlugin(corePlugin)
 
+  runPlugins('afterOpenContext', newContext, options)
+
   if (plugins) {
     for (const plugin of plugins) {
       activatePlugin(plugin)
     }
   }
-
-  runPlugins('afterOpenContext', newContext, options)
 
   if (createStore) {
     getStore(typeof createStore === 'object' ? createStore : {})
@@ -117,4 +118,17 @@ export function withContext (code, options = {}) {
     context: newContext,
     returnValue
   }
+}
+
+export function getPluginContext (name) {
+  const { plugins } = getContext()
+  if (!plugins.contexts[name]) {
+    plugins.contexts[name] = {}
+  }
+  return plugins.contexts[name]
+}
+
+export function setPluginContext (name, pluginContext) {
+  const { plugins } = getContext()
+  plugins.contexts[name] = pluginContext
 }

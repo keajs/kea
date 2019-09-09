@@ -26,8 +26,11 @@ import { getContext } from '../context'
       }
 
       events: {
-        // Run after creating a new context, before plugins and inputs are applied
+        // Run after creating a new context, before plugins are activated and the store is created
         afterOpenContext (context, options)
+
+        // Run after this plugin has been activated
+        afterPlugin ()
 
         // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
         beforeReduxStore (options)
@@ -140,6 +143,8 @@ export function activatePlugin (pluginToActivate) {
       }
       plugins.events[key].push(plugin.events[key])
     }
+
+    plugin.events.afterPlugin && plugin.events.afterPlugin()
   }
 }
 
