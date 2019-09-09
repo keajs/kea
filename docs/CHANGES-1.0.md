@@ -18,13 +18,68 @@ Read below to see what changed compared to 0.28.7 in order to upgrade your apps.
 
 Kea 1.0 is a *complete rewrite* of 0.28, adding all the features below while [retaining the bundle size](https://bundlephobia.com/result?p=kea@1.0.0-rc.3).
 
-There are *almost* no breaking changes in the API for `kea()` and `connect()` calls. Most of the user facing changes have to do with the setup of Kea and with the plugin architecture. 
+There are *almost* no breaking changes in the API for `kea()` and `connect()` calls. Most of the user facing changes have to do with the setup of Kea and with the plugin architecture.
 
 Oh, and we have hooks now! :tada:
 
 Follow along in [this issue](https://github.com/keajs/kea/issues/98) to be informed about progress towards 1.0-FINAL.
 
 ## What changed?
+
+### Logic events (from `1.0.0-rc.7`)
+
+You can now run the following code:
+
+```js
+kea({
+  events: ({ actions }) => ({
+    beforeMount: () => {
+      console.log('run before the plugin is mounted')
+    },
+    afterMount: () => {
+      console.log('run after the plugin is mounted')
+    },
+    beforeUnmount: () => {
+      console.log('run before the plugin is unmounted')
+    },
+    afterUnmount: () => {
+      console.log('run after the plugin is unmounted')
+    }
+  })
+})
+```
+
+Previously such events could only be defined via plugins.
+
+Also, the arguments to these events in *plugins* changed from `(pathString, logic)` to just `(logic)`. The events inside the logic take no arguments.
+
+### afterPlugin hook, plugin context, logic cache (from `1.0.0-rc.7`)
+
+1. There is now a clear `afterPlugin` event that can be used to initialize the plugin
+2. You may now request a separate context for each plugin via `setPluginContext` and `getPluginContext`
+3. There is now a variable `cache` that you can use on the logic for storing all sorts of temporary data
+
+```js
+import { getPluginContext, setPluginContext } from 'kea'
+
+const testPlugin = {
+  name: 'test',
+
+  events: {
+    afterPlugin () {
+      setPluginContext('pluginName', { someKey: 'yesplease' })
+    },
+
+    afterBuild (logic, inputs) {
+      logic.cache.temporaryPluginDataInLogic = getPluginContext('pluginName').someKey
+    },
+
+    afterMount (logic) {
+      console.log(logic.cache.temporaryPluginDataInLogic)
+    }
+  }
+}
+```
 
 ### Breaking: logic.actions are bound automatically (from `1.0.0-rc.4`)
 
@@ -51,14 +106,14 @@ logic.actions.doSomething()
 store.dispatch(logic.actionCreators.doSomething())
 ```
 
-To recap, nothing changes if you just `connect` to actions and use them in your components, use hooks or if you use a library that automatically binds the action creators, like `kea-thunk`. 
+To recap, nothing changes if you just `connect` to actions and use them in your components, use hooks or if you use a library that automatically binds the action creators, like `kea-thunk`.
 
 The only breaking changes happen if you import a logic and use its `.actions` object directly.
 
 
 ### Selectors have store.getState() as the default param (from `1.0.0-rc.3`)
 
-If you are used to using `logic.selectors` directly, 
+If you are used to using `logic.selectors` directly,
 
 ```js
 const logic = kea({ ... })
@@ -89,7 +144,7 @@ Values are great to use with [kea-listeners](https://github.com/keajs/kea-listen
 kea({
   listeners: ({ actions, values }) => ({
     // action that conditionally calls another action
-    [actions.openUrl]: ({ url }) => { 
+    [actions.openUrl]: ({ url }) => {
       // get the value from the reducer 'url'
       const currentUrl = values.url
 
@@ -103,7 +158,7 @@ kea({
 
 ### Renaming: connect.props -> connect.values (from `1.0.0-rc.4`)
 
-Using `connect({ props: [] })` made sense when the connection was then directly passed to a react component as props. However with the introduction of the `values` object above and the `useValues` hook below, it makes sense to use the same term also in connect. 
+Using `connect({ props: [] })` made sense when the connection was then directly passed to a react component as props. However with the introduction of the `values` object above and the `useValues` hook below, it makes sense to use the same term also in connect.
 
 So, starting from `1.0.0-rc.4`, you should use `connect({ values: [] })` instead. Using `props` here will still work. It will get deprecation warnings in 1.1 and be removed in 2.0.
 
@@ -246,7 +301,7 @@ This means that to setup kea, all you need to do is:
 
 ### Everything is a plugin
 
-Starting with 1.0 you may consider Kea as an **extendable logic engine for frontend development**. 
+Starting with 1.0 you may consider Kea as an **extendable logic engine for frontend development**.
 
 The core of Kea is a system that converts input like this:
 
@@ -504,7 +559,7 @@ kea({
 })
 ```
 
-Defaults defined via `defaults` hold priority to those defined as the first argument in `reducers`. 
+Defaults defined via `defaults` hold priority to those defined as the first argument in `reducers`.
 
 You still need to define some default value (and optionally a proptype) inside reducers. You can just now overwrite them with other data as needed with the `defaults` api.
 
@@ -528,7 +583,7 @@ resetContext({
 })
 ```
 
-or 
+or
 
 ```js
 resetContext({
@@ -545,7 +600,7 @@ resetContext({
 
 For a while kea has supported passing the `preloadedState` key to `getStore()` in order to initialize the state.
 
-Because logic is now lazy by default, we can't rely on what was in the Redux to still be there when the logic mounts. 
+Because logic is now lazy by default, we can't rely on what was in the Redux to still be there when the logic mounts.
 
 Preloaded state for non-kea reducers (e.g. `router`) will still work without issues.
 
@@ -642,7 +697,7 @@ This callback can even be `async`.
 
 Kea now keeps track of what logic is currently in use (rendered on the screen) and which is not.
 
-This greatly helps plugin authors. For example `kea-saga` needed to integrate this tracking itself, greatly increasing the complexity of the code... and relying on dark magic to make it work. 
+This greatly helps plugin authors. For example `kea-saga` needed to integrate this tracking itself, greatly increasing the complexity of the code... and relying on dark magic to make it work.
 
 Now for example to start or stop sagas when a component mounts, it just integrates the plugin hooks `afterMount(pathString, logic)` and `afterUnmount(pathString, logic)`.
 
@@ -678,14 +733,14 @@ kea({
     doSomething: function * (action) {
       if (action.payload.key !== key) { // don't do this anymore
         return
-      } 
+      }
       // do stuff
     }
   }
 })
 ```
 
-This is no longer necessary. 
+This is no longer necessary.
 
 Now all actions created by every individual keyed logic are unique and **`action.payload.key` doesn't exist anymore**.
 
@@ -761,7 +816,7 @@ Similar to `takeEvery` in `kea-saga`, listeners listen for actions and let you r
 
 ```js
   kea({
-    listeners: ({ actions, selectors }) => ({ 
+    listeners: ({ actions, selectors }) => ({
       [actions.updateName]: (action, { dispatch, getState }) => {
         console.log(action.payload)
 
@@ -778,7 +833,7 @@ Listeners aims to be a lightweight general purpose plugin that other plugin auth
 
 #### kea-router
 
-Built with `kea-listeners`, `kea-router` acts as a bridge between `kea`, `react-redux` and `connected-react-router`. 
+Built with `kea-listeners`, `kea-router` acts as a bridge between `kea`, `react-redux` and `connected-react-router`.
 
 ```js
   kea({
@@ -843,4 +898,4 @@ Upgrade all your packages to the latest RC (kea) or beta (plugins) versions:
 
 ... and then please report if it works fine, what broke, did you notice any performance or other issues, etc.
 
-I've been running a [large production webapp](https://www.apprentus.com) on the latest 1.0 beta now for a while and so far so good. 
+I've been running a [large production webapp](https://www.apprentus.com) on the latest 1.0 beta now for a while and so far so good.
