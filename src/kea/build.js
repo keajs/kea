@@ -39,18 +39,18 @@ function buildLogic ({ inputs, path, key, props }) {
     if (input.extend) {
       for (const innerInput of input.extend) {
         applyInputToLogic(logic, innerInput)
-      }    
+      }
     }
   }
 
   /*
     add a connection to ourselves in the end
     logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
-  */ 
+  */
   logic.connections[logic.pathString] = logic
 
   runPlugins('afterBuild', logic, inputs)
- 
+
   return logic
 }
 
@@ -99,9 +99,9 @@ function setLogicDefaults (logic) {
 function applyInputToLogic (logic, input) {
   runPlugins('beforeLogic', logic, input)
 
-  const { plugins: { buildSteps } } = getContext()
+  const { plugins: { buildOrder, buildSteps } } = getContext()
 
-  for (const step of Object.keys(buildSteps)) {
+  for (const step of buildOrder) {
     for (const func of buildSteps[step]) {
       func(logic, input)
     }

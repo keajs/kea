@@ -56,7 +56,7 @@ test('getting and setting works', () => {
       flatDefaults: false,
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch'
-    }    
+    }
   })
 
   closeContext()
@@ -77,12 +77,12 @@ test('context works with plugins', () => {
     name: 'test',
 
     defaults: () => ({
-      ranAfterConnect: false
+      ranNewBuildStep: false
     }),
 
     buildSteps: {
-      connect (logic, input) {
-        logic.ranAfterConnect = true
+      newBuildStep (logic, input) {
+        logic.ranNewBuildStep = true
       }
     }
   }
@@ -106,14 +106,17 @@ test('context works with plugins', () => {
     }
   })
 
-  expect(Object.keys(getContext().plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
+  expect(Object.keys(getContext().plugins.buildSteps)).toEqual(
+    [...Object.keys(corePlugin.buildSteps), 'newBuildStep']
+  )
 
-  expect(getContext().plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect, testPlugin.buildSteps.connect ])
+  expect(getContext().plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect ])
+  expect(getContext().plugins.buildSteps.newBuildStep).toEqual([ testPlugin.buildSteps.newBuildStep ])
 
   // const logic = kea({ options:{lazy:true}})
   const logic = kea({})
 
-  expect(logic.ranAfterConnect).toEqual(true)
+  expect(logic.ranNewBuildStep).toEqual(true)
 
   closeContext()
   expect(getContext()).not.toBeDefined()
@@ -192,7 +195,7 @@ test('nested context defaults work', () => {
   logic.mount()
 
   expect(store.getState()).toEqual({
-    kea: {}, 
+    kea: {},
     scenes: { testy: { key: 'value', name: 'alfred' } }
   })
 
@@ -207,10 +210,10 @@ test('nested context defaults work', () => {
   logic2.mount()
 
   expect(store.getState()).toEqual({
-    kea: {}, 
-    scenes: { 
+    kea: {},
+    scenes: {
       testy: { key: 'value', name: 'alfred' },
-      noDefaults: { key: 'noValue', name: 'batman' } 
+      noDefaults: { key: 'noValue', name: 'batman' }
     }
   })
 })
@@ -243,7 +246,7 @@ test('flat context defaults work', () => {
   logic.mount()
 
   expect(store.getState()).toEqual({
-    kea: {}, 
+    kea: {},
     scenes: { testy: { key: 'value', name: 'alfred' } }
   })
 
@@ -258,10 +261,10 @@ test('flat context defaults work', () => {
   logic2.mount()
 
   expect(store.getState()).toEqual({
-    kea: {}, 
-    scenes: { 
+    kea: {},
+    scenes: {
       testy: { key: 'value', name: 'alfred' },
-      noDefaults: { key: 'noValue', name: 'batman' } 
+      noDefaults: { key: 'noValue', name: 'batman' }
     }
   })
 })

@@ -165,7 +165,7 @@ test('can extend in plugins in buildSteps', () => {
   const testPlugin = {
     name: 'testPlugin',
     buildSteps: {
-      defaults (logic, input) {
+      newStep (logic, input) {
         if (!logic.actions.domore) {
           logic.extend({
             actions: () => ({

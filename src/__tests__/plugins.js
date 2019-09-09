@@ -27,26 +27,59 @@ test('plugins add build steps', () => {
     name: 'test',
 
     defaults: () => ({
-      ranAfterConnect: false
+      ranPlugins: []
     }),
 
+    buildOrder: {
+      afterConnect: { after: 'connect' },
+      beforeEvents: { before: 'events' },
+      afterEvents: { after: 'events' }
+    },
+
     buildSteps: {
-      connect (logic, input) {
-        logic.ranAfterConnect = true
-      }
+      afterEvents (logic, input) {
+        logic.ranPlugins.push('afterEvents')
+      },
+      afterConnect (logic, input) {
+        logic.ranPlugins.push('afterConnect')
+      },
+      beforeEvents (logic, input) {
+        logic.ranPlugins.push('beforeEvents')
+      },
     }
   }
 
   activatePlugin(testPlugin)
 
   expect(plugins.activated).toEqual([corePlugin, testPlugin])
-  expect(Object.keys(plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
+  expect(Object.keys(plugins.buildSteps)).toEqual(
+    [...Object.keys(corePlugin.buildSteps), 'afterEvents', 'afterConnect', 'beforeEvents']
+  )
+  expect(plugins.buildOrder).toEqual(
+    [
+      'connect',
+      'afterConnect', // added here
+      'constants',
+      'actionCreators',
+      'actions',
+      'defaults',
+      'reducers',
+      'reducer',
+      'reducerSelectors',
+      'selectors',
+      'values',
+      'beforeEvents', // added here
+      'events',
+      'afterEvents' // added here
+    ]
+  )
 
-  expect(plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect, testPlugin.buildSteps.connect ])
+  expect(plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect ])
+  expect(plugins.buildSteps.afterConnect).toEqual([ testPlugin.buildSteps.afterConnect ])
 
   const logic = kea({})
 
-  expect(logic.ranAfterConnect).toEqual(true)
+  expect(logic.ranPlugins).toEqual(['afterConnect', 'beforeEvents', 'afterEvents'])
 })
 
 test('plugins add events', () => {

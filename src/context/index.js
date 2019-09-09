@@ -28,6 +28,7 @@ export function openContext (options = {}) {
   const newContext = {
     plugins: {
       activated: [],
+      buildOrder: [],
       buildSteps: {},
       events: {},
       logicFields: {},

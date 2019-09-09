@@ -11,6 +11,12 @@ import { getContext } from '../context'
         key: {}
       }),
 
+      // when are the build steps run (skip this and they are appended to the end)
+      buildOrder: {
+        listeners: { before: 'events' },
+        thunks: { after: 'actionCreators' }
+      },
+
       // either add new steps or add after effects for existing steps
       buildSteps: {
         // steps from core that you can extend
@@ -116,10 +122,27 @@ export function activatePlugin (pluginToActivate) {
 
   if (plugin.buildSteps) {
     for (const key of Object.keys(plugin.buildSteps)) {
+      // if redefining an existing step, add to the end of the list (no order changing possible anymore)
       if (plugins.buildSteps[key]) {
+        console.error(`[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
         plugins.buildSteps[key].push(plugin.buildSteps[key])
       } else {
         plugins.buildSteps[key] = [plugin.buildSteps[key]]
+
+        if (plugin.buildOrder && plugin.buildOrder[key]) {
+          const { after, before } = plugin.buildOrder[key]
+          const index = plugins.buildOrder.indexOf(after || before)
+
+          if (after && index >= 0) {
+            plugins.buildOrder.splice(index + 1, 0, key)
+          } else if (before && index >= 0) {
+            plugins.buildOrder.splice(index, 0, key)
+          } else {
+            plugins.buildOrder.push(key)
+          }
+        } else {
+          plugins.buildOrder.push(key)
+        }
       }
     }
   }
