@@ -46,7 +46,7 @@ export function createSelectors (logic, input) {
       }
     }
 
-    builtSelectors[key] = (state = getStoreState(), props = logic.props) => createSelector(...args, func)(state, props)
-    logic.selectors[key] = builtSelectors[key]
+    builtSelectors[key] = createSelector(...args, func)
+    logic.selectors[key] = (state = getStoreState(), props = logic.props) => builtSelectors[key](state, props)
   })
 }
