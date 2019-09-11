@@ -108,10 +108,6 @@ test('defaults from selectors', () => {
     })
   })
 
-  // can only use "directName" below if the other logic is mounted before we build
-  // we must be able to fully build the logic without mounting anything
-  randomStore.mount()
-
   const singletonLogic = kea({
     connect: {
       values: [randomStore, ['storedName']],
@@ -128,7 +124,9 @@ test('defaults from selectors', () => {
       connectedName: [selectors.storedName, PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }],
-      directName: [randomStore.selectors.storedName, PropTypes.string, {
+      // randomStore.selectors is not yet built, so we must delay calling it
+      // with another selector or mount it before building this logic
+      directName: [state => randomStore.selectors.storedName(state), PropTypes.string, {
         [actions.updateName]: (state, payload) => payload.name
       }]
     }),
