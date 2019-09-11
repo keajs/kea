@@ -17,7 +17,7 @@ import { wrapComponent } from '../react/wrap'
 
   - logic()          === logic.build()
   - logic(props)     === logic.build(props)
-  - logic(Component) === logic.wrap(Component) 
+  - logic(Component) === logic.wrap(Component)
 
   Functions defined on wrappers:
 
@@ -65,7 +65,7 @@ import { wrapComponent } from '../react/wrap'
 
   PS! Building logic is a fast operation. If we have already built the logic for the
       corresponding input and key combination (the key is derived from props), it
-      will just be returned from the cache and connected with the new props. 
+      will just be returned from the cache and connected with the new props.
       Feel free to call logic(props) as often as you need to.
 
   Constants on logic wrappers and built logic:
@@ -88,7 +88,7 @@ export function kea (input) {
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
   wrapper.inputs = [input]
-  
+
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
   wrapper.build = props => getBuiltLogic(wrapper.inputs, props, wrapper)
   wrapper.mount = callback => wrapper.build().mount(callback)
@@ -100,20 +100,6 @@ export function kea (input) {
 
   if (!input.key) {
     getContext().options.autoMount && wrapper.mount && wrapper.mount()
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    const { options: { proxyFields } } = getContext()
-    if (proxyFields) {
-      function missingField (wrapper, propertyName) {
-        const path = wrapper.inputs[0].path ? ` "${wrapper.inputs[0].path('*').join('.')}"` : ''
-        throw new Error(`[KEA] Property "${propertyName}" not found on logic${path}. Perhaps you need to mount it first?`)
-      }
-      const targetWrapper = wrapper
-      wrapper = new Proxy(targetWrapper, {
-        get: (obj, prop) => prop in obj ? obj[prop] : missingField(obj, prop)
-      })
-    }
   }
 
   return wrapper

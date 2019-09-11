@@ -126,17 +126,17 @@ test('it is not a singleton if there is a key', () => {
   expect(response._isKea).toBe(true)
   expect(response._isKeaWithKey).toBe(true)
 
-  expect(() => response.path).toThrow()
-  expect(() => response.constants).toThrow()
+  expect(response.path).not.toBeDefined()
+  expect(response.constants).not.toBeDefined()
 
   // actions
-  expect(() => response.actions).toThrow()
+  expect(response.actions).not.toBeDefined()
 
   // reducers
-  expect(() => response.reducer).toThrow()
-  expect(() => response.reducers).toThrow()
+  expect(response.reducer).not.toBeDefined()
+  expect(response.reducers).not.toBeDefined()
 
   // selectors
-  expect(() => response.selector).toThrow()
-  expect(() => response.selectors).toThrow()
+  expect(response.selector).not.toBeDefined()
+  expect(response.selectors).not.toBeDefined()
 })
