@@ -108,6 +108,10 @@ test('defaults from selectors', () => {
     })
   })
 
+  // can only use "directName" below if the other logic is mounted before we build
+  // we must be able to fully build the logic without mounting anything
+  randomStore.mount()
+
   const singletonLogic = kea({
     connect: {
       values: [randomStore, ['storedName']],

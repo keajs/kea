@@ -4,6 +4,7 @@ import { addConnection } from '../shared/connect'
   Copy the connect'ed logic stores' selectors and actions into this object
 
   input.connect = {
+    logic: [farmSceneLogic],
     values: [farmSceneLogic, ['chicken']],
     actions: [farmSceneLogic, ['setChicken']]
   }
@@ -21,6 +22,15 @@ export function createConnect (logic, input) {
 
   const props = logic.props || {}
   const connect = typeof input.connect === 'function' ? input.connect(props) : input.connect
+
+  if (connect.logic) {
+    for (let otherLogic of connect.logic) {
+      if (otherLogic._isKea) {
+        otherLogic = otherLogic(props)
+      }
+      addConnection(logic, otherLogic)
+    }
+  }
 
   if (connect.actions) {
     const response = deconstructMapping(connect.actions)
