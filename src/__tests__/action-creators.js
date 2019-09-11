@@ -20,6 +20,8 @@ test('action creators work the right way', () => {
     })
   })
 
+  logic.mount()
+
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(logic.actions).sort()).toEqual(
     ['actionWithBool', 'actionWithInteger', 'actionWithNull', 'manualAction', 'updateName']

@@ -95,8 +95,6 @@ test('connecting to something that does not exist gives an error', () => {
 })
 
 test('reducers with undefined actions throw', () => {
-  const { store } = getContext()
-
   const logic = kea({
     actions: ({}) => ({
       doSomething: true
@@ -112,4 +110,44 @@ test('reducers with undefined actions throw', () => {
   expect(() => {
     logic.build()
   }).toThrow("[KEA] Logic \"kea.inline.1\" reducer \"thingie\" is waiting for an action that is undefined: [do something (kea.inline.1), undefined]")
+})
+
+test('using actions before mounting throws', () => {
+  const { store } = getContext()
+
+  const logic = kea({
+    path: () => ['kea', 'random'],
+    actions: ({}) => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      thingie: [false, {
+        [actions.doSomething]: () => true
+      }]
+    })
+  })
+
+  expect(() => {
+    logic.actions.doSomething()
+  }).toThrow("[KEA] Property \"actions\" not found on logic \"kea.random\". Perhaps you need to mount it first?")
+
+  expect(() => {
+    logic.values.thingie
+  }).toThrow("[KEA] Property \"values\" not found on logic \"kea.random\". Perhaps you need to mount it first?")
+
+  const logic2 = kea({
+    actions: ({}) => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      thingie: [false, {
+        [actions.doSomething]: () => true
+      }]
+    })
+  })
+
+  expect(() => {
+    logic2.actions.doSomething()
+  }).toThrow("[KEA] Property \"actions\" not found on logic. Perhaps you need to mount it first?")
+
 })

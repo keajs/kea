@@ -15,7 +15,7 @@ test.skip('can not extend when mounted', () => {
     })
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit'])
 
   expect(() => {
     logic.extend({
@@ -39,7 +39,7 @@ test('can extend with .extend', () => {
     })
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend with inline .extend', () => {
@@ -53,7 +53,7 @@ test('can extend with inline .extend', () => {
     })
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend with extend: []', () => {
@@ -70,7 +70,7 @@ test('can extend with extend: []', () => {
     ]
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend multiple times with .extend', () => {
@@ -92,7 +92,7 @@ test('can extend multiple times with .extend', () => {
     })
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
 test('can extend multiple times with inline .extend', () => {
@@ -110,7 +110,7 @@ test('can extend multiple times with inline .extend', () => {
     })
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
 test('can extend multiple times with extend: []', () => {
@@ -132,7 +132,7 @@ test('can extend multiple times with extend: []', () => {
     ]
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
 test('can extend in plugins in beforeBuild', () => {
@@ -158,7 +158,7 @@ test('can extend in plugins in beforeBuild', () => {
     plugins: [testPlugin]
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend in plugins in buildSteps', () => {
@@ -186,7 +186,7 @@ test('can extend in plugins in buildSteps', () => {
     plugins: [testPlugin]
   })
 
-  expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
 test('can extend in plugins in afterBuild', () => {
@@ -211,6 +211,8 @@ test('can extend in plugins in afterBuild', () => {
     }),
     plugins: [testPlugin]
   })
+
+  logic.mount()
 
   expect(Object.keys(logic.actions).sort()).toEqual(['doit', 'domore'])
 })
@@ -303,6 +305,8 @@ test('extending logic merges the right properties', () => {
       }
     ]
   })
+
+  logic.mount()
 
   // check generic
   expect(logic._isKea).toBe(true)

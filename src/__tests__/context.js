@@ -115,6 +115,7 @@ test('context works with plugins', () => {
 
   // const logic = kea({ options:{lazy:true}})
   const logic = kea({})
+  logic.mount()
 
   expect(logic.ranNewBuildStep).toEqual(true)
 

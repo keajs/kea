@@ -94,6 +94,7 @@ const reservedKeys = {
   path: true,
   pathString: true,
   props: true,
+  wrapper: true,
 
   wrap: true,
   build: true,
@@ -104,8 +105,7 @@ const reservedKeys = {
 export const reservedProxiedKeys = [
   'path',
   'pathString',
-  'props',
-  'mount'
+  'props'
 ]
 
 export function activatePlugin (pluginToActivate) {

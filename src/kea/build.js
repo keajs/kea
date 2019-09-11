@@ -4,7 +4,7 @@ import { getContext } from '../context'
 import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 
-export function getBuiltLogic (inputs, props) {
+export function getBuiltLogic (inputs, props, wrapper) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
@@ -19,7 +19,7 @@ export function getBuiltLogic (inputs, props) {
   const { build: { cache } } = getContext()
 
   if (!cache[pathString]) {
-    cache[pathString] = buildLogic({ inputs, path, key, props })
+    cache[pathString] = buildLogic({ inputs, path, key, props, wrapper })
   } else {
     cache[pathString].props = props
   }
@@ -28,8 +28,8 @@ export function getBuiltLogic (inputs, props) {
 }
 
 // builds logic. does not check if it's built or already on the context
-function buildLogic ({ inputs, path, key, props }) {
-  let logic = createBlankLogic({ key, path, props })
+function buildLogic ({ inputs, path, key, props, wrapper }) {
+  let logic = createBlankLogic({ key, path, props, wrapper })
   setLogicDefaults(logic)
 
   runPlugins('beforeBuild', logic, inputs)
@@ -54,16 +54,17 @@ function buildLogic ({ inputs, path, key, props }) {
   return logic
 }
 
-function createBlankLogic ({ key, path, props }) {
+function createBlankLogic ({ key, path, props, wrapper }) {
   let logic = {
     _isKeaBuild: true,
     key,
     path,
     pathString: path.join('.'),
     props,
+    wrapper,
     extend: input => applyInputToLogic(logic, input),
     mount: (callback) => {
-      mountLogic(logic)
+      mountLogic(logic, wrapper)
       if (callback) {
         const response = callback(logic)
 

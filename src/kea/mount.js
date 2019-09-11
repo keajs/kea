@@ -1,9 +1,10 @@
 import { attachReducer, detachReducer } from '../store/reducer'
-import { runPlugins } from '../plugins'
+import { runPlugins, reservedProxiedKeys } from '../plugins'
 
 import { getContext } from '../context'
 
-export function mountLogic (logic) {
+
+export function mountLogic (logic, wrapper) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections)) {
@@ -20,9 +21,34 @@ export function mountLogic (logic) {
         attachReducer(connectedLogic)
       }
 
+      proxyFields(connectedLogic)
+
       runPlugins('afterMount', connectedLogic)
       connectedLogic.events.afterMount && connectedLogic.events.afterMount()
     }
+  }
+}
+
+function proxyFields (logic) {
+  const { options: { proxyFields }, plugins: { logicFields } } = getContext()
+
+  if (proxyFields) {
+    for (const key of reservedProxiedKeys) {
+      proxyFieldToLogic(logic.wrapper, key)
+    }
+    for (const key of Object.keys(logicFields)) {
+      proxyFieldToLogic(logic.wrapper, key)
+    }
+  }
+}
+
+function proxyFieldToLogic (wrapper, key) {
+  if (!wrapper.hasOwnProperty(key)) {
+    Object.defineProperty(wrapper, key, {
+      get: function () {
+        return wrapper.build()[key]
+      }
+    })
   }
 }
 

@@ -42,6 +42,8 @@ test('singleton logic has all the right properties', () => {
     })
   })
 
+  response.mount()
+
   // check generic
   expect(response._isKea).toBe(true)
   expect(response._isKeaWithKey).toBe(false)
@@ -118,20 +120,23 @@ test('it is not a singleton if there is a key', () => {
     })
   })
 
+  expect(() => response.mount()).toThrow()
+
   // check generic
   expect(response._isKea).toBe(true)
   expect(response._isKeaWithKey).toBe(true)
-  expect(response.path).not.toBeDefined()
-  expect(response.constants).not.toBeDefined()
+
+  expect(() => response.path).toThrow()
+  expect(() => response.constants).toThrow()
 
   // actions
-  expect(response.actions).not.toBeDefined()
+  expect(() => response.actions).toThrow()
 
   // reducers
-  expect(response.reducer).not.toBeDefined()
-  expect(response.reducers).not.toBeDefined()
+  expect(() => response.reducer).toThrow()
+  expect(() => response.reducers).toThrow()
 
   // selectors
-  expect(response.selector).not.toBeDefined()
-  expect(response.selectors).not.toBeDefined()
+  expect(() => response.selector).toThrow()
+  expect(() => response.selectors).toThrow()
 })

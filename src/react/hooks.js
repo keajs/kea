@@ -52,11 +52,12 @@ export function useActions (logic) {
 
 export function useMountedLogic (logic) {
   const unmount = useRef(undefined)
-  const pathString = useRef(logic.pathString)
 
   if (!unmount.current) {
     unmount.current = logic.mount()
   }
+
+  const pathString = useRef(logic.pathString)
 
   if (pathString.current !== logic.pathString) {
     unmount.current()

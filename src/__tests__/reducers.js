@@ -22,6 +22,8 @@ test('it converts reducer arrays correctly', () => {
     })
   })
 
+  logic.mount()
+
   expect(Object.keys(logic.reducers).sort()).toEqual(['everything', 'noOptions', 'noProp', 'noPropNoOptions', 'onlyDefault'])
   expect(Object.keys(logic.defaults).sort()).toEqual(['everything', 'milk', 'noOptions', 'noProp', 'noPropNoOptions', 'onlyDefault'])
   expect(Object.keys(logic.propTypes).sort()).toEqual(['everything', 'noOptions'])

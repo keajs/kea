@@ -79,7 +79,7 @@ test('plugins add build steps', () => {
 
   const logic = kea({})
 
-  expect(logic.ranPlugins).toEqual(['afterConnect', 'beforeEvents', 'afterEvents'])
+  expect(logic.build().ranPlugins).toEqual(['afterConnect', 'beforeEvents', 'afterEvents'])
 })
 
 test('plugins add events', () => {
@@ -107,9 +107,8 @@ test('plugins add events', () => {
   expect(plugins.events.afterBuild).toEqual([ testPlugin.events.afterBuild ])
 
   const logic = kea({})
-  logic.build()
 
-  expect(logic.ranAfterBuild).toEqual(true)
+  expect(logic.build().ranAfterBuild).toEqual(true)
 })
 
 test('function plugins work', () => {
@@ -138,9 +137,8 @@ test('function plugins work', () => {
   expect(plugins.events.afterBuild).toEqual([ testPluginContents.events.afterBuild ])
 
   const logic = kea({})
-  logic.build()
 
-  expect(logic.ranAfterBuild).toEqual(true)
+  expect(logic.build().ranAfterBuild).toEqual(true)
 })
 
 test('plugin context & afterPlugin work', () => {
@@ -171,9 +169,8 @@ test('plugin context & afterPlugin work', () => {
   expect(plugins.events.afterBuild).toEqual([ testPlugin.events.afterBuild ])
 
   const logic = kea({})
-  logic.build()
 
-  expect(logic.ranAfterBuild).toEqual('yesplease')
+  expect(logic.build().ranAfterBuild).toEqual('yesplease')
 })
 
 test('can use logic.cache to store things', () => {

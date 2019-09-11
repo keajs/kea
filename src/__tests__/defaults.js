@@ -206,6 +206,8 @@ test('defaults from input.defaults selector', () => {
     })
   })
 
+  randomStore.mount()
+
   const dynamicLogic = kea({
     connect: {
       values: [randomStore, ['storedName']],

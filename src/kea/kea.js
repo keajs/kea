@@ -1,8 +1,8 @@
 import { getContext } from '../context'
 
-import { reservedProxiedKeys } from '../plugins'
-
 import { getBuiltLogic } from './build'
+import { getPathForInput } from './path'
+
 import { wrapComponent } from '../react/wrap'
 /*
 
@@ -77,7 +77,7 @@ import { wrapComponent } from '../react/wrap'
 
 */
 export function kea (input) {
-  const wrapper = function (args) {
+  let wrapper = function (args) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
     }
@@ -90,7 +90,8 @@ export function kea (input) {
   wrapper.inputs = [input]
   
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = props => getBuiltLogic(wrapper.inputs, props)
+  wrapper.build = props => getBuiltLogic(wrapper.inputs, props, wrapper)
+  wrapper.mount = callback => wrapper.build().mount(callback)
 
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)
@@ -98,18 +99,21 @@ export function kea (input) {
   }
 
   if (!input.key) {
-    const { options: { proxyFields }, plugins: { logicFields } } = getContext()
-
-    if (proxyFields) {
-      for (const key of Object.keys(logicFields)) {
-        proxyFieldToLogic(wrapper, key)
-      }
-      for (const key of reservedProxiedKeys) {
-        proxyFieldToLogic(wrapper, key)
-      }
-    }
-
     getContext().options.autoMount && wrapper.mount && wrapper.mount()
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    const { options: { proxyFields } } = getContext()
+    if (proxyFields) {
+      function missingField (wrapper, propertyName) {
+        const path = wrapper.inputs[0].path ? ` "${wrapper.inputs[0].path('*').join('.')}"` : ''
+        throw new Error(`[KEA] Property "${propertyName}" not found on logic${path}. Perhaps you need to mount it first?`)
+      }
+      const targetWrapper = wrapper
+      wrapper = new Proxy(targetWrapper, {
+        get: (obj, prop) => prop in obj ? obj[prop] : missingField(obj, prop)
+      })
+    }
   }
 
   return wrapper
@@ -117,12 +121,4 @@ export function kea (input) {
 
 export function connect (input) {
   return kea({ connect: input })
-}
-
-function proxyFieldToLogic (wrapper, key) {
-  Object.defineProperty(wrapper, key, {
-    get: function () {
-      return wrapper.build()[key]
-    }
-  })
 }
