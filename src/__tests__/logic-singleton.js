@@ -42,11 +42,18 @@ test('singleton logic has all the right properties', () => {
     })
   })
 
+  expect(response._isKea).toBe(true)
+  expect(response._isKeaWithKey).toBe(false)
+
+  expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+
+  expect(response.path).not.toBeDefined()
+  expect(response.actions).not.toBeDefined()
+  expect(response.selectors).not.toBeDefined()
+
   response.mount()
 
   // check generic
-  expect(response._isKea).toBe(true)
-  expect(response._isKeaWithKey).toBe(false)
   expect(response.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(response.connections)).toEqual(['scenes.homepage.index'])
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })

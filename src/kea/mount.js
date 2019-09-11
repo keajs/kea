@@ -42,7 +42,7 @@ function proxyFields (logic) {
   }
 }
 
-function proxyFieldToLogic (wrapper, key) {
+export function proxyFieldToLogic (wrapper, key) {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
       get: function () {

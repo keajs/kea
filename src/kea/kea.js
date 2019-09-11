@@ -1,7 +1,7 @@
 import { getContext } from '../context'
 
 import { getBuiltLogic } from './build'
-import { getPathForInput } from './path'
+import { proxyFieldToLogic } from './mount'
 
 import { wrapComponent } from '../react/wrap'
 /*
@@ -99,6 +99,9 @@ export function kea (input) {
   }
 
   if (!input.key) {
+    // so we can do logic.constants even before mounting
+    proxyFieldToLogic(wrapper, 'constants')
+
     getContext().options.autoMount && wrapper.mount && wrapper.mount()
   }
 
