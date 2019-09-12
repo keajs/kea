@@ -429,6 +429,16 @@ resetContext({
   createStore: <span class="hljs-literal">true</span>,
   plugins: [ localStoragePlugin ]
 })
+</code></pre><h2>Configuration options</h2><p>The plugin takes the following options:</p><pre><code class="bash hljs">localStoragePlugin({
+  // <span class="hljs-keyword">in</span> <span class="hljs-keyword">case</span> you want to replace this, e.g. <span class="hljs-keyword">for</span> tests or non browser environments
+  storageEngine: window.localStorage,
+
+  // added before all paths <span class="hljs-keyword">in</span> localStorage keys
+  prefix: <span class="hljs-string">&apos;example&apos;</span>,
+
+  // to change the symbol that concats path parts
+  separator: <span class="hljs-string">&apos;_&apos;</span>
+})
 </code></pre></div><div class="description"><h2>Usage</h2><p><strong>NB!</strong> To make a reducer persist in LocalStorage, your logic store <strong>must</strong> have a defined <code>path</code>.</p><p>Just add <code>{ persist: true }</code> as an option to your reducers, and it will be stored:</p><pre><code class="javascript hljs bash">const logic = kea({
   // path must be defined!
   path: () =&gt; [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;homepage&apos;</span>, <span class="hljs-string">&apos;name&apos;</span>],
@@ -440,6 +450,10 @@ resetContext({
   reducers: ({ actions, constants }) =&gt; ({
     // just add { persist: <span class="hljs-literal">true</span> }
     name: [<span class="hljs-string">&apos;chirpy&apos;</span>, { persist: <span class="hljs-literal">true</span> }, {
+      [actions.updateName]: (state, payload) =&gt; payload.name
+    }],
+    // you may override the prefix and separator keys
+    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, { persist: <span class="hljs-literal">true</span>, prefix: <span class="hljs-string">&apos;example&apos;</span>, separator: <span class="hljs-string">&apos;_&apos;</span> }, {
       [actions.updateName]: (state, payload) =&gt; payload.name
     }]
   })
