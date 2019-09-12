@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -432,14 +438,14 @@ footer.opencollective-footer a {
   }
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a class="active" aria-current="true" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Example #6 - Forms</h2><p>Before Kea I used to dread forms in React. They would always require a lot of work to set up properly.</p><p>I could either use <code>setState</code> for the simplest one-component forms... or a <a href="https://github.com/erikras/redux-form/issues/2315">bulky library</a> like <a href="https://redux-form.com/">redux-form</a> for a connected Redux-based form. Neither of those is a great option... and writing a pure-redux-form requires way too much boilerplate.</p><p>With Kea, forms are finally easy! Even the code to setup a form from scratch is quick to write, as you shall soon see.</p></div><div class="description"><h2>What shall we do?</h2><p>In this chapter we will first build a simple form that looks like this:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><em>Go ahead, play with it!</em></p><p>... and then abstract the remaining boilerplate into a form builder.</p></div><div class="description"><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a aria-current="page" class="active" href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><p><strong><span style="color: red;">TODO!</span> This example needs to be updated for Kea 1.0!</strong></p><p>Everything below should still work, but might no longer be considered <em>best practice</em></p><h2>Example - Forms</h2><p>Before Kea I used to dread forms in React. They would always require a lot of work to set up properly.</p><p>I could either use <code>setState</code> for the simplest one-component forms... or a <a href="https://github.com/erikras/redux-form/issues/2315">bulky library</a> like <a href="https://redux-form.com/">redux-form</a> for a connected Redux-based form. Neither of those is a great option... and writing a pure-redux-form requires way too much boilerplate.</p><p>With Kea, forms are finally easy! Even the code to setup a form from scratch is quick to write, as you shall soon see.</p></div><div class="description"><h2>What shall we do?</h2><p>In this chapter we will first build a simple form that looks like this:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p><em>Go ahead, play with it!</em></p><p>... and then abstract the remaining boilerplate into a form builder.</p></div><div class="description"><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
 yarn add kea-saga redux-saga
 
 <span class="hljs-comment"># if using npm</span>
 npm install kea-saga redux-saga --save
-</code></pre><p>Then import <code>sagaPlugin</code> from <code>kea-saga</code> in your <code>store.js</code> and add it to the plugins array in <code>getStore()</code></p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+</code></pre><p>Then import <code>sagaPlugin</code> from <code>kea-saga</code> and add it to your <code>resetContext()</code>:</p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
 
-const store = getStore({
+resetContext({
   plugins: [
     sagaPlugin
   ]
@@ -512,7 +518,7 @@ import form from <span class="hljs-string">&apos;./form&apos;</span>
       <span class="hljs-string">&apos;submit&apos;</span>
     ]
   ],
-  props: [
+  values: [
     form, [
       <span class="hljs-string">&apos;values&apos;</span>,
       <span class="hljs-string">&apos;isSubmitting&apos;</span>
@@ -552,8 +558,7 @@ import form from <span class="hljs-string">&apos;./form&apos;</span>
 }
 </code></pre><p>This code works! In fact, try it below:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>The only problem: once you hit &quot;submit&quot;, it will forever be stuck in the <code>isSubmitting</code> state.</p><p>We need to add some logic to make it actually do something.</p></div><div class="description"><h2>4. Submitting the form</h2><p>We will use the <code>takeLatest</code> helper to listen to the submit action and respond with either a <code>submitSuccess</code> or <code>submitFailure</code> action:</p><pre><code class="javascript hljs bash">// form.js
 
-import { put } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
+import { put, delay } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
 <span class="hljs-built_in">export</span> default kea({
   // actions, reducers, ...
@@ -724,7 +729,7 @@ import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
 </code></pre><p>So what is all of the form-specific data? What kind of an API do we want the <code>createForm</code> function to have?</p><p>Well, here&apos;s one option:</p><pre><code class="javascript hljs bash">// form.js
 
 import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
-import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
+import { delay } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
 
 import createForm from <span class="hljs-string">&apos;./create-form&apos;</span>
 
@@ -876,7 +881,7 @@ import form from <span class="hljs-string">&apos;./form&apos;</span>
       <span class="hljs-string">&apos;submit&apos;</span>
     ]
   ],
-  props: [
+  values: [
     form, [
       <span class="hljs-string">&apos;values&apos;</span>,
       <span class="hljs-string">&apos;isSubmitting&apos;</span>,
@@ -918,7 +923,7 @@ import form from <span class="hljs-string">&apos;./form&apos;</span>
     )
   }
 }
-</code></pre><p>And this is the created form in action:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>Now, there are surely additional things that can be done. For example:</p><ol><li>You may create an abstract <code>Field</code> component that removes even more boilerplate.</li><li>You may add extra code for async validation. E.g. checking if the username is taken or not.</li><li>You may publish this <code>createForm</code> as a separate NPM package and reap all the fame that comes with being an open source maintainer :).</li></ol><p>... but those things are outside the scope of this guide and are left as an exercise for the reader.</p><p>I hope you found this guide useful!</p><p>Happy hacking! :D</p><h2>Next steps</h2><p>The last topic in this guide: <a href="/guide/migration">How to migrate existing Redux applications?</a> or read the <a href="/api/logic">API docs</a>.</p></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre><p>And this is the created form in action:</p><div class="demo"><div><div class="form-field"><label>Name</label><input type="text" value="John Doe"></div><div class="form-field"><label>E-mail</label><input type="text" value=""></div><div class="form-field"><label class="block">Message</label><textarea></textarea></div><button>Submit!</button></div></div><p>Now, there are surely additional things that can be done. For example:</p><ol><li>You may create an abstract <code>Field</code> component that removes even more boilerplate.</li><li>You may add extra code for async validation. E.g. checking if the username is taken or not.</li><li>You may publish this <code>createForm</code> as a separate NPM package and reap all the fame that comes with being an open source maintainer :).</li></ol><p>... but those things are outside the scope of this guide and are left as an exercise for the reader.</p><p>I hope you found this guide useful!</p><p>Happy hacking! :D</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

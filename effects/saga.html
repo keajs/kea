@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -411,25 +417,19 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsSaga"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a class="active" aria-current="true" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p><p>Also read the sections of the guide marked &quot;with kea-saga&quot; to learn more.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> and <a href="https://github.com/redux-saga/redux-saga"><code>redux-saga</code></a> packages:</p><pre><code class="bash hljs">yarn add kea-saga redux-saga
-npm install --save kea-saga redux-saga
-</code></pre><p>Then you have a few ways to install the plugin:</p><pre><code class="javascript hljs bash">// the cleanest way
-import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
-import { getStore } from <span class="hljs-string">&apos;kea&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a aria-current="page" class="active" href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Sagas</h2><p>Kea has first class support for sagas via the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> plugin.</p><p>Read more about Sagas on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-saga"><code>kea-saga</code></a> and <a href="https://github.com/redux-saga/redux-saga"><code>redux-saga</code></a> packages:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
+yarn add kea-saga redux-saga
 
-const store = getStore({
+<span class="hljs-comment"># if you&apos;re using npm</span>
+npm install --save kea-saga redux-saga
+</code></pre><p>Then you to install the plugin:</p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+import { resetContext } from <span class="hljs-string">&apos;kea&apos;</span>
+
+resetContext({
+  createStore: <span class="hljs-literal">true</span>,
   plugins: [ sagaPlugin ]
 })
-
-// another way
-import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
-import { activatePlugin } from <span class="hljs-string">&apos;kea&apos;</span>
-
-activatePlugin(sagaPlugin)
-
-// the shortest way
-import <span class="hljs-string">&apos;kea-saga/install&apos;</span>
-</code></pre><p>Use whichever way is most convenient for your setup.</p><p>Note that the <code>kea-saga</code> plugin needs to be installed globally as it needs to add its middleware to the store. You can&apos;t use it as a local plugin inside <code>kea({})</code> calls.</p><p>If you have configured your store through <a href="/api/store"><code>getStore()</code></a>, you&apos;re all set!</p><p><button>I&apos;m not using <code>getStore</code></button></p></div><div class="description"><h2>Usage</h2><p>First, read the docs on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage to learn how sagas work.</p><p>Adding <code>kea-saga</code> will give your logic stores access to the keys: <code>start</code>, <code>stop</code>, <code>takeEvery</code>, <code>takeLatest</code>, <code>workers</code>, <code>sagas</code>.</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+</code></pre></div><div class="description"><h2>Usage</h2><p>First, read the docs on the <a href="https://redux-saga.js.org/">redux-saga</a> homepage to learn how sagas work.</p><p>Adding <code>kea-saga</code> will give your logic stores access to the keys: <code>start</code>, <code>stop</code>, <code>takeEvery</code>, <code>takeLatest</code>, <code>workers</code>, <code>sagas</code>.</p><pre><code class="javascript hljs bash">import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-built_in">export</span> default kea({
   // ... see the api docs <span class="hljs-keyword">for</span> more
@@ -568,7 +568,7 @@ myRandomSceneLogic.saga == <span class="hljs-keyword">function</span> * () {
 
   // start() ...
 }
-</code></pre></div><div class="description"><h2>FAQ</h2><p><strong>My sagas won&apos;t start with my component!</strong></p><p><code>kea-saga</code> injects itself into your component&apos;s <code>componentDidMount</code> function and starts the sagas before returning control to the original <code>componentDidMount</code>.</p><p>Because <a href="https://babeljs.io/repl/#?babili=false&amp;browsers=&amp;build=&amp;builtIns=false&amp;code_lz=MYGwhgzhAEDKD2BbApgFwBYEsB2BzaA3gFDTTDzYSoBOArsKvNdABQCUhJpZFE8IyAHQh4uFgHIqYaqhy5xbLgF8uXKdgAm0jQDFa2BpgqsOxbj0r8hIseIBG4BcqJdp1eAHc9B2cYC8JtB-AHyc5uSWAsKiEg5gcU6kKipEEXxRNiwIKBhyggAO7oyoAJ75Qupa1Lr6hhSKAPQN0AC0oQBmtb7YgQQpaVbRYtloWHgFRfCl5YJunt512I3NbdD6GsjtOMgaLgKo0Hw5Y_gB2MgecEijcuxERzfjldoL3XdEQA&amp;debug=false&amp;circleciRepo=&amp;evaluate=true&amp;lineWrap=false&amp;presets=es2015%2Creact%2Cstage-2&amp;prettier=false&amp;targets=&amp;version=6.26.0">of the way</a> ES classes work, if you define your <code>componentDidMount</code> as an arrow function (<code>componentDidMount = () =&gt; {}</code>), it will only be declared after your class is instantiated and it will overwrite modifications by <code>kea-saga</code>.</p><p>Thus, at least for now, keep your <code>componentDidMount</code> as a regular function. See more details in <a href="https://github.com/keajs/kea-saga/issues/2">this issue</a>.</p></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

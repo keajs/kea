@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -598,24 +604,21 @@ footer.opencollective-footer a {
   .kea-slider .buttons span.selected {
   background: #08FF04;
 }
-</style><style type="text/css">.kea-counter {
-  margin: 0;
-}
 </style></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="active" href="/">Home</a><a class="" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class=""><div class="content without-sidebar"><div><div class="homepage-scene"><div class="landing"><div class="intro"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMTAuMDAwMDAwKSI+CiAgICAgICAgICAgIDxlbGxpcHNlIGlkPSJPdmFsIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMTEiIGZpbGw9IiNGRkZGRkYiIGN4PSI5OSIgY3k9IjkwIiByeD0iOTAiIHJ5PSI5MCI+PC9lbGxpcHNlPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDMxLjAwMDAwMCkiIGZpbGw9IiMwMDAwMDAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTE0OS4yOTI2NDEsMjcuMzg3NTQ3IEMxNDcuOTA0OTkyLDIzLjIzNzU5OTIgMTQ1LjI3NTkzNCwyMS44NDk5NTAzIDE0NS4yNzU5MzQsMjEuODQ5OTUwMyBDMTQ1LjI3MjY4NCwyMS44NDk5NTAzIDE0NC43MjM0NzQsMjMuNTc4ODI0NCAxNDMuNDA3MzIsMjQuMzc1MDE2NCBDMTQyLjA5MTE2NiwyNS4xNzEyMDg0IDE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDAuNDYzMDM0LDI0Ljg5NDk3ODUgQzE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDMuNjkwMDQ5LDM5LjY0ODkwNCAxNDIuNjE3NjI3LDQ3LjkwOTgwMjMgQzE0MS41NDUyMDYsNTYuMTY3NDUwOSAxMzguMjE0MTk4LDYxLjk1MjAyOTYgMTM2LjQ0MzA3Nyw2Ni4xOTk0NzAzIEMxMzQuNjc1MjA2LDcwLjQ0NjkxMDkgMTI5LjgwNzA2LDc4Ljc2NjMwNSAxMjUuMTE3NjUyLDg0LjA3MzE2ODUgQzEyMC40MjQ5OTQsODkuMzg2NTMxNSAxMDYuMjYyNTI1LDEwMy4wOTA3ODMgMTAwLjE3MjQ2OSwxMDcuMDA2NzQ4IEM5NC4wODI0MTI0LDExMC45MTk0NjMgOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDkwLjM4NzQzMTUsMTExLjQxMzQyNyBDOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDk2LjM2MDQ5NjQsMTE2LjQ4OTU1OCA5OS4yNjI1MzUxLDExOC4xNTM0MzYgQzEwMi4xNjQ1NzQsMTE5LjgxNzMxNSAxMDMuOTk3NDQsMTE5Ljk4NjMwMyAxMDUuODc1ODAzLDExOS45NDQwNTYgQzEwNy43NTA5MTcsMTE5LjkwNTA1OSAxMDkuNTU0NTM2LDExOS40NTk4NDEgMTEwLjcxNDcwMSwxMTguNzQ0ODkzIEMxMTEuODc0ODY3LDExOC4wMzMxOTUgMTE0LjI4OTQ0MSwxMTcuODUxMjA4IDExNS4xODMxMjYsMTE5LjEwNTYxNyBDMTE2LjA3NjgxLDEyMC4zNTM1MjYgMTE2LjM0MzI5MSwxMjEuODcxMTY2IDExNi4zNDMyOTEsMTIxLjg3MTE2NiBDMTE2LjM0MzI5MSwxMjEuODcxMTY2IDEyMS44Mzg2NDEsMTIyLjA0OTkwMyAxMjMuNTM1MDE3LDEyMy4zNDY1NTggQzEyNS4yMzEzOTQsMTI0LjY0MzIxNCAxMjUuMTQzNjUsMTI3LjYzNjI0NiAxMjUuMTQzNjUsMTI3LjYzNjI0NiBDMTI1LjE0MzY1LDEyNy42MzYyNDYgMTI0LjE5MTQ2OSwxMjQuODA1NzAyIDEyMi41OTU4MzYsMTI0LjgwNTcwMiBDMTIwLjk5Njk1MiwxMjQuODA1NzAyIDEyMi4zMDk4NTcsMTI2LjU4OTgyMiAxMTkuNjgwNzk4LDEyNi40OTg4MjkgQzExNy4wNDg0OSwxMjYuNDA0NTg1IDEwOS43NjU3NywxMjQuNTY4NDY5IDEwMy42MTA3MTgsMTI0LjAwNjI2IEM5Ny40NTU2NjY3LDEyMy40NDQwNTEgOTAuOTY5MTM5MSwxMjQuMTk0NzQ2IDg4LjE1MTU5NDMsMTI0LjU2ODQ2OSBDODUuMzMwNzk5NywxMjQuOTQ1NDQyIDgxLjU3NDA3MzQsMTI1LjkzMzM3IDgwLjA2NjE4MzIsMTI1LjEzMzkyOCBDNzguNTY0NzkyNSwxMjQuMzM0NDg2IDc4LjQyNTA1MjcsMTIzLjExNTgyNSA3OC40MjUwNTI3LDEyMy4xMTU4MjUgQzc4LjQyNTA1MjcsMTIzLjExNTgyNSA3Ny44NTk1OTM5LDEyMy4xNjEzMjIgNzYuNzgwNjcyNSwxMjQuMDU1MDA3IEM3NS42OTg1MDEzLDEyNC45NDU0NDIgNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc1LjQ2MTI2ODYsMTI2LjE3MDYwMyBDNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc0LjU3MDgzMzQsMTIzLjc3MjI3NyA3Ni4zMDk0NTY4LDEyMi41OTU4NjMgQzc4LjA0ODA4MDIsMTIxLjQxOTQ0OSA3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuMTI3MDAxNiwxMjEuNjU2NjgxIEM3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuNzM3OTU3MSwxMjAuNjcyMDAzIDgxLjM4MjMzNzMsMTIwLjg2MDQ4OSBDODMuMDI5OTY3MywxMjEuMDQ1NzI2IDkxLjY3NDMzNzcsMTIwLjY3MjAwMyA5Mi41NjgwMjI2LDEyMC42NzIwMDMgQzkzLjQ2MTcwNzYsMTIwLjY3MjAwMyA5NC42ODM2MTg2LDEyMC40MzgwMiA5My40MTI5NjExLDExOS4zMDcxMDIgQzkyLjE0NTU1MzQsMTE4LjE3OTQzNSA4NS43MDc3NzIzLDExMi4wNzMxMjkgODUuNzA3NzcyMywxMTIuMDczMTI5IEM4NS43MDQ1MjI1LDExMi4wNzMxMjkgNzcuNjM1MzYwMiwxMTMuMTA5ODA0IDcwLjg2Mjg1MzUsMTEyLjg1MzA3MiBDNjQuMDkwMzQ2NywxMTIuNTkzMDkxIDU0LjA5MDgyNSwxMTIuMDE0NjM0IDU0LjA5MDgyNSwxMTIuMDE0NjM0IEM1NC4wOTA4MjUsMTEyLjAxNDYzNCAxNS42NTkxMjQsMTQ0LjE1NDc5MyA4LjQzMTY1MDM5LDE0OS45MTk4NzMgQzEuMjAwOTI3MDEsMTU1LjY4ODIwMyAtMC43NzE2NzkzMjYsMTU0LjczOTI3MiAwLjI1MTk5NjExOSwxNTAuNzk3MzA5IEMxLjI3MjQyMTgsMTQ2Ljg1NTM0NiAxMC44Mzk3MjUsMTM0LjM2OTc1NSAxMC44Mzk3MjUsMTM0LjM2OTc1NSBDMTAuODM2NDc1MiwxMzQuMzY5NzU1IDkuNzQ0NTU0NzcsMTMyLjU0MzM4OCAxMC45ODU5NjQ0LDEyOS4yNjExMjcgQzEyLjIyNzM3MzksMTI1Ljk3MjM2NyAxNC40MTc3MTQ0LDEyMS4yOTkyMDcgMTQuNDE3NzE0NCwxMjEuMjk5MjA3IEMxNC40MTQ0NjQ3LDEyMS4yOTkyMDcgMTAuOTUzNDY2NywxMjUuNjQ3MzkxIDkuODg3NTQ0MzUsMTI2Ljk5NjA0MiBDOC44MjE2MjE5OCwxMjguMzQ3OTQ0IDcuNjA5NDYwMjcsMTI4Ljk5MTM5NyA4LjM5MjY1MzIzLDEyNS44NjE4NzUgQzkuMTc5MDk1OTUsMTIyLjczMjM1MyAxNi44MjkwMzg4LDEwNy41NDk0NTkgMjguODUzMTYzMSw5MS4zODgzODU3IEM0MC44NzQwMzc2LDc1LjIzMDU2MjUgNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDUzLjE1NDg5MzEsNjYuMTc5OTcxNyBDNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDY1LjAxNjUyOTMsNTEuNDg3NzkxNyA3Mi44MDI5NjIyLDQ0Ljk2ODc2NjUgQzgwLjU5MjY0NDgsMzguNDQ5NzQxMyA4OC42NDg4MDgxLDMyLjgzNDE1MDMgOTAuNTUzMTY5NCwzMS4zODQ3NTU5IEM5Mi40NTQyODA5LDI5LjkzODYxMTIgOTMuNzIxNjg4NiwyOC4xMjg0OTMgOTQuODEwMzU5MywyNS42ODE0MjEyIEM5NS44OTU3ODAzLDIzLjIzNzU5OTIgMTAzLjY4MjIxMyw5LjExMDg3ODA5IDEwOS44NDA1MTUsMy44NTkyNjA1NyBDMTE1Ljk5ODgxNiwtMS4zOTU2MDY3MSAxMjcuMjA0LC0wLjIwMjk0MzU3NCAxMzEuMTc1MjExLDEuMTkxMjA0ODkgQzEzNS4xNDMxNzIsMi41OTE4NTI4OCAxMzkuMTY5NjI5LDUuNTAwMzkxMDUgMTQwLjY3NzUxOSw3LjIzMjUxNDg5IEMxNDIuMTg4NjU5LDguOTY0NjM4NzQgMTQyLjE4ODY1OSwxMC4zNjUyODY3IDE0Mi4xODg2NTksMTAuMzY1Mjg2NyBDMTQyLjE4NTQwOSwxMC4zNjUyODY3IDE0Ny4yMTYwNDMsMTIuMjA3OTAyNSAxNDkuOTU4ODQzLDE1Ljc4NTg5MTkgQzE1Mi42OTUxNDQsMTkuMzYzODgxNCAxNTUuMDQ0NzIyLDI2Ljc5NjA5MDEgMTQ5Ljk0OTA5NCwzNS4yMTI5NzcgQzE0OS45NDkwOTQsMzUuMjEyOTc3IDE1MC42NzM3OTEsMzEuNTQwNzQ0NSAxNDkuMjkyNjQxLDI3LjM4NzU0NyBaIiBpZD0iRmlsbC0zMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbC0yIiBzdHJva2U9IiNGRkZGRkYiIGN4PSIxMzEiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=" alt=""><div class="text"><h1>Kea</h1><strong>High level abstraction between <nobr>React and Redux</nobr></strong><div class="links"><a href="/guide/installation">Get started</a>&#xA0;&#xA0;&#xA0;&#xA0;<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>&#xA0;&#xA0;&#xA0;&#xA0;<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe></div></div></div></div><h2>What is Kea?</h2><div class="description"><p>Kea is a state management library for React. It <em>empowers</em> Redux, making it as easy to use as <code>setState</code> while retaining composability and improving code clarity.</p><ul><li><strong>100% Redux</strong>: Built on top of <a href="http://redux.js.org/">redux</a> and <a href="https://github.com/reactjs/reselect">reselect</a>.</li><li><strong>Side effect agnostic</strong>: use <a href="/effects/thunk">thunks</a> with redux-thunk, <a href="/effects/saga">sagas</a> with redux-saga or (soon!) <a href="https://github.com/keajs/kea/issues/40">epics</a> with redux-observable.</li><li><strong>Wrappable</strong>: Write logic alongside React components. Easier than <code>setState</code> and perfect for small components.</li><li><strong>Connectable</strong>: Pull in data and actions through ES6+ <a href="/guide/connected">imports</a>. Built for large and ambitious apps.</li><li><strong>No boilerplate</strong>: Forget <code>mapStateToProps</code> and redundant constants. Only write code that matters!</li><li><strong>No new concepts</strong>: Use actions, reducers and selectors. Gradually migrate <a href="/guide/migration">existing Redux applications</a>.</li></ul><p>Compare it to other state management libraries: <a href="https://medium.com/@mariusandra/kea-vs-setstate-redux-mobx-dva-jumpstate-apollo-etc-4aa26ea11d02">Kea vs setState, Redux, Mobx, Dva, JumpState, Apollo, etc.</a></p></div><h2>Thank you to our sponsors!</h2><div class="description"><p><a href="https://opencollective.com/kea/sponsor/0/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/0/avatar.svg"></a><a href="https://opencollective.com/kea/sponsor/1/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/1/avatar.svg"></a><a href="https://opencollective.com/kea/sponsor/2/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/2/avatar.svg"></a></p><p><a href="https://opencollective.com/kea#sponsor">Support this project by becoming a sponsor</a>.</p><p>Your logo will show up here and in the <a href="https://github.com/keajs/kea" target="_blank">README</a> with a link to your website.</p></div><h2>How does it work?</h2><div class="split"><div class="wide-description"><p>In Kea, you define logic stores with the <code>kea({})</code> function.</p><p>Each logic store contains <code>actions</code>, <code>reducers</code> and <code>selectors</code>.</p></div><div class="code"><pre><code class="javascript hljs">kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function">(<span class="hljs-params">{}</span>) =&gt;</span> ({ }),
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({ }),
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({ })
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="active" href="/">Kea 1.0</a><a class="" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class=""><div class="content without-sidebar"><div><div class="homepage-scene"><div class="landing"><div class="intro"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMTAuMDAwMDAwKSI+CiAgICAgICAgICAgIDxlbGxpcHNlIGlkPSJPdmFsIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMTEiIGZpbGw9IiNGRkZGRkYiIGN4PSI5OSIgY3k9IjkwIiByeD0iOTAiIHJ5PSI5MCI+PC9lbGxpcHNlPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDMxLjAwMDAwMCkiIGZpbGw9IiMwMDAwMDAiPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTE0OS4yOTI2NDEsMjcuMzg3NTQ3IEMxNDcuOTA0OTkyLDIzLjIzNzU5OTIgMTQ1LjI3NTkzNCwyMS44NDk5NTAzIDE0NS4yNzU5MzQsMjEuODQ5OTUwMyBDMTQ1LjI3MjY4NCwyMS44NDk5NTAzIDE0NC43MjM0NzQsMjMuNTc4ODI0NCAxNDMuNDA3MzIsMjQuMzc1MDE2NCBDMTQyLjA5MTE2NiwyNS4xNzEyMDg0IDE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDAuNDYzMDM0LDI0Ljg5NDk3ODUgQzE0MC40NjMwMzQsMjQuODk0OTc4NSAxNDMuNjkwMDQ5LDM5LjY0ODkwNCAxNDIuNjE3NjI3LDQ3LjkwOTgwMjMgQzE0MS41NDUyMDYsNTYuMTY3NDUwOSAxMzguMjE0MTk4LDYxLjk1MjAyOTYgMTM2LjQ0MzA3Nyw2Ni4xOTk0NzAzIEMxMzQuNjc1MjA2LDcwLjQ0NjkxMDkgMTI5LjgwNzA2LDc4Ljc2NjMwNSAxMjUuMTE3NjUyLDg0LjA3MzE2ODUgQzEyMC40MjQ5OTQsODkuMzg2NTMxNSAxMDYuMjYyNTI1LDEwMy4wOTA3ODMgMTAwLjE3MjQ2OSwxMDcuMDA2NzQ4IEM5NC4wODI0MTI0LDExMC45MTk0NjMgOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDkwLjM4NzQzMTUsMTExLjQxMzQyNyBDOTAuMzg3NDMxNSwxMTEuNDEzNDI3IDk2LjM2MDQ5NjQsMTE2LjQ4OTU1OCA5OS4yNjI1MzUxLDExOC4xNTM0MzYgQzEwMi4xNjQ1NzQsMTE5LjgxNzMxNSAxMDMuOTk3NDQsMTE5Ljk4NjMwMyAxMDUuODc1ODAzLDExOS45NDQwNTYgQzEwNy43NTA5MTcsMTE5LjkwNTA1OSAxMDkuNTU0NTM2LDExOS40NTk4NDEgMTEwLjcxNDcwMSwxMTguNzQ0ODkzIEMxMTEuODc0ODY3LDExOC4wMzMxOTUgMTE0LjI4OTQ0MSwxMTcuODUxMjA4IDExNS4xODMxMjYsMTE5LjEwNTYxNyBDMTE2LjA3NjgxLDEyMC4zNTM1MjYgMTE2LjM0MzI5MSwxMjEuODcxMTY2IDExNi4zNDMyOTEsMTIxLjg3MTE2NiBDMTE2LjM0MzI5MSwxMjEuODcxMTY2IDEyMS44Mzg2NDEsMTIyLjA0OTkwMyAxMjMuNTM1MDE3LDEyMy4zNDY1NTggQzEyNS4yMzEzOTQsMTI0LjY0MzIxNCAxMjUuMTQzNjUsMTI3LjYzNjI0NiAxMjUuMTQzNjUsMTI3LjYzNjI0NiBDMTI1LjE0MzY1LDEyNy42MzYyNDYgMTI0LjE5MTQ2OSwxMjQuODA1NzAyIDEyMi41OTU4MzYsMTI0LjgwNTcwMiBDMTIwLjk5Njk1MiwxMjQuODA1NzAyIDEyMi4zMDk4NTcsMTI2LjU4OTgyMiAxMTkuNjgwNzk4LDEyNi40OTg4MjkgQzExNy4wNDg0OSwxMjYuNDA0NTg1IDEwOS43NjU3NywxMjQuNTY4NDY5IDEwMy42MTA3MTgsMTI0LjAwNjI2IEM5Ny40NTU2NjY3LDEyMy40NDQwNTEgOTAuOTY5MTM5MSwxMjQuMTk0NzQ2IDg4LjE1MTU5NDMsMTI0LjU2ODQ2OSBDODUuMzMwNzk5NywxMjQuOTQ1NDQyIDgxLjU3NDA3MzQsMTI1LjkzMzM3IDgwLjA2NjE4MzIsMTI1LjEzMzkyOCBDNzguNTY0NzkyNSwxMjQuMzM0NDg2IDc4LjQyNTA1MjcsMTIzLjExNTgyNSA3OC40MjUwNTI3LDEyMy4xMTU4MjUgQzc4LjQyNTA1MjcsMTIzLjExNTgyNSA3Ny44NTk1OTM5LDEyMy4xNjEzMjIgNzYuNzgwNjcyNSwxMjQuMDU1MDA3IEM3NS42OTg1MDEzLDEyNC45NDU0NDIgNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc1LjQ2MTI2ODYsMTI2LjE3MDYwMyBDNzUuNDYxMjY4NiwxMjYuMTcwNjAzIDc0LjU3MDgzMzQsMTIzLjc3MjI3NyA3Ni4zMDk0NTY4LDEyMi41OTU4NjMgQzc4LjA0ODA4MDIsMTIxLjQxOTQ0OSA3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuMTI3MDAxNiwxMjEuNjU2NjgxIEM3OS4xMjcwMDE2LDEyMS42NTY2ODEgNzkuNzM3OTU3MSwxMjAuNjcyMDAzIDgxLjM4MjMzNzMsMTIwLjg2MDQ4OSBDODMuMDI5OTY3MywxMjEuMDQ1NzI2IDkxLjY3NDMzNzcsMTIwLjY3MjAwMyA5Mi41NjgwMjI2LDEyMC42NzIwMDMgQzkzLjQ2MTcwNzYsMTIwLjY3MjAwMyA5NC42ODM2MTg2LDEyMC40MzgwMiA5My40MTI5NjExLDExOS4zMDcxMDIgQzkyLjE0NTU1MzQsMTE4LjE3OTQzNSA4NS43MDc3NzIzLDExMi4wNzMxMjkgODUuNzA3NzcyMywxMTIuMDczMTI5IEM4NS43MDQ1MjI1LDExMi4wNzMxMjkgNzcuNjM1MzYwMiwxMTMuMTA5ODA0IDcwLjg2Mjg1MzUsMTEyLjg1MzA3MiBDNjQuMDkwMzQ2NywxMTIuNTkzMDkxIDU0LjA5MDgyNSwxMTIuMDE0NjM0IDU0LjA5MDgyNSwxMTIuMDE0NjM0IEM1NC4wOTA4MjUsMTEyLjAxNDYzNCAxNS42NTkxMjQsMTQ0LjE1NDc5MyA4LjQzMTY1MDM5LDE0OS45MTk4NzMgQzEuMjAwOTI3MDEsMTU1LjY4ODIwMyAtMC43NzE2NzkzMjYsMTU0LjczOTI3MiAwLjI1MTk5NjExOSwxNTAuNzk3MzA5IEMxLjI3MjQyMTgsMTQ2Ljg1NTM0NiAxMC44Mzk3MjUsMTM0LjM2OTc1NSAxMC44Mzk3MjUsMTM0LjM2OTc1NSBDMTAuODM2NDc1MiwxMzQuMzY5NzU1IDkuNzQ0NTU0NzcsMTMyLjU0MzM4OCAxMC45ODU5NjQ0LDEyOS4yNjExMjcgQzEyLjIyNzM3MzksMTI1Ljk3MjM2NyAxNC40MTc3MTQ0LDEyMS4yOTkyMDcgMTQuNDE3NzE0NCwxMjEuMjk5MjA3IEMxNC40MTQ0NjQ3LDEyMS4yOTkyMDcgMTAuOTUzNDY2NywxMjUuNjQ3MzkxIDkuODg3NTQ0MzUsMTI2Ljk5NjA0MiBDOC44MjE2MjE5OCwxMjguMzQ3OTQ0IDcuNjA5NDYwMjcsMTI4Ljk5MTM5NyA4LjM5MjY1MzIzLDEyNS44NjE4NzUgQzkuMTc5MDk1OTUsMTIyLjczMjM1MyAxNi44MjkwMzg4LDEwNy41NDk0NTkgMjguODUzMTYzMSw5MS4zODgzODU3IEM0MC44NzQwMzc2LDc1LjIzMDU2MjUgNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDUzLjE1NDg5MzEsNjYuMTc5OTcxNyBDNTMuMTU0ODkzMSw2Ni4xNzk5NzE3IDY1LjAxNjUyOTMsNTEuNDg3NzkxNyA3Mi44MDI5NjIyLDQ0Ljk2ODc2NjUgQzgwLjU5MjY0NDgsMzguNDQ5NzQxMyA4OC42NDg4MDgxLDMyLjgzNDE1MDMgOTAuNTUzMTY5NCwzMS4zODQ3NTU5IEM5Mi40NTQyODA5LDI5LjkzODYxMTIgOTMuNzIxNjg4NiwyOC4xMjg0OTMgOTQuODEwMzU5MywyNS42ODE0MjEyIEM5NS44OTU3ODAzLDIzLjIzNzU5OTIgMTAzLjY4MjIxMyw5LjExMDg3ODA5IDEwOS44NDA1MTUsMy44NTkyNjA1NyBDMTE1Ljk5ODgxNiwtMS4zOTU2MDY3MSAxMjcuMjA0LC0wLjIwMjk0MzU3NCAxMzEuMTc1MjExLDEuMTkxMjA0ODkgQzEzNS4xNDMxNzIsMi41OTE4NTI4OCAxMzkuMTY5NjI5LDUuNTAwMzkxMDUgMTQwLjY3NzUxOSw3LjIzMjUxNDg5IEMxNDIuMTg4NjU5LDguOTY0NjM4NzQgMTQyLjE4ODY1OSwxMC4zNjUyODY3IDE0Mi4xODg2NTksMTAuMzY1Mjg2NyBDMTQyLjE4NTQwOSwxMC4zNjUyODY3IDE0Ny4yMTYwNDMsMTIuMjA3OTAyNSAxNDkuOTU4ODQzLDE1Ljc4NTg5MTkgQzE1Mi42OTUxNDQsMTkuMzYzODgxNCAxNTUuMDQ0NzIyLDI2Ljc5NjA5MDEgMTQ5Ljk0OTA5NCwzNS4yMTI5NzcgQzE0OS45NDkwOTQsMzUuMjEyOTc3IDE1MC42NzM3OTEsMzEuNTQwNzQ0NSAxNDkuMjkyNjQxLDI3LjM4NzU0NyBaIiBpZD0iRmlsbC0zMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPGNpcmNsZSBpZD0iT3ZhbC0yIiBzdHJva2U9IiNGRkZGRkYiIGN4PSIxMzEiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=" alt=""><div class="text"><h1>Kea</h1><strong>Data Layer for React. Powered by Redux.</strong><div class="links"><a href="/guide/installation">Get started</a>&#xA0;&#xA0;&#xA0;&#xA0;<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>&#xA0;&#xA0;&#xA0;&#xA0;<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe></div></div></div></div><div class="description"><p><strong>NB!</strong> This documentation is for the 1.0 release. To see docs for 0.28, click here.</p></div><h2>Why Kea?</h2><div class="description"><p>The Kea project began when I first started to use <a href="https://redux.js.org">Redux</a> in a <a href="https://reactjs.org/">React</a> app in 2015.</p><p>Redux was fine, but I kept writing very similar code over and over again. Eventually I looked for ways to simplify things. I wrote several helper functions that automatised most of these repetitive tasks.</p><p>That loose collection of functions grew into the first public release of Kea, version 0.1 at the start of 2016.</p><p>Those in turn evolved into a unified <u>high level abstraction over Redux</u>. The small helper functions morphed into a standardised way to describe your app&apos;s state and all the logic that manipulates it, including side effects. (versions 0.1 to 0.28 over 3 years).</p><p>That worked well. There were plenty of users and businesses who depended on Kea to power their apps. Several of them said very nice things about it.</p><p>Then things got complicated.</p><p>Recent changes in React and React-Redux combined with community feedback through unsolvable feature requests forced me to take a step back and have a fresh look at what was Kea and where was it heading. It was time for a refactor... Which turned into a rewrite... Which took on a life of its own... and kept <a href="https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md">expanding and expanding and expanding</a>.</p><p>All of this while retaining the same bundle size as before (16kb minified -&gt; 17kb minified).</p><p>After 5+ months of hard work over 300+ commits Kea 1.0 was born.</p><p>It&apos;s a complete rewrite of what came before, taking Kea from being just an abstraction over Redux into proper framework territory.</p></div><h2>What is Kea?</h2><div class="description"><p>Think of React as the <u>User Interface (UI) layer</u> of your application. It takes your application&apos;s state and converts it into something the user can interact with. It is <a href="https://2018.stateofjs.com/front-end-frameworks/overview/">exceptionally good</a> at this.</p><p>React, however, is unopinionated as to where you actually store this state. While it provides some primitives to get you going (think <code>useState</code>), most apps eventually implement a dedicated state management solution.</p><p>Kea is one such solution. It adds a <u>Data Layer</u> to React&apos;s UI layer and acts as the brain of your application. There is seamless interoperability between both layers as we are standing on the great work done by the react-redux team.</p><p>Kea, however, is more than just a state container. There are plenty of nice features to make any developer happy. Read on to find out more!</p></div><h2>How does it work?</h2><div class="split"><div class="wide-description"><p>In Kea, you create <code>logic</code> from input with the <code>kea()</code> function.</p><p>Each logic contains <code>actions</code>, <code>reducers</code> and <code>selectors</code>.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ ... }),
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({ ... }),
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({ ... })
 })
-</code></pre></div></div><div class="split"><div class="wide-description"><p>They work just like in Redux:</p><ul><li>They are all pure functions (no side effects, same input = same output)</li><li><strong>Actions</strong> are functions which take an input and return a payload</li><li><strong>Reducers</strong> take actions as input and return new_data = old_data + payload</li><li><strong>Selectors</strong> take the input of multiple reducers and return a combined output</li></ul><p>See here for a nice overview of how Redux works: <a href="https://medium.com/gitconnected/redux-logic-flow-crazy-simple-summary-35416eadabd8">Redux Logic Flow&#x200A;&#x2014;&#x200A;Crazy Simple Summary</a></p><p>For example, to build a simple counter:</p></div><div class="code"><pre><code class="javascript hljs">kea({
+</code></pre></div></div><div class="split"><div class="wide-description"><p>They work just like in Redux:</p><ul><li><strong>Actions</strong> request changes in the system</li><li><strong>Reducers</strong> manage your data and change it in response to actions</li><li><strong>Selectors</strong> combine one or more reducers into a new output</li></ul><p>They must all be pure functions and perform no side effects.</p><p>If this is new to you, see <a href="https://medium.com/gitconnected/redux-logic-flow-crazy-simple-summary-35416eadabd8" target="_blank">here</a> for a nice overview of how Redux works.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
     <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
       [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
       [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
     }]
@@ -624,125 +627,260 @@ footer.opencollective-footer a {
   <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
     <span class="hljs-attr">doubleCounter</span>: [
       <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
-      (counter) =&gt; counter * <span class="hljs-number">2</span>,
-      PropTypes.number
+      (counter) =&gt; counter * <span class="hljs-number">2</span>
     ]
   })
 })
-</code></pre></div></div><div class="split"><div class="wide-description"><p>The logic stores can either</p><p>1) be wrapped around your component or pure function:</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({ <span class="hljs-comment">/* options from above */</span> })
+</code></pre></div></div><div class="split"><div class="wide-description"><p>To access these actions and values from React you either:</p><ol><li><a href="#" style="font-weight: bold;"><span>Use hooks</span></a></li><li><a href="#" style="font-weight: normal;"><span>Wrap the <code>logic</code> around your functional component</span></a></li><li><a href="#" style="font-weight: normal;"><span>Wrap the <code>logic</code> around your Class component</span></a></li><li><a href="#" style="font-weight: normal;"><span>Use a (legacy) decorator</span></a></li><li><a href="#" style="font-weight: normal;"><span>Use an inline (legacy) decorator</span></a></li><li><a href="#" style="font-weight: normal;"><span>Use <code>connect()</code> to wrap actions and values from multiple logic around one component.</span></a></li></ol></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({ ... })
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Counter</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { increment, decrement } = useActions(logic)
+  <span class="hljs-keyword">const</span> { counter, doubleCounter } = useValues(logic)
 
-    <span class="hljs-keyword">return</span> &lt;div&gt;...&lt;/div&gt;
-  }
+  <span class="hljs-keyword">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;Counter: {counter}&lt;/p&gt;
+      &lt;p&gt;DoubleCounter: {doubleCounter}&lt;/p&gt;
+      &lt;p&gt;
+        &lt;button onClick={() =&gt; increment(1)}&gt;+&lt;/button&gt;
+        &lt;button onClick={() =&gt; decrement(1)}&gt;-&lt;/button&gt;
+      &lt;/p&gt;
+    &lt;/div&gt;
+  )
 }
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> logic(Counter)
-</code></pre></div></div><div class="split"><div class="wide-description"><p>2) used as decorators:</p></div><div class="code"><pre><code class="javascript hljs">@kea({ <span class="hljs-comment">/* options from above */</span> })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">return</span> &lt;div /&gt;
-  }
-}
-</code></pre></div></div><div class="split"><div class="wide-description"><p>or</p><p>3) imported and then connected to.</p><p>You can also connect logic stores together, to e.g:</p><ul><li>... use actions from one logic store in the reducer of another.</li><li>... combine reducers from multiple logic stores into one selector.</li></ul></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({ <span class="hljs-comment">/* options from above */</span> })
-
-<span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;features-logic&apos;</span>
-
-@connect({
-  <span class="hljs-attr">actions</span>: [
-    featuresLogic, [
-      <span class="hljs-string">&apos;increment&apos;</span>,
-      <span class="hljs-string">&apos;decrement&apos;</span>
-    ]
-  ],
-  <span class="hljs-attr">props</span>: [
-    featuresLogic, [
-      <span class="hljs-string">&apos;counter&apos;</span>,
-      <span class="hljs-string">&apos;doubleCounter&apos;</span>
-    ]
-  ]
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">return</span> &lt;div /&gt;
-  }
-}
-</code></pre></div></div><div class="split"><div class="wide-description"><p>Eventually you&apos;ll need side effects. Then you have a choice.</p><p>You can use simple <a href="/effects/thunk">thunks</a> via redux-thunk:</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&apos;kea-thunk&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-keyword">const</span> incrementerLogic = kea({
+</code></pre></div></div><div class="split"><div class="wide-description"><p>Eventually you&apos;ll need side effects (e.g. to talk to your API). Then you have a choice:</p><ol><li><p><a href="#" style="font-weight: bold;"><span>You can use listeners via kea-listeners</span></a></p><p><a href="https://github.com/keajs/kea-listeners">Listeners</a> are functions that run after the action they are listening to is dispatched.</p><p>They have built in support for cancellation and debouncing through breakpoints.</p></li><li><p><a href="#" style="font-weight: normal;"><span>You can use thunks via kea-thunk &amp; redux-thunk</span></a></p></li><li><p><a href="#" style="font-weight: normal;"><span>You can use sagas via kea-saga &amp; redux-saga</span></a></p></li></ol></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> incrementerLogic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">increase</span>: <span class="hljs-literal">true</span>
+    <span class="hljs-attr">increase</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">debouncedIncrease</span>: <span class="hljs-function"><span class="hljs-params">ms</span> =&gt;</span> ({ ms })
   }),
+
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.increase]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + <span class="hljs-number">1</span>
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increase]: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> state + <span class="hljs-number">1</span>
     }]
   }),
-  <span class="hljs-attr">thunks</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, dispatch, getState }</span>) =&gt;</span> ({
-    <span class="hljs-attr">increaseAsync</span>: <span class="hljs-keyword">async</span> (ms) =&gt; {
-      <span class="hljs-keyword">await</span> delay(ms)
-      <span class="hljs-keyword">await</span> actions.increase()
+
+  <span class="hljs-attr">listeners</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, values, store }</span>) =&gt;</span> ({
+    [actions.debouncedIncrease]: <span class="hljs-keyword">async</span> ({ ms }, breakpoint) =&gt; {
+      <span class="hljs-comment">// return if the action was called again while sleeping</span>
+      <span class="hljs-keyword">await</span> breakpoint(ms)
+      actions.increase()
+
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Current state: <span class="hljs-subst">${values.counter}</span>`</span>)
     }
   })
 })
-</code></pre></div></div><div class="split"><div class="wide-description"><p>.... or the more powerful <a href="/effects/saga">sagas</a> via redux-saga.</p><p>(coming soon: <a href="https://github.com/keajs/kea/issues/40">support for epics</a> with redux-observable)</p><p>Check out the examples below or <a href="/guide/installation">start reading the guide</a> for more.</p><p>If you&apos;re already using Redux in your apps, it&apos;s <a href="/guide/migration">really easy to migrate</a>.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&apos;kea-saga&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+</code></pre></div></div><h2>Any other interesting plugins?</h2><div class="split"><div class="wide-description"><p>Yes! There are many other plugins you can extend your logic with.</p><p>For example <code><a href="https://gist.github.com/mariusandra/ed989e0a362cb9beb30526abf85b1021">kea-dimensions</a></code>, which sets a value based on the screen dimensions.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { useValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">const</span> sliderLogic = kea({
+<span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">dimensions</span>: {
+    <span class="hljs-attr">isSmallScreen</span>: [<span class="hljs-literal">false</span>, <span class="hljs-built_in">window</span> =&gt; <span class="hljs-built_in">window</span>.innerWidth &lt; <span class="hljs-number">640</span>],
+    <span class="hljs-attr">isLargeScreen</span>: [<span class="hljs-literal">true</span>, <span class="hljs-built_in">window</span> =&gt; <span class="hljs-built_in">window</span>.innerWidth &gt;= <span class="hljs-number">960</span>]
+  },
+})
+
+<span class="hljs-keyword">const</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Component</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { isSmallScreen } = useValues(logic)
+
+  <span class="hljs-keyword">if</span> (isSmallScreen) {
+    <span class="hljs-keyword">return</span> &lt;small&gt;Hello Small World&lt;/small&gt;
+  }
+
+  <span class="hljs-keyword">return</span> &lt;strong&gt;Hello Big World&lt;/strong&gt;
+}
+</code></pre></div></div><div class="split"><div class="wide-description"><p>... or <code><a href="https://github.com/keajs/kea-router">kea-router</a></code>, which dispatches actions in response to URL changes... and changes the URL in response to dispatched actions.</p></div><div class="code"><pre><code class="javascript hljs">kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+    <span class="hljs-attr">openArticle</span>: <span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> ({ id }),
+    <span class="hljs-attr">closeArticle</span>: <span class="hljs-literal">true</span>
   }),
 
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">article</span>: [<span class="hljs-literal">null</span>, {
+      [actions.openArticle]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.id,
+      [actions.closeArticle]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">null</span>
+    }]
+  })
+
+  actionToUrl: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    [actions.openArticle]: <span class="hljs-function">(<span class="hljs-params">{ id }</span>) =&gt;</span> <span class="hljs-string">`/articles/<span class="hljs-subst">${id}</span>`</span>,
+    [actions.closeArticle]: <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> <span class="hljs-string">&apos;/articles&apos;</span>
+  }),
+
+  <span class="hljs-attr">urlToAction</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-string">&apos;/articles/:id&apos;</span>: <span class="hljs-function">(<span class="hljs-params">{ id }</span>) =&gt;</span> actions.openArticle(id),
+    <span class="hljs-string">&apos;/articles&apos;</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> actions.closeArticle()
+  })
+})
+</code></pre></div></div><h2>What more can Kea do?</h2><div class="split"><div class="wide-description"><p>You can connect logic with one another. For example to:</p><ol><li><a href="#" style="font-weight: bold;"><span>Use actions from one logic in the reducer of another</span></a></li><li><a href="#" style="font-weight: normal;"><span>Use values from one logic in the selector of another</span></a></li></ol></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
     }]
   }),
+})
 
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentImage</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
-      (currentSlide) =&gt; images[currentSlide],
-      PropTypes.object
-    ]
-  }),
+<span class="hljs-keyword">const</span> doubleLogic = kea({
+  <span class="hljs-attr">connect</span>: {
+    <span class="hljs-comment">// reusing the same actions</span>
+    actions: [logic, [<span class="hljs-string">&apos;increment&apos;</span>, <span class="hljs-string">&apos;decrement&apos;</span>]]
+  }
 
-  <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
+  reducers: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount * <span class="hljs-number">2</span>,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount * <span class="hljs-number">2</span>
+    }]
+  })
+})</code></pre></div></div><div class="split"><div class="wide-description"><p>You can programmatically create logic.</p><p>This example function <code>createGetterSetterLogic(...)</code> creates for the options <code>{ foo: &quot;bar&quot;, moo: &quot;baz&quot; }</code> logic:</p><ol><li>... with the actions <code>setFoo</code> and <code>setMoo</code></li><li>... with reducers for <code>foo</code> and <code>moo</code> (defaulting to &quot;bar&quot; and &quot;baz&quot;)</li></ol><p>You can abstract away repetetive code like this.</p><p>See the chapter in the guide about <a href="/guide/forms">forms</a> for one example of this approach.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalize</span>(<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-keyword">return</span> name.charAt(<span class="hljs-number">0</span>).toUpperCase() + name.slice(<span class="hljs-number">1</span>).toLowerCase()
+}
 
-    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
-      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
-        <span class="hljs-attr">change</span>: take(updateSlide.toString()),
-        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createGetterSetterLogic</span> (<span class="hljs-params">options</span>) </span>{
+  <span class="hljs-keyword">return</span> kea({
+    <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">let</span> actions = {}
+      <span class="hljs-built_in">Object</span>.keys(options).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+        actions[<span class="hljs-string">`set<span class="hljs-subst">${capitalize(key)}</span>`</span>] = <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> ({ [key]: value })
       })
-
-      <span class="hljs-keyword">if</span> (timeout) {
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
-        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
-      }
+      <span class="hljs-keyword">return</span> actions
+    },
+    <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> {
+      <span class="hljs-keyword">let</span> reducers = {}
+      <span class="hljs-built_in">Object</span>.keys(options).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+        reducers[key] = [
+          options[key],
+          {
+            [actions[<span class="hljs-string">`set<span class="hljs-subst">${capitalize(key)}</span>`</span>]]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload[key]
+          }
+        ]
+      })
+      <span class="hljs-keyword">return</span> reducers
     }
-  }
-})
-</code></pre></div></div><h2>Simple counter</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+  })
+}
 
-@kea({
+<span class="hljs-keyword">const</span> logic = createGetterSetterLogic({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&apos;React&apos;</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">&apos;Frontend bliss&apos;</span>
+})
+
+<span class="hljs-comment">// logic.actions == { setName (value) {}, setDescription (value) {} }</span>
+<span class="hljs-comment">// logic.values == { name: ..., description: ... }</span>
+</code></pre></div></div><div class="split"><div class="wide-description"><p>You can extend already created logic through <code>logic.extend({})</code></p><p>Inside <code>logic.extend({})</code> you use exactly the same syntax as in <code>kea({})</code>.</p><p>Split code out of <code>kea({})</code> blocks into functions that <code>extend</code> them with certain features.</p><p>When needed, further abstract these extensions into a plugin.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
     <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  })
+})
+
+logic.extend({
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">doubleCounter</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
+      (counter) =&gt; counter * <span class="hljs-number">2</span>
+    ]
+  })
+})
+</code></pre></div></div><h2>Cool. Is that it?</h2><div class="split"><div class="wide-description"><p>No! There&apos;s a lot more Kea can do!</p><p>For example, if you give your logic a <code>key</code>, you can have multiple independent copies of it.</p><p>The <code>key</code> is derived from <code>props</code>, which is either:</p><ol><li><a href="#" style="font-weight: bold;"><span>Passed to the logic as arguments when using hooks</span></a><p>Use the format: <code>useActions(logic(props))</code></p></li><li><a href="#" style="font-weight: normal;"><span>Taken from your component&apos;s props</span></a></li></ol><p>Imagine having multiple independent [&apos;image galleries&apos;, &apos;todo items&apos;, &apos;text edit forms&apos;, ...] on one page with their own state and actions.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">key</span>: <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> props.id,
+
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount = <span class="hljs-number">1</span></span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount = <span class="hljs-number">1</span></span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key, props }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  })
+})
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Counter</span> (<span class="hljs-params">{ id }</span>) </span>{
+  <span class="hljs-keyword">const</span> { counter, doubleCounter } = useValues(logic({ id }))
+  <span class="hljs-keyword">const</span> { increment, decrement } = useActions(logic({ id }))
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div&gt;
+      Counter {id}: {counter}&lt;br /&gt;
+      &lt;button onClick={() =&gt; increment(1)}&gt;Increment&lt;/button&gt;
+      &lt;button onClick={() =&gt; decrement(1)}&gt;Decrement&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Counters</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> (
+    &lt;&gt;
+      &lt;Counter id={1} /&gt;
+      &lt;Counter id={2} /&gt;
+    &lt;/&gt;
+  )
+}
+</code></pre></div></div><div class="split"><div class="wide-description"><p>When you use Kea with React, your <code>logic</code>&apos;s reducers are automatically added to redux when your component renders and removed when it&apos;s destroyed.</p><p>However, you can also interact with <code>logic</code> outside React if you mount it manually (or set <code>autoMount</code> to true when initializing Kea).</p><ul><li>Call <code>logic.mount()</code> to initialize the logic and connect it to redux.</li><li>Then call <code>logic.actions.doSomething()</code> to dispatch actions</li><li>... and use <code>logic.values.something</code> to get the values</li><li>... and access everything else that is defined on a built logic.</li></ul><p>If your logic uses a key, you must build it first:</p><p><code>const builtLogic = logic({ id: 123 })</code></p><p>And then call <code>builtLogic.mount()</code> to mount it.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-comment">// create the counter logic from the examples above</span>
+<span class="hljs-keyword">const</span> logic = kea({ ... })
+
+<span class="hljs-comment">// connect its reducers to redux</span>
+<span class="hljs-keyword">const</span> unmount = logic.mount()
+
+logic.values.counter
+<span class="hljs-comment">// =&gt; 0</span>
+
+logic.actions.increment()
+<span class="hljs-comment">// =&gt; { type: &apos;increment ...&apos;, payload: { amount: 1 } }</span>
+
+logic.values.counter
+<span class="hljs-comment">// =&gt; 1</span>
+
+<span class="hljs-comment">// remove reducers from redux</span>
+unmount()
+
+logic.values.counter
+<span class="hljs-comment">// =&gt; throw new Error()!</span>
+</code></pre></div></div><div class="split"><div class="wide-description"><p>Events.</p><p>A logic has 4 events that you can hook into:</p><ul><li><code>beforeMount()</code> - runs before the logic is mounted</li><li><code>afterMount()</code> - runs after the logic was mounted</li><li><code>beforeUnmount()</code> - runs before the logic is unmounted</li><li><code>afterUnmount()</code> - runs after the logic was unmounted</li></ul><p>We recommend keeping your events light and only dispatching actions from them.</p><p>These actions should then be caught by reducers or listeners which do whatever is needed.</p></div><div class="code"><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
+      [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
+    }]
+  })
+
+  events: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    afterMount () {
+      actions.increment()
+    }
+  })
+})
+</code></pre></div></div><h2>Okay, that must be it with the features?</h2><div class="description"><p>Almost! There are few more concepts and keywords that we didn&apos;t cover yet:</p><ul><li><code>path</code> - to make it easier to debug</li><li><code>constants</code> - for when you need a place to store enums</li><li><code>actionCreators</code> - raw redux actions without dispatch</li><li><code>selectors</code> - raw reselect selectors, abstracted away by <code>values</code>, but there if you need them</li><li><code>defaults</code> - set default values for reducers by selecting data from props or other logic</li><li><code>cache</code> - a transient object for storing temporary data in plugins</li><li>how to create plugins</li><li>the kea context and plugin contexts</li><li>using props in selectors</li><li>initialized vs built vs mounted logic</li></ul><p>... to name a few.</p><p>Check out the examples below or <a href="/guide/installation">start reading the docs</a> to learn more!</p><p>If you&apos;re already using Redux in your apps, it&apos;s <a href="/guide/migration">really easy to migrate</a>.</p></div><h2>Simple counter</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">hooks</button><button class="">functional</button><button class="">hoc</button><button class="">decorator</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea, useActions, useValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">const</span> counterLogic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount }),
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">amount</span>) =&gt;</span> ({ amount })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
       [actions.increment]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.amount,
       [actions.decrement]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state - payload.amount
     }]
@@ -751,143 +889,89 @@ footer.opencollective-footer a {
   <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
     <span class="hljs-attr">doubleCounter</span>: [
       <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.counter],
-      (counter) =&gt; counter * <span class="hljs-number">2</span>,
-      PropTypes.number
+      (counter) =&gt; counter * <span class="hljs-number">2</span>
     ]
   })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { counter, doubleCounter } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { increment, decrement } = <span class="hljs-keyword">this</span>.actions
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;kea-counter&apos;&gt;
-        Count: {counter}&lt;br /&gt;
-        Doublecount: {doubleCounter}&lt;br /&gt;
-        &lt;button onClick={() =&gt; increment(1)}&gt;Increment&lt;/button&gt;
-        &lt;button onClick={() =&gt; decrement(1)}&gt;Decrement&lt;/button&gt;
-      &lt;/div&gt;
-    )
-  }
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Counter</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { counter, doubleCounter } = useValues(counterLogic)
+  <span class="hljs-keyword">const</span> { increment, decrement } = useActions(counterLogic)
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div className=&apos;kea-counter&apos;&gt;
+      Count: {counter}&lt;br /&gt;
+      Doublecount: {doubleCounter}&lt;br /&gt;
+      &lt;button onClick={() =&gt; increment(1)}&gt;Increment&lt;/button&gt;
+      &lt;button onClick={() =&gt; decrement(1)}&gt;Decrement&lt;/button&gt;
+    &lt;/div&gt;
+  )
 }
-</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br>Doublecount: 0<br><button>Increment</button><button>Decrement</button></div></div><br>Read the guide: <a href="/guide/counter">Counter</a></div></div><h2>Delayed Counter <small>with <a href="/effects/thunk">thunks</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Counter
+</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br>Doublecount: 0<br><button>Increment</button><button>Decrement</button></div></div></div></div><h2>Delayed Counter <small>with <a href="/effects/listeners">kea-listeners</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">hooks</button><button class="">functional</button><button class="">hoc</button><button class="">decorator</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea, useActions, useValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">const</span> delay = <span class="hljs-function"><span class="hljs-params">ms</span> =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> <span class="hljs-built_in">window</span>.setTimeout(resolve, ms))
 
-@kea({
+<span class="hljs-keyword">const</span> logic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">increase</span>: <span class="hljs-literal">true</span>
+    <span class="hljs-attr">increase</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">increaseAsync</span>: <span class="hljs-function"><span class="hljs-params">ms</span> =&gt;</span> ({ ms }),
+    <span class="hljs-attr">toggleDebounced</span>: <span class="hljs-literal">true</span>
   }),
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.increase]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + <span class="hljs-number">1</span>
+    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, {
+      [actions.increase]: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> state + <span class="hljs-number">1</span>
+    }],
+    <span class="hljs-attr">debounced</span>: [<span class="hljs-literal">false</span>, {
+      [actions.toggleDebounced]: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> !state
     }]
   }),
-  <span class="hljs-attr">thunks</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, dispatch, getState }</span>) =&gt;</span> ({
-    <span class="hljs-attr">increaseAsync</span>: <span class="hljs-keyword">async</span> (ms) =&gt; {
-      <span class="hljs-keyword">await</span> delay(ms)
-      <span class="hljs-keyword">await</span> actions.increase()
+  <span class="hljs-attr">listeners</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, values }</span>) =&gt;</span> ({
+    [actions.increaseAsync]: <span class="hljs-keyword">async</span> ({ ms }, breakpoint) =&gt; {
+      <span class="hljs-keyword">if</span> (values.debounced) {
+        <span class="hljs-keyword">await</span> breakpoint(ms) <span class="hljs-comment">// breaks if called again while waiting</span>
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">await</span> delay(ms) <span class="hljs-comment">// does not break</span>
+      }
+      actions.increase()
     }
   })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThunkCounter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { increase, increaseAsync } = <span class="hljs-keyword">this</span>.actions
-    <span class="hljs-keyword">const</span> { counter } = <span class="hljs-keyword">this</span>.props
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div style={{textAlign: &apos;center&apos;}}&gt;
-        &lt;div&gt;{counter}&lt;/div&gt;
-        {[0, 10, 100, 500, 1000, 2000].map(ms =&gt; (
-          &lt;button key={ms}
-                  onClick={() =&gt; ms === 0 ? increase() : increaseAsync(ms)}&gt;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ListenerCounter</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { counter, debounced } = useValues(logic)
+  <span class="hljs-keyword">const</span> { increase, increaseAsync, toggleDebounced } = useActions(logic)
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div style={{textAlign: &apos;center&apos;}}&gt;
+      &lt;div&gt;{counter}&lt;/div&gt;
+      &lt;div&gt;
+        {[0, 10, 100, 250, 500, 1000, 2000].map(ms =&gt; (
+          &lt;button
+            key={ms}
+            onClick={() =&gt; ms === 0 ? increase() : increaseAsync(ms)}&gt;
             {ms}
           &lt;/button&gt;
         ))}
       &lt;/div&gt;
-    )
-  }
-}
-</code></pre></div></div><div class="description"><div class="demo"><div style="text-align: center;"><div>0</div><button>0</button><button>10</button><button>100</button><button>500</button><button>1000</button><button>2000</button></div></div><p>Read the docs: <a href="/effects/thunk">kea-thunk</a></p><p>Play with it in <a href="https://www.webpackbin.com/bins/-KxSPoMw6q-_lcXY8guq" target="_blank">WebpackBin</a></p></div></div><h2>Slider <small>with <a href="/effects/saga">sagas</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-keyword">import</span> { take, race, put } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span> <span class="hljs-comment">// promise-based timeout helper</span>
-<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span> <span class="hljs-comment">// range(3) === [0, 1, 2]</span>
-
-<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
-
-@kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
-  }),
-
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
-    }]
-  }),
-
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">currentImage</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
-      (currentSlide) =&gt; images[currentSlide],
-      PropTypes.object
-    ]
-  }),
-
-  <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
-
-    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
-      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
-        <span class="hljs-attr">change</span>: take(updateSlide.toString()),
-        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
-      })
-
-      <span class="hljs-keyword">if</span> (timeout) {
-        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
-        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
-      }
-    }
-  }
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { currentSlide, currentImage } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
-
-    <span class="hljs-keyword">const</span> title = <span class="hljs-string">`Image copyright by <span class="hljs-subst">${currentImage.author}</span>`</span>
-
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;kea-slider&apos;&gt;
-        &lt;img src={currentImage.src} alt={title} title={title} /&gt;
-        &lt;div className=&apos;buttons&apos;&gt;
-          {range(images.length).map(i =&gt; (
-            &lt;span key={i}
-                  className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
-                  onClick={() =&gt; updateSlide(i)} /&gt;
-          ))}
-        &lt;/div&gt;
+      &lt;div&gt;
+        &lt;button onClick={toggleDebounced}&gt;
+          {debounced ? &apos;[x]&apos; : &apos;[ ]&apos;} Debounced
+        &lt;/button&gt;
       &lt;/div&gt;
-    )
-  }
+    &lt;/div&gt;
+  )
 }
-</code></pre></div></div><div class="description"><div class="demo"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div><br>Read the guide: <a href="/guide/sliders">Sliders</a></div></div><h2>Github <small>with <a href="/effects/saga">sagas</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> { put, call } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-<span class="hljs-keyword">import</span> { delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga&apos;</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ListenerCounter
+</code></pre></div></div><div class="description"><div class="demo"><div style="text-align: center;"><div>0</div><div><button>0</button><button>10</button><button>100</button><button>250</button><button>500</button><button>1000</button><button>2000</button></div><div><button>[ ] Debounced</button></div></div></div><p>Read more about <a href="/effects/listeners">kea-listeners</a></p></div></div><h2>Github <small>with <a href="/effects/listeners">kea-listeners</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">hooks</button><button class="">functional</button><button class="">hoc</button><button class="">decorator</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea, useActions, useValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">const</span> API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
-@kea({
+<span class="hljs-keyword">const</span> githubLogic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">setUsername</span>: <span class="hljs-function">(<span class="hljs-params">username</span>) =&gt;</span> ({ username }),
     <span class="hljs-attr">setRepositories</span>: <span class="hljs-function">(<span class="hljs-params">repositories</span>) =&gt;</span> ({ repositories }),
@@ -895,19 +979,19 @@ footer.opencollective-footer a {
   }),
 
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">username</span>: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
+    <span class="hljs-attr">username</span>: [<span class="hljs-string">&apos;keajs&apos;</span>, {
       [actions.setUsername]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.username
     }],
-    <span class="hljs-attr">repositories</span>: [[], PropTypes.array, {
+    <span class="hljs-attr">repositories</span>: [[], {
       [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [],
       [actions.setRepositories]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.repositories
     }],
-    <span class="hljs-attr">isLoading</span>: [<span class="hljs-literal">true</span>, PropTypes.bool, {
+    <span class="hljs-attr">isLoading</span>: [<span class="hljs-literal">true</span>, {
       [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
       [actions.setRepositories]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
       [actions.setFetchError]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>
     }],
-    <span class="hljs-attr">error</span>: [<span class="hljs-literal">null</span>, PropTypes.string, {
+    <span class="hljs-attr">error</span>: [<span class="hljs-literal">null</span>, {
       [actions.setUsername]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">null</span>,
       [actions.setFetchError]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.message
     }]
@@ -916,192 +1000,147 @@ footer.opencollective-footer a {
   <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
     <span class="hljs-attr">sortedRepositories</span>: [
       <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.repositories],
-      (repositories) =&gt; repositories.sort(
-                          <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> b.stargazers_count - a.stargazers_count),
-      PropTypes.array
+      (repositories) =&gt; {
+        <span class="hljs-keyword">const</span> sorter = <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> b.stargazers_count - a.stargazers_count
+        <span class="hljs-keyword">return</span> [...repositories].sort(sorter)
+      }
+    ]
+  }),
+
+  <span class="hljs-attr">events</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, values }</span>) =&gt;</span> ({
+    afterMount () {
+      actions.setUsername(values.username)
+    }
+  }),
+
+  <span class="hljs-attr">listeners</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    [actions.setUsername]: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">{ username }, breakpoint</span>) </span>{
+      <span class="hljs-keyword">const</span> { setRepositories, setFetchError } = actions
+
+      <span class="hljs-keyword">await</span> breakpoint(<span class="hljs-number">100</span>) <span class="hljs-comment">// debounce for 100ms</span>
+
+      <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${API_URL}</span>/users/<span class="hljs-subst">${username}</span>/repos?per_page=250`</span>
+      <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-built_in">window</span>.fetch(url)
+
+      breakpoint() <span class="hljs-comment">// break if action was called while we were fetching</span>
+
+      <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">await</span> response.json()
+
+      <span class="hljs-keyword">if</span> (response.status === <span class="hljs-number">200</span>) {
+        setRepositories(json)
+      } <span class="hljs-keyword">else</span> {
+        setFetchError(json.message)
+      }
+    }
+  })
+})
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Github</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> {
+    username, isLoading, repositories, sortedRepositories, error
+  } = useValues(githubLogic)
+  <span class="hljs-keyword">const</span> { setUsername } = useActions(githubLogic)
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div className=&apos;example-github-scene&apos;&gt;
+      &lt;div style={{marginBottom: 20}}&gt;
+        &lt;h1&gt;Search for a github user&lt;/h1&gt;
+        &lt;input
+          value={username}
+          type=&apos;text&apos;
+          onChange={e =&gt; setUsername(e.target.value)} /&gt;
+      &lt;/div&gt;
+      {isLoading ? (
+        &lt;div&gt;
+          Loading...
+        &lt;/div&gt;
+      ) : repositories.length &gt; 0 ? (
+        &lt;div&gt;
+          Found {repositories.length} repositories for user {username}!
+          {sortedRepositories.map(repo =&gt; (
+            &lt;div key={repo.id}&gt;
+              &lt;a href={repo.html_url} target=&apos;_blank&apos;&gt;{repo.full_name}&lt;/a&gt;
+              {&apos; - &apos;}{repo.stargazers_count} stars, {repo.forks} forks.
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      ) : (
+        &lt;div&gt;
+          {error ? `Error: ${error}` : &apos;No repositories found&apos;}
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  )
+}
+
+export default Github
+</code></pre></div></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 14 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1429 stars, 50 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 4 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 3 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 1 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-listeners" target="_blank">keajs/kea-listeners</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-router" target="_blank">keajs/kea-router</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-next-test" target="_blank">keajs/kea-next-test</a> - 0 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github API</a></div></div><h2>Slider <small>with <a href="/effects/saga">kea-saga</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">hooks</button><button class="">functional</button><button class="">hoc</button><button class="">decorator</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { kea, useActions, useHooks } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">import</span> { take, race, put, delay } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+
+<span class="hljs-keyword">import</span> range <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/range&apos;</span> <span class="hljs-comment">// range(3) === [0, 1, 2]</span>
+
+<span class="hljs-keyword">import</span> images <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./images&apos;</span>     <span class="hljs-comment">// array of objects [{ src, author }, ...]</span>
+
+<span class="hljs-keyword">const</span> sliderLogic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">updateSlide</span>: <span class="hljs-function"><span class="hljs-params">index</span> =&gt;</span> ({ index })
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentSlide</span>: [<span class="hljs-number">0</span>, {
+      [actions.updateSlide]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> payload.index % images.length
+    }]
+  }),
+
+  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
+    <span class="hljs-attr">currentImage</span>: [
+      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.currentSlide],
+      (currentSlide) =&gt; images[currentSlide]
     ]
   }),
 
   <span class="hljs-attr">start</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
-    <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;username&apos;</span>)
-    <span class="hljs-keyword">yield</span> put(setUsername(username))
-  },
+    <span class="hljs-keyword">const</span> { updateSlide } = <span class="hljs-keyword">this</span>.actions
 
-  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.setUsername]: workers.fetchRepositories
-  }),
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+      <span class="hljs-keyword">const</span> { timeout } = <span class="hljs-keyword">yield</span> race({
+        <span class="hljs-attr">change</span>: take(updateSlide),
+        <span class="hljs-attr">timeout</span>: delay(<span class="hljs-number">5000</span>)
+      })
 
-  <span class="hljs-attr">workers</span>: {
-    * fetchRepositories (action) {
-      <span class="hljs-keyword">const</span> { setRepositories, setFetchError } = <span class="hljs-keyword">this</span>.actions
-      <span class="hljs-keyword">const</span> { username } = action.payload
-
-      <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">100</span>) <span class="hljs-comment">// debounce for 100ms</span>
-
-      <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${API_URL}</span>/users/<span class="hljs-subst">${username}</span>/repos?per_page=250`</span>
-      <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">yield</span> <span class="hljs-built_in">window</span>.fetch(url)
-
-      <span class="hljs-keyword">if</span> (response.status === <span class="hljs-number">200</span>) {
-        <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">yield</span> response.json()
-        <span class="hljs-keyword">yield</span> put(setRepositories(json))
-      } <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">yield</span> response.json()
-        <span class="hljs-keyword">yield</span> put(setFetchError(json.message))
+      <span class="hljs-keyword">if</span> (timeout) {
+        <span class="hljs-keyword">const</span> currentSlide = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">&apos;currentSlide&apos;</span>)
+        <span class="hljs-keyword">yield</span> put(updateSlide(currentSlide + <span class="hljs-number">1</span>))
       }
     }
   }
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Github</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { username, isLoading, repositories,
-            sortedRepositories, error } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { setUsername } = <span class="hljs-keyword">this</span>.actions
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;example-github-scene&apos;&gt;
-        &lt;div style={{marginBottom: 20}}&gt;
-          &lt;h1&gt;Search for a github user&lt;/h1&gt;
-          &lt;input value={username}
-                 type=&apos;text&apos;
-                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
-        &lt;/div&gt;
-        {isLoading ? (
-          &lt;div&gt;
-            Loading...
-          &lt;/div&gt;
-        ) : repositories.length &gt; 0 ? (
-          &lt;div&gt;
-            Found {repositories.length} repositories for user {username}!
-            {sortedRepositories.map(repo =&gt; (
-              &lt;div key={repo.id}&gt;
-                &lt;a href={repo.html_url} target=&apos;_blank&apos;&gt;{repo.full_name}&lt;/a&gt;
-                {&apos; - &apos;}{repo.stargazers_count} stars, {repo.forks} forks.
-              &lt;/div&gt;
-            ))}
-          &lt;/div&gt;
-        ) : (
-          &lt;div&gt;
-            {error ? `Error: ${error}` : &apos;No repositories found&apos;}
-          &lt;/div&gt;
-        )}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Slider</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { currentSlide, currentImage } = useValues(sliderLogic)
+  <span class="hljs-keyword">const</span> { updateSlide } = useActions(sliderLogic)
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div className=&apos;kea-slider&apos;&gt;
+      &lt;img
+        src={currentImage.src}
+        alt={`Image copyright by ${currentImage.author}`}
+        title={`Image copyright by ${currentImage.author}`} /&gt;
+      &lt;div className=&apos;buttons&apos;&gt;
+        {range(images.length).map(i =&gt; (
+          &lt;span
+            key={i}
+            className={i === currentSlide ? &apos;selected&apos; : &apos;&apos;}
+            onClick={() =&gt; updateSlide(i)} /&gt;
+        ))}
       &lt;/div&gt;
-    )
-  }
+    &lt;/div&gt;
+  )
 }
-</code></pre></div></div><div class="description"><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 11 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1376 stars, 52 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 2 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 3 forks.</div></div></div></div><br>Read the guide: <a href="/guide/github">Github</a></div></div><h2>Debounced countdown <small>with <a href="/effects/saga">sagas</a></small></h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-keyword">import</span> delay <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;~/utils/delay&apos;</span>
-<span class="hljs-keyword">import</span> { put, cancelled } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-
-@kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">start</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">finish</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">setCounter</span>: <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> ({ counter })
-  }),
-
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, key, props }</span>) =&gt;</span> ({
-    <span class="hljs-attr">counter</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
-      [actions.setCounter]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.counter
-    }],
-    <span class="hljs-attr">finished</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
-      [actions.start]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-      [actions.finish]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>
-    }]
-  }),
-
-  <span class="hljs-attr">takeLatest</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, workers }</span>) =&gt;</span> ({
-    [actions.start]: <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">try</span> {
-        <span class="hljs-keyword">const</span> { setCounter, finish } = <span class="hljs-keyword">this</span>.actions
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">50</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
-          <span class="hljs-keyword">yield</span> put(setCounter(i))
-          <span class="hljs-keyword">yield</span> delay(<span class="hljs-number">50</span>)
-        }
-        <span class="hljs-keyword">yield</span> put(finish())
-      } <span class="hljs-keyword">finally</span> {
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">yield</span> cancelled()) {
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Countdown was cancelled!&apos;</span>)
-        }
-      }
-    }
-  })
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Countdown</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { counter, finished } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { start } = <span class="hljs-keyword">this</span>.actions
-
-    <span class="hljs-keyword">return</span> (
-      &lt;div className=&apos;kea-counter&apos;&gt;
-        Count: {counter}
-        &lt;br /&gt;&lt;br /&gt;
-        {finished
-          ? &apos;We made it until the end! finish() action triggered&apos;
-          : &apos;Click start to trigger the finish() action in a few seconds&apos;}
-        &lt;br /&gt;&lt;br /&gt;
-        &lt;button onClick={() =&gt; start()}&gt;Start&lt;/button&gt;
-      &lt;/div&gt;
-    )
-  }
-}
-</code></pre></div></div><div class="description"><div class="demo"><div class="kea-counter">Count: 0<br><br>Click start to trigger the finish() action in a few seconds<br><br><button>Start</button></div></div><br></div></div><h2>Connected logic stores</h2><div class="split"><div class="code"><div><div class="code-style-bar"><button class="active">decorator</button><button class="">hoc</button><button class="">functional</button></div><pre><code class="javascript hljs"><span class="hljs-comment">// features-logic.js</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prop-types&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
-    <span class="hljs-attr">toggleFeature</span>: <span class="hljs-function">(<span class="hljs-params">feature</span>) =&gt;</span> ({ feature })
-  }),
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">features</span>: [{}, PropTypes.object, {
-      [actions.toggleFeature]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-        <span class="hljs-keyword">const</span> { feature } = payload
-        <span class="hljs-keyword">return</span> {
-          ...state,
-          [feature]: !state[feature]
-        }
-      }
-    }]
-  })
-})
-
-<span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-keyword">import</span> featuresLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../features-logic&apos;</span>
-
-@connect({
-  <span class="hljs-attr">actions</span>: [
-    featuresLogic, [
-      <span class="hljs-string">&apos;toggleFeature&apos;</span>
-    ]
-  ],
-  <span class="hljs-attr">props</span>: [
-    featuresLogic, [
-      <span class="hljs-string">&apos;features&apos;</span>
-    ]
-  ]
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectedToggle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { features } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { toggleFeature } = <span class="hljs-keyword">this</span>.actions
-
-    <span class="hljs-keyword">return</span> (
-      &lt;div&gt;
-        &lt;p&gt;{features.something ? &apos;Something enabled&apos; : &apos;Something disabled&apos;}&lt;/p&gt;
-        &lt;button onClick={() =&gt; toggleFeature(&apos;something&apos;)}&gt;Toggle something&lt;/button&gt;
-      &lt;/div&gt;
-    )
-  }
-}
-</code></pre></div></div><div class="description"><div class="demo"><div><p>Something disabled</p><button>Toggle something</button></div></div><br>Read the guide: <a href="/guide/connected">Connected</a></div></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+export default Slider
+</code></pre></div></div><div class="description"><div class="demo"><div class="kea-slider"><img src="/f3950cfdf9b297de16cb49e4405ee0d3.jpg" alt="Image copyright by Kevin Glisson" title="Image copyright by Kevin Glisson"><div class="buttons"><span class="selected"></span><span class=""></span><span class=""></span></div></div></div><br>Read the guide: <a href="/guide/sliders">Sliders</a></div></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

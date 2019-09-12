@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -411,141 +417,119 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideMigration"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a class="active" aria-current="true" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="migration-scene"><div class="description"><h2>Migrating existing Redux applications</h2><p>Since kea is just redux, it is very easy to connect it to an existing redux application.</p><h2>Reading external data</h2><p>You may pull in data from any part of the Redux tree with the Kea. For this you will use either the <code>@connect({ props: [] })</code> helper or the <code>connect: { props: [] }</code> option in the <code>@kea({})</code> function.</p><p>Instead of passing a kea logic store to <code>props</code> you just pass a selector. Like so:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a aria-current="page" class="active" href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="migration-scene"><div class="description"><h2>Migrating existing Redux applications</h2><p>Since kea is just redux, it is very easy to connect it to an existing redux application.</p><h2>Reading non-Kea state</h2><p>You may pull in data from any part of the Redux tree with the Kea through <code>kea({ connect: { ... } })</code>.</p><p>Instead of passing a logic to fetch from, pass a selector:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
 <span class="hljs-keyword">import</span> someLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./some-logic&apos;</span>
 
 <span class="hljs-keyword">const</span> railsContext = <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.rails
 
-@connect({
-  <span class="hljs-attr">props</span>: [
-    someLogic, [
-      <span class="hljs-string">&apos;prop1&apos;</span>,
-      <span class="hljs-string">&apos;prop2&apos;</span>
-    ],
-    railsContext, [
-      <span class="hljs-string">&apos;i18nLocale&apos;</span>,
-      <span class="hljs-string">&apos;currentUserId&apos;</span>
-    ],
-    (state) =&gt; state.form.myForm, [
-      <span class="hljs-string">&apos;* as myForm&apos;</span>
+<span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">connect</span>: {
+    <span class="hljs-attr">values</span>: [
+      someLogic, [ <span class="hljs-comment">// &lt;----- instead of logic like this</span>
+        <span class="hljs-string">&apos;prop1&apos;</span>,
+        <span class="hljs-string">&apos;prop2&apos;</span>
+      ],
+      state =&gt; state.rails, [ <span class="hljs-comment">// &lt;----- pass a selector</span>
+        <span class="hljs-string">&apos;i18nLocale&apos;</span>,
+        <span class="hljs-string">&apos;currentUserId&apos;</span>
+      ],
+      state =&gt; state.form.myForm, [
+        <span class="hljs-string">&apos;* as myForm&apos;</span> <span class="hljs-comment">// get everything as &apos;myForm&apos;</span>
+      ]
     ]
-  ]
+  }
+
+  <span class="hljs-comment">// ...</span>
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
-  render () {
-    <span class="hljs-keyword">const</span> { prop1, prop2, i18nLocale, currentUserId, myForm } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-comment">// ...</span>
-  }
+</code></pre><h2>Using non-Kea actions</h2><p>Similarly, use an object of action creators and select the ones you need:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+<span class="hljs-keyword">import</span> someLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./some-logic&apos;</span>
+
+<span class="hljs-keyword">const</span> railsContext = <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.rails
+
+<span class="hljs-keyword">const</span> actionsCreators = {
+  <span class="hljs-attr">doSomething</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;DO_SOMETHING&apos;</span>, <span class="hljs-attr">payload</span>: { } }),
+  <span class="hljs-attr">otherAction</span>: <span class="hljs-function">(<span class="hljs-params">{ id }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;OTHER_ACTION&apos;</span>, <span class="hljs-attr">payload</span>: { id } }),
 }
-</code></pre><h2>Using external actions</h2><p>Kea always adds <code>dispatch</code> as one of the props to your app, so you can easily call actions that are defined elsewhere.</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">import</span> { push } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-router-redux&apos;</span>
 
-<span class="hljs-keyword">import</span> doSomething <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./actions/do-something&apos;</span>
-
-<span class="hljs-comment">// just to get the dispatch</span>
-@kea({})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
-  handleButton = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-keyword">const</span> { dispatch } = <span class="hljs-keyword">this</span>.props
-
-    <span class="hljs-comment">// call the action</span>
-    dispatch(doSomething())
-
-    <span class="hljs-comment">// ask redux-router to take us home</span>
-    dispatch(push(<span class="hljs-string">&apos;/home&apos;</span>))
+<span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">connect</span>: {
+    <span class="hljs-attr">actions</span>: [
+      someLogic, [ <span class="hljs-comment">// &lt;--------------- instead of logic like this</span>
+        <span class="hljs-string">&apos;action1&apos;</span>,
+        <span class="hljs-string">&apos;action2&apos;</span>
+      ],
+      actionsCreators, [ <span class="hljs-comment">// &lt;-- pass an object of action creators</span>
+        <span class="hljs-string">&apos;doSomething&apos;</span>, <span class="hljs-comment">// &lt;------------ and select what is needed</span>
+        <span class="hljs-string">&apos;otherAction&apos;</span>
+      ]
+    ]
   }
 
-  render () {
-    <span class="hljs-keyword">return</span> (
-      &lt;div&gt;
-        &lt;button onClick={this.handleButton}&gt;
-          Do something
-        &lt;/button&gt;
-      &lt;/div&gt;
-    )
-  }
-}
-</code></pre><p>You may listen to other actions and either have them influence your reducers or run a saga when they happen. Just replace <code>actions.something</code> with <code>MY_TYPE_CONSTANT</code>, like so:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+  <span class="hljs-comment">// ..</span>
+})
+</code></pre><p>You may listen to other actions and either have them influence your reducers or run a saga when they happen. Just replace <code>actions.something</code> with <code>ACTION_TYPE_CONSTANT</code>, like so:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
 <span class="hljs-keyword">import</span> { LOCATION_CHANGE } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-router-redux&apos;</span>
-
 <span class="hljs-keyword">import</span> { SOME_ACTION } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./actions&apos;</span>
 
-@kea({
+<span class="hljs-keyword">const</span> logic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">doit</span>: <span class="hljs-literal">true</span>
   }),
 
-  <span class="hljs-attr">reducer</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">myValue</span>: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
+    <span class="hljs-attr">myValue</span>: [<span class="hljs-literal">false</span>, {
       [SOME_ACTION]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
       [actions.doit]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>
     }]
   }),
 
-  <span class="hljs-attr">takeEvery</span>: <span class="hljs-function">(<span class="hljs-params">{ workers }</span>) =&gt;</span> ({
-    [LOCATION_CHANGE]: workers.urlToState
-  }),
-
-  <span class="hljs-attr">workers</span>: {
-    * urlToStateWorker (action) {
-      <span class="hljs-keyword">const</span> { search, pathname } = action.payload
+  <span class="hljs-attr">listeners</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    [LOCATION_CHANGE]: <span class="hljs-function">(<span class="hljs-params">payload</span>) =&gt;</span> {
       <span class="hljs-comment">// ...</span>
     }
-  }
+  })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">const</span> MyComponent extends Component {
-  <span class="hljs-comment">// ...</span>
-}
-</code></pre><h2>Using Kea actions and selectors elsewhere</h2><p>If the redux-only part of your app needs access to some props or actions from kea logic stores, you can import them like so:</p><pre><code class="javascript hljs"><span class="hljs-comment">// my-logic.js</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
+</code></pre><h2>Using Kea actions and selectors elsewhere</h2><p>If the redux-only part of your app needs access to some values or actions from kea logic stores, you can import them like so:</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
   <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
     <span class="hljs-attr">addOne</span>: <span class="hljs-literal">true</span>
   }),
   <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions }</span>) =&gt;</span> ({
-    <span class="hljs-attr">myNumber</span>: [<span class="hljs-number">0</span>, PropTypes.number, {
+    <span class="hljs-attr">myNumber</span>: [<span class="hljs-number">0</span>, {
       [actions.addOne]: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state + <span class="hljs-number">1</span>
     }]
   }),
   <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ selectors }</span>) =&gt;</span> ({
     <span class="hljs-attr">myNumberDouble</span>: [
       <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.myNumber],
-      (myNumber) =&gt; myNumber * <span class="hljs-number">2</span>,
-      PropTypes.number
+      (myNumber) =&gt; myNumber * <span class="hljs-number">2</span>
     ]
   })
 })
 
-<span class="hljs-comment">// component</span>
-<span class="hljs-keyword">import</span> TodoList <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../components/TodoList&apos;</span>
-<span class="hljs-keyword">import</span> { toggleTodo } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../actions&apos;</span>
+<span class="hljs-comment">// The logic must be mounted before you can access its fields</span>
+<span class="hljs-comment">// This is done automatically when a React component is using it.</span>
 
-<span class="hljs-keyword">import</span> myLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./my-logic&apos;</span>
+<span class="hljs-comment">// If you&apos;re using Kea outside React, call logic.mount() manually to have</span>
+<span class="hljs-comment">// access to all the fields below.</span>
+logic.mount()
 
-<span class="hljs-keyword">const</span> mapStateToProps = <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> {
-  <span class="hljs-keyword">return</span> {
-    <span class="hljs-attr">todos</span>: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> state.todos,
-    <span class="hljs-attr">myNumber</span>: myLogic.selectors.myNumber,
-    <span class="hljs-attr">myNumberDouble</span>: myLogic.selectors.myNumberDouble,
-  }
-}
+<span class="hljs-comment">// Call an action to add something</span>
+logic.actions.addOne()
 
-<span class="hljs-keyword">const</span> mapDispatchToProps = <span class="hljs-function"><span class="hljs-params">dispatch</span> =&gt;</span> {
-  <span class="hljs-keyword">return</span> {
-    <span class="hljs-attr">onTodoClick</span>: <span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> dispatch(toggleTodo(id)),
-    <span class="hljs-attr">onAddOneClick</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> dispatch(myLogic.actions.addOne())
-  }
-}
+<span class="hljs-comment">// Create an action (returns the object { type: &apos;add one ...&apos;, payload: {} })</span>
+logic.actionCreators.addOne()
 
-<span class="hljs-keyword">const</span> ConnectedTodoList = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TodoList)
+<span class="hljs-comment">// Reselect selectors for querying redux (state defaults to getState())</span>
+logic.selectors.myNumber(state)
+logic.selectors.myNumberDouble(state)
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ConnectedTodoList
-</code></pre><p>The <a href="/api/logic">API docs</a> describe what is available to import.</p><h2>Next steps</h2><p>That&apos;s it for the guide!</p><p>Check out the <a href="/examples/todos">example applications</a> or read the <a href="/api/logic">API docs</a>.</p></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+<span class="hljs-comment">// Shorthand for selectors (implemented as getters)</span>
+logic.values.myNumber
+logic.values.myNumberDouble
+</code></pre><p>The <a href="/api/logic">API docs</a> describe what is available to import.</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

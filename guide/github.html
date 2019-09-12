@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -411,45 +417,47 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideGithub"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a class="active" aria-current="true" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Example #4 - Github</h2><p>In this guide we are going to build a component that asks for an username and then fetches all the repositories for that user on Github.</p><p>The final result will look like this:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 11 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1376 stars, 52 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 2 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 3 forks.</div></div></div></div></div><div class="description"><div><h2>0. Install <code>kea-saga</code></h2><p>We&apos;ll be using sagas in this example. To add support for them, install the <code>kea-saga</code> and <code>redux-saga</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
-yarn add kea-saga redux-saga
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a aria-current="page" class="active" href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Example - Github API</h2><p>In this guide we are going to build a component that asks for an username and then fetches all the repositories for that user on Github.</p><p>The final result will look like this:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 14 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1429 stars, 50 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 4 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 3 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 1 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-listeners" target="_blank">keajs/kea-listeners</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-router" target="_blank">keajs/kea-router</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-next-test" target="_blank">keajs/kea-next-test</a> - 0 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div></div></div></div></div><div class="description"><div><h2>0. Install <code>kea-listeners</code></h2><p>We&apos;ll be using listeners in this example. To add support for them, install the <code>kea-listeners</code> packages.</p><pre><code class="bash hljs"><span class="hljs-comment"># if using yarn</span>
+yarn add kea-listeners
 
 <span class="hljs-comment"># if using npm</span>
-npm install kea-saga redux-saga --save
-</code></pre><p>Then import <code>sagaPlugin</code> from <code>kea-saga</code> in your <code>store.js</code> and add it to the plugins array in <code>getStore()</code></p><pre><code class="javascript hljs bash">import sagaPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
+npm install kea-listeners --save
+</code></pre><p>Then import <code>listenersPlugin</code> from <code>kea-listeners</code> and use it in the <code>plugins</code> array in your <code>resetContext()</code>.</p><pre><code class="javascript hljs bash">import { resetContext } from <span class="hljs-string">&apos;kea&apos;</span>
+import listenersPlugin from <span class="hljs-string">&apos;kea-saga&apos;</span>
 
-const store = getStore({
+resetContext({
   plugins: [
-    sagaPlugin
+    listenersPlugin
   ]
 })
-</code></pre><p><a href="/effects/saga">Read here for more</a></p></div></div><div class="description"><h2>1. Input the username</h2><p>Now that you have seen the end result, let&apos;s build it, piece by piece.</p><p>The first thing we want to do is to have an input element to enter the username.</p><p>If you have followed the other parts of this guide, you should know how to get this part working.</p><p>Hopefully after some tinkering you will come up with something like this:</p><pre><code class="javascript hljs bash">import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
-import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
-import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
+</code></pre><p><a href="/effects/listeners">Read here for more</a></p></div></div><div class="description"><h2>1. Input the username</h2><p>Now that you have seen the end result, let&apos;s build it, piece by piece.</p><p>The first thing we want to do is to have an input field to enter the username and store it in kea:</p><pre><code class="javascript hljs bash">import React from <span class="hljs-string">&apos;react&apos;</span>
+import { kea, useActions, useValues } from <span class="hljs-string">&apos;kea&apos;</span>
 
-@kea({
+const logic = kea({
   actions: () =&gt; ({
     setUsername: (username) =&gt; ({ username })
   }),
 
   reducers: ({ actions }) =&gt; ({
-    username: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
+    username: [<span class="hljs-string">&apos;keajs&apos;</span>, {
       [actions.setUsername]: (_, payload) =&gt; payload.username
     }]
   })
 })
-<span class="hljs-built_in">export</span> default class ExampleGithubScene extends Component {
+
+fucntion <span class="hljs-function"><span class="hljs-title">Github</span></span> () {
   <span class="hljs-function"><span class="hljs-title">render</span></span> () {
-    const { username } = this.props
-    const { setUsername } = this.actions
+    const { username } = useValues(logic)
+    const { setUsername } = useActions(logic)
 
     <span class="hljs-built_in">return</span> (
       &lt;div className=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;
         &lt;div style={{marginBottom: 20}}&gt;
           &lt;h1&gt;Search <span class="hljs-keyword">for</span> a github user&lt;/h1&gt;
-          &lt;input value={username}
-                 <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
+          &lt;input
+            value={username}
+            <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
+            onChange={e =&gt; setUsername(e.target.value)} /&gt;
         &lt;/div&gt;
         &lt;div&gt;
           Repos will come here...
@@ -458,51 +466,50 @@ import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
     )
   }
 }
-</code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div><p>You could probably have gotten as far with react&apos;s <code>setState</code>, but since we want to capture this event, we&apos;ll go straight for the kea solution.</p></div><div class="description"><h2>2. Capture <code>setUsername</code> and trigger an API call</h2><p>The next step is to intercept Redux and listen for each instance of the <code>setUsername</code> action being triggered.</p><p>We do this with the <code>takeLatest</code> option and a special worker function which does the API call.</p><button>takeLatest vs takeEvery?</button><p>The code to hook them up would look something like this:</p><pre><code class="javascript hljs bash">@kea({
-  actions: ...,
-  reducers: ...,
-
-  takeLatest: ({ actions, workers }) =&gt; ({
-    [actions.setUsername]: workers.fetchRepositories
+</code></pre><p>Live demo:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Repos will come here...</div></div></div></div><div class="description"><h2>2. Capture calls <code>setUsername</code> and trigger an API call</h2><p>The next step is to listen for the  <code>setUsername</code> action and run some code whenever it has been dispatched:</p><pre><code class="javascript hljs bash">const logic = kea({
+  actions: () =&gt; ({
+    setUsername: (username) =&gt; ({ username })
   }),
 
-  workers: {
-    * fetchRepositories (action) {
-      const { username } = action.payload
+  reducers: ({ actions }) =&gt; ({
+    username: [<span class="hljs-string">&apos;keajs&apos;</span>, {
+      [actions.setUsername]: (_, payload) =&gt; payload.username
+    }]
+  })
 
-      console.log(`setUsername called with <span class="hljs-variable">${username}</span>`)
+  listeners: ({ actions }) =&gt; ({
+    [actions.setUsername]: ({ username }) =&gt; {
+      /// ...
     }
-  }
+  })
 })
-</code></pre></div><div class="description"><h2>3. Trigger the actual call</h2><p>Now that we have a time and a place where we can make the API call, let&apos;s actually make it.</p><p>We will use the standard <code>Fetch</code> API for it.</p><p>The code for this, with an additional 100ms debounce, will look like this:</p><pre><code class="javascript hljs bash">import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
+</code></pre></div><div class="description"><h2>3. Trigger the actual call</h2><p>We must ask Github for data about this user.</p><p>For this we&apos;ll use the standard <code>window.Fetch</code> API. We also add 300 milliseconds of debounce before actually making the call, to give the user time to add another keystroke:</p><pre><code class="javascript hljs bash">const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
-const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
-
-@kea({
+const logic = kea({
   // ...
 
-  workers: {
-    * fetchRepositories (action) {
-      const { username } = action.payload
-
-      yield delay(100) // debounce <span class="hljs-keyword">for</span> 100ms
+  listeners: ({ actions }) =&gt; ({
+    [actions.setUsername]: async ({ username }, breakpoint) =&gt; {
+      await breakpoint(300) // debounce <span class="hljs-keyword">for</span> 300ms
 
       const url = `<span class="hljs-variable">${API_URL}</span>/users/<span class="hljs-variable">${username}</span>/repos?per_page=250`
-      const response = yield window.fetch(url)
+      const response = await window.fetch(url)
+
+      breakpoint() // <span class="hljs-built_in">break</span> <span class="hljs-keyword">if</span> action was dispatched again <span class="hljs-keyword">while</span> we were fetching
+
+      const json = await response.json()
 
       <span class="hljs-keyword">if</span> (response.status === 200) {
-        const json = yield response.json()
         // we have the repositories <span class="hljs-keyword">in</span> `json`
         // what to <span class="hljs-keyword">do</span> with them?
       } <span class="hljs-keyword">else</span> {
-        const json = yield response.json()
-        // there<span class="hljs-string">&apos;s an error in `json.message`
-        // what to do with it?
+        // there is an error <span class="hljs-keyword">in</span> `json.message`
+        // what to <span class="hljs-keyword">do</span> with it?
       }
     }
-  }
+  })
 })
-</span></code></pre><p>Note the <code>yield</code> statements that we use to synchronously resolve promises without any nested callbacks!</p><p>There are more details on <code>yield</code> and the code that you can use inside the workers in the <a href="/guide/sliders">sliders guide</a>.</p></div><div class="description"><h2>4. Store the response of the call</h2><p>Now that we get the repositories, where to put them?</p><p>The answer: in a few new reducers.</p><p>We&apos;re interested in 3 things:</p><ol><li>Whether we&apos;re currently fetching and data: <code>isLoading</code></li><li>The repositories that we have fetched: <code>repositories</code></li><li>Any error that might have occurred: <code>error</code></li></ol><p>We can get all of this by just adding two new actions:</p><ol><li>One to set the repositories: <code>setRepositories</code></li><li>One to set the error message: <code>setFetchError</code></li></ol><p>Hooking them up gives the following result:</p><pre><code class="javascript hljs bash">@kea({
+</code></pre></div><div class="description"><h2>4. Store the response of the call</h2><p>Now that we get the repositories, where to put them?</p><p>The answer: in a few new reducers.</p><p>We&apos;re interested in 3 things:</p><ol><li>Whether we&apos;re currently fetching and data: <code>isLoading</code></li><li>The repositories that we have fetched: <code>repositories</code></li><li>Any error that might have occurred: <code>error</code></li></ol><p>We can get all of this by just adding two new actions:</p><ol><li>One to set the repositories: <code>setRepositories</code></li><li>One to set the error message: <code>setFetchError</code></li></ol><p>Hooking them up gives the following result:</p><pre><code class="javascript hljs bash">const logic = kea({
   actions: () =&gt; ({
     setUsername: (username) =&gt; ({ username }),
     setRepositories: (repositories) =&gt; ({ repositories }),
@@ -510,120 +517,115 @@ const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</sp
   }),
 
   reducers: ({ actions }) =&gt; ({
-    username: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
+    username: [<span class="hljs-string">&apos;keajs&apos;</span>, {
       [actions.setUsername]: (_, payload) =&gt; payload.username
     }],
-    repositories: [[], PropTypes.array, {
+    repositories: [[], {
       [actions.setUsername]: () =&gt; [],
       [actions.setRepositories]: (_, payload) =&gt; payload.repositories
     }],
-    isLoading: [<span class="hljs-literal">false</span>, PropTypes.bool, {
+    isLoading: [<span class="hljs-literal">false</span>, {
       [actions.setUsername]: () =&gt; <span class="hljs-literal">true</span>,
       [actions.setRepositories]: () =&gt; <span class="hljs-literal">false</span>,
       [actions.setFetchError]: () =&gt; <span class="hljs-literal">false</span>
     }],
-    error: [null, PropTypes.string, {
+    error: [null, {
       [actions.setUsername]: () =&gt; null,
       [actions.setFetchError]: (_, payload) =&gt; payload.message
     }]
+  }),
+
+  listeners: ({ actions }) =&gt; ({
+    // ...
   })
 })
-</code></pre><p>Now we just need to call the right actions from the worker:</p><pre><code class="javascript hljs bash">import { put } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span> // new
+</code></pre><p>Now we just need to call the right actions from the worker:</p><pre><code class="javascript hljs bash">const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
-@kea({
-  workers: {
-    * fetchRepositories (action) {
-      const { setRepositories, setFetchError } = this.actions // new
-      const { username } = action.payload
+const logic = kea({
+  // ...
 
-      yield delay(100)
+  listeners: ({ actions }) =&gt; ({
+    [actions.setUsername]: async ({ username }, breakpoint) =&gt; {
+      await breakpoint(300) // debounce <span class="hljs-keyword">for</span> 300ms
 
       const url = `<span class="hljs-variable">${API_URL}</span>/users/<span class="hljs-variable">${username}</span>/repos?per_page=250`
-      const response = yield window.fetch(url)
+      const response = await window.fetch(url)
+
+      // <span class="hljs-built_in">break</span> <span class="hljs-keyword">if</span> the same action was dispatched again <span class="hljs-keyword">while</span> we were fetching <span class="hljs-keyword">for</span> fetch
+      breakpoint()
+
+      const json = await response.json()
 
       <span class="hljs-keyword">if</span> (response.status === 200) {
-        const json = yield response.json()
-        yield put(setRepositories(json)) // new
+        actions.setRepositories(json)         // &lt;-- new
       } <span class="hljs-keyword">else</span> {
-        const json = yield response.json()
-        yield put(setFetchError(json.message)) // new
+        actions.setFetchError(json.message)   // &lt;-- new
       }
     }
-  }
+  })
 })
-</code></pre><p>Note that we have to use the redux-saga <code>put</code> effect when dispatching the actions.</p></div><div class="description"><h2>5. Display the result</h2><p>The last step is to display the repositories to the user. To do this we use the following code:</p><pre><code class="javascript hljs bash"><span class="hljs-built_in">export</span> default class ExampleGithubScene extends Component {
-  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
-    const { username, isLoading, repositories, error } = this.props
-    const { setUsername } = this.actions
+</code></pre></div><div class="description"><h2>5. Display the result</h2><p>The last step is to display the repositories to the user. To do this we use the following code:</p><pre><code class="javascript hljs bash"><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">Github</span></span> () {
+  const { username, isLoading, repositories, error } = useValues(logic)
+  const { setUsername } = useActions(logic)
 
-    <span class="hljs-built_in">return</span> (
-      &lt;div className=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;
-        &lt;div style={{marginBottom: 20}}&gt;
-          &lt;h1&gt;Search <span class="hljs-keyword">for</span> a github user&lt;/h1&gt;
-          &lt;input value={username}
-                 <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
-        &lt;/div&gt;
-        {isLoading ? (
-          &lt;div&gt;
-            Loading...
-          &lt;/div&gt;
-        ) : repositories.length &gt; 0 ? (
-          &lt;div&gt;
-            Found {repositories.length} repositories <span class="hljs-keyword">for</span> user {username}!
-            {repositories.map(repo =&gt; (
-              &lt;div key={repo.id}&gt;
-                &lt;a href={repo.html_url} target=<span class="hljs-string">&apos;_blank&apos;</span>&gt;{repo.full_name}&lt;/a&gt;
-                {<span class="hljs-string">&apos; - &apos;</span>}
-                {repo.stargazers_count} stars, {repo.forks} forks.
-              &lt;/div&gt;
-            ))}
-          &lt;/div&gt;
-        ) : (
-          &lt;div&gt;
-            {error ? `Error: <span class="hljs-variable">${error}</span>` : <span class="hljs-string">&apos;No repositories found&apos;</span>}
-          &lt;/div&gt;
-        )}
+  <span class="hljs-built_in">return</span> (
+    &lt;div className=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;
+      &lt;div style={{marginBottom: 20}}&gt;
+        &lt;h1&gt;Search <span class="hljs-keyword">for</span> a github user&lt;/h1&gt;
+        &lt;input
+          value={username}
+          <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
+          onChange={e =&gt; setUsername(e.target.value)} /&gt;
       &lt;/div&gt;
-    )
-  }
+      {isLoading ? (
+        &lt;div&gt;
+          Loading...
+        &lt;/div&gt;
+      ) : repositories.length &gt; 0 ? (
+        &lt;div&gt;
+          Found {repositories.length} repositories <span class="hljs-keyword">for</span> user {username}!
+          {repositories.map(repo =&gt; (
+            &lt;div key={repo.id}&gt;
+              &lt;a href={repo.html_url} target=<span class="hljs-string">&apos;_blank&apos;</span>&gt;{repo.full_name}&lt;/a&gt;
+              {<span class="hljs-string">&apos; - &apos;</span>}
+              {repo.stargazers_count} stars, {repo.forks} forks.
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      ) : (
+        &lt;div&gt;
+          {error ? `Error: <span class="hljs-variable">${error}</span>` : <span class="hljs-string">&apos;No repositories found&apos;</span>}
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  )
 }
-</code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p><p>What&apos;s still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p></div><div class="description"><h2>6. Last steps</h2><p>No problem, we can fix that!</p><p>First, to load the repositories on page load, we have two options, both requiring the <code>start</code> function that is run when the component is mounted.</p><p>Option #1 is to call the <code>fetchRepositories</code> worker directly using redux-saga&apos;s <code>call</code>:</p><pre><code class="javascript hljs bash">import { call } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
+</code></pre><p>Giving us the following result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>No repositories found</div></div></div><p>It works! Almost...</p></div><div class="description"><h2>6. Last steps</h2><p>What&apos;s still missing?</p><p>Well, for starters it would be nice if it would fetch all the respositories on page load.</p><p>Also, it would be great to sort the repositories by the number of stars</p><p>Let&apos;s fix these points!</p><p>First, to load the repositories on page load, we can use kea&apos;s mount events and run an action whenever the logic is mounted:</p><pre><code class="javascript hljs">const logic = kea({
+  // listeners: ...
 
-@kea({
-  start: <span class="hljs-keyword">function</span> * () {
-    const username = yield this.get(<span class="hljs-string">&apos;username&apos;</span>)
-    yield call(this.workers.fetchRepositories, { payload: { username } })
-  }
+  events: ({ actions, values }) =&gt; ({
+    afterMount: () {
+      actions.setUsername(values.username)
+    }
+  })
 })
-</code></pre><p>This works, but it feels kind of hacky. We&apos;re pretending to be an action that triggers the worker.</p><p>The other option is to go through redux and execute the <code>setUsername</code> action with the default username:</p><pre><code class="javascript hljs bash">@kea({
-  start: <span class="hljs-keyword">function</span> * () {
-    const { setUsername } = this.actions
-    const username = yield this.get(<span class="hljs-string">&apos;username&apos;</span>)
-    yield put(setUsername(username))
-  }
-})
-</code></pre><p>It feels cleaner, but there&apos;s still something weird with calling <code>setUsername</code> with the username that&apos;s already set.</p><p>In the end, both approaches get the job done, and it&apos;s up to you to figure out which makes more sense depening on your situation.</p><p>The second problem had to do with sorting the results.</p><p>For that we can create a selector that takes the <code>repositories</code> as input and outputs a sorted array:</p><pre><code class="javascript hljs bash">@kea({
+</code></pre><p>To stort the results we can create a selector that takes <code>repositories</code> as input and outputs a sorted array:</p><pre><code class="javascript hljs bash">const logic = kea({
+  // ...
   selectors: ({ selectors }) =&gt; ({
     sortedRepositories: [
       () =&gt; [selectors.repositories],
       (repositories) =&gt; {
         <span class="hljs-built_in">return</span> repositories.sort((a, b) =&gt; b.stargazers_count - a.stargazers_count)
-      },
-      PropTypes.array
+      }
     ]
   })
 })
-</code></pre><p>Now all that&apos;s left to do is to replace <code>repositories</code> with <code>sortedRepositories</code> in your component.</p><p>Because the selectors are made with <code>reselect</code> under the hood, you can be sure that they will only be recalculated (resorted in this case) when the original input (repositories) change.</p><p>That&apos;s much better than re-sorting them on every call to <code>render()</code>.</p></div><div class="description"><h2>7. Final result</h2><p>Adding the finishing touches gives us this final result:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 11 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1376 stars, 52 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 2 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 0 stars, 3 forks.</div></div></div></div><p>With this code:</p><pre><code class="javascript hljs bash">import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
-import PropTypes from <span class="hljs-string">&apos;prop-types&apos;</span>
+</code></pre><p>Now all that&apos;s left to do is to replace <code>repositories</code> with <code>sortedRepositories</code> in your component.</p><p>Because the selectors are made with <code>reselect</code> under the hood, you can be sure that they will only be recalculated (resorted in this case) when the original input (repositories) change, not between other renders.</p></div><div class="description"><h2>7. Final result</h2><p>Adding the finishing touches gives us this final masterpiece:</p><div class="demo"><div class="example-github-scene"><div style="margin-bottom: 20px;"><h1>Search for a github user</h1><input type="text" value="keajs"></div><div>Found 14 repositories for user keajs!<div><a href="https://github.com/keajs/kea" target="_blank">keajs/kea</a> - 1429 stars, 50 forks.</div><div><a href="https://github.com/keajs/kea-website" target="_blank">keajs/kea-website</a> - 7 stars, 8 forks.</div><div><a href="https://github.com/keajs/kea-example" target="_blank">keajs/kea-example</a> - 5 stars, 2 forks.</div><div><a href="https://github.com/keajs/kea-on-rails" target="_blank">keajs/kea-on-rails</a> - 5 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-localstorage" target="_blank">keajs/kea-localstorage</a> - 4 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-saga" target="_blank">keajs/kea-saga</a> - 3 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-parallel" target="_blank">keajs/kea-parallel</a> - 2 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-cli" target="_blank">keajs/kea-cli</a> - 1 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-thunk" target="_blank">keajs/kea-thunk</a> - 1 stars, 3 forks.</div><div><a href="https://github.com/keajs/kea-listeners" target="_blank">keajs/kea-listeners</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-rails-loader" target="_blank">keajs/kea-rails-loader</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-router" target="_blank">keajs/kea-router</a> - 0 stars, 0 forks.</div><div><a href="https://github.com/keajs/kea-next-test" target="_blank">keajs/kea-next-test</a> - 0 stars, 1 forks.</div><div><a href="https://github.com/keajs/kea-parallel-loader" target="_blank">keajs/kea-parallel-loader</a> - 0 stars, 0 forks.</div></div></div></div><p>With this code:</p><pre><code class="javascript hljs bash">import React, { Component } from <span class="hljs-string">&apos;react&apos;</span>
 import { kea } from <span class="hljs-string">&apos;kea&apos;</span>
-
-import { put, call } from <span class="hljs-string">&apos;redux-saga/effects&apos;</span>
-import { delay } from <span class="hljs-string">&apos;redux-saga&apos;</span>
 
 const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</span>
 
-@kea({
+const logic = kea({
   actions: () =&gt; ({
     setUsername: (username) =&gt; ({ username }),
     setRepositories: (repositories) =&gt; ({ repositories }),
@@ -631,19 +633,19 @@ const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</sp
   }),
 
   reducers: ({ actions }) =&gt; ({
-    username: [<span class="hljs-string">&apos;keajs&apos;</span>, PropTypes.string, {
+    username: [<span class="hljs-string">&apos;keajs&apos;</span>, {
       [actions.setUsername]: (_, payload) =&gt; payload.username
     }],
-    repositories: [[], PropTypes.array, {
+    repositories: [[], {
       [actions.setUsername]: () =&gt; [],
       [actions.setRepositories]: (_, payload) =&gt; payload.repositories
     }],
-    isLoading: [<span class="hljs-literal">true</span>, PropTypes.bool, {
+    isLoading: [<span class="hljs-literal">true</span>, {
       [actions.setUsername]: () =&gt; <span class="hljs-literal">true</span>,
       [actions.setRepositories]: () =&gt; <span class="hljs-literal">false</span>,
       [actions.setFetchError]: () =&gt; <span class="hljs-literal">false</span>
     }],
-    error: [null, PropTypes.string, {
+    error: [null, {
       [actions.setUsername]: () =&gt; null,
       [actions.setFetchError]: (_, payload) =&gt; payload.message
     }]
@@ -653,79 +655,67 @@ const API_URL = <span class="hljs-string">&apos;https://api.github.com&apos;</sp
     sortedRepositories: [
       () =&gt; [selectors.repositories],
       (repositories) =&gt; repositories.sort(
-                          (a, b) =&gt; b.stargazers_count - a.stargazers_count),
-      PropTypes.array
+                          (a, b) =&gt; b.stargazers_count - a.stargazers_count)
     ]
   }),
 
-  start: <span class="hljs-keyword">function</span> * () {
-    const { setUsername } = this.actions
-    const username = yield this.get(<span class="hljs-string">&apos;username&apos;</span>)
-    yield put(setUsername(username))
-  },
-
-  takeLatest: ({ actions, workers }) =&gt; ({
-    [actions.setUsername]: workers.fetchRepositories
-  }),
-
-  workers: {
-    * fetchRepositories (action) {
-      const { setRepositories, setFetchError } = this.actions
-      const { username } = action.payload
-
-      yield delay(100) // debounce <span class="hljs-keyword">for</span> 100ms
+  listeners: ({ actions }) =&gt; ({
+    [actions.setUsername]: async ({ username }, breakpoint) =&gt; {
+      await breakpoint(300) // debounce <span class="hljs-keyword">for</span> 300ms
 
       const url = `<span class="hljs-variable">${API_URL}</span>/users/<span class="hljs-variable">${username}</span>/repos?per_page=250`
-      const response = yield window.fetch(url)
+      const response = await window.fetch(url)
+
+      // <span class="hljs-built_in">break</span> <span class="hljs-keyword">if</span> the same action was dispatched again <span class="hljs-keyword">while</span> we were fetching <span class="hljs-keyword">for</span> fetch
+      breakpoint()
+
+      const json = await response.json()
 
       <span class="hljs-keyword">if</span> (response.status === 200) {
-        const json = yield response.json()
-        yield put(setRepositories(json))
+        actions.setRepositories(json)         // &lt;-- new
       } <span class="hljs-keyword">else</span> {
-        const json = yield response.json()
-        yield put(setFetchError(json.message))
+        actions.setFetchError(json.message)   // &lt;-- new
       }
     }
-  }
+  })
 })
-<span class="hljs-built_in">export</span> default class ExampleGithubScene extends Component {
-  <span class="hljs-function"><span class="hljs-title">render</span></span> () {
-    const { username, isLoading, repositories,
-            sortedRepositories, error } = this.props
-    const { setUsername } = this.actions
 
-    <span class="hljs-built_in">return</span> (
-      &lt;div className=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;
-        &lt;div style={{marginBottom: 20}}&gt;
-          &lt;h1&gt;Search <span class="hljs-keyword">for</span> a github user&lt;/h1&gt;
-          &lt;input value={username}
-                 <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
-                 onChange={e =&gt; setUsername(e.target.value)} /&gt;
-        &lt;/div&gt;
-        {isLoading ? (
-          &lt;div&gt;
-            Loading...
-          &lt;/div&gt;
-        ) : repositories.length &gt; 0 ? (
-          &lt;div&gt;
-            Found {repositories.length} repositories <span class="hljs-keyword">for</span> user {username}!
-            {sortedRepositories.map(repo =&gt; (
-              &lt;div key={repo.id}&gt;
-                &lt;a href={repo.html_url} target=<span class="hljs-string">&apos;_blank&apos;</span>&gt;{repo.full_name}&lt;/a&gt;
-                {<span class="hljs-string">&apos; - &apos;</span>}{repo.stargazers_count} stars, {repo.forks} forks.
-              &lt;/div&gt;
-            ))}
-          &lt;/div&gt;
-        ) : (
-          &lt;div&gt;
-            {error ? `Error: <span class="hljs-variable">${error}</span>` : <span class="hljs-string">&apos;No repositories found&apos;</span>}
-          &lt;/div&gt;
-        )}
+<span class="hljs-keyword">function</span> GithubScene {
+  const { username, isLoading, repositories,
+          sortedRepositories, error } = useValues(logic)
+  const { setUsername } = useActions(logic)
+
+  <span class="hljs-built_in">return</span> (
+    &lt;div className=<span class="hljs-string">&apos;example-github-scene&apos;</span>&gt;
+      &lt;div style={{marginBottom: 20}}&gt;
+        &lt;h1&gt;Search <span class="hljs-keyword">for</span> a github user&lt;/h1&gt;
+        &lt;input value={username}
+              <span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;text&apos;</span>
+              onChange={e =&gt; setUsername(e.target.value)} /&gt;
       &lt;/div&gt;
-    )
-  }
+      {isLoading ? (
+        &lt;div&gt;
+          Loading...
+        &lt;/div&gt;
+      ) : repositories.length &gt; 0 ? (
+        &lt;div&gt;
+          Found {repositories.length} repositories <span class="hljs-keyword">for</span> user {username}!
+          {sortedRepositories.map(repo =&gt; (
+            &lt;div key={repo.id}&gt;
+              &lt;a href={repo.html_url} target=<span class="hljs-string">&apos;_blank&apos;</span>&gt;{repo.full_name}&lt;/a&gt;
+              {<span class="hljs-string">&apos; - &apos;</span>}{repo.stargazers_count} stars, {repo.forks} forks.
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      ) : (
+        &lt;div&gt;
+          {error ? `Error: <span class="hljs-variable">${error}</span>` : <span class="hljs-string">&apos;No repositories found&apos;</span>}
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  )
 }
-</code></pre><p>There&apos;s still one thing that&apos;s broken:</p><p>If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github&apos;s API provides a way to ask for the next 100 results (the <a href="https://developer.github.com/v3/repos/#response"><code>Link</code> headers</a>), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).</p></div><div class="description">Next page: <a href="/guide/connected">Connected logic</a></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+</code></pre><p>There&apos;s still one thing that&apos;s broken:</p><p>If a github user or organisation has more than 100 repositories, only the first 100 results will be returned. Github&apos;s API provides a way to ask for the next 100 results (the <a href="https://developer.github.com/v3/repos/#response"><code>Link</code> headers</a>), but as resolving this is outside the scope of this guide, it will be left as an exercise for the reader ;).</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

@@ -415,49 +415,86 @@ footer.opencollective-footer a {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsThunk"); </script></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("pluginsRouter"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a aria-current="page" class="active" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Thunks</h2><p>Thunks are simple ways to define side effects with Redux.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-thunk"><code>kea-thunk</code></a> and <a href="https://github.com/gaearon/redux-thunk"><code>redux-thunk</code></a> packages:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
-yarn add kea-thunk redux-thunk
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="page" class="active" href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Router</h2><p>Please help write this section or read more about <a href="https://github.com/keajs/kea-router"><code>kea-router</code></a> on github!</p><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-router"><code>kea-router</code></a> package:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
+yarn add kea-router
 
 <span class="hljs-comment"># if you&apos;re using npm</span>
-npm install --save kea-thunk redux-thunk
-</code></pre><p>Then you have install the plugin:</p><pre><code class="javascript hljs bash">import thunkPlugin from <span class="hljs-string">&apos;kea-thunk&apos;</span>
+npm install --save kea-router
+</code></pre><p>Then install the plugin:</p><pre><code class="javascript hljs bash">import { routerPlugin ] from <span class="hljs-string">&apos;kea-router&apos;</span>
 import { resetContext } from <span class="hljs-string">&apos;kea&apos;</span>
 
 resetContext({
   createStore: <span class="hljs-literal">true</span>,
-  plugins: [ thunkPlugin ]
+  plugins: [ routerPlugin({ /* options */ }) ]
 })
-</code></pre></div><div class="description"><h2>Usage</h2><p>You define thunks in a block called <code>thunks</code>. Here are some examples:</p><pre><code class="javascript hljs bash">const delay = (ms) =&gt; new Promise(resolve =&gt; window.setTimeout(resolve, ms))
+</code></pre><h2>Configuration options</h2><p>The plugin takes the following options:</p><pre><code class="bash hljs">routerPlugin({
+  // The browser History API or something that mocks it
+  // Defaults to window.history <span class="hljs-keyword">in</span> the browser and a mock memoryHistory otherwise
+  <span class="hljs-built_in">history</span>: window.history,
 
-const logic = kea({
-  actions: ({ constants }) =&gt; ({
-    updateName: name =&gt; ({ name })
+  // An object with the keys { pathname, search, <span class="hljs-built_in">hash</span> } used to
+  // get the current location. Defaults to window.location <span class="hljs-keyword">in</span> the browser and
+  // an empty object otherwise.
+  location: window.location,
+
+  // If there is a difference between the path <span class="hljs-keyword">in</span> the browser and the path <span class="hljs-keyword">in</span>
+  // your routes, use these <span class="hljs-built_in">functions</span> to clear it up.
+  // For example to have the same app on many subfolders <span class="hljs-keyword">in</span> one the site.
+  pathFromRoutesToWindow: path =&gt; <span class="hljs-string">&apos;/subfolder&apos;</span> + path,
+  pathFromWindowToRoutes: path =&gt; path.replace(/^\/subfolder/, <span class="hljs-string">&apos;&apos;</span>)
+})
+</code></pre><h2>Sample usage</h2><pre><code class="bash hljs">kea({
+  // define the actions from below
+  actions: () =&gt; ({ ... }),
+
+  // define article = { id, ... }
+  reducers: () =&gt; ({ ... }),
+
+  actionToUrl: ({ actions, values }) =&gt; ({
+    [actions.openList]: ({ id }) =&gt; `/articles`,
+    [actions.openArticle]: ({ id }) =&gt; `/articles/<span class="hljs-variable">${id}</span>`,
+    [actions.openComments]: () =&gt; `/articles/<span class="hljs-variable">${values.article.id}</span>/comments`,
+    [actions.closeComments]: () =&gt; `/articles/<span class="hljs-variable">${values.article.id}</span>`
   }),
 
-  thunks: ({ actions, dispatch, getState }) =&gt; ({
-    updateNameAsync: async name =&gt; {
-      await delay(1000)            // standard promise
-      await actions.anotherThunk() // another thunk action
-      actions.updateName(name)     // not a thunk, so no async needed
-      dispatch({ <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;RANDOM_REDUX_ACTION&apos;</span> }) // random redux action
-
-      console.log(values.name) // <span class="hljs-string">&apos;chirpy&apos;</span>
-      console.log(values.otherKey) // undefined
+  urlToAction: ({ actions }) =&gt; ({
+    <span class="hljs-string">&apos;/articles&apos;</span>: () =&gt; actions.openList(),
+    <span class="hljs-string">&apos;/articles/:id(/:extra)&apos;</span>: ({ id, extra }) =&gt; {
+      actions.openArticle(id)
+      <span class="hljs-keyword">if</span> (extra === <span class="hljs-string">&apos;comments&apos;</span>) {
+        actions.openComments()
+      } <span class="hljs-keyword">else</span> {
+        actions.closeComments()
+      }
     },
-    anotherThunk: async () =&gt; {
-      // <span class="hljs-keyword">do</span> something
-    }
-  }),
-
-  reducers: ({ actions, constants }) =&gt; ({
-    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, {
-      [actions.updateName]: (state, payload) =&gt; payload.name
-    }]
   })
 })
-</code></pre><p>As you can see, you have access to the standard Redux <code>dispatch</code> and <code>getState</code> methods. However you don&apos;t need to call <code>dispatch</code> before any action in the actions object. They are wrapped automatically.</p></div></div></div></div></section></main></div></div>
+
+
+
+// To get or manipulate the route, import router and ask it <span class="hljs-keyword">for</span> the following:
+
+import { router } from <span class="hljs-string">&apos;kea-router&apos;</span>
+
+kea({
+  connect: {
+    actions: [
+      router, [
+        <span class="hljs-string">&apos;push&apos;</span>,   // push(url)
+        <span class="hljs-string">&apos;replace&apos;</span> // replace(url),
+        <span class="hljs-string">&apos;locationChanged&apos;</span> // payload == { pathname, search, <span class="hljs-built_in">hash</span>, method }
+      ]
+    ],
+    values: [
+      router, [
+        <span class="hljs-string">&apos;location&apos;</span> // { pathname, search, <span class="hljs-built_in">hash</span> }
+      ]
+    ]
+  }
+})
+</code></pre></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

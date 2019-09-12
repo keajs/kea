@@ -415,49 +415,126 @@ footer.opencollective-footer a {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsThunk"); </script></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiContext"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a aria-current="page" class="active" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Thunks</h2><p>Thunks are simple ways to define side effects with Redux.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-thunk"><code>kea-thunk</code></a> and <a href="https://github.com/gaearon/redux-thunk"><code>redux-thunk</code></a> packages:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
-yarn add kea-thunk redux-thunk
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="page" class="active" href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2>Context</h2><p>Kea stores all of its runtime data on a context. This context must be reset before you can use your app.</p><h3>resetContext</h3><p>Call <code>resetContext</code> before you render your app and connect all the different plugins to it.</p><p>Here are all the options you can pass to it:</p><pre><code class="javascript hljs"><span class="hljs-comment">// store.js</span>
+<span class="hljs-keyword">import</span> { resetContext } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
 
-<span class="hljs-comment"># if you&apos;re using npm</span>
-npm install --save kea-thunk redux-thunk
-</code></pre><p>Then you have install the plugin:</p><pre><code class="javascript hljs bash">import thunkPlugin from <span class="hljs-string">&apos;kea-thunk&apos;</span>
-import { resetContext } from <span class="hljs-string">&apos;kea&apos;</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> resetContext({
+  <span class="hljs-comment">// Plugins</span>
+  plugins: [
+    sagaPlugin,
+    listenersPlugin,
+    routerPlugin
+  ]
 
-resetContext({
+  <span class="hljs-comment">// Create a redux store when resetting the context (no options).</span>
   createStore: <span class="hljs-literal">true</span>,
-  plugins: [ thunkPlugin ]
-})
-</code></pre></div><div class="description"><h2>Usage</h2><p>You define thunks in a block called <code>thunks</code>. Here are some examples:</p><pre><code class="javascript hljs bash">const delay = (ms) =&gt; new Promise(resolve =&gt; window.setTimeout(resolve, ms))
 
-const logic = kea({
-  actions: ({ constants }) =&gt; ({
-    updateName: name =&gt; ({ name })
-  }),
+  <span class="hljs-comment">// Create a redux store when resetting the context (with options).</span>
+  createStore: { <span class="hljs-comment">// otherwise pass the following</span>
+    <span class="hljs-comment">// what root paths are available for kea</span>
+    paths: [<span class="hljs-string">&apos;kea&apos;</span>, <span class="hljs-string">&apos;scenes&apos;</span>],
 
-  thunks: ({ actions, dispatch, getState }) =&gt; ({
-    updateNameAsync: async name =&gt; {
-      await delay(1000)            // standard promise
-      await actions.anotherThunk() // another thunk action
-      actions.updateName(name)     // not a thunk, so no async needed
-      dispatch({ <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;RANDOM_REDUX_ACTION&apos;</span> }) // random redux action
+    <span class="hljs-comment">// additional reducers that your app uses</span>
+    reducers: {},
 
-      console.log(values.name) // <span class="hljs-string">&apos;chirpy&apos;</span>
-      console.log(values.otherKey) // undefined
-    },
-    anotherThunk: async () =&gt; {
-      // <span class="hljs-keyword">do</span> something
+    <span class="hljs-comment">// preloaded state for redux, used only with all non-kea reducers</span>
+    preloadedState: <span class="hljs-literal">undefined</span>,
+
+    <span class="hljs-comment">// middleware that gets passed to applyMiddleware(...middleware)</span>
+    middleware: [],
+
+    <span class="hljs-comment">// the compose function, defaults to the one from redux-devtools-extension or redux&apos;s own compose</span>
+    compose: composeWithDevTools || compose,
+
+    <span class="hljs-comment">// gets passed to compose(middleware, ...enhancers)(createStore)</span>
+    enhancers: []
+  },
+
+  <span class="hljs-comment">// global defaults for specific logic</span>
+  defaults: {
+    <span class="hljs-attr">scenes</span>: {
+      <span class="hljs-attr">some</span>: {
+        <span class="hljs-attr">logic</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&apos;value&apos;</span> }
+      }
     }
-  }),
+  },
 
-  reducers: ({ actions, constants }) =&gt; ({
-    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, {
-      [actions.updateName]: (state, payload) =&gt; payload.name
-    }]
-  })
+  <span class="hljs-comment">// make a lot of noise</span>
+  debug: <span class="hljs-literal">false</span>,
+
+  <span class="hljs-comment">// automatically build and mount logic when kea({}) is called. useful for legacy apps</span>
+  autoMount: <span class="hljs-literal">false</span>,
+
+  <span class="hljs-comment">// after calling const builtLogic = logic.build(); builtLogic.mount(),</span>
+  <span class="hljs-comment">// make fields like builtLogic.actions available on logic</span>
+  proxyFields: <span class="hljs-literal">true</span>,
+
+  <span class="hljs-comment">// if true, the defaults option takes keys like defaults:</span>
+  <span class="hljs-comment">// --&gt; { &apos;scenes.some.logic&apos;: { key: &apos;value&apos; } }</span>
+  <span class="hljs-comment">// if false, the defaults option takes keys like defaults:</span>
+  <span class="hljs-comment">// --&gt; { scenes: { some: { logic: { key: &apos;value&apos; } } } }</span>
+  flatDefaults: <span class="hljs-literal">false</span>,
+
+  <span class="hljs-comment">// how to regenerate the store when attaching a reducer to redux</span>
+  <span class="hljs-comment">// - dispatch = dispatch a ATTACH_REDUCER action</span>
+  <span class="hljs-comment">// - replace = silently replace the root reducer</span>
+  attachStrategy: <span class="hljs-string">&apos;dispatch&apos;</span>,
+
+  <span class="hljs-comment">// how to regenerate the store when detaching a reducer to redux</span>
+  <span class="hljs-comment">// - dispatch = dispatch a DETACH_REDUCER action</span>
+  <span class="hljs-comment">// - replace = silently replace the root reducer</span>
+  <span class="hljs-comment">// - persist = never remove reducers from redux</span>
+  detachStrategy: <span class="hljs-string">&apos;dispatch&apos;</span>
 })
-</code></pre><p>As you can see, you have access to the standard Redux <code>dispatch</code> and <code>getState</code> methods. However you don&apos;t need to call <code>dispatch</code> before any action in the actions object. They are wrapped automatically.</p></div></div></div></div></section></main></div></div>
+</code></pre><h3>getContext</h3><p>Call <code>getContext()</code> from anywhere to peek into the context</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { getContext } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
+
+getContext() == {
+  <span class="hljs-attr">plugins</span>: {
+    <span class="hljs-attr">activated</span>: [],
+    <span class="hljs-attr">buildOrder</span>: [],
+    <span class="hljs-attr">buildSteps</span>: {},
+    <span class="hljs-attr">events</span>: {},
+    <span class="hljs-attr">logicFields</span>: {},
+    <span class="hljs-attr">contexts</span>: {}
+  },
+
+  <span class="hljs-attr">input</span>: {
+    <span class="hljs-attr">inlinePathCreators</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(),
+    <span class="hljs-attr">inlinePathCounter</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">defaults</span>: <span class="hljs-literal">undefined</span>
+  },
+
+  <span class="hljs-attr">build</span>: {
+    <span class="hljs-attr">cache</span>: {}
+  },
+
+  <span class="hljs-attr">mount</span>: {
+    <span class="hljs-attr">counter</span>: {},
+    <span class="hljs-attr">mounted</span>: {}
+  },
+
+  <span class="hljs-attr">reducers</span>: {
+    <span class="hljs-attr">tree</span>: {},
+    <span class="hljs-attr">roots</span>: {},
+    <span class="hljs-attr">combined</span>: <span class="hljs-literal">undefined</span>
+  },
+
+  <span class="hljs-attr">store</span>: <span class="hljs-literal">undefined</span>, <span class="hljs-comment">// you can get a copy of redux&apos;s store from here</span>
+
+  options: {
+    <span class="hljs-attr">debug</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">autoMount</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">proxyFields</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">flatDefaults</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">attachStrategy</span>: <span class="hljs-string">&apos;dispatch&apos;</span>,
+    <span class="hljs-attr">detachStrategy</span>: <span class="hljs-string">&apos;dispatch&apos;</span>,
+
+    ...otherOptions
+  }
+}
+</code></pre></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

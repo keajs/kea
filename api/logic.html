@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -411,234 +417,136 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiLogic"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="false" href="/guide/installation">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a class="active" aria-current="true" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>kea(options)</code></h2><p>Create a new kea <strong>logic store</strong> and connect it to redux.</p><h3>Usage</h3><p>Here is a complete example with all the options available. See below for further explanations.</p><pre><code class="javascript hljs"><span class="hljs-comment">// scenes/my-random-scene/logic.js</span>
-<span class="hljs-keyword">import</span> { kea } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-<span class="hljs-keyword">import</span> localStoragePlugin <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea-localstorage&apos;</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a aria-current="page" class="active" href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>logic</code></h2><p>Once you have initialised a logic with <code>const logic = kea({})</code>, there are a few things you can do with it:</p><h3>logic()</h3><p>By calling just <code>logic(something)</code>, we call any of the following methods:</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({})
 
-<span class="hljs-keyword">import</span> otherLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./other-logic.js&apos;</span>
-<span class="hljs-keyword">import</span> dynamicLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./dynamic-logic.js&apos;</span>
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> kea({
-  <span class="hljs-attr">plugins</span>: [
-    localStoragePlugin
-  ],
-
-  <span class="hljs-attr">connect</span>: {
-    <span class="hljs-attr">actions</span>: [
-      otherLogic, [
-        <span class="hljs-string">&apos;firstAction&apos;</span>,
-        <span class="hljs-string">&apos;secondAction as renamedAction&apos;</span>
-      ]
-    ],
-
-    <span class="hljs-attr">props</span>: [
-      otherLogic, [
-        <span class="hljs-string">&apos;firstProp&apos;</span>,
-        <span class="hljs-string">&apos;secondProp as renamedProp&apos;</span>,
-        <span class="hljs-string">&apos;* as allProps&apos;</span>
-      ],
-      <span class="hljs-comment">// use Dynamic Logic</span>
-      dynamicLogic.withKey(<span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> props.id), [
-        <span class="hljs-string">&apos;dynamicProp as thatProp&apos;</span>
-      ],
-      <span class="hljs-comment">// select from any redux tree node</span>
-      (state) =&gt; state.somethingThatResolvesToAnObject, [
-        <span class="hljs-string">&apos;variable&apos;</span>,
-        <span class="hljs-string">&apos;otherVariable&apos;</span>
-      ]
-    ]
-  },
-
-  <span class="hljs-attr">path</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;index&apos;</span>],
-
-  <span class="hljs-attr">constants</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-string">&apos;OTHER_STRING&apos;</span>],
-
-  <span class="hljs-attr">actions</span>: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
-    <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">&apos;payload value&apos;</span>,
-    <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> },
-    <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
-    <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ id, message }),
-    <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ id, message })
+logic()          --&gt; logic.build()
+logic(props)     --&gt; logic.build(props)
+logic(Component) --&gt; logic.wrap(Component)
+</code></pre><h3>logic.wrap()</h3><p>Wrap the logic around a React Component (functional or Class) and give it access to all actions and values</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">doSomething</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">doSomethingElse</span>: <span class="hljs-literal">true</span>,
   }),
-
-  <span class="hljs-attr">reducers</span>: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
-    <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* with localStoragePlugin: { persist: true }, */</span> {
-      <span class="hljs-comment">// operations</span>
-      [actions.simpleAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload.value <span class="hljs-comment">// return the new state,</span>
-      [actions.complexAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-        <span class="hljs-comment">// do more things in the block</span>
-        <span class="hljs-keyword">return</span> state + payload.value
-      },
-      [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
-      [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-      [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-      <span class="hljs-string">&quot;ANY_OTHER_ACTION_TYPE&quot;</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">&apos;do whatever you want&apos;</span>
-    }],
-
-    <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
-      [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> constants.STRING,
-      [actions.someOtherAction]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value
-    }]
-  }),
-
-  <span class="hljs-attr">selectors</span>: <span class="hljs-function">(<span class="hljs-params">{ path, constants, actions, selectors }</span>) =&gt;</span> ({
-    <span class="hljs-attr">selectorName</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.inputSelector1, selectors.inputSelector2],
-      (input1, input2) =&gt; createOutput(input),
-      returnPropType
-    ],
-
-    <span class="hljs-attr">computedValue</span>: [
-      <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.reducerKey, selectors.constantDefault],
-      (reducerKey, constantDefault) =&gt; {
-        <span class="hljs-keyword">return</span> complicatedOperation(reducerKey, constantDefault)
-      },
-      PropTypes.object
-    ]
+  <span class="hljs-attr">reduceres</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">firstOne</span>: [<span class="hljs-string">&apos;defaultValue&apos;</span>],
+    <span class="hljs-attr">secondOne</span>: [<span class="hljs-string">&apos;defaultValue&apos;</span>]
   })
 })
 
-<span class="hljs-comment">// index.js</span>
-<span class="hljs-keyword">import</span> myRandomSceneLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;scenes/my-random-scene/logic&apos;</span>
-</code></pre><h3>Options</h3><h4>plugins: <code>[]</code></h4><p>Plugins that only this logic store will use. See the <code>plugins</code> array in <code>getStore</code> on how to install global plugins.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-plugins: [
-  localStoragePlugin
-]
-</code></pre><h4>path: <code>() =&gt; []</code></h4><p>Give a name to the logic store and register it in a certain location in your application&apos;s Redux tree.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-path: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
+<span class="hljs-comment">// with function components</span>
 
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.path == [<span class="hljs-string">&apos;scenes&apos;</span>, <span class="hljs-string">&apos;myRandomScene&apos;</span>, <span class="hljs-string">&apos;logicMountPoint&apos;</span>]
-</code></pre><h4>constants: <code>() =&gt; []</code></h4><p>Create constants that can be used in other parts of the logic store.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-constants: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-string">&apos;OTHER_STRING&apos;</span>]
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">MyComponent</span> (<span class="hljs-params">{ firstOne, secondOne, actions: { doSomething, doSomethingElse } }</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+}
 
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.constants == { <span class="hljs-attr">STRING</span>: <span class="hljs-string">&apos;STRING&apos;</span>, <span class="hljs-attr">OTHER_STRING</span>: <span class="hljs-string">&apos;OTHER_STRING&apos;</span> }
-</code></pre><h4>actions: <code>({ path, constants }) =&gt; ({})</code></h4><p>Define action creators</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-actions: <span class="hljs-function">(<span class="hljs-params">{ path, constants }</span>) =&gt;</span> ({
-  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-string">&apos;payload value&apos;</span>,
-  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> },
-  <span class="hljs-attr">simpleAction</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-keyword">const</span> ConnectedComponent = logic(MyComponent)
 
-  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
-  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ id, message }),
-  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ id, message })
+
+<span class="hljs-comment">// with class components</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyClassComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+  render () {
+    <span class="hljs-keyword">const</span> { firstOne, secondOne } = <span class="hljs-keyword">this</span>.props
+
+    <span class="hljs-comment">// NB! this.actions is a shorthand for this.props.actions</span>
+    <span class="hljs-keyword">const</span> { doSomething, doSomethingElse } = <span class="hljs-keyword">this</span>.actions
+
+    <span class="hljs-keyword">return</span> &lt;div /&gt;
+  }
+}
+
+const ConnectedClassComponent = logic(MyClassComponent)
+</code></pre><h3>logic.build()</h3><p>Build the logic, but don&apos;t yet connect it to Redux</p><p>Builds are cached on the context, so calling it a on every render is very fast, assuming the key doesn&apos;t change.</p><pre><code class="javascript hljs"><span class="hljs-comment">// create a logic</span>
+<span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">key</span>: <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> props.id,
+
+  <span class="hljs-attr">constants</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [<span class="hljs-string">&apos;SOMETHING&apos;</span>],
+
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">doSomething</span>: <span class="hljs-literal">true</span>,
+  }),
+
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">myValue</span>: [<span class="hljs-string">&apos;yes&apos;</span>]
+  })
 })
 
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.actions == {
-  <span class="hljs-attr">actionWithStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-string">&apos;payload value&apos;</span> } }),
-  <span class="hljs-attr">anotherActionWithAStaticPayload</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">thisIs</span>: <span class="hljs-string">&apos;that&apos;</span> } }),
-  <span class="hljs-attr">simpleAction</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span> } }),
+<span class="hljs-comment">// get a built copy</span>
+<span class="hljs-keyword">const</span> builtLogic = logic.build({ <span class="hljs-attr">id</span>: <span class="hljs-number">10</span> })
 
-  <span class="hljs-attr">actionWithDynamicPayload</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id } }),
-  <span class="hljs-attr">actionWithManyParameters</span>: <span class="hljs-function">(<span class="hljs-params">id, message</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } }),
-  <span class="hljs-attr">actionWithObjectInput</span>: <span class="hljs-function">(<span class="hljs-params">{ id, message }</span>) =&gt;</span> ({ <span class="hljs-attr">type</span>: <span class="hljs-string">&apos;...&apos;</span>, <span class="hljs-attr">payload</span>: { id, message } })
-}
-</code></pre><h4>reducers: <code>({ path, constants, actions }) =&gt; ({})</code></h4><p>Define the structure and logic of your reducers</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-reducers: <span class="hljs-function">(<span class="hljs-params">{ actions, path, constants }</span>) =&gt;</span> ({
-  <span class="hljs-attr">reducerKey</span>: [defaultValue, propType, <span class="hljs-comment">/* optional options: { persist: true }, */</span> {
-    <span class="hljs-comment">// operations</span>
-    [actions.simpleAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> state + payload <span class="hljs-comment">// return the new state,</span>
-    [actions.complexAction]: <span class="hljs-function">(<span class="hljs-params">state, payload</span>) =&gt;</span> {
-      <span class="hljs-comment">// do more things in the block</span>
-      <span class="hljs-keyword">return</span> state + payload
-    },
-    [actions.noStateUsed]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value,
-    [actions.setToTrue]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>,
-    [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">false</span>,
-    <span class="hljs-string">&quot;ANY_OTHER_ACTION_TYPE&quot;</span>: <span class="hljs-function">(<span class="hljs-params">state, payload, meta</span>) =&gt;</span> <span class="hljs-string">&apos;do whatever you want&apos;</span>
-  }],
+<span class="hljs-comment">// you may now access all the properties</span>
+<span class="hljs-comment">// ... keeping in mind it&apos;s not yet mounted</span>
 
-  <span class="hljs-attr">constantDefault</span>: [constants.OTHER_STRING, PropTypes.string, {
-    [actions.clearSomething]: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> constants.STRING,
-    [actions.someOtherAction]: <span class="hljs-function">(<span class="hljs-params">_, payload</span>) =&gt;</span> payload.value
-  }]
+<span class="hljs-comment">// action creator (returns object { type: &apos;do something&apos;, payload: {} })</span>
+builtLogic.actionCreators.doSomething()
+
+<span class="hljs-comment">// bound actions. dispatches the created action automatically</span>
+<span class="hljs-comment">// probably not useful if the logic is not mounted</span>
+builtLogic.actions.doSomething()
+
+<span class="hljs-comment">// get the contants</span>
+buildLogic.constants == { <span class="hljs-attr">SOMETHING</span>: <span class="hljs-string">&apos;SOMETHING&apos;</span> }
+
+<span class="hljs-comment">// a disconnected selector, will probably throw when called</span>
+buildLogic.selectors.myValue(state)
+
+<span class="hljs-comment">// this will throw since the logic is not mounted</span>
+buildLogic.values.myValue
+</code></pre><h3>logic.mount()</h3><p>Mount the logic on Redux, return a function that unmounts</p><p>Shorthand for <code>logic.build().mount()</code></p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> logic = kea({})
+
+<span class="hljs-comment">// When you call logic.mount(), we actually send it through .build():</span>
+logic.mount() == logic.build().mount()
+
+<span class="hljs-comment">// With logic with keys, this is true:</span>
+logic(props).mount() == logic.build(props).mount()
+
+<span class="hljs-comment">// In any case, logic.mount() connects this logic to Redux</span>
+<span class="hljs-comment">// and also mounts all other connected logic.</span>
+<span class="hljs-comment">// It returns a function, which when called will unmount the logic from the store:</span>
+<span class="hljs-keyword">const</span> unmount = logic.mount()
+
+logic.actions.doSomething()
+<span class="hljs-built_in">console</span>.log(logic.values.myValue)
+
+unmount()
+
+<span class="hljs-comment">// Alternatively, pass a callback to execute its contents and unmount automatically</span>
+logic.mount(<span class="hljs-function"><span class="hljs-params">builtLogic</span> =&gt;</span> {
+  builtLogic.actions.doSomething()
+  <span class="hljs-built_in">console</span>.log(builtLogic.values.myValue)
 })
 
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.reducers == {
-  <span class="hljs-attr">reducerKey</span>: <span class="hljs-function">(<span class="hljs-params">initialState = defaultValue, action</span>) =&gt;</span> <span class="hljs-comment">/* ... */</span>,
-  <span class="hljs-attr">constantDefault</span>: <span class="hljs-function">(<span class="hljs-params">initialState = constants.OTHER_STRING, action</span>) =&gt;</span> <span class="hljs-comment">/* ... */</span>,
-}
-myRandomSceneLogic.reducer == combineReducers(reducers)
-</code></pre><h4>selectors: <code>({ path, constants, actions, selectors }) =&gt; ({})</code></h4><p>Define selectors, which are only recomputed when their input changes</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-selectors: <span class="hljs-function">(<span class="hljs-params">{ path, constants, actions, selectors }</span>) =&gt;</span> ({
-  <span class="hljs-attr">selectorName</span>: [
-    <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.inputSelector1, selectors.inputSelector2],
-    (input1, input2) =&gt; createOutput(input),
-    returnPropType
-  ],
+<span class="hljs-comment">// The callback can also be async</span>
+logic.mount(<span class="hljs-keyword">async</span> builtLogic =&gt; {
+  <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-built_in">window</span>.fetch(<span class="hljs-string">&apos;/api/give-me-all-your-data&apos;</span>)
+  builtLogic.actions.doSomething(<span class="hljs-keyword">await</span> response.json())
+  <span class="hljs-built_in">console</span>.log(builtLogic.values.myValue)
+})
+</code></pre><h3>logic.extend()</h3><p>Add more features to the logic</p><pre><code class="javascript hljs"><span class="hljs-comment">// create a logic</span>
+<span class="hljs-keyword">const</span> logic = kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">doSomething</span>: <span class="hljs-literal">true</span>,
+  }),
 
-  <span class="hljs-attr">computedValue</span>: [
-    <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [selectors.reducerKey, selectors.constantDefault],
-    (reducerKey, constantDefault) =&gt; {
-      <span class="hljs-keyword">return</span> complicatedOperation(reducerKey, constantDefault)
-    },
-    PropTypes.object
-  ]
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">myValue</span>: [<span class="hljs-string">&apos;yes&apos;</span>]
+  })
 })
 
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.selectors == {
-  <span class="hljs-comment">// all reducer keys first,</span>
-  reducerKey: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.scenes.myRandomScene.index.reducerKey,
-  <span class="hljs-attr">constantDefault</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.scenes.myRandomScene.index.constantDefault,
+logic.extend({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">doSomethingElse</span>: <span class="hljs-literal">true</span>,
+  }),
 
-  <span class="hljs-comment">// other defined selectors</span>
-  selectorName: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> memoizedSelectorForSelectorName(state),
-  <span class="hljs-attr">computedValue</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> memoizedSelectorForComputedValue(state)
-}
-
-myRandomSceneLogic.selector == <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> ({
-  <span class="hljs-attr">reducerKey</span>: state.scenes.myRandomScene.index.reducerKey,
-  <span class="hljs-attr">constantDefault</span>: state.scenes.myRandomScene.index.constantDefault,
-  <span class="hljs-attr">selectorName</span>: memoizedSelectorForSelectorName(state),
-  <span class="hljs-attr">computedValue</span>: memoizedSelectorForComputedValue(state)
+  <span class="hljs-attr">reducers</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">anotherValue</span>: [<span class="hljs-string">&apos;no&apos;</span>]
+  })
 })
-</code></pre><h4>connect: <code>{}</code></h4><p>Fetch actions and selectors/props from other logic stores.</p><pre><code class="javascript hljs"><span class="hljs-comment">// Input</span>
-connect: {
-  <span class="hljs-attr">actions</span>: [
-    otherLogic, [
-      <span class="hljs-string">&apos;firstAction&apos;</span>,
-      <span class="hljs-string">&apos;secondAction as renamedAction&apos;</span>
-    ]
-  ],
 
-  <span class="hljs-attr">props</span>: [
-    otherLogic, [
-      <span class="hljs-string">&apos;firstProp&apos;</span>,
-      <span class="hljs-string">&apos;secondProp as renamedProp&apos;</span>,
-      <span class="hljs-string">&apos;* as allProps&apos;</span>
-    ],
-    <span class="hljs-comment">// use Dynamic Logic</span>
-    dynamicLogic.withKey(<span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> props.id), [
-      <span class="hljs-string">&apos;dynamicProp as thatProp&apos;</span>
-    ],
-    <span class="hljs-comment">// select from any redux tree node</span>
-    (state) =&gt; state.somethingThatResolvesToAnObject, [
-      <span class="hljs-string">&apos;variable&apos;</span>,
-      <span class="hljs-string">&apos;otherVariable&apos;</span>
-    ]
-  ]
-}
-
-<span class="hljs-comment">// Output</span>
-myRandomSceneLogic.actions == {
-  <span class="hljs-attr">firstAction</span>: otherLogic.actions.firstAction,
-  <span class="hljs-attr">renamedAction</span>: otherLogic.actions.secondAction
-}
-
-myRandomSceneLogic.selectors == {
-  <span class="hljs-attr">firstProp</span>: otherLogic.selectors.firstProp,
-  <span class="hljs-attr">renamedProp</span>: otherLogic.selectors.secondProp,
-  <span class="hljs-attr">allProps</span>: otherLogic.selector,
-  <span class="hljs-attr">variable</span>: state.somethingThatResolvesToAnObject.variable,
-  <span class="hljs-attr">otherVariable</span>: state.somethingThatResolvesToAnObject.otherVariable
-}
-</code></pre></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+<span class="hljs-comment">// Now you can use both:</span>
+<span class="hljs-built_in">Object</span>.keys(logic.build().actions) == [<span class="hljs-string">&apos;doSomething&apos;</span>, <span class="hljs-string">&apos;doSomethingElse&apos;</span>]
+<span class="hljs-built_in">Object</span>.keys(logic.build().selectors) == [<span class="hljs-string">&apos;myValue&apos;</span>, <span class="hljs-string">&apos;anotherValue&apos;</span>]
+</code></pre></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

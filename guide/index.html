@@ -101,62 +101,71 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 body {
-	background: #ffffff;
-	margin: 0;
+  background: #ffffff;
+  margin: 0;
   font-family: 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 a {
-	color: green;
+  color: green;
+}
+
+p {
+  line-height: 1.5rem;
+}
+
+li {
+  margin: 5px 0;
+  line-height: 1.5rem;
 }
 
 code {
-	background: #f8f8f8;
-	padding: 2px;
+  background: #f8f8f8;
+  padding: 2px;
 }
 
 .code {
-	text-align: left;
-	margin: 20px;
+  text-align: left;
+  margin: 20px;
 }
 
 .description {
-	text-align: left;
-	margin: 20px;
-	line-height: 22px;
+  text-align: left;
+  margin: 20px;
+  line-height: 22px;
 }
 
 .example {
-	margin: 20px;
+  margin: 20px;
 }
 
 h1, h2 {
-	font-weight: 400;
+  font-weight: 400;
 }
 
 h1, h2 {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 h2, h3 {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .demo {
-	background: #f0f0f0;
-	padding: 20px;
-	margin: 20px 0;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .extra-help {
-	background: #ffffdd;
-	padding: 20px;
-	margin: 20px 0;
+  background: #ffffdd;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .hljs {
-	line-height: 16px;
+  line-height: 16px;
 }
 
 .api-scene {
@@ -164,20 +173,20 @@ h2, h3 {
 }
 
 .code-style-bar {
-	background: #388e3c;
-	height: 24px;
+  background: #388e3c;
+  height: 24px;
 }
 
 .code-style-bar button {
-		color: white;
-		background: none;
-		border: 1px solid #fff;
-		cursor: pointer;
-		height: 22px;
-		margin-top: 1px;
-		margin-left: 1px;
-		outline: none
-	}
+    color: white;
+    background: none;
+    border: 1px solid #fff;
+    cursor: pointer;
+    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    outline: none
+  }
 
 .code-style-bar button.active {
   color: #222;
@@ -279,9 +288,6 @@ main section.with-sidebar .content.with-sidebar {
           -ms-flex-positive: 2;
               flex-grow: 2;
       max-width: calc(100% - 240px);
-    }
-main section.with-sidebar .content.darker {
-      background: #eee;
     }
 @media (max-width: 767px) {
 
@@ -411,45 +417,34 @@ footer.opencollective-footer a {
 	}
 </style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guideInstallation"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Home</a><a class="active" href="/guide">Docs</a><a class="" href="/examples">Examples</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">OpenCollective</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a aria-current="true" href="/guide/installation" class="active">Installation</a></li><li><a aria-current="false" href="/guide/counter">Counter</a></li><li><a aria-current="false" href="/guide/counter-dynamic">Dynamic Counter</a></li><li><a aria-current="false" href="/guide/sliders">Sliders</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/github">Github API</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/connected">Connected Logic</a></li><li><a aria-current="false" href="/guide/dynamic-connected">Dynamic Connected Logic</a></li><li><a aria-current="false" href="/guide/forms">Forms</a><small style="margin-left: 10px; color: rgb(170, 170, 170); font-weight: 300;">with kea-saga</small></li><li><a aria-current="false" href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="false" href="/guide/testing">Testing</a></li><li><a aria-current="false" href="/guide/faq">Frequently Asked Questions</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="false" href="/effects/saga">Sagas</a></li><li><a aria-current="false" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a aria-current="false" href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a aria-current="false" href="/api/logic">kea(options)</a></li><li><a aria-current="false" href="/api/component">kea(options)(Component)</a></li><li><a aria-current="false" href="/api/connect">connect(options)</a></li><li><a aria-current="false" href="/api/store">getStore</a></li><li><a aria-current="false" href="/api/reducer">keaReducer</a></li><li><a aria-current="false" href="/api/action">createAction</a></li><li><a aria-current="false" href="/api/reset">resetKeaCache</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Installation</h2><p>Installing <code>kea</code> is rather straightforward. You need to add the <code>kea</code> package, install any plugins and connect your store to Redux.</p><p>This guide describes two ways to install Kea:</p><ol><li>Adding kea to an existing app, either with <code>create-redux-app</code> or without</li><li>Starting a new kea app from scratch</li></ol><h3>1. Adding to an existing app</h3><h4>1.1. Install the packages</h4><p>First install the packages:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation" aria-current="page" class="active">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="counter-singleton-scene"><div class="description"><h2>Installation</h2><p>Installing <code>kea</code> is rather straightforward. You need to add the <code>kea</code> package, reset kea&apos;s context and wrap your app with react-redux&apos;s <code>&lt;Provider /&gt;</code> tag.</p><h3>1. Install the packages</h3><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
 yarn add kea redux react-redux reselect
 
 <span class="hljs-comment"># if you&apos;re using npm</span>
 npm install kea redux react-redux reselect --save
-</code></pre><h4>1.2. Configure Redux</h4><p>Then configure the <a href="https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store">Redux store</a>. You may either do it <a href="/api/store#manual">manually</a> or use the <code>getStore</code> helper. We recommend using the helper, as it will also configure any installed plugins (e.g. <a href="/api/saga">kea-saga</a>). You may pass additional middleware and reducers as <a href="/api/store">options</a>.</p><p>First, create a file called <code>store.js</code> with the following content:</p><pre><code class="javascript hljs bash">// store.js
-import { getStore } from <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-built_in">export</span> default getStore({
-  // additional options (e.g. plugins, middleware, reducers, ...)
-})
-</code></pre><p>Then import this in your app&apos;s entrypoint <strong>before</strong> any calls to <code>kea()</code> are made. In practice this means you should import your store before your root component.</p><p>Finally, wrap your <code>&lt;App /&gt;</code> with Redux&apos;s <code>&lt;Provider /&gt;</code>.</p><p>This is how your entrypoint would look like if you used <code>create-react-app</code>:</p><pre><code class="javascript hljs bash">// index.js
-import React from <span class="hljs-string">&apos;react&apos;</span>;
+</code></pre><h3>2. Set up Kea&apos;s context</h3><p>Kea stores all of its data on a <u>context</u>, which must be set up before any <code>logic</code> can be used. This context stores a reference to the redux store, initializes all plugins, caches all built logic and keeps track of what is mounted and what is not.</p><p>To set it up, just call <code>resetContext(options)</code> before rendering your app.</p><p>Then also wrap your <code>&lt;App /&gt;</code> with Redux&apos;s <code>&lt;Provider /&gt;</code>, getting the <code>store</code> from <code>getContext()</code>.</p><p>This is how your <code>index.js</code> would look like if you used <code>create-react-app</code>:</p><pre><code class="javascript hljs bash">import React from <span class="hljs-string">&apos;react&apos;</span>;
 import ReactDOM from <span class="hljs-string">&apos;react-dom&apos;</span>;
-import { Provider } from <span class="hljs-string">&apos;react-redux&apos;</span>; // &lt;--- add this
-
+import { resetContext, getContext } from <span class="hljs-string">&apos;kea&apos;</span>; // &lt;-- add this
+import { Provider } from <span class="hljs-string">&apos;react-redux&apos;</span>; // &lt;---------- add this
 import <span class="hljs-string">&apos;./index.css&apos;</span>;
-
-import store from <span class="hljs-string">&apos;./store&apos;</span>; // &lt;--- add this BEFORE App
 import App from <span class="hljs-string">&apos;./App&apos;</span>;
-import registerServiceWorker from <span class="hljs-string">&apos;./registerServiceWorker&apos;</span>;
 
-ReactDOM.render(
-  &lt;Provider store={store}&gt; // &lt;-- add this
+resetContext({ // &lt;----------------------------------- add this
+  createStore: {
+    // additional options (e.g. middleware, reducers, ...)
+  },
+  plugins: [
+    // additional kea plugins
+  ]
+})
+
+ReactDOM.render( // &lt;-------------------------- and update this
+  &lt;Provider store={getContext().store}&gt;
     &lt;App /&gt;
   &lt;/Provider&gt;,
   document.getElementById(<span class="hljs-string">&apos;root&apos;</span>)
-);
-
-registerServiceWorker();
-</code></pre><h4>1.3. Optional: Enable decorators</h4><p>Kea makes use of an experimental support for decorators to make your code nicer to read. If you wish to use this feature, follow the guide here: <a href="https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy">babel-plugin-transform-decorators-legacy</a>.</p><h5>1.3.1. Decorators for apps made with <code>create-react-app</code></h5><p>If your app was made with <code>create-react-app</code>, you have two options for installing support for decorators.</p><p>You may install them ejecting your webpack configuration and following the <a href="https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy">guide</a> from above.</p><p>If you wish to avoid that, you have to find some other way. The easiest option is to replace <code>react-scripts</code> with <a href="https://github.com/kitze/custom-react-scripts"><code>custom-react-scripts</code></a>.</p><p>To do this, first run these commands:</p><pre><code class="bash hljs">yarn add custom-react-scripts
-yarn remove react-scripts
-</code></pre><p>Then create a file called <code>.env</code> in the root of your project and add this:</p><pre><code class="bash hljs">REACT_APP_DECORATORS=<span class="hljs-literal">true</span>
-</code></pre><p>Now you will be able to use decorators in your code</p><h3>2. Starting a new kea app from scratch</h3><p>Kea comes with a CLI tool that can generate a skeleton for your app. Ues it like so:</p><pre><code class="bash hljs">npm install -g kea-cli
-kea new my-project
-<span class="hljs-built_in">cd</span> my-project
-yarn       <span class="hljs-comment"># ... or npm install</span>
-yarn start <span class="hljs-comment"># ... or npm start</span>
-</code></pre><h2>Continue with the guide</h2>Next page: <a href="/guide/counter">Counter</a></div></div></div></div></section></main><footer class="opencollective-footer"><p>Developing Kea and writing this documentation takes a fair bit of work.</p><p>Please support this work by sponsoring us on <a href="https://opencollective.com/kea" target="_blank">OpenCollective</a>.</p><p>Just <strong>$2/month</strong> will make a huge difference in our mission to develop the best state management solution for React!</p></footer></div></div>
+)
+</code></pre><p>And you&apos;re done! Feel free to use <code>kea()</code> calls anywhere in your code!</p><h4>A note about call order</h4><p>In versions of Kea before 1.0, you had to run the setup code before any call to <code>kea({})</code> was made. This is no longer the case. Each call to <code>kea({})</code> lazily loads the logic and builds it only when requested, either when mounted onto a React component or instructed to do so manually (via <code>logic.build()</code> and/or <code>logic.mount()</code>).</p><p>Calling <code>resetContext()</code> always clears all initialised logic and reverts your app to a clean state.</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 

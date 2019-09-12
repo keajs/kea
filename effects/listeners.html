@@ -415,49 +415,87 @@ footer.opencollective-footer a {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsThunk"); </script></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("effectsListeners"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a aria-current="page" class="active" href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Thunks</h2><p>Thunks are simple ways to define side effects with Redux.</p></div><div class="description"><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-thunk"><code>kea-thunk</code></a> and <a href="https://github.com/gaearon/redux-thunk"><code>redux-thunk</code></a> packages:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
-yarn add kea-thunk redux-thunk
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a aria-current="page" class="active" href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div><div class="description"><h2>Listeners</h2><p>Please help write this section or read more about <a href="https://github.com/keajs/kea-listeners">kea-listeners on github</a>!</p><h2>Installation</h2><p>First install the <a href="https://github.com/keajs/kea-listeners"><code>kea-listeners</code></a> package:</p><pre><code class="bash hljs"><span class="hljs-comment"># if you&apos;re using yarn</span>
+yarn add kea-listeners
 
 <span class="hljs-comment"># if you&apos;re using npm</span>
-npm install --save kea-thunk redux-thunk
-</code></pre><p>Then you have install the plugin:</p><pre><code class="javascript hljs bash">import thunkPlugin from <span class="hljs-string">&apos;kea-thunk&apos;</span>
+npm install --save kea-listeners
+</code></pre><p>Then install the plugin:</p><pre><code class="javascript hljs bash">import listenersPlugin from <span class="hljs-string">&apos;kea-listeners&apos;</span>
 import { resetContext } from <span class="hljs-string">&apos;kea&apos;</span>
 
 resetContext({
   createStore: <span class="hljs-literal">true</span>,
-  plugins: [ thunkPlugin ]
+  plugins: [ listenersPlugin ]
 })
-</code></pre></div><div class="description"><h2>Usage</h2><p>You define thunks in a block called <code>thunks</code>. Here are some examples:</p><pre><code class="javascript hljs bash">const delay = (ms) =&gt; new Promise(resolve =&gt; window.setTimeout(resolve, ms))
+</code></pre><h2>Sample usage</h2><pre><code class="bash hljs">kea({
+  // ...
 
-const logic = kea({
-  actions: ({ constants }) =&gt; ({
-    updateName: name =&gt; ({ name })
-  }),
+  listeners: ({ actions, values, store, sharedListeners }) =&gt; ({
+    // action that conditionally calls another action
+    [actions.openUrl]: ({ url }) =&gt; {
+      // get the value from the reducer <span class="hljs-string">&apos;url&apos;</span>
+      const currentUrl = values.url
 
-  thunks: ({ actions, dispatch, getState }) =&gt; ({
-    updateNameAsync: async name =&gt; {
-      await delay(1000)            // standard promise
-      await actions.anotherThunk() // another thunk action
-      actions.updateName(name)     // not a thunk, so no async needed
-      dispatch({ <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;RANDOM_REDUX_ACTION&apos;</span> }) // random redux action
-
-      console.log(values.name) // <span class="hljs-string">&apos;chirpy&apos;</span>
-      console.log(values.otherKey) // undefined
+      <span class="hljs-keyword">if</span> (url !== currentUrl) {
+        actions.reallyOpenTheUrl(url)
+      }
     },
-    anotherThunk: async () =&gt; {
-      // <span class="hljs-keyword">do</span> something
-    }
+
+    // listen to any redux action <span class="hljs-built_in">type</span>, not just ones defined <span class="hljs-keyword">in</span> this logic
+    <span class="hljs-string">&apos;LOCATION_CHANGE&apos;</span>: (payload) =&gt; {
+      // <span class="hljs-keyword">do</span> something with the regular redux action
+      console.log(payload)
+      store.dispatch({
+        <span class="hljs-built_in">type</span>: <span class="hljs-string">&apos;REDUX_ACTION&apos;</span>,
+        payload: { redux: <span class="hljs-string">&apos;cool&apos;</span> }
+      })
+    },
+
+    // two listeners with one shared action
+    [actions.anotherAction]: sharedListeners.sharedActionListener,
+    [actions.yetAnotherAction]: sharedListeners.sharedActionListener,
+
+    // Debounce <span class="hljs-keyword">for</span> 300ms before making an API call
+    // Break <span class="hljs-keyword">if</span> this action was called again <span class="hljs-keyword">while</span> we were sleeping
+    [actions.debouncedFetchResults]: async ({ username }, breapoint) =&gt; {
+      // If the same action gets called again <span class="hljs-keyword">while</span> this waits, we will throw an exception
+      // and catch it immediately, effectively cancelling the operation.
+      await breakpoint(300)
+
+      // Make an API call
+      const user = await API.fetchUser(username)
+
+      // <span class="hljs-keyword">if</span> during the previous fetch this action was called again, <span class="hljs-keyword">then</span> <span class="hljs-built_in">break</span> here
+      breakpoint()
+
+      // save the result
+      actions.userReceived(user)
+    },
+
+    // you can also pass an array of <span class="hljs-built_in">functions</span>
+    [actions.oneActionMultipleListeners]: [
+      (payload, breakpoint, action) =&gt; { /* ... */ },
+      sharedListeners.doSomething,
+      sharedListeners.logAction
+    ]
   }),
 
-  reducers: ({ actions, constants }) =&gt; ({
-    name: [<span class="hljs-string">&apos;chirpy&apos;</span>, {
-      [actions.updateName]: (state, payload) =&gt; payload.name
-    }]
+  // <span class="hljs-keyword">if</span> multiple actions must trigger similar code, use sharedListeners
+  sharedListeners: ({ actions, values, store }) =&gt; ({
+    // all listeners and sharedListeners also get a third parameter:
+    // - action = the full dispatched action
+    sharedActionListener: <span class="hljs-keyword">function</span> (payload, breakpoint, action) {
+      <span class="hljs-keyword">if</span> (action.type === actions.anotherAction.toString()) {
+        // handle this <span class="hljs-keyword">case</span> separately
+      }
+      // <span class="hljs-keyword">do</span> something common <span class="hljs-keyword">for</span> both
+      console.log(action)
+    }
   })
 })
-</code></pre><p>As you can see, you have access to the standard Redux <code>dispatch</code> and <code>getState</code> methods. However you don&apos;t need to call <code>dispatch</code> before any action in the actions object. They are wrapped automatically.</p></div></div></div></div></section></main></div></div>
+</code></pre></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
