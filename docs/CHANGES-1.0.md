@@ -1,18 +1,6 @@
-**Updated 2019/06/18 with changes for `1.0.0-rc.1`**
-
-**Updated 2019/06/13 with changes for `1.0.0-beta.31`**
-
-**Updated 2019/04/28 with changes for `1.0.0-beta.15`**
-
-# What is Kea?
-
-If you're new to Kea, read this document for an introduction: _What is Kea and why you should be excited about it!_. (**TODO**)
-
-It describes what is Kea from first principles. Thus if you have never heard of Kea before, it's a good place to start. If you are already using Kea, check it out anyway, as it explains what makes the 1.0 release so special.
-
-Read below to see what changed compared to 0.28.7 in order to upgrade your apps.
-
 # Kea 1.0 changes
+
+Read below to see what changed in 1.0 compared to 0.28.7 in order to upgrade your apps.
 
 ## Status
 
