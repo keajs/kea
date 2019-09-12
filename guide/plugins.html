@@ -415,39 +415,87 @@ footer.opencollective-footer a {
 		border-top-color: #359335;
 		border-left-color: #359335;
 	}
-</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("apiConnect"); </script></head>
+</style><script type="text/javascript" charset="utf-8">if (!window.__keaPrerender) { window.__keaPrerender = []; }; window.__keaPrerender.push("guidePlugins"); </script></head>
   <body>
-    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li><li><a href="/guide/plugins">Writing Plugins</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a aria-current="page" class="active" href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li><li><a href="/api/plugins">Plugins</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="api-scene"><h2><code>connect(options)</code></h2><p>Shorthand for <code>kea({ connect: options })</code></p><p>It&apos;s very handy for connecting actions and values to class components.</p><h3>Usage</h3><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
-<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;kea&apos;</span>
-
-<span class="hljs-keyword">import</span> menuLogic <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;../menu/logic&apos;</span>
-
-@connect({
-  <span class="hljs-attr">actions</span>: [
-    menuLogic, [
-      <span class="hljs-string">&apos;openMenu&apos;</span>,
-      <span class="hljs-string">&apos;closeMenu&apos;</span>
-    ]
-  ],
-  <span class="hljs-attr">values</span>: [
-    menuLogic, [
-      <span class="hljs-string">&apos;isOpen as isMenuOpen&apos;</span>
-    ]
-  ]
+    <div id="root"><div><header class="body-header"><nav class="first-level"><a class="" href="/">Kea 1.0</a><a class="active" href="/guide">Docs</a><a class="right" href="https://github.com/keajs/kea" target="_blank"><span class="long-text">Github</span><span class="short-text">GH</span></a><a class="opencollective" href="https://opencollective.com/kea" target="_blank"><span class="long-text">Support Kea</span><span class="short-text">OC</span></a></nav></header><main><section class="with-sidebar"><aside class="kea-sidebar"><nav class="second-level"><div><strong class="section-title">Guide</strong><ul><li><a href="/guide/installation">Installation</a></li><li><a href="/guide/github">Example: Github API</a></li><li><a href="/guide/forms">Example: Forms</a></li><li><a href="/guide/sliders">Example: Sliders</a></li><li><a href="/guide/migration">Migrating Redux Apps</a></li><li><a aria-current="page" class="active" href="/guide/plugins">Writing Plugins</a></li></ul></div><div><strong class="section-title">Side effects</strong><ul><li><a href="/effects/listeners">Listeners</a></li><li><a href="/effects/saga">Sagas</a></li><li><a href="/effects/thunk">Thunks</a></li></ul></div><div><strong class="section-title">Plugins</strong><ul><li><a href="/plugins/router">Router</a></li><li><a href="/plugins/localstorage">LocalStorage</a></li></ul></div><div><strong class="section-title">API</strong><ul><li><a href="/api/context">context</a></li><li><a href="/api/kea">kea</a></li><li><a href="/api/logic">logic</a></li><li><a href="/api/connect">connect</a></li><li><a href="/api/action">createAction</a></li><li><a href="/api/plugins">Plugins</a></li></ul></div></nav></aside><div class="content with-sidebar"><div><div class="plugins-scene"><div class="description"><p><strong>NB!</strong> See the <a href="/api/plugins">plugins API page</a> for a list of everything that plugins can do.</p><h2>Requests plugin</h2><p>In this guide we will write a simple plugin called &quot;requests&quot; that takes as input an action and creates 3 actions for different states of this action. Something like this:</p><pre><code class="javascript hljs"><span class="hljs-comment">// this input:</span>
+kea({
+  <span class="hljs-attr">requests</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">fetchArticle</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> api.fetchArticle(id)
+    fetchComments: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> api.fetchComments(id),
+    <span class="hljs-attr">postComment</span>: <span class="hljs-function">(<span class="hljs-params">id, comment</span>) =&gt;</span> api.postComment(id, comment)
+  })
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  render () {
-    <span class="hljs-keyword">const</span> { isMenuOpen } = <span class="hljs-keyword">this</span>.props
-    <span class="hljs-keyword">const</span> { openMenu, closeMenu } = <span class="hljs-keyword">this</span>.actions
 
-    <span class="hljs-keyword">return</span> (
-      &lt;div&gt;
-        &lt;button onClick={isMenuOpen ? closeMenu : openMenu}&gt;Toggle menu&lt;/button&gt;
-      &lt;/div&gt;
-    )
+<span class="hljs-comment">// will be converted to this output:</span>
+kea({
+  <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">fetchArticle</span>: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
+    <span class="hljs-attr">fetchArticleSuccess</span>: <span class="hljs-function">(<span class="hljs-params">request, response</span>) =&gt;</span> ({ request, response }),
+    <span class="hljs-attr">fetchArticleFailure</span>: <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> ({ error })
+
+    fetchComments: <span class="hljs-function">(<span class="hljs-params">id</span>) =&gt;</span> ({ id }),
+    <span class="hljs-attr">fetchCommentsSuccess</span>: <span class="hljs-function">(<span class="hljs-params">request, response</span>) =&gt;</span> ({ request, response }),
+    <span class="hljs-attr">fetchCommentsFailure</span>: <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> ({ error })
+
+    postComment: <span class="hljs-function">(<span class="hljs-params">id, comment</span>) =&gt;</span> ({ id, comment }),
+    <span class="hljs-attr">postCommentSuccess</span>: <span class="hljs-function">(<span class="hljs-params">request, response</span>) =&gt;</span> ({ request, response }),
+    <span class="hljs-attr">postCommentFailure</span>: <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> ({ error })
+  })
+})
+</code></pre><p>The first step in authoring a plugin is to create a blank plugin and add it to the plugins array in <code>resetContext</code>.</p><p>Here&apos;s a sample skeleton structure for a plugin, extracted from the code on the <a href="/api/plugins">plugins API page</a>. See that page for all that you can do with plugins.</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> requestsPlugin = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-regexp">/* { options } */</span></span>) =&gt;</span> ({
+  <span class="hljs-comment">// Required: name of the plugin</span>
+  name: <span class="hljs-string">&apos;requests&apos;</span>
+
+  <span class="hljs-comment">// default values for output in logic,</span>
+  <span class="hljs-comment">// also used to register keys that the plugin exports on the logic</span>
+  defaults: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+  }),
+
+  <span class="hljs-comment">// when are the build steps run</span>
+  <span class="hljs-comment">// (skip this and they are appended to the end)</span>
+  buildOrder: {
+  },
+
+  <span class="hljs-comment">// steps that are performed when building the logic</span>
+  buildSteps: {
   }
-}
-</code></pre></div></div></div></section></main></div></div>
+
+  <span class="hljs-comment">// various other events that the plugin can hook into</span>
+  events: {
+  }
+})
+
+
+<span class="hljs-comment">// later:</span>
+resetContext({
+  <span class="hljs-attr">createStore</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">plugins</span>: [ requestsPlugin ]
+})
+</code></pre><p>This time we&apos;re only interested in the <code>afterLogic</code> event. We will take the input from our &quot;requests&quot; object and extend the logic with the actions that we generate from it.</p><pre><code class="javascript hljs"><span class="hljs-keyword">const</span> requestsPlugin = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-regexp">/* { options } */</span></span>) =&gt;</span> ({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&apos;requests&apos;</span>
+
+  events: {
+    afterLogic (logic, input) {
+      <span class="hljs-comment">// skip if there are no requests in the input</span>
+      <span class="hljs-keyword">if</span> (!input.requests) {
+        <span class="hljs-keyword">return</span>
+      }
+
+      <span class="hljs-comment">// run the requests function with the already created logic as an input,</span>
+      <span class="hljs-comment">// so it can do ({ actions, ... }) =&gt; ({ ... })</span>
+      <span class="hljs-keyword">const</span> requests = input.requests(logic)
+
+      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> convert requests into newActions</span>
+      <span class="hljs-keyword">let</span> newActions = {}
+
+      <span class="hljs-comment">// extend the logic with these actions</span>
+      logic.extend({
+        <span class="hljs-attr">actions</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> newActions
+      })
+    }
+  }
+})
+</code></pre><p><strong>TODO</strong> This documentation is still a work in progress... but I hope you can imagine what happens next :)</p></div></div></div></div></section></main></div></div>
     <script src="/common.bundle.js"></script>
   
 
