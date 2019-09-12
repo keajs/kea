@@ -3,8 +3,7 @@ import { runPlugins, reservedProxiedKeys } from '../plugins'
 
 import { getContext } from '../context'
 
-
-export function mountLogic (logic, wrapper) {
+export function mountLogic (logic) {
   const { mount: { counter, mounted } } = getContext()
 
   for (const pathString of Object.keys(logic.connections)) {

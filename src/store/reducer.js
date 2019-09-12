@@ -25,12 +25,12 @@ export function keaReducer (pathStart = 'scenes') {
 
 export function attachReducer (logic) {
   const { path, reducer } = logic
-  const { 
-    reducers: { tree, combined }, 
-    options: { attachStrategy }, 
-    store 
+  const {
+    reducers: { tree, combined },
+    options: { attachStrategy },
+    store
   } = getContext()
-  
+
   const pathStart = path[0]
 
   initRootReducerTree(pathStart)
@@ -83,12 +83,12 @@ export function attachReducer (logic) {
 export function detachReducer (logic) {
   const { path } = logic
 
-  const { 
-    reducers: { tree, combined }, 
-    options: { detachStrategy }, 
-    store 
+  const {
+    reducers: { tree, combined },
+    options: { detachStrategy },
+    store
   } = getContext()
-  
+
   const pathStart = path[0]
 
   if (detachStrategy === 'persist') {
@@ -127,7 +127,7 @@ export function detachReducer (logic) {
   if (detached) {
     if (detachStrategy === 'dispatch' || detachStrategy === 'replace') {
       runPlugins('beforeDetach', logic)
-  
+
       if (detachStrategy === 'dispatch') {
         store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
       } else if (detachStrategy === 'replace') {
