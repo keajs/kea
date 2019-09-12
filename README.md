@@ -5,13 +5,13 @@
 [![Backers on Open Collective](https://opencollective.com/kea/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/kea/sponsors/badge.svg)](#sponsors)
 
+![Kea Logo](https://kea.js.org/img/logo.svg)
+
 # Kea 1.0
 
 This branch (`master`) contains Kea 1.0. To see the old 0.28 version, [click here](https://github.com/keajs/kea/tree/stable-0.28).
 
 To see what has changed between 0.28 and 1.0, see [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md).
-
-![Kea Logo](https://kea.js.org/img/logo.svg)
 
 A `kea` is two things:
 
@@ -28,8 +28,6 @@ Until this readme is updated with an intro for Kea 1.0, open the [documentation]
 <a href="https://opencollective.com/kea/sponsor/1/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/kea/sponsor/2/website" target="_blank"><img src="https://opencollective.com/kea/sponsor/2/avatar.svg"></a>
 <a href="https://opencollective.com/kea#backers" target="_blank"><img src="https://opencollective.com/kea/backers.svg?width=890"></a>
-
-[Support this project by becoming a backer](https://opencollective.com/kea#backer).
 
 ## Contributors
 
