@@ -877,12 +877,12 @@ You don't want to know :).
 
 Make sure you're running `react-redux` version 7.1 or later and `react` version `16.8.3` or later.
 
-Upgrade all your packages to the latest RC (kea) or beta (plugins) versions:
+Upgrade all your packages to the latest 1.0+ versions:
 
-- kea: ![kea](https://img.shields.io/npm/v/kea/beta.svg)
-- kea-saga: ![kea](https://img.shields.io/npm/v/kea-saga/beta.svg)
-- kea-thunk: ![kea](https://img.shields.io/npm/v/kea-thunk/beta.svg)
-- kea-localstorage: ![kea](https://img.shields.io/npm/v/kea-localstorage/beta.svg)
+- kea: ![kea](https://img.shields.io/npm/v/kea.svg)
+- kea-saga: ![kea](https://img.shields.io/npm/v/kea-saga.svg)
+- kea-thunk: ![kea](https://img.shields.io/npm/v/kea-thunk.svg)
+- kea-localstorage: ![kea](https://img.shields.io/npm/v/kea-localstorage.svg)
 
 ... and then please report if it works fine, what broke, did you notice any performance or other issues, etc.
 
