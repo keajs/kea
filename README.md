@@ -1,4 +1,3 @@
-![beta version](https://img.shields.io/npm/v/kea/beta.svg)
 [![NPM Version](https://img.shields.io/npm/v/kea.svg)](https://www.npmjs.com/package/kea)
 [![minified](https://badgen.net/bundlephobia/min/kea)](https://bundlephobia.com/result?p=kea)
 [![minified + gzipped](https://badgen.net/bundlephobia/minzip/kea)](https://bundlephobia.com/result?p=kea)
