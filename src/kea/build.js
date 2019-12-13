@@ -100,11 +100,17 @@ function setLogicDefaults (logic) {
 function applyInputToLogic (logic, input) {
   runPlugins('beforeLogic', logic, input)
 
-  const { plugins: { buildOrder, buildSteps } } = getContext()
+  if (typeof input === 'function') {
+    getContext().build.building = logic
+    input.bind(logic)(logic) // build it
+    getContext().build.building = null
+  } else {
+    const { plugins: { buildOrder, buildSteps } } = getContext()
 
-  for (const step of buildOrder) {
-    for (const func of buildSteps[step]) {
-      func(logic, input)
+    for (const step of buildOrder) {
+      for (const func of buildSteps[step]) {
+        func(logic, input)
+      }
     }
   }
 
