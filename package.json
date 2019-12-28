@@ -26,7 +26,8 @@
     "lint": "eslint src/**",
     "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
-    "test": "BABEL_ENV=test jest"
+    "test": "BABEL_ENV=test jest",
+    "test-watch": "BABEL_ENV=test jest --watchAll"
   },
   "files": [
     "es",
