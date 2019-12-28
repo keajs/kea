@@ -30,5 +30,15 @@ export function addSelectors (selectorsToAdd) {
 
     builtSelectors[key] = createSelector(...args, func)
     logic.selectors[key] = (state = getStoreState(), props = logic.props) => builtSelectors[key](state, props)
+
+    if (!logic.values.hasOwnProperty(key)) {
+      Object.defineProperty(logic.values, key, {
+        get: function () {
+          return logic.selectors[key](getStoreState(), logic.props)
+        },
+        enumerable: true
+      })
+    }
+
   })
 }

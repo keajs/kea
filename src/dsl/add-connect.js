@@ -1,5 +1,5 @@
 import { addConnection } from '../core/shared/connect'
-import { getContext } from '../context'
+import { getContext, getStoreState } from '../context'
 
 export function addConnect (connect) {
   const logic = getContext().build.building
@@ -77,6 +77,15 @@ export function connectValues (values, props) {
       }
     } else {
       logic.selectors[to] = from === '*' ? otherLogic : (state, props) => otherLogic(state, props)[from]
+    }
+
+    if (!logic.values.hasOwnProperty(to)) {
+      Object.defineProperty(logic.values, to, {
+        get: function () {
+          return logic.selectors[to](getStoreState(), logic.props)
+        },
+        enumerable: true
+      })
     }
 
     if (process.env.NODE_ENV !== 'production') {
