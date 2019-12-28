@@ -102,9 +102,10 @@ function applyInputToLogic (logic, input) {
   runPlugins('beforeLogic', logic, input)
 
   if (typeof input === 'function') {
+    const oldLogic = getContext().build.building
     getContext().build.building = logic
     input.bind(logic)(logic) // build it
-    getContext().build.building = null
+    getContext().build.building = oldLogic
   } else if (input.__skipConvert) {
     const { plugins: { buildOrder, buildSteps } } = getContext()
 
@@ -114,9 +115,10 @@ function applyInputToLogic (logic, input) {
       }
     }
   } else {
+    const oldLogic = getContext().build.building
     getContext().build.building = logic
     convertLogic(input).bind(logic)(logic)
-    getContext().build.building = null
+    getContext().build.building = oldLogic
   }
 
   runPlugins('afterLogic', logic, input)
