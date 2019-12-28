@@ -1,8 +1,8 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../index'
-import { convertLogic } from '../kea/build'
 
 import { addActions, addReducers, addSelectors } from '../dsl'
+import { convertLogic } from '../kea/convert'
 
 // import './helper/jsdom'
 // import React from 'react'
