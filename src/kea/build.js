@@ -3,6 +3,7 @@ import { getContext } from '../context'
 
 import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
+import { addActions, addReducers, addSelectors } from '../dsl'
 
 export function getBuiltLogic (inputs, props, wrapper) {
   const input = inputs[0]
@@ -96,6 +97,18 @@ function setLogicDefaults (logic) {
   }
 }
 
+export const convertLogic = input => logic => {
+  if (input.actions) {
+    addActions(input.actions(logic))
+  }
+  if (input.reducers) {
+    addReducers(input.reducers(logic))
+  }
+  if (input.selectors) {
+    addSelectors(input.selectors(logic))
+  }
+}
+
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic (logic, input) {
   runPlugins('beforeLogic', logic, input)
@@ -103,6 +116,10 @@ function applyInputToLogic (logic, input) {
   if (typeof input === 'function') {
     getContext().build.building = logic
     input.bind(logic)(logic) // build it
+    getContext().build.building = null
+  } else if (input.__convert) {
+    getContext().build.building = logic
+    convertLogic(input).bind(logic)(logic)
     getContext().build.building = null
   } else {
     const { plugins: { buildOrder, buildSteps } } = getContext()

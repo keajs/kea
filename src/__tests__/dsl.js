@@ -1,5 +1,6 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../index'
+import { convertLogic } from '../kea/build'
 
 import { addActions, addReducers, addSelectors } from '../dsl'
 
@@ -53,12 +54,51 @@ test('builds logic with functions', () => {
     })
   })
 
+  const normalConvertedLogic = kea(convertLogic({
+    actions: () => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      thingie: [false, {
+        [actions.doSomething]: () => true
+      }]
+    }),
+    selectors: ({ selectors }) => ({
+      anotherThing: [
+        () => [selectors.thingie],
+        (thingie) => 'whatever'
+      ]
+    })
+  }))
+
+  const keyConvertedLogic = kea({
+    __convert: true,
+    actions: () => ({
+      doSomething: true
+    }),
+    reducers: ({ actions }) => ({
+      thingie: [false, {
+        [actions.doSomething]: () => true
+      }]
+    }),
+    selectors: ({ selectors }) => ({
+      anotherThing: [
+        () => [selectors.thingie],
+        (thingie) => 'whatever'
+      ]
+    })
+  })
+
   const builtLogic = logic.build()
   const builtNormalLogic = normalLogic.build()
+  const builtNormalConvertedLogic = normalConvertedLogic.build()
+  const builtKeyConvertedLogic = keyConvertedLogic.build()
 
   const keys = ['actions', 'actionCreators', 'reducers', 'defaults', 'selectors']
 
   for (const key of keys) {
     expect(Object.keys(builtLogic[key])).toEqual(Object.keys(builtNormalLogic[key]))
+    expect(Object.keys(builtLogic[key])).toEqual(Object.keys(builtNormalConvertedLogic[key]))
+    expect(Object.keys(builtLogic[key])).toEqual(Object.keys(builtKeyConvertedLogic[key]))
   }
 })
