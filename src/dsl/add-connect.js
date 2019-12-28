@@ -1,15 +1,23 @@
 import { addConnection } from '../core/shared/connect'
 import { getContext } from '../context'
 
-export function connectLogic (logicsToConnect, props = {}) {
+export function addConnect (connect) {
+  const logic = getContext().build.building
+  const props = logic.props || {}
+
+  connect.logic && connectLogic(connect.logic, props)
+  connect.actions && connectActions(connect.actions, props)
+  connect.values && connectValues(connect.values, props)
+  connect.props && connectValues(connect.props, props)
+}
+
+export function connectLogic (otherLogic, props = {}) {
   const logic = getContext().build.building
 
-  for (let otherLogic of logicsToConnect) {
-    if (otherLogic._isKea) {
-      otherLogic = otherLogic(props)
-    }
-    addConnection(logic, otherLogic)
+  if (otherLogic._isKea) {
+    otherLogic = otherLogic(props)
   }
+  addConnection(logic, otherLogic)
 }
 
 export function connectActions (actions, props) {
@@ -72,17 +80,6 @@ export function connectValues (values, props) {
       }
     }
   })
-}
-
-export function addConnect (connect) {
-  const logic = getContext().build.building
-
-  const props = logic.props || {}
-
-  connect.logic && connectLogic(connect.logic, props)
-  connect.actions && connectActions(connect.actions, props)
-  connect.values && connectValues(connect.values, props)
-  connect.props && connectValues(connect.props, props)
 }
 
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
