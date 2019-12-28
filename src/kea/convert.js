@@ -1,4 +1,4 @@
-import { addActions, addConnect, addConstants, addDefaults, addReducers, addSelectors } from '../dsl'
+import { addActions, addConnect, addConstants, addDefaults, addEvents, addReducers, addSelectors } from '../dsl'
 
 export const convertLogic = input => logic => {
   input.connect && addConnect(typeof input.connect === 'function' ? input.connect(logic.props) : input.connect)
@@ -7,4 +7,5 @@ export const convertLogic = input => logic => {
   input.defaults && addDefaults(input.defaults)
   input.reducers && addReducers(input.reducers(logic))
   input.selectors && addSelectors(input.selectors(logic))
+  input.events && addEvents(input.events(logic))
 }
