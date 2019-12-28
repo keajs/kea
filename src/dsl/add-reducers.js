@@ -52,6 +52,16 @@ export function addReducers (reducers) {
 
       logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
       logic.selectors[key] = createSelector(logic.selector, state => state[key])
+
+      if (!logic.values.hasOwnProperty(key)) {
+        Object.defineProperty(logic.values, key, {
+          get: function () {
+            return logic.selectors[key](getStoreState(), logic.props)
+          },
+          enumerable: true
+        })
+      }
+
     }
   }
 

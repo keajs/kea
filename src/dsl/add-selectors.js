@@ -39,6 +39,5 @@ export function addSelectors (selectorsToAdd) {
         enumerable: true
       })
     }
-
   })
 }

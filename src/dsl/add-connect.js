@@ -11,13 +11,12 @@ export function addConnect (connect) {
   connect.props && connectValues(connect.props, props)
 }
 
-export function connectLogic (otherLogic, props = {}) {
+export function connectLogic (otherLogics, props = {}) {
   const logic = getContext().build.building
 
-  if (otherLogic._isKea) {
-    otherLogic = otherLogic(props)
+  for (const otherLogic of otherLogics) {
+    addConnection(logic, otherLogic._isKea ? otherLogic(props) : otherLogic)
   }
-  addConnection(logic, otherLogic)
 }
 
 export function connectActions (actions, props) {
