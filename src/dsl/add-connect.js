@@ -46,6 +46,11 @@ export function connectActions (actions, props) {
         throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
       }
     }
+
+    // TODO: duplicate code
+    const action = logic.actionCreators[to]
+    logic.actions[to] = (...inp) => getContext().store.dispatch(action(...inp))
+    logic.actions[to].toString = () => logic.actionCreators[to].toString()
   })
 }
 
