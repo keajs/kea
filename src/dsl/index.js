@@ -1,6 +1,6 @@
 export { addActions } from './add-actions'
 export { addConnect } from './add-connect'
-export { addDefaults } from './add-defaults'
+export { addDefaults, addContextDefaults } from './add-defaults'
 export { addEvents } from './add-events'
 export { addConstants } from './add-constants'
 export { addSelectors } from './add-selectors'

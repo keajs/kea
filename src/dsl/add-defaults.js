@@ -13,13 +13,17 @@ import { getContext } from '../context'
     key2: 20
   }
 */
-export function addDefaults (inputDefaults) {
+export function addContextDefaults () {
   const { input: { defaults } } = getContext()
   const logic = getContext().build.building
 
   if (defaults) {
     assignContextDefaults(logic, defaults)
   }
+}
+
+export function addDefaults (inputDefaults) {
+  const logic = getContext().build.building
 
   if (inputDefaults) {
     assignInputDefaults(logic, inputDefaults)
