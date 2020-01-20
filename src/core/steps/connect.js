@@ -80,7 +80,10 @@ export function createConnect (logic, input) {
           logic.propTypes[to] = otherLogic.propTypes[from]
         }
       } else {
-        logic.selectors[to] = from === '*' ? otherLogic : (state, props) => (otherLogic(state, props) && otherLogic(state, props)[from])
+        logic.selectors[to] = from === '*' ? otherLogic : (state, props) => {
+          const values = otherLogic(state, props)
+          return values && values[from]
+        }
       }
 
       if (process.env.NODE_ENV !== 'production') {
