@@ -19,6 +19,7 @@ export default {
     connections: {},
     constants: {},
     actionCreators: {},
+    actionKeys: {},
     actions: {},
     defaults: {},
     reducers: {},

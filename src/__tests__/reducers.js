@@ -54,3 +54,39 @@ test('it converts reducer arrays correctly', () => {
   expect(logic.reducerOptions.everything).toEqual({ persist: true })
   expect(logic.reducerOptions.noProp).toEqual({ persist: true })
 })
+
+test('it auto-detects local actions from the key in reducers', () => {
+  resetContext({ createStore: true })
+
+  const logic = kea({
+    actions: () => ({
+      makeMagic: true,
+      moreMagic: value => ({ value })
+    }),
+
+    defaults: { howMuchMagic: 0 },
+
+    reducers: ({ actions }) => ({
+      howMuchMagic: {
+        makeMagic: state => state + 1,
+        [actions.moreMagic]: (state, { value }) => state + value
+      }
+    })
+  })
+
+  logic.mount()
+
+  expect(Object.keys(logic.reducers).sort()).toEqual(['howMuchMagic'])
+
+  expect(logic.defaults.howMuchMagic).toEqual(0)
+  expect(logic.values.howMuchMagic).toEqual(0)
+
+  logic.actions.makeMagic()
+  console.log(logic.values.howMuchMagic)
+
+  expect(logic.values.howMuchMagic).toEqual(1)
+
+  logic.actions.moreMagic(100)
+
+  expect(logic.values.howMuchMagic).toEqual(101)
+})

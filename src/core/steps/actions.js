@@ -15,7 +15,9 @@ import { getContext } from '../../context'
 export function createActions (logic, input) {
   Object.keys(logic.actionCreators).forEach(key => {
     const action = logic.actionCreators[key]
+    const string = action.toString()
     logic.actions[key] = (...inp) => getContext().store.dispatch(action(...inp))
-    logic.actions[key].toString = () => logic.actionCreators[key].toString()
+    logic.actions[key].toString = () => string
+    logic.actionKeys[string] = key
   })
 }

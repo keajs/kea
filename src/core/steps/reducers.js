@@ -64,10 +64,10 @@ export function createReducers (logic, input) {
 
       logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
     } else if (typeof s === 'function' || typeof s === 'object') {
-      logic.reducers[key] = typeof s === 'function' ? s : createMappingReducer(s, null, key, logic)
       if (typeof logic.defaults[key] === 'undefined') {
         logic.defaults[key] = null
       }
+      logic.reducers[key] = typeof s === 'function' ? s : createMappingReducer(s, logic.defaults[key], key, logic)
     }
   }
 }
@@ -98,6 +98,8 @@ function createMappingReducer (mapping, defaultValue, key, logic) {
 
     if (mapping[action.type]) {
       return mapping[action.type](state, action.payload, action.meta)
+    } else if (logic.actionKeys[action.type] && mapping[logic.actionKeys[action.type]]) {
+      return mapping[logic.actionKeys[action.type]](state, action.payload, action.meta)
     } else {
       return state
     }
