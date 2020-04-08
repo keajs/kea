@@ -63,6 +63,11 @@ export function createReducers (logic, input) {
       }
 
       logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
+    } else if (typeof s === 'function' || typeof s === 'object') {
+      logic.reducers[key] = typeof s === 'function' ? s : createMappingReducer(s, null, key, logic)
+      if (typeof logic.defaults[key] === 'undefined') {
+        logic.defaults[key] = null
+      }
     }
   }
 }
