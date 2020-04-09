@@ -121,3 +121,42 @@ test('runs before and after mount events', () => {
     'connectedLogic.afterUnmount'
   ])
 })
+
+test('accept functions and arrays', () => {
+  let actions = []
+
+  const connectedLogic = kea({
+    reducers: () => ({
+      value: [true]
+    }),
+    events: () => ({
+      afterMount () {
+        actions.push('connectedLogic.afterMount')
+      }
+    })
+  })
+
+  const logic = kea({
+    connect: {
+      values: [connectedLogic, ['value']]
+    },
+    events: () => ({
+      afterMount: [
+        () => actions.push('logic.afterMount1'),
+        () => actions.push('logic.afterMount2')
+      ]
+    })
+  })
+
+  expect(actions).toEqual([])
+
+  const unmount = logic.mount()
+
+  expect(actions).toEqual([
+    'connectedLogic.afterMount',
+    'logic.afterMount1',
+    'logic.afterMount2'
+  ])
+
+  unmount()
+})
