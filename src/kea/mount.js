@@ -20,8 +20,6 @@ export function mountLogic (logic) {
         attachReducer(connectedLogic)
       }
 
-      // proxyFields(connectedLogic.wrapper)
-
       runPlugins('afterMount', connectedLogic)
       connectedLogic.events.afterMount && connectedLogic.events.afterMount()
     }
