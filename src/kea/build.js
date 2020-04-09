@@ -3,6 +3,7 @@ import { getContext } from '../context'
 
 import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
+import { addConnection } from '..'
 
 export function getBuiltLogic (inputs, props, wrapper) {
   const input = inputs[0]
@@ -32,6 +33,10 @@ function buildLogic ({ inputs, path, key, props, wrapper }) {
   let logic = createBlankLogic({ key, path, props, wrapper })
   setLogicDefaults(logic)
 
+  const { build: { heap } } = getContext()
+
+  heap.push(logic)
+
   runPlugins('beforeBuild', logic, inputs)
 
   for (const input of inputs) {
@@ -50,6 +55,14 @@ function buildLogic ({ inputs, path, key, props, wrapper }) {
   logic.connections[logic.pathString] = logic
 
   runPlugins('afterBuild', logic, inputs)
+
+  // if we were building something when this got triggered, add this as a dependency for the previous logic
+  if (heap.length > 1) {
+    const lastLogic = heap[heap.length - 2]
+    addConnection(lastLogic, logic)
+  }
+
+  heap.pop()
 
   return logic
 }

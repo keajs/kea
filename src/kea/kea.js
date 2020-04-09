@@ -1,9 +1,9 @@
 import { getContext } from '../context'
 
 import { getBuiltLogic } from './build'
-import { proxyFieldToLogic } from './mount'
 
 import { wrapComponent } from '../react/wrap'
+import { proxyFields } from './mount'
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -99,8 +99,8 @@ export function kea (input) {
   }
 
   if (!input.key) {
-    // so we can do logic.constants even before mounting
-    proxyFieldToLogic(wrapper, 'constants')
+    // so we can call wrapper.something directly
+    proxyFields(wrapper)
 
     getContext().options.autoMount && wrapper.mount && wrapper.mount()
   }

@@ -47,9 +47,9 @@ test('singleton logic has all the right properties', () => {
 
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
-  expect(response.path).not.toBeDefined()
-  expect(response.actions).not.toBeDefined()
-  expect(response.selectors).not.toBeDefined()
+  expect(() => { response.path }).toThrow() // eslint-disable-line
+  expect(() => { response.actions }).toThrow() // eslint-disable-line
+  expect(() => { response.selectors }).toThrow() // eslint-disable-line
 
   response.mount()
 

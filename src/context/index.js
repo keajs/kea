@@ -42,7 +42,8 @@ export function openContext (options = {}) {
     },
 
     build: {
-      cache: {}
+      cache: {},
+      heap: []
     },
 
     mount: {

@@ -82,7 +82,6 @@ test('it auto-detects local actions from the key in reducers', () => {
   expect(logic.values.howMuchMagic).toEqual(0)
 
   logic.actions.makeMagic()
-  console.log(logic.values.howMuchMagic)
 
   expect(logic.values.howMuchMagic).toEqual(1)
 
