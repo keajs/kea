@@ -3,7 +3,7 @@ import { getContext } from '../context'
 import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
-import { proxyFields } from './mount'
+import { reservedProxiedKeys } from '../plugins'
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -24,7 +24,6 @@ import { proxyFields } from './mount'
   - logic.wrap(Component) # wrap around a React component
   - logic.build(props)    # build logic; optionally using props
   - logic.extend(input)   # add more input; does not alter already built logic
-
 
   Built Logic:
 
@@ -110,4 +109,35 @@ export function kea (input) {
 
 export function connect (input) {
   return kea({ connect: input })
+}
+
+export function proxyFields (wrapper) {
+  const { options: { proxyFields }, plugins: { logicFields } } = getContext()
+
+  if (proxyFields) {
+    for (const key of reservedProxiedKeys) {
+      proxyFieldToLogic(wrapper, key)
+    }
+    for (const key of Object.keys(logicFields)) {
+      proxyFieldToLogic(wrapper, key)
+    }
+  }
+}
+
+export function proxyFieldToLogic (wrapper, key) {
+  if (!wrapper.hasOwnProperty(key)) {
+    Object.defineProperty(wrapper, key, {
+      get: function () {
+        const { mount: { mounted }, build: { heap } } = getContext()
+        const builtLogic = wrapper.build()
+
+        // if mounted or building as a connected dependency, return the proxied value
+        if (mounted[builtLogic.pathString] || heap.length > 0 || key === 'constants') {
+          return builtLogic[key]
+        } else {
+          throw new Error(`[KEA] Can not access "${key}" on logic "${builtLogic.pathString}" because it is not mounted!`)
+        }
+      }
+    })
+  }
 }

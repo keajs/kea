@@ -26,37 +26,6 @@ export function mountLogic (logic) {
   }
 }
 
-export function proxyFields (wrapper) {
-  const { options: { proxyFields }, plugins: { logicFields } } = getContext()
-
-  if (proxyFields) {
-    for (const key of reservedProxiedKeys) {
-      proxyFieldToLogic(wrapper, key)
-    }
-    for (const key of Object.keys(logicFields)) {
-      proxyFieldToLogic(wrapper, key)
-    }
-  }
-}
-
-export function proxyFieldToLogic (wrapper, key) {
-  if (!wrapper.hasOwnProperty(key)) {
-    Object.defineProperty(wrapper, key, {
-      get: function () {
-        const { mount: { mounted }, build: { heap } } = getContext()
-        const builtLogic = wrapper.build()
-
-        // if mounted or building as a connected dependency, return the proxied value
-        if (mounted[builtLogic.pathString] || heap.length > 0 || key === 'constants') {
-          return builtLogic[key]
-        } else {
-          throw new Error(`[KEA] Can not access "${key}" on logic "${builtLogic.pathString}" because it is not mounted!`)
-        }
-      }
-    })
-  }
-}
-
 export function unmountLogic (logic) {
   const { mount: { counter, mounted } } = getContext()
 
