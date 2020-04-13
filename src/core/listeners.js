@@ -51,8 +51,14 @@ export default {
         ...(logic.listeners || {})
       }
 
-      for (const key of Object.keys(newListeners)) {
-        let newArray = Array.isArray(newListeners[key]) ? newListeners[key] : [newListeners[key]]
+      for (const actionKey of Object.keys(newListeners)) {
+        let newArray = Array.isArray(newListeners[actionKey]) ? newListeners[actionKey] : [newListeners[actionKey]]
+
+        let key = actionKey
+        if (typeof logic.actions[key] !== 'undefined') {
+          key = logic.actions[key].toString()
+        }
+
         newArray = newArray.map(l => {
           return function (action) {
             const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[key] || 0) + 1

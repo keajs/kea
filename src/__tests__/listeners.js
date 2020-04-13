@@ -48,6 +48,36 @@ test('listeners work', () => {
   expect(listenerRan).toBe(true)
 })
 
+test('listeners work with local action keys', () => {
+  const { store } = getContext()
+
+  let listenerRan = false
+
+  const firstLogic = kea({
+    path: () => ['scenes', 'listeners', 'first'],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      name: ['chirpy', PropTypes.string, {
+        updateName: (state, payload) => payload.name
+      }]
+    }),
+    listeners: ({ actions }) => ({
+      updateName: () => {
+        listenerRan = true
+      }
+    })
+  })
+
+  firstLogic.mount()
+
+  firstLogic.actions.updateName('derpy')
+  expect(firstLogic.values.name).toBe('derpy')
+
+  expect(listenerRan).toBe(true)
+})
+
 test('sharedListeners work', () => {
   const { store } = getContext()
 
