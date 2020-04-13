@@ -7,3 +7,4 @@ export { activatePlugin } from './plugins'
 
 export { createAction } from './core/shared/actions'
 export { addConnection } from './core/shared/connect'
+export { isBreakpoint } from './core/listeners'

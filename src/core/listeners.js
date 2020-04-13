@@ -11,6 +11,8 @@ kea({
   })
 })
 */
+export const LISTENERS_BREAKPOINT = 'kea-listeners breakpoint broke'
+export const isBreakpoint = error => error.message === LISTENERS_BREAKPOINT
 
 export default {
   name: 'listeners',
@@ -52,15 +54,16 @@ export default {
       for (const key of Object.keys(newListeners)) {
         let newArray = Array.isArray(newListeners[key]) ? newListeners[key] : [newListeners[key]]
         newArray = newArray.map(l => {
-          return async function (action) {
+          return function (action) {
             const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[key] || 0) + 1
             fakeLogic.cache.listenerBreakpointCounter[key] = breakCounter
 
             const throwIfCalled = () => {
               if (fakeLogic.cache.listenerBreakpointCounter[key] !== breakCounter) {
-                throw new Error('kea-listeners breakpoint broke')
+                throw new Error(LISTENERS_BREAKPOINT)
               }
             }
+
             const breakpoint = (ms) => {
               if (typeof ms !== 'undefined') {
                 return new Promise(resolve => setTimeout(resolve, ms)).then(() => {
@@ -73,12 +76,21 @@ export default {
 
             let response
             try {
-              response = await l(action.payload, breakpoint, action)
+              response = l(action.payload, breakpoint, action)
+
+              if (response && response.then && typeof response.then === 'function') {
+                return response.catch(e => {
+                  if (e.message !== LISTENERS_BREAKPOINT) {
+                    throw e
+                  }
+                })
+              }
             } catch (e) {
-              if (e.message !== 'kea-listeners breakpoint broke') {
+              if (e.message !== LISTENERS_BREAKPOINT) {
                 throw e
               }
             }
+
             return response
           }
         })
