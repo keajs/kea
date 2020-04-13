@@ -5,22 +5,21 @@ import './helper/jsdom'
 import { configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import corePlugin from '../core'
+import listenersPlugin from '../core/listeners'
 import { activatePlugin } from '../plugins'
 
 configure({ adapter: new Adapter() })
 
-beforeEach(() => {
+test('the core and listeners plugins are activated automatically', () => {
   resetContext()
-})
-
-test('the core plugin is activated automatically', () => {
   const { plugins } = getContext()
 
-  expect(plugins.activated).toEqual([corePlugin])
-  expect(Object.keys(plugins.buildSteps)).toEqual(Object.keys(corePlugin.buildSteps))
+  expect(plugins.activated).toEqual([corePlugin, listenersPlugin])
+  expect(Object.keys(plugins.buildSteps)).toEqual([...Object.keys(corePlugin.buildSteps), ...Object.keys(listenersPlugin.buildSteps)])
 })
 
 test('plugins add build steps', () => {
+  resetContext()
   const { plugins } = getContext()
 
   const testPlugin = {
@@ -51,9 +50,9 @@ test('plugins add build steps', () => {
 
   activatePlugin(testPlugin)
 
-  expect(plugins.activated).toEqual([corePlugin, testPlugin])
+  expect(plugins.activated).toEqual([corePlugin, listenersPlugin, testPlugin])
   expect(Object.keys(plugins.buildSteps)).toEqual(
-    [...Object.keys(corePlugin.buildSteps), 'afterEvents', 'afterConnect', 'beforeEvents']
+    [...Object.keys(corePlugin.buildSteps), ...Object.keys(listenersPlugin.buildSteps), 'afterEvents', 'afterConnect', 'beforeEvents']
   )
   expect(plugins.buildOrder).toEqual(
     [
@@ -68,6 +67,8 @@ test('plugins add build steps', () => {
       'reducerSelectors',
       'selectors',
       'values',
+      'sharedListeners',
+      'listeners',
       'beforeEvents', // added here
       'events',
       'afterEvents' // added here
@@ -83,6 +84,7 @@ test('plugins add build steps', () => {
 })
 
 test('plugins add events', () => {
+  resetContext({ skipPlugins: ['listeners'] })
   const { plugins } = getContext()
 
   const testPlugin = {
@@ -112,6 +114,7 @@ test('plugins add events', () => {
 })
 
 test('function plugins work', () => {
+  resetContext({ skipPlugins: ['listeners'] })
   const { plugins } = getContext()
 
   const testPluginContents = {
@@ -142,6 +145,7 @@ test('function plugins work', () => {
 })
 
 test('plugin context & afterPlugin work', () => {
+  resetContext({ skipPlugins: ['listeners'] })
   const { plugins } = getContext()
 
   const testPlugin = {
@@ -174,6 +178,7 @@ test('plugin context & afterPlugin work', () => {
 })
 
 test('can use logic.cache to store things', () => {
+  resetContext({ skipPlugins: ['listeners'] })
   const { plugins } = getContext()
 
   let checkedAfterMount = false

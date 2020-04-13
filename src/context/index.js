@@ -1,6 +1,6 @@
 import corePlugin from '../core'
+import listenersPlugin from '../core/listeners'
 import { activatePlugin, runPlugins } from '../plugins'
-import { kea } from '../index'
 import { getStore } from '../store'
 
 let context
@@ -23,7 +23,7 @@ export function openContext (options = {}) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore, defaults, ...otherOptions } = options
+  const { plugins, createStore, defaults, skipPlugins, ...otherOptions } = options
 
   const newContext = {
     plugins: {
@@ -74,6 +74,10 @@ export function openContext (options = {}) {
   setContext(newContext)
 
   activatePlugin(corePlugin)
+
+  if (!skipPlugins || skipPlugins.indexOf('listeners') === -1) {
+    activatePlugin(listenersPlugin)
+  }
 
   runPlugins('afterOpenContext', newContext, options)
 

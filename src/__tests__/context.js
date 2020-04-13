@@ -2,6 +2,7 @@
 import { kea } from '../index'
 import './helper/jsdom'
 import corePlugin from '../core'
+import listenersPlugin from '../core/listeners'
 import { activatePlugin } from '../plugins';
 import { getContext, setContext, openContext, closeContext, resetContext, withContext } from '../context'
 
@@ -19,7 +20,8 @@ test('getting and setting works', () => {
   expect(getContext()).toMatchObject({
     plugins: {
       activated: [
-        { name: 'core' }
+        { name: 'core' },
+        { name: 'listeners' }
       ],
       // buildSteps: {},
       // logicFields: {},
@@ -90,7 +92,8 @@ test('context works with plugins', () => {
   expect(getContext()).toMatchObject({
     plugins: {
       activated: [
-        { name: 'core' }
+        { name: 'core' },
+        { name: 'listeners' }
       ]
     }
   })
@@ -101,13 +104,14 @@ test('context works with plugins', () => {
     plugins: {
       activated: [
         { name: 'core' },
+        { name: 'listeners' },
         { name: 'test' }
       ]
     }
   })
 
   expect(Object.keys(getContext().plugins.buildSteps)).toEqual(
-    [...Object.keys(corePlugin.buildSteps), 'newBuildStep']
+    [...Object.keys(corePlugin.buildSteps), ...Object.keys(listenersPlugin.buildSteps), 'newBuildStep']
   )
 
   expect(getContext().plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect ])
@@ -129,6 +133,7 @@ test('context works with plugins', () => {
     plugins: {
       activated: [
         { name: 'core' },
+        { name: 'listeners' },
         { name: 'test' }
       ]
     }
