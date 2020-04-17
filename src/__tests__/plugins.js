@@ -207,3 +207,23 @@ test('can use logic.cache to store things', () => {
   expect(logic.cache.whatever).toEqual(true)
   expect(checkedAfterMount).toEqual(true)
 })
+
+test('can not activate the same plugin twice', () => {
+  resetContext({ skipPlugins: ['listeners'] })
+
+  const testPlugin = {
+    name: 'test',
+
+    events: {
+      afterLogic (logic) {
+        logic.cache.whatever = true
+      }
+    }
+  }
+
+  activatePlugin(testPlugin)
+
+  expect(() => {
+    activatePlugin(testPlugin)
+  }).toThrow()
+})

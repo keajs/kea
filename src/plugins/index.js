@@ -118,6 +118,10 @@ export function activatePlugin (pluginToActivate) {
     throw new Error('[KEA] Tried to activate a plugin without a name!')
   }
 
+  if (plugins.activated.find(plugin => plugin.name === name)) {
+    throw new Error(`[KEA] Tried to activate plugin "${name}", but it was already installed!`)
+  }
+
   plugins.activated.push(plugin)
 
   if (plugin.buildSteps) {
