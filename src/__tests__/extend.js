@@ -319,7 +319,7 @@ test('extending logic merges the right properties', () => {
   expect(Object.keys(logic.actions)).toEqual(['updateName', 'updateDescription'])
   const { updateName, updateDescription } = logic.actionCreators
   expect(typeof updateDescription).toBe('function')
-  expect(updateDescription.toString()).toBe('update description (homepage.index)')
+  expect(updateDescription.toString()).toBe('update description (scenes.homepage.index)')
   expect(updateDescription('desc desc')).toEqual({ payload: { description: 'desc desc' }, type: updateDescription.toString() })
 
   // reducers

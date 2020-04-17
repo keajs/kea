@@ -18,20 +18,17 @@ export function createActionCreators (logic, input) {
     return
   }
 
-  const path = logic.path
   const payloadCreators = input.actions(logic)
 
   Object.keys(payloadCreators).forEach(key => {
     if (typeof payloadCreators[key] === 'function' && payloadCreators[key]._isKeaAction) {
       logic.actionCreators[key] = payloadCreators[key]
     } else {
-      logic.actionCreators[key] = createAction(createActionType(key, path), payloadCreators[key])
+      logic.actionCreators[key] = createAction(createActionType(key, logic.pathString), payloadCreators[key])
     }
   })
 }
 
-export function createActionType (key, path) {
-  // remove 'scenes.' from the path
-  const pathString = (path[0] === 'scenes' ? path.slice(1) : path).join('.')
+export function createActionType (key, pathString) {
   return `${toSpaces(key)} (${pathString})`
 }

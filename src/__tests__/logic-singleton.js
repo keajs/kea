@@ -62,7 +62,7 @@ test('singleton logic has all the right properties', () => {
   expect(Object.keys(response.actions)).toEqual(['updateName'])
   const { updateName } = response.actionCreators
   expect(typeof updateName).toBe('function')
-  expect(updateName.toString()).toBe('update name (homepage.index)')
+  expect(updateName.toString()).toBe('update name (scenes.homepage.index)')
   expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
 
   // reducers
