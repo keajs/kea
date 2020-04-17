@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getStore } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -22,7 +22,7 @@ class BookDetail extends Component {
 }
 
 test('selectors have access to the component\'s props', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const books = {
     1: 'book1',

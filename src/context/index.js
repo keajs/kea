@@ -23,7 +23,7 @@ export function openContext (options = {}) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore, defaults, skipPlugins, ...otherOptions } = options
+  const { plugins, createStore = true, defaults, skipPlugins, ...otherOptions } = options
 
   const newContext = {
     plugins: {

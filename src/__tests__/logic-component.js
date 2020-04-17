@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, getStore, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -44,7 +44,7 @@ beforeEach(() => {
 })
 
 test('singletons connect to react components', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
@@ -110,7 +110,7 @@ test('singletons connect to react components', () => {
 })
 
 test('dynamic connect to react components', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const dynamicLogic = kea({
     key: (props) => props.id,
@@ -177,7 +177,7 @@ test('dynamic connect to react components', () => {
 })
 
 test('connected props can be used as selectors', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
@@ -259,7 +259,7 @@ test('connected props can be used as selectors', () => {
 })
 
 test('doubly connected actions are merged', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const firstLogic = kea({
     actions: ({ constants }) => ({
@@ -293,7 +293,7 @@ test('doubly connected actions are merged', () => {
 })
 
 test('no protypes needed', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const firstLogic = kea({
     actions: ({ constants }) => ({
@@ -333,9 +333,11 @@ test('no protypes needed', () => {
 })
 
 test('can select with regular', () => {
-  const store = getStore({
-    reducers: {
-      random: () => ({ some: 'value' })
+  const { store } = resetContext({
+    createStore: {
+      reducers: {
+        random: () => ({ some: 'value' })
+      }
     }
   })
 
@@ -384,7 +386,7 @@ test('can select with regular', () => {
 })
 
 test('dynamic reducer initial props', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const dynamicLogic = kea({
     key: (props) => props.id,

@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, getStore, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 
 test('does not double render with the same props', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],

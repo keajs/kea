@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 
 test('can use withkey for actions and props', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const dynamicLogic = kea({
     key: (props) => props.id,

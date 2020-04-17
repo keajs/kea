@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import PropTypes from 'prop-types'
@@ -9,7 +9,7 @@ beforeEach(() => {
 })
 
 test('can mount stores and have them connect to redux without react', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
@@ -57,7 +57,7 @@ test('can mount stores and have them connect to redux without react', () => {
 })
 
 test('can mount stores with keys and have them connet to redux without react', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     key: props => props.id,
@@ -106,7 +106,7 @@ test('can mount stores with keys and have them connet to redux without react', (
 })
 
 test('can mount with callback', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
@@ -145,7 +145,7 @@ test('can mount with callback', () => {
 })
 
 test('can mount with a promise', async () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
@@ -186,7 +186,7 @@ test('can mount with a promise', async () => {
 })
 
 test('can mount with a async/await', async () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],

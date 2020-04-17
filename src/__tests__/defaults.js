@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -25,7 +25,7 @@ test('defaults from props for lazy', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'dynamic'],
@@ -94,7 +94,7 @@ test('defaults from selectors', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const randomStore = kea({
     actions: ({ constants }) => ({
@@ -194,7 +194,7 @@ test('defaults from input.defaults selector', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const randomStore = kea({
     actions: ({ constants }) => ({
@@ -299,7 +299,7 @@ test('defaults from props via input.defaults without selector', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const lazyLogic = kea({
     actions: ({ constants }) => ({
@@ -368,7 +368,7 @@ test('defaults from selectors in input.defaults without selector', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const randomStore = kea({
     actions: ({ constants }) => ({
@@ -467,7 +467,7 @@ test('defaults from input.defaults as object', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const singletonLogic = kea({
     actions: () => ({
@@ -536,7 +536,7 @@ test('defaults from selector that returns an object', () => {
     )
   }
 
-  const store = getStore()
+  const { store } = getContext()
 
   const randomStore = kea({
     actions: () => ({

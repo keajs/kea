@@ -13,7 +13,7 @@ beforeEach(() => {
 test('getting and setting works', () => {
   expect(getContext()).not.toBeDefined()
 
-  openContext()
+  openContext({ createStore: false })
 
   expect(getContext()).toBeDefined()
 

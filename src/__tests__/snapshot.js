@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -28,7 +28,7 @@ beforeEach(() => {
 })
 
 test('snapshots must match', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],

@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { getContext, kea, resetContext } from '../index'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
@@ -56,7 +56,7 @@ beforeEach(() => {
 })
 
 test('inject proptypes to react component', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
@@ -103,7 +103,7 @@ test('inject proptypes to react component', () => {
 })
 
 test('get connected proptyes', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const otherLogic = kea({
     reducers: () => ({
@@ -161,7 +161,7 @@ test('get connected proptyes', () => {
 })
 
 test('also works without proptypes', () => {
-  const store = getStore()
+  const { store } = getContext()
   const logic = kea({
     actions: () => ({
       doSomething: true

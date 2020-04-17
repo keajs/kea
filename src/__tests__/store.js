@@ -26,7 +26,7 @@ class SampleComponent extends Component {
 }
 
 beforeEach(() => {
-  resetContext()
+  resetContext({ createStore: false })
 })
 
 test('getStore can be initalized with a preloaded state for non-kea reducers', () => {

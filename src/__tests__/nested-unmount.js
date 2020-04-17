@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -16,7 +16,7 @@ beforeEach(() => {
 })
 
 test('updating state to remove logic from react unmounts neatly', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   // inner
 
@@ -86,7 +86,7 @@ test('updating state to remove logic from react unmounts neatly', () => {
 })
 
 test('swapping out connected logic gives the right state', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const outerLogic = kea({
     actions: () => ({
@@ -170,7 +170,7 @@ test('swapping out connected logic gives the right state', () => {
 })
 
 test('it also works with dynamic logic (with reducers)', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const containerLogic = kea({
     path: () => ['scenes', 'container'],
@@ -293,7 +293,7 @@ test('it also works with dynamic logic (with reducers)', () => {
 })
 
 test('it also works with dynamic logic (without reducers)', () => {
-  const store = getStore()
+  const { store } = getContext()
 
   const containerLogic = kea({
     path: () => ['scenes', 'container'],

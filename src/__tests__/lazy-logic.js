@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext } from '../index'
+import { kea, resetContext, getContext } from '../index'
 
 import './helper/jsdom'
 import React from 'react'
@@ -17,7 +17,7 @@ beforeEach(() => {
 test('eager logic loading works', () => {
   resetContext({ autoMount: true })
 
-  const store = getStore()
+  const { store } = getContext()
 
   const logic = kea({
     path: () => ['scenes', 'eager'],
@@ -93,9 +93,7 @@ test('eager logic loading works', () => {
 })
 
 test('lazy logic loading works', () => {
-  resetContext({ autoMount: false })
-
-  const store = getStore()
+  const { store } = resetContext({ autoMount: false })
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
