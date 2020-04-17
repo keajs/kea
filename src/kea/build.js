@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-export function getBuiltLogic (inputs, props, wrapper) {
+export function getBuiltLogic (inputs, props, wrapper, autoConnect = true) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
@@ -17,15 +17,26 @@ export function getBuiltLogic (inputs, props, wrapper) {
   const path = getPathForInput(input, props)
   const pathString = path.join('.')
 
-  const { build: { cache } } = getContext()
+  const { build: { heap: buildHeap, cache: buildCache }, run: { heap: runHeap } } = getContext()
 
-  if (!cache[pathString]) {
-    cache[pathString] = buildLogic({ inputs, path, key, props, wrapper })
+  if (!buildCache[pathString]) {
+    buildCache[pathString] = buildLogic({ inputs, path, key, props, wrapper })
   } else {
-    cache[pathString].props = props
+    buildCache[pathString].props = props
   }
 
-  return cache[pathString]
+  // if we were building something when this got triggered, add this as a dependency for the previous logic
+  if (buildHeap.length > 0 && !buildHeap[buildHeap.length - 1].connections[pathString]) {
+    addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
+  }
+
+  // if we were running a listener and built this logic, mount it directly
+  if (autoConnect && runHeap.length > 0 && !runHeap[runHeap.length - 1].connections[pathString]) {
+    addConnection(runHeap[runHeap.length - 1], buildCache[pathString])
+    mountLogic(buildCache[pathString]) // will be unmounted via the connection
+  }
+
+  return buildCache[pathString]
 }
 
 // builds logic. does not check if it's built or already on the context
@@ -55,12 +66,6 @@ function buildLogic ({ inputs, path, key, props, wrapper }) {
   logic.connections[logic.pathString] = logic
 
   runPlugins('afterBuild', logic, inputs)
-
-  // if we were building something when this got triggered, add this as a dependency for the previous logic
-  if (heap.length > 1) {
-    const lastLogic = heap[heap.length - 2]
-    addConnection(lastLogic, logic)
-  }
 
   heap.pop()
 

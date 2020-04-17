@@ -51,6 +51,10 @@ export function openContext (options = {}) {
       mounted: {}
     },
 
+    run: {
+      heap: []
+    },
+
     reducers: {
       tree: {},
       roots: {},

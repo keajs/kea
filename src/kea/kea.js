@@ -4,6 +4,7 @@ import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
 import { reservedProxiedKeys } from '../plugins'
+import { getPathForInput } from './path'
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -89,9 +90,8 @@ export function kea (input) {
   wrapper.inputs = [input]
 
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = props => getBuiltLogic(wrapper.inputs, props, wrapper)
+  wrapper.build = (props, autoConnect = true) => getBuiltLogic(wrapper.inputs, props, wrapper, autoConnect)
   wrapper.mount = callback => wrapper.build().mount(callback)
-
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)
     return wrapper
@@ -100,8 +100,7 @@ export function kea (input) {
   if (!input.key) {
     // so we can call wrapper.something directly
     proxyFields(wrapper)
-
-    getContext().options.autoMount && wrapper.mount && wrapper.mount()
+    getContext().options.autoMount && wrapper.mount()
   }
 
   return wrapper
@@ -128,14 +127,15 @@ export function proxyFieldToLogic (wrapper, key) {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
       get: function () {
-        const { mount: { mounted }, build: { heap } } = getContext()
-        const builtLogic = wrapper.build()
+        const { mount: { mounted }, build: { heap: buildHeap }, run: { heap: runHeap } } = getContext()
+        const path = getPathForInput(wrapper.inputs[0], {})
+        const pathString = path.join('.')
 
         // if mounted or building as a connected dependency, return the proxied value
-        if (mounted[builtLogic.pathString] || heap.length > 0 || key === 'constants') {
-          return builtLogic[key]
+        if (mounted[pathString] || buildHeap.length > 0 || runHeap.length > 0 || key === 'constants') {
+          return wrapper.build()[key]
         } else {
-          throw new Error(`[KEA] Can not access "${key}" on logic "${builtLogic.pathString}" because it is not mounted!`)
+          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!`)
         }
       }
     })

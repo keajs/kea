@@ -61,6 +61,10 @@ export default {
 
         newArray = newArray.map(l => {
           return function (action) {
+            const { run: { heap } } = getContext()
+
+            heap.push(logic)
+
             const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[key] || 0) + 1
             fakeLogic.cache.listenerBreakpointCounter[key] = breakCounter
 
@@ -95,6 +99,8 @@ export default {
               if (e.message !== LISTENERS_BREAKPOINT) {
                 throw e
               }
+            } finally {
+              heap.pop()
             }
 
             return response
