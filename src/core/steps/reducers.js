@@ -27,53 +27,102 @@ export function createReducers (logic, input) {
   const keys = Object.keys(reducers)
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    const s = reducers[key]
-    if (Array.isArray(s)) {
+    const object = reducers[key]
+
+    let initialValue
+    let reducer
+    let type
+    let options
+
+    if (Array.isArray(object)) {
       // s = [ value, (type), (options), reducer ]
-      const initialValue = s[0]
-      const reducer = s[s.length - 1]
-      const type = typeof s[1] === 'function' ? s[1] : undefined
-      const options = typeof s[s.length - 2] === 'object' ? s[s.length - 2] : undefined
-
-      let value
-
-      // if we have a previously provided default value, use it
-      if (typeof logic.defaults[key] !== 'undefined') {
-        value = logic.defaults[key]
-      } else {
-        // there is a root default selector. use it and try to get the key, fallback to initialValue
-        if (typeof logic.defaults['*'] === 'function') {
-          value = (state, props) => {
-            const v = logic.defaults['*'](state, props)[key]
-            return typeof v === 'undefined' ? initialValue : typeof v === 'function' ? v(state, props) : v
-          }
-        } else {
-          value = initialValue
-        }
-
-        // save the given value as default if nothing else was given
-        logic.defaults[key] = value
+      initialValue = object[0]
+      reducer = object[object.length - 1]
+      type = typeof object[1] === 'function' ? object[1] : undefined
+      if (typeof object[object.length - 2] === 'object') {
+        options = object[object.length - 2]
       }
-
-      if (type) {
-        logic.propTypes[key] = type
-      }
-      if (options) {
-        logic.reducerOptions[key] = options
-      }
-
-      logic.reducers[key] = typeof reducer === 'function' ? reducer : createMappingReducer(reducer, value, key, logic)
-    } else if (typeof s === 'function' || typeof s === 'object') {
-      if (typeof logic.defaults[key] === 'undefined') {
-        logic.defaults[key] = null
-      }
-      logic.reducers[key] = typeof s === 'function' ? s : createMappingReducer(s, logic.defaults[key], key, logic)
+    } else if (typeof object === 'function' || typeof object === 'object') {
+      initialValue = null
+      reducer = object
+    } else {
+      throw new Error(`[KEA] Logic "${logic.pathString}" reducer "${key}" is set to unsupported value`)
     }
+
+    // if we have a previously provided default value, use it
+    if (typeof logic.defaults[key] === 'undefined') {
+      // there is a root default selector. use it and try to get the key, fallback to initialValue
+      if (typeof logic.defaults['*'] === 'function') {
+        logic.defaults[key] = (state, props) => {
+          const v = logic.defaults['*'](state, props)[key]
+          return typeof v === 'undefined' ? initialValue : typeof v === 'function' ? v(state, props) : v
+        }
+      } else {
+        logic.defaults[key] = initialValue
+      }
+    }
+
+    if (type) {
+      logic.propTypes[key] = type
+    }
+
+    if (!logic.reducerOptions[key]) {
+      logic.reducerOptions[key] = {}
+    }
+
+    if (options) {
+      Object.assign(logic.reducerOptions[key], options)
+    }
+
+    if (!logic.cache.reducers) {
+      logic.cache.reducers = {}
+    }
+
+    if (!logic.cache.reducers[key] || (options && options.replace)) {
+      logic.cache.reducers[key] = { functions: [], mapping: {} }
+    }
+
+    const cache = logic.cache.reducers[key]
+
+    if (typeof reducer === 'function') {
+      cache.functions.push(reducer)
+    } else if (reducer) {
+      const mappingKeys = Object.keys(reducer)
+      for (let i = 0; i < mappingKeys.length; i++) {
+        const mappingKey = logic.actions[mappingKeys[i]] ? logic.actions[mappingKeys[i]].toString() : mappingKeys[i]
+        cache.mapping[mappingKey] = reducer[mappingKeys[i]]
+      }
+    }
+
+    const funReducer = createFunctionReducer(cache.functions, logic.defaults[key])
+    const mapReducer = createMappingReducer(cache.mapping, logic.defaults[key], key, logic)
+
+    const newReducer = funReducer && mapReducer ? (state, action, fullState) => mapReducer(funReducer(state, action, fullState), action, fullState) : (mapReducer || funReducer)
+
+    logic.reducers[key] = newReducer || (() => logic.defaults[key])
+  }
+}
+
+function createFunctionReducer (functions, defaultValue, key, logic) {
+  if (functions.length === 0) {
+    return null
+  }
+
+  return (state, action, fullState) => {
+    if (typeof state === 'undefined') {
+      state = getDefaultState(defaultValue, fullState, key, logic)
+    }
+
+    return functions.reduce((accumulatedState, reducer) => reducer(accumulatedState, action, fullState), state)
   }
 }
 
 // create reducer function from such an object { [action]: (state, payload) => state }
 function createMappingReducer (mapping, defaultValue, key, logic) {
+  if (Object.keys(mapping).length === 0) {
+    return null
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     if (typeof mapping.undefined !== 'undefined') {
       throw new Error(`[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`)
@@ -82,26 +131,27 @@ function createMappingReducer (mapping, defaultValue, key, logic) {
 
   return (state, action, fullState) => {
     if (typeof state === 'undefined') {
-      state = defaultValue
-
-      if (typeof state === 'function') {
-        if (fullState) {
-          state = defaultValue(fullState, logic.props)
-        } else {
-          if (process.env.NODE_ENV !== 'production') {
-            console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.pathString}"`)
-          }
-          state = undefined
-        }
-      }
+      state = getDefaultState(defaultValue, fullState, key, logic)
     }
 
     if (mapping[action.type]) {
       return mapping[action.type](state, action.payload, action.meta)
-    } else if (logic.actionKeys[action.type] && mapping[logic.actionKeys[action.type]]) {
-      return mapping[logic.actionKeys[action.type]](state, action.payload, action.meta)
     } else {
       return state
     }
   }
+}
+
+function getDefaultState (defaultValue, fullState, key, logic) {
+  if (typeof defaultValue === 'function') {
+    if (fullState) {
+      return defaultValue(fullState, logic.props)
+    } else {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.pathString}"`)
+      }
+      return undefined
+    }
+  }
+  return defaultValue
 }
