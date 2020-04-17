@@ -35,17 +35,6 @@ export function getStore (opts = {}) {
   // clone options
   let options = Object.assign({}, defaultOptions(), opts)
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (options.plugins.length > 0) {
-      console.error('[KEA] Passing plugins to getStore is deprecated. Pass them to a context instead.')
-    }
-  }
-
-  // activate all the plugins
-  options.plugins.forEach(plugin => {
-    activatePlugin(plugin)
-  })
-
   // clone reducers
   options.reducers = Object.assign({}, options.reducers)
   options.paths.forEach(path => {
