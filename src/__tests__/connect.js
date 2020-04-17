@@ -310,4 +310,38 @@ test('can connect logic without values/actions', () => {
   expect(logic.values.name).toEqual('chirpy-12')
   expect(connectedLogic.values.description).toEqual('default')
 })
-  
+
+test('can connect logic via array', () => {
+  const { store } = getContext()
+
+  const connectedLogic = kea({
+    actions: () => ({
+      updateDescription: description => ({ description })
+    }),
+
+    reducers: ({ actions, props }) => ({
+      description: ['default', PropTypes.string, {
+        [actions.updateDescription]: (_, payload) => payload.description
+      }]
+    })
+  })
+
+  const logic = kea({
+    connect: [connectedLogic],
+
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions, props }) => ({
+      name: [`chirpy-${props.id}`, PropTypes.string, {
+        [actions.updateName]: (state, payload) => payload.name
+      }]
+    })
+  })
+
+  logic({ id: 12 }).mount()
+
+  expect(logic.values.name).toEqual('chirpy-12')
+  expect(connectedLogic.values.description).toEqual('default')
+})

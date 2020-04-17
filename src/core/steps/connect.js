@@ -23,12 +23,17 @@ export function createConnect (logic, input) {
   const props = logic.props || {}
   const connect = typeof input.connect === 'function' ? input.connect(props) : input.connect
 
-  if (connect.logic) {
-    for (let otherLogic of connect.logic) {
+  const connectLogic = Array.isArray(connect) ? connect : connect.logic
+
+  if (connectLogic) {
+    for (let otherLogic of connectLogic) {
       if (otherLogic._isKea) {
         otherLogic = otherLogic(props)
       }
       addConnection(logic, otherLogic)
+    }
+    if (Array.isArray(connect)) {
+      return
     }
   }
 
