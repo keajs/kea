@@ -168,7 +168,7 @@ export function recursiveCreateReducer (treeNode) {
 // We are using our own function for the tree nodes instead of redux's combineReducers beacause this way we will not
 // get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting.
 // Instead we'll simply discard the keys we don't need.
-// Please note that logic store reducers are still built with redux's combineReducers.
+// Please note that logic reducers are still built with redux's combineReducers.
 export function combineKeaReducers (reducers) {
   const reducerKeys = Object.keys(reducers)
 
