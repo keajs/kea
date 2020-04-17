@@ -126,7 +126,7 @@ test('lazy logic loading works', () => {
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const SampleComponent = ({ id, name, capitalizedName, upperCaseName, actions: { updateName } }) => (
     <div>
@@ -167,5 +167,5 @@ test('lazy logic loading works', () => {
   wrapper.unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })

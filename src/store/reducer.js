@@ -6,9 +6,12 @@ export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 
 const defaultState = {}
 
-function initRootReducerTree (pathStart) {
-  const { reducers: { tree } } = getContext()
+export function initRootReducerTree (pathStart) {
+  const { reducers: { tree, whitelist } } = getContext()
   if (!tree[pathStart]) {
+    if (whitelist && !whitelist[pathStart]) {
+      throw new Error(`[KEA] Can not start reducer's path with "${pathStart}"! Please add it to the whitelist`)
+    }
     tree[pathStart] = {}
     regenerateRootReducer(pathStart)
   }
@@ -26,7 +29,7 @@ export function keaReducer (pathStart = 'scenes') {
 export function attachReducer (logic) {
   const { path, reducer } = logic
   const {
-    reducers: { tree, combined },
+    reducers: { tree },
     options: { attachStrategy },
     store
   } = getContext()
@@ -73,7 +76,7 @@ export function attachReducer (logic) {
     if (attachStrategy === 'dispatch') {
       store && store.dispatch({ type: ATTACH_REDUCER, payload: { path, reducer } })
     } else if (attachStrategy === 'replace') {
-      store && store.replaceReducer(combined)
+      store && store.replaceReducer(createCombinedReducer())
     }
 
     runPlugins('afterAttach', logic)
@@ -84,7 +87,7 @@ export function detachReducer (logic) {
   const { path } = logic
 
   const {
-    reducers: { tree, combined },
+    reducers: { tree },
     options: { detachStrategy },
     store
   } = getContext()
@@ -94,8 +97,6 @@ export function detachReducer (logic) {
   if (detachStrategy === 'persist') {
     return
   }
-
-  initRootReducerTree(pathStart)
 
   let pointer = tree
 
@@ -131,7 +132,7 @@ export function detachReducer (logic) {
       if (detachStrategy === 'dispatch') {
         store && store.dispatch({ type: DETACH_REDUCER, payload: { path } })
       } else if (detachStrategy === 'replace') {
-        store && store.replaceReducer(combined)
+        store && store.replaceReducer(createCombinedReducer())
       }
 
       runPlugins('afterDetach', logic)
@@ -140,8 +141,14 @@ export function detachReducer (logic) {
 }
 
 export function regenerateRootReducer (pathStart) {
-  const { reducers: { tree, roots } } = getContext()
-  roots[pathStart] = recursiveCreateReducer(tree[pathStart])
+  const { reducers: { tree, roots, whitelist } } = getContext()
+
+  if (pathStart !== 'kea' && !whitelist && typeof tree[pathStart] === 'object' && Object.keys(tree[pathStart]).length === 0) {
+    delete roots[pathStart]
+  } else {
+    roots[pathStart] = recursiveCreateReducer(tree[pathStart])
+  }
+  regenerateCombinedReducer()
 }
 
 export function recursiveCreateReducer (treeNode) {
@@ -190,4 +197,15 @@ export function combineKeaReducers (reducers) {
 
     return stateChanged ? nextState : state
   }
+}
+
+function regenerateCombinedReducer() {
+  const { redux, roots } = getContext().reducers
+  const reducers = Object.assign({}, redux, roots)
+  getContext().reducers.combined = combineKeaReducers(reducers)
+}
+
+export function createCombinedReducer () {
+  regenerateCombinedReducer()
+  return (state = defaultState, action, fullState) => getContext().reducers.combined(state, action, fullState)
 }

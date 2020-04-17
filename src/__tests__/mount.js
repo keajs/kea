@@ -40,7 +40,7 @@ test('can mount stores and have them connect to redux without react', () => {
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const unmount = logic.mount()
 
@@ -53,7 +53,7 @@ test('can mount stores and have them connect to redux without react', () => {
   unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
 
 test('can mount stores with keys and have them connet to redux without react', () => {
@@ -89,7 +89,7 @@ test('can mount stores with keys and have them connet to redux without react', (
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const unmount = logic({ id: 'testKey' }).mount()
 
@@ -102,7 +102,7 @@ test('can mount stores with keys and have them connet to redux without react', (
   unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
 
 test('can mount with callback', () => {
@@ -121,7 +121,7 @@ test('can mount with callback', () => {
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   let callbackRan = false
 
@@ -141,7 +141,7 @@ test('can mount with callback', () => {
   expect(response).toEqual(5)
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
 
 test('can mount with a promise', async () => {
@@ -160,7 +160,7 @@ test('can mount with a promise', async () => {
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   let callbackRan = false
 
@@ -182,7 +182,7 @@ test('can mount with a promise', async () => {
   expect(response).toEqual(5)
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
 
 test('can mount with a async/await', async () => {
@@ -201,7 +201,7 @@ test('can mount with a async/await', async () => {
   })
 
   // nothing yet in the store
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   let callbackRan = false
 
@@ -225,5 +225,5 @@ test('can mount with a async/await', async () => {
   expect(response).toEqual(5)
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })

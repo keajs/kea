@@ -340,14 +340,12 @@ test('defaults from props via input.defaults without selector', () => {
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'defaultName' } } },
-    scenes: {}
   })
 
   lazyLogic.actions.updateName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'birb' } } },
-    scenes: {}
   })
 
   wrapper.render()
@@ -433,21 +431,18 @@ test('defaults from selectors in input.defaults without selector', () => {
 
   expect(store.getState()).toEqual({
     kea: { inline: { 2: { storedName: 'storedName' }, 1: { connectedName: 'storedName', directName: 'george' } } },
-    scenes: {}
   })
 
   singletonLogic.actions.updateStoredName('birb')
 
   expect(store.getState()).toEqual({
     kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'storedName', directName: 'george' } } },
-    scenes: {}
   })
 
   store.dispatch(singletonLogic.actionCreators.updateName('birb'))
 
   expect(store.getState()).toEqual({
     kea: { inline: { 2: { storedName: 'birb' }, 1: { connectedName: 'birb', directName: 'birb' } } },
-    scenes: {}
   })
 
   wrapper.render()
@@ -523,7 +518,6 @@ test('defaults from input.defaults as object', () => {
 
   expect(store.getState()).toEqual({
     kea: { inline: { 1: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
-    scenes: {}
   })
 
   wrapper.unmount()
@@ -611,7 +605,6 @@ test('defaults from selector that returns an object', () => {
         2: { object: { propsName: 'henry', connectedName: 'george', directName: 'joe' } }
       }
     },
-    scenes: {}
   })
 
   wrapper.unmount()

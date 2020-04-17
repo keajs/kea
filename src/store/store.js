@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 
-import { keaReducer, combineKeaReducers } from './reducer'
-import { activatePlugin, runPlugins } from '../plugins'
+import { createCombinedReducer, initRootReducerTree } from './reducer'
+import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 
 const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -10,7 +10,7 @@ const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEV
 // this must be a function as we need new objects every time
 // otherwise it could happen that the "middleware" array gets mutated on the default
 const defaultOptions = () => ({
-  paths: ['kea', 'scenes'],
+  paths: undefined,
   reducers: {},
   preloadedState: undefined,
   middleware: [],
@@ -35,11 +35,8 @@ export function getStore (opts = {}) {
   // clone options
   let options = Object.assign({}, defaultOptions(), opts)
 
-  // clone reducers
-  options.reducers = Object.assign({}, options.reducers)
-  options.paths.forEach(path => {
-    options.reducers[path] = keaReducer(path)
-  })
+  // clone redux reducers
+  context.reducers.redux = Object.assign({}, options.reducers)
 
   // run pre-hooks
   runPlugins('beforeReduxStore', options)
@@ -55,12 +52,19 @@ export function getStore (opts = {}) {
   // create the store creator
   const finalCreateStore = composeEnchancer(...options.enhancers)(createStore)
 
-  // combine reducers
-  const combined = combineKeaReducers(options.reducers)
-  context.reducers.combined = combined
+  // if we are whitelisting paths
+  if (options.paths && options.paths.length > 0) {
+    context.reducers.whitelist = []
+    options.paths.forEach(pathStart => {
+      context.reducers.whitelist[pathStart] = true
+      initRootReducerTree(pathStart)
+    })
+  } else {
+    initRootReducerTree('kea')
+  }
 
   // create store
-  const store = finalCreateStore(combined, Object.assign({}, options.preloadedState))
+  const store = finalCreateStore(createCombinedReducer(), Object.assign({}, options.preloadedState))
   context.store = store
 
   // run post-hooks

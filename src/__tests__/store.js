@@ -43,7 +43,6 @@ test('getStore can be initalized with a preloaded state for non-kea reducers', (
   })
   expect(store.getState()).toEqual({
     kea: {},
-    scenes: {},
     routes: { 'someRoute': true }
   })
 })
@@ -107,7 +106,7 @@ test('can use createStore on resetContext', () => {
 
   expect(context).toBe(getContext())
   expect(context.store).toBeDefined()
-  expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'scenes'])
+  expect(Object.keys(context.store.getState()).sort()).toEqual(['kea'])
 
   const secondContext = resetContext({
     createStore: {
@@ -118,4 +117,73 @@ test('can use createStore on resetContext', () => {
   expect(secondContext).toBe(getContext())
   expect(secondContext.store).toBeDefined()
   expect(Object.keys(secondContext.store.getState()).sort()).toEqual(['kea', 'parrots', 'scenes'])
+})
+
+test('can create reducers with random paths', () => {
+  const context = resetContext({
+    createStore: {
+      reducers: {
+        router: () => 'router'
+      }
+    }
+  })
+
+  expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'router'])
+
+  const existingLogic = kea({
+    path: () => ['parrots', 'nz', 'kea'],
+    reducers: () => ({
+      sheep: ['tasty']
+    })
+  })
+
+  const nonExistingLogic = kea({
+    path: () => ['birds', 'nz', 'kea'],
+    reducers: () => ({
+      sheep: ['tasty']
+    })
+  })
+
+  existingLogic.mount()
+  expect(context.store.getState().parrots.nz.kea.sheep).toBe('tasty')
+
+  nonExistingLogic.mount()
+  expect(context.store.getState().birds.nz.kea.sheep).toBe('tasty')
+
+  expect(Object.keys(context.store.getState()).sort()).toEqual( ['birds', 'kea', 'parrots', 'router'])
+})
+
+test('can not create reducers with random paths if restricted', () => {
+  const context = resetContext({
+    createStore: {
+      paths: ['kea', 'scenes', 'parrots'],
+      reducers: {
+        router: () => 'router'
+      }
+    }
+  })
+
+  expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'parrots', 'router', 'scenes'])
+
+  const existingLogic = kea({
+    path: () => ['parrots', 'nz', 'kea'],
+    reducers: () => ({
+      sheep: ['tasty']
+    })
+  })
+
+  const nonExistingLogic = kea({
+    path: () => ['birds', 'nz', 'kea'],
+    reducers: () => ({
+      sheep: ['tasty']
+    })
+  })
+
+  existingLogic.mount()
+
+  expect(context.store.getState().parrots.nz.kea.sheep).toBe('tasty')
+
+  expect(() => {
+    nonExistingLogic.mount()
+  }).toThrow(`[KEA] Can not start reducer's path with "birds"! Please add it to the whitelist`)
 })

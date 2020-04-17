@@ -183,7 +183,7 @@ test('nested context defaults work', () => {
   })
 
   expect(store.getState()).toEqual({
-    kea: {}, scenes: {}
+    kea: {}
   })
 
   const logic = kea({
@@ -195,7 +195,7 @@ test('nested context defaults work', () => {
   })
 
   expect(store.getState()).toEqual({
-    kea: {}, scenes: {}
+    kea: {}
   })
 
   logic.mount()
@@ -234,7 +234,7 @@ test('flat context defaults work', () => {
   })
 
   expect(store.getState()).toEqual({
-    kea: {}, scenes: {}
+    kea: {}
   })
 
   const logic = kea({
@@ -246,7 +246,7 @@ test('flat context defaults work', () => {
   })
 
   expect(store.getState()).toEqual({
-    kea: {}, scenes: {}
+    kea: {}
   })
 
   logic.mount()

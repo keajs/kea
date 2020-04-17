@@ -66,7 +66,7 @@ test('connect works as an object', () => {
 
   const ConnectedComponent = logic(SampleComponent)
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const wrapper = mount(
     <Provider store={store}>
@@ -74,19 +74,19 @@ test('connect works as an object', () => {
     </Provider>
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.description').text()).toEqual('default')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
 
   wrapper.render()
 
@@ -98,7 +98,7 @@ test('connect works as an object', () => {
   wrapper.unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
 
 test('connect works as a function', () => {
@@ -153,7 +153,7 @@ test('connect works as a function', () => {
 
   const ConnectedComponent = logic(SampleComponent)
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const wrapper = mount(
     <Provider store={store}>
@@ -161,19 +161,19 @@ test('connect works as a function', () => {
     </Provider>
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.description').text()).toEqual('default')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   store.dispatch(logic.actionCreators.updateName('somename'))
   store.dispatch(connectedLogic.actionCreators.updateDescription('new description'))
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
 
   wrapper.render()
 
@@ -185,7 +185,7 @@ test('connect works as a function', () => {
   wrapper.unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
   
 test('props cascade when connecting', () => {
@@ -241,7 +241,7 @@ test('props cascade when connecting', () => {
 
   const ConnectedComponent = logic(SampleComponent)
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 
   const wrapper = mount(
     <Provider store={store}>
@@ -249,7 +249,7 @@ test('props cascade when connecting', () => {
     </Provider>
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } } })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy-12')
@@ -259,7 +259,7 @@ test('props cascade when connecting', () => {
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } }, scenes: {} })
+  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
 
   wrapper.render()
 
@@ -271,7 +271,7 @@ test('props cascade when connecting', () => {
   wrapper.unmount()
 
   // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {}, scenes: {} })
+  expect(store.getState()).toEqual({ kea: {} })
 })
   
 test('can connect logic without values/actions', () => {

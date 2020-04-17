@@ -54,6 +54,8 @@ export function openContext (options = {}) {
     reducers: {
       tree: {},
       roots: {},
+      redux: {},
+      whitelist: false,
       combined: undefined
     },
 
