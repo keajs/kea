@@ -68,6 +68,7 @@ export function openContext (options = {}) {
     options: {
       debug: false,
       autoMount: false,
+      autoConnect: true,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',

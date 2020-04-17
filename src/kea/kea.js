@@ -90,7 +90,7 @@ export function kea (input) {
   wrapper.inputs = [input]
 
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = (props, autoConnect = true) => getBuiltLogic(wrapper.inputs, props, wrapper, autoConnect)
+  wrapper.build = (props, autoConnectInListener = true) => getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
   wrapper.mount = callback => wrapper.build().mount(callback)
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)

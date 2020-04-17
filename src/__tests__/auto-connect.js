@@ -847,3 +847,62 @@ test('props work with autoConnect listeners', () => {
   expect(() => { secondLogic(props).values.secondName }).toThrow() // eslint-disable-line
   expect(() => { thirdLogic(props).values.thirdName }).toThrow() // eslint-disable-line
 })
+
+test('other logic is not connected if autoConnect is false', () => {
+  resetContext({ createStore: true, autoMount: false, autoConnect: false })
+
+  const thirdLogic = kea({
+    actions: () => ({
+      thirdAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      thirdName: ['third', {
+        [actions.thirdAction]: (_, { name }) => name
+      }]
+    })
+  })
+
+  const secondLogic = kea({
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+
+    selectors: ({ selectors }) => ({
+      combinedName: [
+        () => [selectors.secondName, thirdLogic.selectors.thirdName],
+        (secondName, thirdName) => `${secondName}.${thirdName}`
+      ]
+    })
+  })
+
+  const logic = kea({
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions }) => ({
+      name: ['first', {
+        [actions.updateName]: (_, { name }) => name,
+        [secondLogic.actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+
+    selectors: ({ selectors }) => ({
+      combinedName: [
+        () => [selectors.name, secondLogic.selectors.combinedName],
+        (name, combinedName) => `${name}.${combinedName}`
+      ]
+    })
+  })
+
+  const unmount1 = logic.mount()
+
+  expect(() => { logic.values.combinedName }).toThrow() // eslint-disable-line
+
+  unmount1()
+})

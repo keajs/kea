@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-export function getBuiltLogic (inputs, props, wrapper, autoConnect = true) {
+export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = true) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
@@ -17,7 +17,11 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnect = true) {
   const path = getPathForInput(input, props)
   const pathString = path.join('.')
 
-  const { build: { heap: buildHeap, cache: buildCache }, run: { heap: runHeap } } = getContext()
+  const {
+    build: { heap: buildHeap, cache: buildCache },
+    run: { heap: runHeap },
+    options: { autoConnect: globalAutoConnect }
+  } = getContext()
 
   if (!buildCache[pathString]) {
     buildCache[pathString] = buildLogic({ inputs, path, key, props, wrapper })
@@ -25,15 +29,20 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnect = true) {
     buildCache[pathString].props = props
   }
 
-  // if we were building something when this got triggered, add this as a dependency for the previous logic
-  if (buildHeap.length > 0 && !buildHeap[buildHeap.length - 1].connections[pathString]) {
-    addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
-  }
+  // autoConnect must be enabled globally
+  if (globalAutoConnect) {
+    // if we were building something when this got triggered, add this as a dependency for the previous logic
+    // always connect these, even if autoConnectInListener is false
+    if (buildHeap.length > 0 && !buildHeap[buildHeap.length - 1].connections[pathString]) {
+      addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
+    }
 
-  // if we were running a listener and built this logic, mount it directly
-  if (autoConnect && runHeap.length > 0 && !runHeap[runHeap.length - 1].connections[pathString]) {
-    addConnection(runHeap[runHeap.length - 1], buildCache[pathString])
-    mountLogic(buildCache[pathString]) // will be unmounted via the connection
+    // if we were running a listener and built this logic, mount it directly
+    // ... except if autoConnectInListener is false
+    if (autoConnectInListener && runHeap.length > 0 && !runHeap[runHeap.length - 1].connections[pathString]) {
+      addConnection(runHeap[runHeap.length - 1], buildCache[pathString])
+      mountLogic(buildCache[pathString]) // will be unmounted via the connection
+    }
   }
 
   return buildCache[pathString]
