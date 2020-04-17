@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-16'
 
 configure({ adapter: new Adapter() })
 
-test('other logic gets connected and mounted automatically when used in reducers via build', () => {
+test('other logic is connected and mounted automatically when used in reducers via build', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const thirdLogic = kea({
@@ -75,10 +75,10 @@ test('other logic gets connected and mounted automatically when used in reducers
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
-  expect(() => { thirdLogic.values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when used in reducers via build in random order', () => {
+test('other logic is connected and mounted automatically when used in reducers via build in random order', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const thirdLogic = kea({
@@ -106,7 +106,7 @@ test('other logic gets connected and mounted automatically when used in reducers
     })
   })
 
-  // this is different compared to previous test, e.g. not all gets built immediately on first mount()
+  // this is different compared to previous test, e.g. not all is built immediately on first mount()
   secondLogic.build()
 
   const logic = kea({
@@ -149,10 +149,10 @@ test('other logic gets connected and mounted automatically when used in reducers
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
-  expect(() => { thirdLogic.values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when used in reducers via wrapper', () => {
+test('other logic is connected and mounted automatically when used in reducers via wrapper', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const thirdLogic = kea({
@@ -217,10 +217,10 @@ test('other logic gets connected and mounted automatically when used in reducers
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
-  expect(() => { thirdLogic.values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when used in reducers via wrapper in random order', () => {
+test('other logic is connected and mounted automatically when used in reducers via wrapper in random order', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const thirdLogic = kea({
@@ -246,7 +246,7 @@ test('other logic gets connected and mounted automatically when used in reducers
     })
   })
 
-  // this is different compared to previous test, e.g. not all gets built immediately on first mount()
+  // this is different compared to previous test, e.g. not all is built immediately on first mount()
   thirdLogic.build()
   secondLogic.build()
 
@@ -265,7 +265,7 @@ test('other logic gets connected and mounted automatically when used in reducers
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
-  expect(() => { thirdLogic.values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 
   const unmount1 = logic.mount()
 
@@ -293,10 +293,10 @@ test('other logic gets connected and mounted automatically when used in reducers
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
-  expect(() => { thirdLogic.values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when used in selectors', () => {
+test('other logic is connected and mounted automatically when used in selectors', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const thirdLogic = kea({
@@ -385,7 +385,7 @@ test('other logic gets connected and mounted automatically when used in selector
   expect(() => { thirdLogic.values.thirdName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when used in listeners as key', () => {
+test('other logic is connected and mounted automatically when used in listeners as key', () => {
   resetContext({ createStore: true, autoMount: false })
 
   const secondLogic = kea({
@@ -436,7 +436,7 @@ test('other logic gets connected and mounted automatically when used in listener
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when called inside listeners', () => {
+test('other logic is connected and mounted automatically when called inside listeners', () => {
   resetContext({ createStore: true, autoMount: false })
 
   let nameFromAction = ''
@@ -493,7 +493,7 @@ test('other logic gets connected and mounted automatically when called inside li
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
 })
 
-test('other logic gets connected and mounted automatically when called inside listeners, even if old got separately mounted', () => {
+test('other logic is connected and mounted automatically when called inside listeners, even if old got separately mounted', () => {
   resetContext({ createStore: true, autoMount: false })
 
   let nameFromAction = ''
@@ -629,6 +629,17 @@ test('listeners are removed from the run heap, even if they throw', () => {
   resetContext({ createStore: true, autoMount: false })
 
   let listenerStarted = false
+  let otherListenerRan = false
+
+  const otherLogic = kea({
+    actions: () => ({ myAction: true }),
+    listeners: ({ actions }) => ({
+      myAction: () => {
+        expect(getContext().run.heap.length).toBe(2)
+        otherListenerRan = true
+      }
+    })
+  })
 
   const logic = kea({
     actions: () => ({
@@ -645,6 +656,7 @@ test('listeners are removed from the run heap, even if they throw', () => {
       [actions.updateName]: ({ name }) => {
         expect(getContext().run.heap.length).toBe(1)
         listenerStarted = true
+        otherLogic.actions.myAction()
         throw new Error('Throwing in listener')
       }
     })
@@ -662,8 +674,176 @@ test('listeners are removed from the run heap, even if they throw', () => {
 
   expect(getContext().run.heap.length).toBe(0)
   expect(listenerStarted).toBe(true)
+  expect(otherListenerRan).toBe(true)
 
   unmount()
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
+})
+
+test('props work with autoConnect', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  const props = {
+    id: '123',
+    otherProp: 'why not'
+  }
+
+  const thirdLogic = kea({
+    key: (props) => props.id,
+    path: (key) => ['autoConnect', 'third', key],
+    actions: () => ({
+      thirdAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      thirdName: ['third', {
+        [actions.thirdAction]: (_, { name }) => name
+      }]
+    })
+  })
+
+  const thirdUnmount = thirdLogic(props).mount()
+
+  const secondLogic = kea({
+    key: (props) => props.id,
+    path: (key) => ['autoConnect', 'second', key],
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions, props }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name,
+        [thirdLogic(props).actions.thirdAction]: (_, { name }) => name
+      }]
+    })
+  })
+
+  const logic = kea({
+    key: props => props.id,
+    path: (key) => ['autoConnect', 'first', key],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions, props }) => ({
+      name: ['first', {
+        [actions.updateName]: (_, { name }) => name,
+        [secondLogic(props).actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+  })
+
+  const unmount1 = logic(props).mount()
+
+  thirdUnmount()
+
+  expect(logic(props).values.name).toEqual('first')
+  expect(secondLogic(props).values.secondName).toEqual('second')
+  expect(thirdLogic(props).values.thirdName).toEqual('third')
+
+  unmount1()
+
+  const unmount2 = secondLogic(props).mount()
+
+  expect(() => { logic(props).values.name }).toThrow() // eslint-disable-line
+  expect(secondLogic(props).values.secondName).toEqual('second')
+  expect(thirdLogic(props).values.thirdName).toEqual('third')
+
+  unmount2()
+
+  const unmount3 = thirdLogic(props).mount()
+
+  expect(() => { logic(props).values.name }).toThrow() // eslint-disable-line
+  expect(() => { secondLogic(props).values.secondName }).toThrow() // eslint-disable-line
+  expect(thirdLogic(props).values.thirdName).toEqual('third')
+
+  unmount3()
+
+  expect(() => { logic(props).values.name }).toThrow() // eslint-disable-line
+  expect(() => { secondLogic(props).values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic(props).values.thirdName }).toThrow() // eslint-disable-line
+})
+
+test('props work with autoConnect listeners', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  const props = {
+    id: '123',
+    otherProp: 'why not'
+  }
+
+  const thirdLogic = kea({
+    key: (props) => props.id,
+    path: (key) => ['autoConnect', 'third', key],
+    actions: () => ({
+      thirdAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      thirdName: ['third', {
+        [actions.thirdAction]: (_, { name }) => name
+      }]
+    })
+  })
+
+  const thirdUnmount = thirdLogic(props).mount()
+
+  const secondLogic = kea({
+    key: (props) => props.id,
+    path: (key) => ['autoConnect', 'second', key],
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions, props }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name,
+      }]
+    })
+  })
+
+  let listenerRan = false
+
+  const logic = kea({
+    key: props => props.id,
+    path: (key) => ['autoConnect', 'first', key],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions, props }) => ({
+      name: ['first', {
+        updateName: (_, { name }) => name,
+        [secondLogic(props).actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+
+    listeners: () => ({
+      updateName: () => {
+        expect(Object.keys(getContext().store.getState().autoConnect).sort()).toEqual(['first', 'second'])
+        thirdLogic(props).actions.thirdAction('thirdname')
+        expect(Object.keys(getContext().store.getState().autoConnect).sort()).toEqual(['first', 'second', 'third'])
+        listenerRan = true
+      }
+    })
+  })
+
+  const unmount = logic(props).mount()
+
+  thirdUnmount()
+
+  expect(logic.values).not.toBeDefined()
+
+  expect(logic(props).values.name).toEqual('first')
+  expect(secondLogic(props).values.secondName).toEqual('second')
+  expect(() => { thirdLogic(props).values.thirdName }).toThrow() // eslint-disable-line
+
+  logic(props).actions.updateName('bla')
+  expect(thirdLogic(props).values.thirdName).toEqual('thirdname') // eslint-disable-line
+
+  unmount()
+
+  expect(listenerRan).toBe(true)
+
+  expect(() => { logic(props).values.name }).toThrow() // eslint-disable-line
+  expect(() => { secondLogic(props).values.secondName }).toThrow() // eslint-disable-line
+  expect(() => { thirdLogic(props).values.thirdName }).toThrow() // eslint-disable-line
 })
