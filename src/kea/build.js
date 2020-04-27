@@ -20,7 +20,8 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
   const {
     build: { heap: buildHeap, cache: buildCache },
     run: { heap: runHeap },
-    options: { autoConnect: globalAutoConnect }
+    options: { autoConnect: globalAutoConnect },
+    mount: { counter: mountCounter }
   } = getContext()
 
   if (!buildCache[pathString]) {
@@ -33,15 +34,19 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
   if (globalAutoConnect) {
     // if we were building something when this got triggered, add this as a dependency for the previous logic
     // always connect these, even if autoConnectInListener is false
-    if (buildHeap.length > 0 && !buildHeap[buildHeap.length - 1].connections[pathString]) {
-      addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
-    }
+    if (buildHeap.length > 0) {
+      if (!buildHeap[buildHeap.length - 1].connections[pathString]) {
+        addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
+      }
 
     // if we were running a listener and built this logic, mount it directly
     // ... except if autoConnectInListener is false
-    if (autoConnectInListener && runHeap.length > 0 && !runHeap[runHeap.length - 1].connections[pathString]) {
-      addConnection(runHeap[runHeap.length - 1], buildCache[pathString])
-      mountLogic(buildCache[pathString]) // will be unmounted via the connection
+    } else if (autoConnectInListener && runHeap.length > 0) {
+      const runningInLogic = runHeap[runHeap.length - 1]
+      if (!runningInLogic.connections[pathString]) {
+        addConnection(runningInLogic, buildCache[pathString])
+        mountLogic(buildCache[pathString], mountCounter[runningInLogic.pathString]) // will be unmounted via the connection
+      }
     }
   }
 
@@ -91,7 +96,7 @@ function createBlankLogic ({ key, path, props, wrapper }) {
     wrapper,
     extend: input => applyInputToLogic(logic, input),
     mount: (callback) => {
-      mountLogic(logic, wrapper)
+      mountLogic(logic)
       if (callback) {
         const response = callback(logic)
 

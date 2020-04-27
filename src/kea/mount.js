@@ -1,14 +1,17 @@
 import { attachReducer, detachReducer } from '../store/reducer'
-import { runPlugins, reservedProxiedKeys } from '../plugins'
+import { runPlugins } from '../plugins'
 
 import { getContext } from '../context'
 
-export function mountLogic (logic) {
+export function mountLogic (logic, count = 1) {
   const { mount: { counter, mounted } } = getContext()
 
-  for (const pathString of Object.keys(logic.connections)) {
-    counter[pathString] = (counter[pathString] || 0) + 1
-    if (counter[pathString] === 1) {
+  // mount this logic after all the dependencies
+  const pathStrings = Object.keys(logic.connections).filter(k => k !== logic.pathString).concat([logic.pathString])
+
+  for (const pathString of pathStrings) {
+    counter[pathString] = (counter[pathString] || 0) + count
+    if (counter[pathString] === count) {
       const connectedLogic = logic.connections[pathString]
 
       runPlugins('beforeMount', connectedLogic)
@@ -29,7 +32,10 @@ export function mountLogic (logic) {
 export function unmountLogic (logic) {
   const { mount: { counter, mounted } } = getContext()
 
-  for (const pathString of Object.keys(logic.connections).reverse()) {
+  // unmount in reverse order
+  const pathStrings = Object.keys(logic.connections).filter(k => k !== logic.pathString).concat([logic.pathString]).reverse()
+
+  for (const pathString of pathStrings) {
     counter[pathString] = (counter[pathString] || 0) - 1
     if (counter[pathString] === 0) {
       const connectedLogic = logic.connections[pathString]

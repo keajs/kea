@@ -432,6 +432,8 @@ test('other logic is connected and mounted automatically when used in listeners 
 
   unmount1()
 
+  expect(getContext().mount.counter).toEqual({})
+
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
 })
@@ -488,6 +490,7 @@ test('other logic is connected and mounted automatically when called inside list
   expect(nameFromAction).toEqual('new name')
 
   unmount1()
+  expect(getContext().mount.counter).toEqual({})
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
@@ -549,6 +552,7 @@ test('other logic is connected and mounted automatically when called inside list
   expect(nameFromAction).toEqual('new name')
 
   unmount1()
+  expect(getContext().mount.counter).toEqual({})
 
   expect(() => { logic.values.name }).toThrow() // eslint-disable-line
   expect(() => { secondLogic.values.secondName }).toThrow() // eslint-disable-line
@@ -905,4 +909,238 @@ test('other logic is not connected if autoConnect is false', () => {
   expect(() => { logic.values.combinedName }).toThrow() // eslint-disable-line
 
   unmount1()
+})
+
+test('multiple mounts and unmounts with listener connection', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  let nameFromAction = ''
+
+  const secondLogic = kea({
+    path: () => ['mount', 'second'],
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+    listeners: ({ actions }) => ({
+      [actions.secondAction]: ({ name }) => {
+        nameFromAction = name
+      }
+    })
+  })
+
+  const logic = kea({
+    path: () => ['mount', 'logic'],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions }) => ({
+      name: ['first', {
+        [actions.updateName]: (_, { name }) => name
+      }]
+    }),
+
+    listeners: ({ actions }) => ({
+      [actions.updateName]: ({ name }) => {
+        secondLogic.actions.secondAction('new name')
+      }
+    })
+  })
+
+  const unmount1 = logic.mount()
+  const unmount2 = logic.mount()
+  const unmount3 = logic.mount()
+
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3 })
+
+  expect(logic.values.name).toEqual('first')
+  expect(nameFromAction).toEqual('')
+
+  logic.actions.updateName('new name')
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3, 'mount.second': 3 })
+
+  unmount3()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 2, 'mount.second': 2 })
+
+  unmount2()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 1, 'mount.second': 1 })
+
+  unmount1()
+  expect(getContext().mount.counter).toEqual({})
+})
+
+test('multiple mounts and unmounts with double connection', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  let nameFromAction = ''
+
+  const thirdLogic = kea({
+    path: () => ['mount', 'third'],
+    reducers: ({ actions }) => ({
+      thirdName: ['third']
+    })
+  })
+
+  const secondLogic = kea({
+    connect: [thirdLogic],
+    path: () => ['mount', 'second'],
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+    listeners: ({ actions }) => ({
+      [actions.secondAction]: ({ name }) => {
+        nameFromAction = name
+      }
+    })
+  })
+
+  const logic = kea({
+    path: () => ['mount', 'logic'],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions }) => ({
+      name: ['first', {
+        [actions.updateName]: (_, { name }) => name
+      }]
+    }),
+
+    listeners: ({ actions }) => ({
+      [actions.updateName]: ({ name }) => {
+        secondLogic.actions.secondAction('new name')
+      }
+    })
+  })
+
+  const unmount1 = logic.mount()
+  const unmount2 = logic.mount()
+  const unmount3 = logic.mount()
+
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3 })
+
+  expect(logic.values.name).toEqual('first')
+  expect(nameFromAction).toEqual('')
+
+  logic.actions.updateName('new name')
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3, 'mount.second': 3, 'mount.third': 3 })
+
+  const unmount4 = logic.mount()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 4, 'mount.second': 4, 'mount.third': 4 })
+
+  unmount4()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3, 'mount.second': 3, 'mount.third': 3 })
+
+  unmount3()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 2, 'mount.second': 2, 'mount.third': 2 })
+
+  unmount2()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 1, 'mount.second': 1, 'mount.third': 1 })
+
+  unmount1()
+  expect(getContext().mount.counter).toEqual({})
+})
+
+test('multiple mounts and unmounts with double connection in actions/values', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  let nameFromAction = ''
+
+  const fourthLogic = kea({
+    path: () => ['mount', 'fourth'],
+    actions: () => ({
+      updateFourth: true
+    }),
+    reducers: ({ actions }) => ({
+      fourthName: ['fourth']
+    })
+  })
+
+  const thirdLogic = kea({
+    path: () => ['mount', 'third'],
+    reducers: ({ actions }) => ({
+      thirdName: ['third']
+    })
+  })
+
+  const secondLogic = kea({
+    connect: {
+      values: [
+        thirdLogic, ['thirdName']
+      ],
+      actions: [
+        fourthLogic, ['updateFourth']
+      ]
+    },
+    path: () => ['mount', 'second'],
+    actions: () => ({
+      secondAction: name => ({ name })
+    }),
+    reducers: ({ actions }) => ({
+      secondName: ['second', {
+        [actions.secondAction]: (_, { name }) => name
+      }]
+    }),
+    listeners: ({ actions }) => ({
+      [actions.secondAction]: ({ name }) => {
+        nameFromAction = name
+      }
+    })
+  })
+
+  const logic = kea({
+    path: () => ['mount', 'logic'],
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+
+    reducers: ({ actions }) => ({
+      name: ['first', {
+        [actions.updateName]: (_, { name }) => name
+      }]
+    }),
+
+    listeners: ({ actions }) => ({
+      [actions.updateName]: ({ name }) => {
+        secondLogic.actions.secondAction('new name')
+      }
+    })
+  })
+
+  const unmount1 = logic.mount()
+  const unmount2 = logic.mount()
+  const unmount3 = logic.mount()
+
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3 })
+
+  expect(logic.values.name).toEqual('first')
+  expect(nameFromAction).toEqual('')
+
+  logic.actions.updateName('new name')
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3, 'mount.second': 3, 'mount.third': 3, 'mount.fourth': 3 })
+
+  const unmount4 = logic.mount()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 4, 'mount.second': 4, 'mount.third': 4, 'mount.fourth': 4 })
+
+  unmount4()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 3, 'mount.second': 3, 'mount.third': 3, 'mount.fourth': 3 })
+
+  unmount3()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 2, 'mount.second': 2, 'mount.third': 2, 'mount.fourth': 2 })
+
+  unmount2()
+  expect(getContext().mount.counter).toEqual({ 'mount.logic': 1, 'mount.second': 1, 'mount.third': 1, 'mount.fourth': 1 })
+
+  unmount1()
+  expect(getContext().mount.counter).toEqual({})
 })
