@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getContext } from '../index'
+import { kea, resetContext, getContext, isBreakpoint } from '../index'
 
 import PropTypes from 'prop-types'
 
@@ -316,6 +316,9 @@ test('breakpoints', async () => {
   let listenerRan1 = 0
   let listenerRan2 = 0
 
+  let caught = 0
+  let caughtNotBreakpoint = 0
+
   const firstLogic = kea({
     actions: () => ({
       setUsername: username => ({ username }),
@@ -331,21 +334,27 @@ test('breakpoints', async () => {
     }),
     listeners: ({ actions, values }) => ({
       [actions.setUsername]: async function (payload, breakpoint) {
-        const { setRepositories } = actions
+        try {
+          const { setRepositories } = actions
 
-        listenerRan0 += 1
+          listenerRan0 += 1
+          await breakpoint(100) // debounce for 100ms
+          listenerRan1 += 1
 
-        await breakpoint(100) // debounce for 100ms
+          // simulate response
+          await delay(200)
+          breakpoint()
 
-        listenerRan1 += 1
+          setRepositories([1, 2, 3])
 
-        // simulate response
-        await delay(200)
-        breakpoint()
-
-        setRepositories([1, 2, 3])
-
-        listenerRan2 += 1
+          listenerRan2 += 1
+        } catch (error) {
+          caught += 1
+          if (isBreakpoint(error)) {
+            throw error
+          }
+          caughtNotBreakpoint += 1
+        }
       }
     })
   })
@@ -368,6 +377,9 @@ test('breakpoints', async () => {
   expect(listenerRan1).toBe(1)
   expect(listenerRan2).toBe(1)
 
+  expect(caught).toBe(3)
+  expect(caughtNotBreakpoint).toBe(0)
+
   expect(firstLogic.values.repositories.length).toBe(3)
 
   // this should trigger the breakpoint without await
@@ -380,4 +392,14 @@ test('breakpoints', async () => {
   expect(listenerRan0).toBe(7)
   expect(listenerRan1).toBe(3)
   expect(listenerRan2).toBe(1)
+
+  await delay(500)
+
+  expect(listenerRan0).toBe(7)
+  expect(listenerRan1).toBe(4)
+  expect(listenerRan2).toBe(2)
+
+  expect(caught).toBe(5)
+  expect(caughtNotBreakpoint).toBe(0)
+
 })
