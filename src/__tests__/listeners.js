@@ -401,5 +401,59 @@ test('breakpoints', async () => {
 
   expect(caught).toBe(5)
   expect(caughtNotBreakpoint).toBe(0)
+})
 
+test('breakpoints with two listeners for same action', async () => {
+  let preListenerRan = 0
+  let listenerRan0 = 0
+
+  const firstLogic = kea({
+    actions: () => ({
+      setUsername: username => ({ username }),
+      setRepositories: repositories => ({ repositories })
+    }),
+    reducers: ({ actions }) => ({
+      username: ['keajs', {
+        [actions.setUsername]: (_, payload) => payload.username
+      }],
+      repositories: [[], {
+        [actions.setRepositories]: (_, payload) => payload.repositories
+      }]
+    }),
+    listeners: ({ actions, values }) => ({
+      [actions.setUsername]: [
+        async function (payload, breakpoint) {
+          await breakpoint(200)
+          preListenerRan += 1
+        },
+        async function (payload, breakpoint) {
+          await breakpoint(100)
+          listenerRan0 += 1
+        }
+      ]
+    })
+  })
+
+  firstLogic.mount()
+
+  firstLogic.actions.setUsername('user1')
+  firstLogic.actions.setUsername('user4')
+
+  expect(preListenerRan).toBe(0)
+  expect(listenerRan0).toBe(0)
+
+  await delay(101)
+
+  expect(preListenerRan).toBe(0)
+  expect(listenerRan0).toBe(1)
+
+  firstLogic.actions.setUsername('user5')
+
+  expect(preListenerRan).toBe(0)
+  expect(listenerRan0).toBe(1)
+
+  await delay(201)
+
+  expect(preListenerRan).toBe(1)
+  expect(listenerRan0).toBe(2)
 })

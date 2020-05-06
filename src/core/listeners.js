@@ -59,17 +59,17 @@ export default {
           key = logic.actions[key].toString()
         }
 
-        newArray = newArray.map(l => {
+        newArray = newArray.map((listener, index) => {
           return function (action) {
             const { run: { heap } } = getContext()
 
             heap.push(logic)
 
-            const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[key] || 0) + 1
-            fakeLogic.cache.listenerBreakpointCounter[key] = breakCounter
+            const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[`${key}/${index}`] || 0) + 1
+            fakeLogic.cache.listenerBreakpointCounter[`${key}/${index}`] = breakCounter
 
             const throwIfCalled = () => {
-              if (fakeLogic.cache.listenerBreakpointCounter[key] !== breakCounter) {
+              if (fakeLogic.cache.listenerBreakpointCounter[`${key}/${index}`] !== breakCounter) {
                 throw new Error(LISTENERS_BREAKPOINT)
               }
             }
@@ -86,7 +86,7 @@ export default {
 
             let response
             try {
-              response = l(action.payload, breakpoint, action)
+              response = listener(action.payload, breakpoint, action)
 
               if (response && response.then && typeof response.then === 'function') {
                 return response.catch(e => {
