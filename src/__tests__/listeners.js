@@ -515,3 +515,41 @@ test('breakpoints with two listeners for same action after extending', async () 
   expect(preListenerRan).toBe(1)
   expect(listenerRan0).toBe(2)
 })
+
+test('breakpoints break when unmounting', async () => {
+  let preListenerRan = 0
+  let breakpointBroke = 0
+
+  const firstLogic = kea({
+    actions: () => ({
+      setUsername: username => ({ username }),
+    }),
+    reducers: () => ({
+      username: ['keajs', {
+        setUsername: (_, payload) => payload.username
+      }]
+    }),
+    listeners: () => ({
+      setUsername: async function (payload, breakpoint) {
+        try {
+          await breakpoint(100)
+          preListenerRan += 1
+        } catch (error) {
+          if (isBreakpoint(error)) {
+            breakpointBroke += 1
+          }
+        }
+      }
+    })
+  })
+
+  const unmount = firstLogic.mount()
+
+  firstLogic.actions.setUsername('user1')
+  await delay(10)
+  unmount()
+  await delay(100)
+
+  expect(preListenerRan).toBe(0)
+  expect(breakpointBroke).toBe(1)
+})

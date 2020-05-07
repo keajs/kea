@@ -177,6 +177,13 @@ export default {
         return
       }
       removeListenersByPathString(logic.pathString, logic.listeners)
+
+      // trigger all breakpoints
+      if (logic.cache.listenerBreakpointCounter) {
+        for (const key of Object.keys(logic.cache.listenerBreakpointCounter)) {
+          logic.cache.listenerBreakpointCounter[key] += 1
+        }
+      }
     },
 
     beforeCloseContext () {
