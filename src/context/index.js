@@ -1,5 +1,5 @@
 import corePlugin from '../core'
-import listenersPlugin from '../core/listeners'
+import listenersPlugin from '../listeners'
 import { activatePlugin, runPlugins } from '../plugins'
 import { getStore } from '../store'
 

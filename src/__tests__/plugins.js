@@ -1,11 +1,11 @@
-/* global test, expect, beforeEach */
+/* global test, expect */
 import { kea, resetContext } from '../index'
 import { getContext, getPluginContext, setPluginContext } from '../context'
 import './helper/jsdom'
 import { configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import corePlugin from '../core'
-import listenersPlugin from '../core/listeners'
+import listenersPlugin from '../listeners'
 import { activatePlugin } from '../plugins'
 
 configure({ adapter: new Adapter() })

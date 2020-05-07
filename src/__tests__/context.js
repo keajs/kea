@@ -2,9 +2,9 @@
 import { kea } from '../index'
 import './helper/jsdom'
 import corePlugin from '../core'
-import listenersPlugin from '../core/listeners'
-import { activatePlugin } from '../plugins';
-import { getContext, setContext, openContext, closeContext, resetContext, withContext } from '../context'
+import listenersPlugin from '../listeners'
+import { activatePlugin } from '../plugins'
+import { getContext, openContext, closeContext, resetContext } from '../context'
 
 beforeEach(() => {
   closeContext()
