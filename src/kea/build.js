@@ -43,7 +43,7 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
     // ... except if autoConnectInListener is false
     } else if (autoConnectInListener && runHeap.length > 0) {
       const runningInLogic = runHeap[runHeap.length - 1]
-      if (!runningInLogic.connections[pathString]) {
+      if (runningInLogic._isKeaBuild && !runningInLogic.connections[pathString]) {
         addConnection(runningInLogic, buildCache[pathString])
         mountLogic(buildCache[pathString], mountCounter[runningInLogic.pathString]) // will be unmounted via the connection
       }

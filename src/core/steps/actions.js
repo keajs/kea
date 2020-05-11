@@ -14,10 +14,22 @@ import { getContext } from '../../context'
 
 export function createActions (logic, input) {
   Object.keys(logic.actionCreators).forEach(key => {
-    const action = logic.actionCreators[key]
-    const string = action.toString()
-    logic.actions[key] = (...inp) => getContext().store.dispatch(action(...inp))
-    logic.actions[key].toString = () => string
-    logic.actionKeys[string] = key
+    const actionCreator = logic.actionCreators[key]
+    const type = actionCreator.toString()
+
+    // we must add the action on the run heap, otherwise if in a listener we dispatch an action,
+    // which causes a react re-render, all logic.build() calls in the react component will be
+    // connected to the listener
+    logic.actions[key] = (...inp) => {
+      const builtAction = actionCreator(...inp)
+      getContext().run.heap.push({ action: builtAction, type: type, logic })
+      try {
+        return getContext().store.dispatch(builtAction)
+      } finally {
+        getContext().run.heap.pop()
+      }
+    }
+    logic.actions[key].toString = () => type
+    logic.actionKeys[type] = key
   })
 }
