@@ -6,20 +6,9 @@
 
 ![Kea Logo](https://kea.js.org/img/logo.svg)
 
-# Kea 1.0
+# Kea 2.0
 
-A `kea` is two things:
-
-1. An [extremely smart mountain parrot](https://www.youtube.com/results?search_query=kea+parrot) from New Zealand.
-2. An equally smart Data Layer for React webapps, built on top of Redux.
-
-# Read the docs!
-
-Until this readme is updated with an intro for Kea 1.0, open the [documentation](https://kea.js.org/) and read from there.
-
-This branch (`master`) contains Kea 1.0. To see the old 0.28 version, [click here](https://github.com/keajs/kea/tree/stable-0.28).
-
-To see what has changed between 0.28 and 1.0, see [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md).
+Open the [documentation](https://kea.js.org/) and read from there.
 
 ## Thank you to our backers!
 
