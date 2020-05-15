@@ -7,7 +7,10 @@ All notable changes to this project will be documented in this file.
 Version 2.0 brings a lot of convenience features and one breaking change. The changes are briefly 
 described below. Read the announcement blog post to get more context: https://kea.js.org/blog/kea-2.0
 
-There's also a new babel plugin you might want to check out: https://github.com/keajs/babel-plugin-kea 
+There's also a new babel plugin you might want to check out: https://github.com/keajs/babel-plugin-kea
+
+Finally, Kea 2.0 comes with brand new docs on [https://kea.js.org](https://kea.js.org). 
+(Old docs for [1.0](https://kea-v1.netlify.app/guide/installation) and [0.28](https://5d7a15398fdb1e00073ed27f--kea-v1.netlify.app/))  
 
 ### Breaking change
 - Listeners are now built in to Kea. That means if you were initialising the `listenersPlugin`
@@ -27,7 +30,6 @@ There's also a new babel plugin you might want to check out: https://github.com/
   specified.
 - Instead of passing an array `[default, {..}]` to a reducer, now passing an object `{..}` works and sets 
   the default to null. 
-- 
 
 ## 1.0.0 - 2019-09-12
 There are too many changes to list here. See [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md) for a complete overview!
