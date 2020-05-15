@@ -3,6 +3,32 @@ All notable changes to this project will be documented in this file.
 
 ## Uncommitted
 
+## 2.0.0 - 2020-05-12
+Version 2.0 brings a lot of convenience features and one breaking change. The changes are briefly 
+described below. Read the announcement blog post to get more context: https://kea.js.org/blog/kea-2.0
+
+There's also a new babel plugin you might want to check out: https://github.com/keajs/babel-plugin-kea 
+
+### Breaking change
+- Listeners are now built in to Kea. That means if you were initialising the `listenersPlugin`
+  before in `resetContext`, you need to remove it. Otherwise Kea won't start.
+
+### Other changes
+- No more need to add the `[actions.` and `]` in `[actions.yourAction]` when defining reducers and listeners
+- Auto-Connect: You can now write `otherLogic.actions.doSomething()` as keys for reducers and listeners
+  and inside the executable part of listeners... instead of having to `connect` the values manually.
+  The logic is automatically connected and mounted if it wasn't already.
+- It's possible to extend reducers with `.extend`. Before if you would define a new reducer with
+  an existing name in the `extend` block, it would override the old one completely. Now thery merge
+  and the actions on the old one still continue to work.
+- `createStore` is now true in `resetContext`. So if you don't need to specify the key at all if you
+  don't have any custom redux middleware.
+- The `path` in your logic can start with anything. Previously it was just `kea` or `scenes` unless manually
+  specified.
+- Instead of passing an array `[default, {..}]` to a reducer, now passing an object `{..}` works and sets 
+  the default to null. 
+- 
+
 ## 1.0.0 - 2019-09-12
 There are too many changes to list here. See [this document](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md) for a complete overview!
 
