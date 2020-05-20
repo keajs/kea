@@ -99,16 +99,12 @@ const reservedKeys = {
   wrap: true,
   build: true,
   mount: true,
-  extend: true
+  extend: true,
 }
 
-export const reservedProxiedKeys = [
-  'path',
-  'pathString',
-  'props'
-]
+export const reservedProxiedKeys = ['path', 'pathString', 'props']
 
-export function activatePlugin (pluginToActivate) {
+export function activatePlugin(pluginToActivate) {
   const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
 
   const { plugins } = getContext()
@@ -128,7 +124,11 @@ export function activatePlugin (pluginToActivate) {
     for (const key of Object.keys(plugin.buildSteps)) {
       // if redefining an existing step, add to the end of the list (no order changing possible anymore)
       if (plugins.buildSteps[key]) {
-        console.error(`[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
+        console.error(
+          `[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${plugins.logicFields[
+            key
+          ] || 'core'}`,
+        )
         plugins.buildSteps[key].push(plugin.buildSteps[key])
       } else {
         plugins.buildSteps[key] = [plugin.buildSteps[key]]
@@ -156,7 +156,11 @@ export function activatePlugin (pluginToActivate) {
     for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
         if (plugins.logicFields[key] || reservedKeys[key]) {
-          console.error(`[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
+          console.error(
+            `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${plugins.logicFields[
+              key
+            ] || 'core'}`,
+          )
         }
       }
       plugins.logicFields[key] = plugin.name
@@ -176,8 +180,11 @@ export function activatePlugin (pluginToActivate) {
 }
 
 // run plugins with this key with the rest of the arguments
-export function runPlugins (key, ...args) {
-  const { plugins, options: { debug } } = getContext()
+export function runPlugins(key, ...args) {
+  const {
+    plugins,
+    options: { debug },
+  } = getContext()
   if (debug) {
     console.log(`[KEA] Event: ${key}`, ...args)
   }

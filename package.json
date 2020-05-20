@@ -27,6 +27,7 @@
     "compile": "rollup -c",
     "watch": "rollup -cw",
     "lint": "eslint src/**",
+    "prettier": "prettier --write src/**/*",
     "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
     "test": "BABEL_ENV=test jest",

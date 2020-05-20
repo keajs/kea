@@ -10,16 +10,18 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 class SampleComponent extends Component {
-  render () {
+  render() {
     const { id, name, capitalizedName } = this.props
     const { updateName } = this.actions
 
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='capitalizedName'>{capitalizedName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="capitalizedName">{capitalizedName}</div>
+        <div className="updateName" onClick={updateName}>
+          updateName
+        </div>
       </div>
     )
   }
@@ -31,19 +33,19 @@ beforeEach(() => {
 
 test('getStore can be initalized with a preloaded state for non-kea reducers', () => {
   const preloadedState = {
-    'kea': {},
-    'scenes': { 'something': { 'name': 'chirpy' } },
-    'routes': { 'someRoute': true }
+    kea: {},
+    scenes: { something: { name: 'chirpy' } },
+    routes: { someRoute: true },
   }
   const store = getStore({
     reducers: {
-      routes: (state = {}, action) => state
+      routes: (state = {}, action) => state,
     },
-    preloadedState: preloadedState
+    preloadedState: preloadedState,
   })
   expect(store.getState()).toEqual({
     kea: {},
-    routes: { 'someRoute': true }
+    routes: { someRoute: true },
   })
 })
 
@@ -51,32 +53,40 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   // use defaults instead of initalizing kea reducers
 
   const preloadedState = {
-    'kea': {},
-    'scenes': { 'something': { 'name': 'chirpoo' } }
+    kea: {},
+    scenes: { something: { name: 'chirpoo' } },
   }
   const store = getStore({
-    preloadedState
+    preloadedState,
   })
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const ConnectedComponent = singletonLogic(SampleComponent)
@@ -84,7 +94,7 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -92,8 +102,8 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
 
   expect(store.getState()).toEqual({
-    'kea': {},
-    'scenes': { 'something': { 'name': 'chirpy' } }
+    kea: {},
+    scenes: { something: { name: 'chirpy' } },
   })
 
   wrapper.unmount()
@@ -101,7 +111,7 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
 
 test('can use createStore on resetContext', () => {
   const context = resetContext({
-    createStore: true
+    createStore: true,
   })
 
   expect(context).toBe(getContext())
@@ -110,8 +120,8 @@ test('can use createStore on resetContext', () => {
 
   const secondContext = resetContext({
     createStore: {
-      paths: ['kea', 'scenes', 'parrots']
-    }
+      paths: ['kea', 'scenes', 'parrots'],
+    },
   })
 
   expect(secondContext).toBe(getContext())
@@ -123,9 +133,9 @@ test('can create reducers with random paths', () => {
   const context = resetContext({
     createStore: {
       reducers: {
-        router: () => 'router'
-      }
-    }
+        router: () => 'router',
+      },
+    },
   })
 
   expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'router'])
@@ -133,15 +143,15 @@ test('can create reducers with random paths', () => {
   const existingLogic = kea({
     path: () => ['parrots', 'nz', 'kea'],
     reducers: () => ({
-      sheep: ['tasty']
-    })
+      sheep: ['tasty'],
+    }),
   })
 
   const nonExistingLogic = kea({
     path: () => ['birds', 'nz', 'kea'],
     reducers: () => ({
-      sheep: ['tasty']
-    })
+      sheep: ['tasty'],
+    }),
   })
 
   existingLogic.mount()
@@ -150,7 +160,7 @@ test('can create reducers with random paths', () => {
   nonExistingLogic.mount()
   expect(context.store.getState().birds.nz.kea.sheep).toBe('tasty')
 
-  expect(Object.keys(context.store.getState()).sort()).toEqual( ['birds', 'kea', 'parrots', 'router'])
+  expect(Object.keys(context.store.getState()).sort()).toEqual(['birds', 'kea', 'parrots', 'router'])
 })
 
 test('can not create reducers with random paths if restricted', () => {
@@ -158,9 +168,9 @@ test('can not create reducers with random paths if restricted', () => {
     createStore: {
       paths: ['kea', 'scenes', 'parrots'],
       reducers: {
-        router: () => 'router'
-      }
-    }
+        router: () => 'router',
+      },
+    },
   })
 
   expect(Object.keys(context.store.getState()).sort()).toEqual(['kea', 'parrots', 'router', 'scenes'])
@@ -168,15 +178,15 @@ test('can not create reducers with random paths if restricted', () => {
   const existingLogic = kea({
     path: () => ['parrots', 'nz', 'kea'],
     reducers: () => ({
-      sheep: ['tasty']
-    })
+      sheep: ['tasty'],
+    }),
   })
 
   const nonExistingLogic = kea({
     path: () => ['birds', 'nz', 'kea'],
     reducers: () => ({
-      sheep: ['tasty']
-    })
+      sheep: ['tasty'],
+    }),
   })
 
   existingLogic.mount()

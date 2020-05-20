@@ -10,7 +10,7 @@ test('it converts reducer arrays correctly', () => {
 
   const logic = kea({
     defaults: () => ({
-      milk: 'not found'
+      milk: 'not found',
     }),
 
     reducers: () => ({
@@ -20,16 +20,41 @@ test('it converts reducer arrays correctly', () => {
       noPropNoOptions: [0, { ACTION: reducerFunction }],
       onlyDefault: [0],
       withoutDefault: { ACTION: reducerFunction },
-      justAFunction: reducerFunction
-    })
+      justAFunction: reducerFunction,
+    }),
   })
 
   logic.mount()
 
-  expect(Object.keys(logic.reducers).sort()).toEqual(['everything', 'justAFunction', 'noOptions', 'noProp', 'noPropNoOptions', 'onlyDefault', 'withoutDefault'])
-  expect(Object.keys(logic.defaults).sort()).toEqual(['everything', 'justAFunction', 'milk', 'noOptions', 'noProp', 'noPropNoOptions', 'onlyDefault', 'withoutDefault'])
+  expect(Object.keys(logic.reducers).sort()).toEqual([
+    'everything',
+    'justAFunction',
+    'noOptions',
+    'noProp',
+    'noPropNoOptions',
+    'onlyDefault',
+    'withoutDefault',
+  ])
+  expect(Object.keys(logic.defaults).sort()).toEqual([
+    'everything',
+    'justAFunction',
+    'milk',
+    'noOptions',
+    'noProp',
+    'noPropNoOptions',
+    'onlyDefault',
+    'withoutDefault',
+  ])
   expect(Object.keys(logic.propTypes).sort()).toEqual(['everything', 'noOptions'])
-  expect(Object.keys(logic.reducerOptions).sort()).toEqual(['everything', 'justAFunction', 'noOptions', 'noProp', 'noPropNoOptions', 'onlyDefault', 'withoutDefault'])
+  expect(Object.keys(logic.reducerOptions).sort()).toEqual([
+    'everything',
+    'justAFunction',
+    'noOptions',
+    'noProp',
+    'noPropNoOptions',
+    'onlyDefault',
+    'withoutDefault',
+  ])
 
   expect(typeof logic.reducers.everything).toBe('function')
   expect(typeof logic.reducers.noProp).toBe('function')
@@ -61,7 +86,7 @@ test('it auto-detects local actions from the key in reducers', () => {
   const logic = kea({
     actions: () => ({
       makeMagic: true,
-      moreMagic: value => ({ value })
+      moreMagic: value => ({ value }),
     }),
 
     defaults: { howMuchMagic: 0 },
@@ -69,9 +94,9 @@ test('it auto-detects local actions from the key in reducers', () => {
     reducers: ({ actions }) => ({
       howMuchMagic: {
         makeMagic: state => state + 1,
-        [actions.moreMagic]: (state, { value }) => state + value
-      }
-    })
+        [actions.moreMagic]: (state, { value }) => state + value,
+      },
+    }),
   })
 
   logic.mount()
@@ -97,28 +122,34 @@ test('it extends reducers instead of overriding them', () => {
     actions: () => ({
       simpleMagic: true,
       makeMagic: true,
-      makeABitMoreMagic: true
+      makeABitMoreMagic: true,
     }),
 
     reducers: ({ actions }) => ({
-      howMuchMagic: [0, {
-        simpleMagic: state => state + 1,
-        makeMagic: state => state + 1
-      }]
-    })
+      howMuchMagic: [
+        0,
+        {
+          simpleMagic: state => state + 1,
+          makeMagic: state => state + 1,
+        },
+      ],
+    }),
   })
 
   logic.extend({
     actions: () => ({
-      moreMagic: true
+      moreMagic: true,
     }),
 
     reducers: ({ actions }) => ({
-      howMuchMagic: [0, {
-        makeMagic: state => state + 2,
-        moreMagic: state => state + 100
-      }]
-    })
+      howMuchMagic: [
+        0,
+        {
+          makeMagic: state => state + 2,
+          moreMagic: state => state + 100,
+        },
+      ],
+    }),
   })
 
   logic.mount()
@@ -139,26 +170,33 @@ test('it overrides reducers when extending with { replace: true }', () => {
 
   const logic = kea({
     actions: () => ({
-      makeMagic: true
+      makeMagic: true,
     }),
 
     reducers: ({ actions }) => ({
-      howMuchMagic: [0, {
-        makeMagic: state => state + 1
-      }]
-    })
+      howMuchMagic: [
+        0,
+        {
+          makeMagic: state => state + 1,
+        },
+      ],
+    }),
   })
 
   logic.extend({
     actions: () => ({
-      moreMagic: true
+      moreMagic: true,
     }),
 
     reducers: ({ actions }) => ({
-      howMuchMagic: [0, { replace: true }, {
-        moreMagic: state => state + 100
-      }]
-    })
+      howMuchMagic: [
+        0,
+        { replace: true },
+        {
+          moreMagic: state => state + 100,
+        },
+      ],
+    }),
   })
 
   logic.mount()
@@ -177,8 +215,8 @@ test('it overrides reducers when extending with { replace: true }', () => {
 test('function reducers work', () => {
   const logic = kea({
     reducers: () => ({
-      justAFunction: ['no milk to day', () => 'my love has gone away']
-    })
+      justAFunction: ['no milk to day', () => 'my love has gone away'],
+    }),
   })
 
   logic.mount()

@@ -8,7 +8,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 beforeEach(() => {
   resetContext({
     plugins: [],
-    createStore: { middleware: [] }
+    createStore: { middleware: [] },
   })
 })
 
@@ -20,18 +20,22 @@ test('listeners work', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'first'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions }) => ({
       [actions.updateName]: () => {
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -56,18 +60,22 @@ test('listeners work with local action keys', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'first'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        updateName: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          updateName: (state, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions }) => ({
       updateName: () => {
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -86,21 +94,25 @@ test('sharedListeners work', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions, sharedListeners }) => ({
-      [actions.updateName]: sharedListeners.doUpdateName
+      [actions.updateName]: sharedListeners.doUpdateName,
     }),
     sharedListeners: ({ actions }) => ({
-      doUpdateName () {
+      doUpdateName() {
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -119,30 +131,34 @@ test('many listeners for one action', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions, sharedListeners }) => ({
       [actions.updateName]: [
         sharedListeners.doUpdateName,
         sharedListeners.otherWorker,
-        function () {
+        function() {
           listenerRan3 = true
-        }
-      ]
+        },
+      ],
     }),
     sharedListeners: ({ actions }) => ({
-      doUpdateName () {
+      doUpdateName() {
         listenerRan1 = true
       },
-      otherWorker () {
+      otherWorker() {
         listenerRan2 = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -164,26 +180,30 @@ test('extend works', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions, sharedListeners }) => ({
       [actions.updateName]: () => {
         listenerRan1 = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.extend({
     listeners: ({ actions, sharedListeners }) => ({
       [actions.updateName]: () => {
         listenerRan2 = true
-      }
-    })
+      },
+    }),
   })
   firstLogic.mount()
 
@@ -202,7 +222,7 @@ test('actions are bound', () => {
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
       updateName: name => ({ name }),
-      updateOtherName: name => ({ name })
+      updateOtherName: name => ({ name }),
     }),
     listeners: ({ actions }) => ({
       [actions.updateName]: () => {
@@ -211,8 +231,8 @@ test('actions are bound', () => {
       },
       [actions.updateOtherName]: () => {
         listenerRan2 = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -232,13 +252,16 @@ test('store exists', () => {
     path: () => ['scenes', 'listeners', 'sharedListeners2'],
     actions: () => ({
       updateName: name => ({ name }),
-      updateOtherName: name => ({ name })
+      updateOtherName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['john', {
-        [actions.updateName]: (_, payload) => payload.name,
-        [actions.updateOtherName]: (_, payload) => payload.name
-      }]
+      name: [
+        'john',
+        {
+          [actions.updateName]: (_, payload) => payload.name,
+          [actions.updateOtherName]: (_, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions, actionCreators, values, selectors, store }) => ({
       [actions.updateName]: () => {
@@ -250,8 +273,8 @@ test('store exists', () => {
       },
       [actions.updateOtherName]: () => {
         listenerRan2 = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -273,13 +296,16 @@ test('actions and values', () => {
     path: () => ['scenes', 'listeners', 'sharedListeners2'],
     actions: () => ({
       updateName: name => ({ name }),
-      updateOtherName: name => ({ name })
+      updateOtherName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['john', {
-        [actions.updateName]: (_, payload) => payload.name,
-        [actions.updateOtherName]: (_, payload) => payload.name
-      }]
+      name: [
+        'john',
+        {
+          [actions.updateName]: (_, payload) => payload.name,
+          [actions.updateOtherName]: (_, payload) => payload.name,
+        },
+      ],
     }),
     listeners: ({ actions, values }) => ({
       [actions.updateName]: (payload, _, action) => {
@@ -298,8 +324,8 @@ test('actions and values', () => {
       },
       [actions.updateOtherName]: () => {
         listenerRan2 = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -322,18 +348,24 @@ test('breakpoints', async () => {
   const firstLogic = kea({
     actions: () => ({
       setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories })
+      setRepositories: repositories => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
-      username: ['keajs', {
-        [actions.setUsername]: (_, payload) => payload.username
-      }],
-      repositories: [[], {
-        [actions.setRepositories]: (_, payload) => payload.repositories
-      }]
+      username: [
+        'keajs',
+        {
+          [actions.setUsername]: (_, payload) => payload.username,
+        },
+      ],
+      repositories: [
+        [],
+        {
+          [actions.setRepositories]: (_, payload) => payload.repositories,
+        },
+      ],
     }),
     listeners: ({ actions, values }) => ({
-      [actions.setUsername]: async function (payload, breakpoint) {
+      [actions.setUsername]: async function(payload, breakpoint) {
         try {
           const { setRepositories } = actions
 
@@ -355,8 +387,8 @@ test('breakpoints', async () => {
           }
           caughtNotBreakpoint += 1
         }
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -410,28 +442,34 @@ test('breakpoints with two listeners for same action', async () => {
   const firstLogic = kea({
     actions: () => ({
       setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories })
+      setRepositories: repositories => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
-      username: ['keajs', {
-        [actions.setUsername]: (_, payload) => payload.username
-      }],
-      repositories: [[], {
-        [actions.setRepositories]: (_, payload) => payload.repositories
-      }]
+      username: [
+        'keajs',
+        {
+          [actions.setUsername]: (_, payload) => payload.username,
+        },
+      ],
+      repositories: [
+        [],
+        {
+          [actions.setRepositories]: (_, payload) => payload.repositories,
+        },
+      ],
     }),
     listeners: ({ actions, values }) => ({
       [actions.setUsername]: [
-        async function (payload, breakpoint) {
+        async function(payload, breakpoint) {
           await breakpoint(200)
           preListenerRan += 1
         },
-        async function (payload, breakpoint) {
+        async function(payload, breakpoint) {
           await breakpoint(100)
           listenerRan0 += 1
-        }
-      ]
-    })
+        },
+      ],
+    }),
   })
 
   firstLogic.mount()
@@ -465,31 +503,37 @@ test('breakpoints with two listeners for same action after extending', async () 
   const firstLogic = kea({
     actions: () => ({
       setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories })
+      setRepositories: repositories => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
-      username: ['keajs', {
-        [actions.setUsername]: (_, payload) => payload.username
-      }],
-      repositories: [[], {
-        [actions.setRepositories]: (_, payload) => payload.repositories
-      }]
+      username: [
+        'keajs',
+        {
+          [actions.setUsername]: (_, payload) => payload.username,
+        },
+      ],
+      repositories: [
+        [],
+        {
+          [actions.setRepositories]: (_, payload) => payload.repositories,
+        },
+      ],
     }),
     listeners: ({ actions }) => ({
-      [actions.setUsername]: async function (payload, breakpoint) {
+      [actions.setUsername]: async function(payload, breakpoint) {
         await breakpoint(200)
         preListenerRan += 1
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.extend({
     listeners: ({ actions }) => ({
-      [actions.setUsername]: async function (payload, breakpoint) {
+      [actions.setUsername]: async function(payload, breakpoint) {
         await breakpoint(100)
         listenerRan0 += 1
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -525,12 +569,15 @@ test('breakpoints break when unmounting', async () => {
       setUsername: username => ({ username }),
     }),
     reducers: () => ({
-      username: ['keajs', {
-        setUsername: (_, payload) => payload.username
-      }]
+      username: [
+        'keajs',
+        {
+          setUsername: (_, payload) => payload.username,
+        },
+      ],
     }),
     listeners: () => ({
-      setUsername: async function (payload, breakpoint) {
+      setUsername: async function(payload, breakpoint) {
         try {
           await breakpoint(100)
           preListenerRan += 1
@@ -539,8 +586,8 @@ test('breakpoints break when unmounting', async () => {
             breakpointBroke += 1
           }
         }
-      }
-    })
+      },
+    }),
   })
 
   const unmount = firstLogic.mount()
@@ -563,12 +610,15 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
       setUsername: username => ({ username }),
     }),
     reducers: () => ({
-      username: ['keajs', {
-        setUsername: (_, payload) => payload.username
-      }]
+      username: [
+        'keajs',
+        {
+          setUsername: (_, payload) => payload.username,
+        },
+      ],
     }),
     listeners: () => ({
-      setUsername: async function (payload, breakpoint) {
+      setUsername: async function(payload, breakpoint) {
         try {
           await breakpoint(100)
           preListenerRan += 1
@@ -577,8 +627,8 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
             breakpointBroke += 1
           }
         }
-      }
-    })
+      },
+    }),
   })
 
   const unmount = firstLogic.mount()

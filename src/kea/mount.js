@@ -3,11 +3,15 @@ import { runPlugins } from '../plugins'
 
 import { getContext } from '../context'
 
-export function mountLogic (logic, count = 1) {
-  const { mount: { counter, mounted } } = getContext()
+export function mountLogic(logic, count = 1) {
+  const {
+    mount: { counter, mounted },
+  } = getContext()
 
   // mount this logic after all the dependencies
-  const pathStrings = Object.keys(logic.connections).filter(k => k !== logic.pathString).concat([logic.pathString])
+  const pathStrings = Object.keys(logic.connections)
+    .filter(k => k !== logic.pathString)
+    .concat([logic.pathString])
 
   for (const pathString of pathStrings) {
     counter[pathString] = (counter[pathString] || 0) + count
@@ -29,11 +33,16 @@ export function mountLogic (logic, count = 1) {
   }
 }
 
-export function unmountLogic (logic) {
-  const { mount: { counter, mounted } } = getContext()
+export function unmountLogic(logic) {
+  const {
+    mount: { counter, mounted },
+  } = getContext()
 
   // unmount in reverse order
-  const pathStrings = Object.keys(logic.connections).filter(k => k !== logic.pathString).concat([logic.pathString]).reverse()
+  const pathStrings = Object.keys(logic.connections)
+    .filter(k => k !== logic.pathString)
+    .concat([logic.pathString])
+    .reverse()
 
   for (const pathString of pathStrings) {
     counter[pathString] = (counter[pathString] || 0) - 1
@@ -58,7 +67,9 @@ export function unmountLogic (logic) {
   }
 }
 
-function clearBuildCache (pathString) {
-  const { build: { cache } } = getContext()
+function clearBuildCache(pathString) {
+  const {
+    build: { cache },
+  } = getContext()
   delete cache[pathString]
 }

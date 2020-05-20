@@ -20,43 +20,53 @@ test('does not double render with the same props', () => {
   const logic = kea({
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   let countRendered = 0
 
-  function SampleComponent ({ id, name, capitalizedName, upperCaseName, actions: { updateName } }) {
+  function SampleComponent({ id, name, capitalizedName, upperCaseName, actions: { updateName } }) {
     countRendered += 1
 
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='capitalizedName'>{capitalizedName}</div>
-        <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="capitalizedName">{capitalizedName}</div>
+        <div className="upperCaseName">{upperCaseName}</div>
+        <div className="updateName" onClick={updateName}>
+          updateName
+        </div>
       </div>
     )
   }
@@ -68,12 +78,12 @@ test('does not double render with the same props', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(countRendered).toEqual(1)
 
-  store.dispatch({ type: 'nothing', payload: { } })
+  store.dispatch({ type: 'nothing', payload: {} })
   expect(countRendered).toEqual(1)
 
   expect(wrapper.find('.id').text()).toEqual('12')

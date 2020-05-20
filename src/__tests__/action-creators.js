@@ -2,7 +2,7 @@
 import { kea, resetContext, keaReducer } from '../index'
 
 import PropTypes from 'prop-types'
-import { createAction } from '../core/shared/actions';
+import { createAction } from '../core/shared/actions'
 
 beforeEach(() => {
   resetContext()
@@ -16,16 +16,20 @@ test('action creators work the right way', () => {
       actionWithBool: true,
       actionWithInteger: 12,
       actionWithNull: null,
-      manualAction: createAction('custom_type', a => a)
-    })
+      manualAction: createAction('custom_type', a => a),
+    }),
   })
 
   logic.mount()
 
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
-  expect(Object.keys(logic.actions).sort()).toEqual(
-    ['actionWithBool', 'actionWithInteger', 'actionWithNull', 'manualAction', 'updateName']
-  )
+  expect(Object.keys(logic.actions).sort()).toEqual([
+    'actionWithBool',
+    'actionWithInteger',
+    'actionWithNull',
+    'manualAction',
+    'updateName',
+  ])
 
   const { actionWithBool, actionWithInteger, actionWithNull, manualAction, updateName } = logic.actionCreators
 

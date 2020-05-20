@@ -29,7 +29,7 @@ export default {
     selectors: {},
     values: {},
     propTypes: {},
-    events: {}
+    events: {},
   }),
 
   buildSteps: {
@@ -43,6 +43,6 @@ export default {
     reducerSelectors: createReducerSelectors,
     selectors: createSelectors,
     values: createValues,
-    events: createEvents
-  }
+    events: createEvents,
+  },
 }

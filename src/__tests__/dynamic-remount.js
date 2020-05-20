@@ -21,31 +21,37 @@ test('can change key/path of logic once it has been wrapped', () => {
     key: props => props.id,
     path: key => ['scenes', 'wrappy', key],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, props }) => ({
-      name: [props.defaultName, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        props.defaultName,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.name],
-        (name) => {
+        name => {
           return name.toUpperCase()
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
-  function SampleComponent ({ id, name, upperCaseName, actions: { updateName } }) {
+  function SampleComponent({ id, name, upperCaseName, actions: { updateName } }) {
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={() => updateName('fred')}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="upperCaseName">{upperCaseName}</div>
+        <div className="updateName" onClick={() => updateName('fred')}>
+          updateName
+        </div>
       </div>
     )
   }
@@ -55,23 +61,28 @@ test('can change key/path of logic once it has been wrapped', () => {
   const togglerLogic = kea({
     path: () => ['scenes', 'toggler'],
     actions: () => ({
-      next: true
+      next: true,
     }),
     reducers: ({ actions }) => ({
-      id: [12, {
-        [actions.next]: state => state + 1
-      }]
-    })
+      id: [
+        12,
+        {
+          [actions.next]: state => state + 1,
+        },
+      ],
+    }),
   })
 
-  function TogglerComponent () {
+  function TogglerComponent() {
     const { id } = useValues(togglerLogic)
     const { next } = useActions(togglerLogic)
 
     return (
       <div>
-        <ConnectedSampleComponent id={id} defaultName='brad' />
-        <button className='next' onClick={next}>next</button>
+        <ConnectedSampleComponent id={id} defaultName="brad" />
+        <button className="next" onClick={next}>
+          next
+        </button>
       </div>
     )
   }
@@ -82,7 +93,7 @@ test('can change key/path of logic once it has been wrapped', () => {
     wrapper = mount(
       <Provider store={getContext().store}>
         <TogglerComponent />
-      </Provider>
+      </Provider>,
     )
   })
 
@@ -94,8 +105,8 @@ test('can change key/path of logic once it has been wrapped', () => {
     kea: {},
     scenes: {
       wrappy: { 12: { name: 'brad' } },
-      toggler: { id: 12 }
-    }
+      toggler: { id: 12 },
+    },
   })
 
   act(() => {
@@ -110,8 +121,8 @@ test('can change key/path of logic once it has been wrapped', () => {
     kea: {},
     scenes: {
       wrappy: { 12: { name: 'fred' } },
-      toggler: { id: 12 }
-    }
+      toggler: { id: 12 },
+    },
   })
 
   act(() => {
@@ -126,7 +137,7 @@ test('can change key/path of logic once it has been wrapped', () => {
     kea: {},
     scenes: {
       wrappy: { 13: { name: 'brad' } },
-      toggler: { id: 13 }
-    }
+      toggler: { id: 13 },
+    },
   })
 })

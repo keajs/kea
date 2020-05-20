@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { kea } from '../kea/kea'
 
-export function useKea (input, deps = []) {
+export function useKea(input, deps = []) {
   return useMemo(() => kea(input), deps)
 }
 
-export function useValues (logic) {
+export function useValues(logic) {
   useMountedLogic(logic)
 
   return useMemo(() => {
@@ -15,7 +15,7 @@ export function useValues (logic) {
 
     for (const key of Object.keys(logic.selectors)) {
       Object.defineProperty(response, key, {
-        get: () => useSelector(logic.selectors[key])
+        get: () => useSelector(logic.selectors[key]),
       })
     }
 
@@ -23,7 +23,7 @@ export function useValues (logic) {
   }, [logic.pathString])
 }
 
-export function useAllValues (logic) {
+export function useAllValues(logic) {
   useMountedLogic(logic)
 
   let response = {}
@@ -34,7 +34,7 @@ export function useAllValues (logic) {
   return response
 }
 
-export function useActions (logic) {
+export function useActions(logic) {
   useMountedLogic(logic)
 
   const dispatch = useDispatch()
@@ -50,7 +50,7 @@ export function useActions (logic) {
   }, [dispatch, logic.pathString])
 }
 
-export function useMountedLogic (logic) {
+export function useMountedLogic(logic) {
   const unmount = useRef(undefined)
 
   if (!unmount.current) {

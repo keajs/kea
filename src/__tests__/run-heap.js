@@ -20,44 +20,36 @@ test('run heap works with actions - build is not autoconnected via react', () =>
     path: () => ['scenes', 'root'],
     actions: () => ({
       loadScene: scene => ({ scene }),
-      setScene: scene => ({ scene })
+      setScene: scene => ({ scene }),
     }),
     reducers: () => ({ scene: ['home', { setScene: (_, { scene }) => scene }] }),
 
     listeners: ({ actions }) => ({
       loadScene: ({ scene }) => {
         actions.setScene(scene)
-      }
-    })
+      },
+    }),
   })
 
   const dashLogic = kea({
     path: () => ['scenes', 'dash'],
-    reducers: () => ({ dashValue: ['present'] })
+    reducers: () => ({ dashValue: ['present'] }),
   })
 
-  function DashComponent () {
+  function DashComponent() {
     const { dashValue } = useValues(dashLogic())
-    return (
-      <div id='dashboard'>
-        {dashValue}
-      </div>
-    )
+    return <div id="dashboard">{dashValue}</div>
   }
 
-  function HomeComponent () {
-    return (
-      <div id='homepage'>
-        On Home
-      </div>
-    )
+  function HomeComponent() {
+    return <div id="homepage">On Home</div>
   }
 
-  function RootComponent () {
+  function RootComponent() {
     const { scene } = useValues(rootLogic)
     return (
       <div>
-        <div id='scene'>{scene}</div>
+        <div id="scene">{scene}</div>
         {scene === 'home' ? <HomeComponent /> : null}
         {scene === 'dash' ? <DashComponent /> : null}
       </div>
@@ -70,7 +62,7 @@ test('run heap works with actions - build is not autoconnected via react', () =>
     wrapper = mount(
       <Provider store={getContext().store}>
         <RootComponent />
-      </Provider>
+      </Provider>,
     )
   })
 

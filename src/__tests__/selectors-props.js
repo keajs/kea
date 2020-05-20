@@ -15,24 +15,24 @@ beforeEach(() => {
 })
 
 class BookDetail extends Component {
-  render () {
+  render() {
     const { book, bookId } = this.props
     return <div id={`book-${bookId}`}>{book}</div>
   }
 }
 
-test('selectors have access to the component\'s props', () => {
+test("selectors have access to the component's props", () => {
   const { store } = getContext()
 
   const books = {
     1: 'book1',
-    2: 'book2'
+    2: 'book2',
   }
 
   const booksLogic = kea({
     reducers: ({ actions }) => ({
-      books: [books, PropTypes.object, {}]
-    })
+      books: [books, PropTypes.object, {}],
+    }),
   })
 
   const bookDetailLogic = kea({
@@ -40,20 +40,20 @@ test('selectors have access to the component\'s props', () => {
       book: [
         () => [booksLogic.selectors.books, (_, props) => props.bookId],
         (books, bookId) => books[bookId],
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const ConnectedBookDetail = bookDetailLogic(BookDetail)
 
   const wrapper = mount(
     <Provider store={store}>
-      <div className='playground-scene'>
+      <div className="playground-scene">
         <ConnectedBookDetail bookId={1} />
         <ConnectedBookDetail bookId={2} />
       </div>
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('#book-1').text()).toEqual('book1')

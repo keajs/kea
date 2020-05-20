@@ -14,29 +14,37 @@ test('can mount stores and have them connect to redux without react', () => {
   const logic = kea({
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   // nothing yet in the store
@@ -61,31 +69,39 @@ test('can mount stores with keys and have them connet to redux without react', (
 
   const logic = kea({
     key: props => props.id,
-    path: (key) => ['scenes', 'lazy', key],
+    path: key => ['scenes', 'lazy', key],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   // nothing yet in the store
@@ -111,13 +127,17 @@ test('can mount with callback', () => {
   const logic = kea({
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   // nothing yet in the store
@@ -129,9 +149,9 @@ test('can mount with callback', () => {
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
     logic.actions.updateName('somename')
-  
-    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
-    
+
+    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
+
     callbackRan = true
 
     return 5
@@ -150,13 +170,17 @@ test('can mount with a promise', async () => {
   const logic = kea({
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   // nothing yet in the store
@@ -169,9 +193,9 @@ test('can mount with a promise', async () => {
       expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
       store.dispatch(logic.actionCreators.updateName('somename'))
-    
-      expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
-      
+
+      expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
+
       callbackRan = true
 
       resolve(5)
@@ -191,13 +215,17 @@ test('can mount with a async/await', async () => {
   const logic = kea({
     path: () => ['scenes', 'lazy'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   // nothing yet in the store
@@ -214,8 +242,8 @@ test('can mount with a async/await', async () => {
 
     await delay(50)
 
-    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })  
-    
+    expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
+
     callbackRan = true
 
     return 5

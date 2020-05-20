@@ -8,17 +8,17 @@ let context
 // this will create a default context
 resetContext()
 
-export function getContext () {
+export function getContext() {
   return context
 }
 
 export const getStoreState = () => getContext().store.getState()
 
-export function setContext (newContext) {
+export function setContext(newContext) {
   context = newContext
 }
 
-export function openContext (options = {}) {
+export function openContext(options = {}) {
   if (context) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
@@ -32,27 +32,27 @@ export function openContext (options = {}) {
       buildSteps: {},
       events: {},
       logicFields: {},
-      contexts: {}
+      contexts: {},
     },
 
     input: {
       inlinePathCreators: new Map(),
       inlinePathCounter: 0,
-      defaults: defaults || undefined
+      defaults: defaults || undefined,
     },
 
     build: {
       cache: {},
-      heap: []
+      heap: [],
     },
 
     mount: {
       counter: {},
-      mounted: {}
+      mounted: {},
     },
 
     run: {
-      heap: []
+      heap: [],
     },
 
     reducers: {
@@ -60,7 +60,7 @@ export function openContext (options = {}) {
       roots: {},
       redux: {},
       whitelist: false,
-      combined: undefined
+      combined: undefined,
     },
 
     store: undefined,
@@ -74,8 +74,8 @@ export function openContext (options = {}) {
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch',
 
-      ...otherOptions
-    }
+      ...otherOptions,
+    },
   }
 
   setContext(newContext)
@@ -101,7 +101,7 @@ export function openContext (options = {}) {
   return context
 }
 
-export function closeContext () {
+export function closeContext() {
   if (context) {
     runPlugins('beforeCloseContext', context)
   }
@@ -109,7 +109,7 @@ export function closeContext () {
   context = undefined
 }
 
-export function resetContext (options = {}) {
+export function resetContext(options = {}) {
   if (context) {
     closeContext()
   }
@@ -117,7 +117,7 @@ export function resetContext (options = {}) {
   return openContext(options)
 }
 
-export function withContext (code, options = {}) {
+export function withContext(code, options = {}) {
   const oldContext = context
 
   openContext(options)
@@ -129,11 +129,11 @@ export function withContext (code, options = {}) {
 
   return {
     context: newContext,
-    returnValue
+    returnValue,
   }
 }
 
-export function getPluginContext (name) {
+export function getPluginContext(name) {
   const { plugins } = getContext()
   if (!plugins.contexts[name]) {
     plugins.contexts[name] = {}
@@ -141,7 +141,7 @@ export function getPluginContext (name) {
   return plugins.contexts[name]
 }
 
-export function setPluginContext (name, pluginContext) {
+export function setPluginContext(name, pluginContext) {
   const { plugins } = getContext()
   plugins.contexts[name] = pluginContext
 }

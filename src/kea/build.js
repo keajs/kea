@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = true) {
+export function getBuiltLogic(inputs, props, wrapper, autoConnectInListener = true) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
@@ -21,7 +21,7 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
     build: { heap: buildHeap, cache: buildCache },
     run: { heap: runHeap },
     options: { autoConnect: globalAutoConnect },
-    mount: { counter: mountCounter }
+    mount: { counter: mountCounter },
   } = getContext()
 
   if (!buildCache[pathString]) {
@@ -39,8 +39,8 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
         addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
       }
 
-    // if we were running a listener and built this logic, mount it directly
-    // ... except if autoConnectInListener is false
+      // if we were running a listener and built this logic, mount it directly
+      // ... except if autoConnectInListener is false
     } else if (autoConnectInListener && runHeap.length > 0) {
       const runningInLogic = runHeap[runHeap.length - 1]
       if (runningInLogic._isKeaBuild && !runningInLogic.connections[pathString]) {
@@ -54,11 +54,13 @@ export function getBuiltLogic (inputs, props, wrapper, autoConnectInListener = t
 }
 
 // builds logic. does not check if it's built or already on the context
-function buildLogic ({ inputs, path, key, props, wrapper }) {
+function buildLogic({ inputs, path, key, props, wrapper }) {
   let logic = createBlankLogic({ key, path, props, wrapper })
   setLogicDefaults(logic)
 
-  const { build: { heap } } = getContext()
+  const {
+    build: { heap },
+  } = getContext()
 
   heap.push(logic)
 
@@ -86,7 +88,7 @@ function buildLogic ({ inputs, path, key, props, wrapper }) {
   return logic
 }
 
-function createBlankLogic ({ key, path, props, wrapper }) {
+function createBlankLogic({ key, path, props, wrapper }) {
   let logic = {
     _isKeaBuild: true,
     key,
@@ -95,7 +97,7 @@ function createBlankLogic ({ key, path, props, wrapper }) {
     props,
     wrapper,
     extend: input => applyInputToLogic(logic, input),
-    mount: (callback) => {
+    mount: callback => {
       mountLogic(logic)
       if (callback) {
         const response = callback(logic)
@@ -111,13 +113,13 @@ function createBlankLogic ({ key, path, props, wrapper }) {
         return response
       }
       return () => unmountLogic(logic)
-    }
+    },
   }
 
   return logic
 }
 
-function setLogicDefaults (logic) {
+function setLogicDefaults(logic) {
   const { plugins } = getContext()
 
   for (const plugin of plugins.activated) {
@@ -129,10 +131,12 @@ function setLogicDefaults (logic) {
 }
 
 // Converts `input` into `logic` by running all build steps in succession
-function applyInputToLogic (logic, input) {
+function applyInputToLogic(logic, input) {
   runPlugins('beforeLogic', logic, input)
 
-  const { plugins: { buildOrder, buildSteps } } = getContext()
+  const {
+    plugins: { buildOrder, buildSteps },
+  } = getContext()
 
   for (const step of buildOrder) {
     for (const func of buildSteps[step]) {

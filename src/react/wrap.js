@@ -4,7 +4,7 @@ import { connect as reduxConnect } from 'react-redux'
 import { getPathStringForInput } from '../kea/path'
 import { runPlugins } from '../plugins'
 
-export function wrapComponent (Component, wrapper) {
+export function wrapComponent(Component, wrapper) {
   const { inputs } = wrapper
   const input = inputs[0]
   runPlugins('beforeWrapper', input, Component)
@@ -44,9 +44,9 @@ export function wrapComponent (Component, wrapper) {
 
       return {
         dispatch: dispatch,
-        actions: actions
+        actions: actions,
       }
-    }
+    },
   )
   const Connect = createConnect(Component)
 
@@ -54,7 +54,7 @@ export function wrapComponent (Component, wrapper) {
   // not using useRef here since we do it only once per component
   let injectPropTypes = !isStateless(Component)
 
-  const Kea = function (props) {
+  const Kea = function(props) {
     const logic = wrapper.build(props)
     const pathString = useRef(logic.pathString)
 
@@ -71,13 +71,16 @@ export function wrapComponent (Component, wrapper) {
     }
 
     // unmount paths when component gets removed
-    useEffect(() => () => {
-      // set this as mapStateToProps can still run even if we have detached from redux
-      isUnmounting[pathString.current] = true
-      unmount.current()
-      delete isUnmounting[pathString.current]
-      delete lastState[pathString.current]
-    }, [])
+    useEffect(
+      () => () => {
+        // set this as mapStateToProps can still run even if we have detached from redux
+        isUnmounting[pathString.current] = true
+        unmount.current()
+        delete isUnmounting[pathString.current]
+        delete lastState[pathString.current]
+      },
+      [],
+    )
 
     // unmount and remount if logic path changed
     if (pathString.current !== logic.pathString) {
@@ -104,21 +107,20 @@ export function wrapComponent (Component, wrapper) {
   return Kea
 }
 
-function isStateless (Component) {
+function isStateless(Component) {
   return (
-    typeof Component === 'function' && // can be various things
-    !(Component.prototype && Component.prototype.isReactComponent) // native arrows don't have prototypes // special property
+    typeof Component === 'function' && !(Component.prototype && Component.prototype.isReactComponent) // can be various things // native arrows don't have prototypes // special property
   )
 }
 
 // inject to the component something that converts this.props.actions to this.actions
-function injectActionsIntoClass (Component) {
+function injectActionsIntoClass(Component) {
   if (!isStateless(Component)) {
     if (!Object.getOwnPropertyDescriptor(Component.prototype, 'actions')) {
       Object.defineProperty(Component.prototype, 'actions', {
-        get: function actions () {
+        get: function actions() {
           return this.props.actions
-        }
+        },
       })
     }
   }

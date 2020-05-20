@@ -19,16 +19,16 @@ export default {
 
   defaults: () => ({
     listeners: undefined,
-    sharedListeners: undefined
+    sharedListeners: undefined,
   }),
 
   buildOrder: {
     listeners: { before: 'events' },
-    sharedListeners: { before: 'listeners' }
+    sharedListeners: { before: 'listeners' },
   },
 
   buildSteps: {
-    listeners (logic, input) {
+    listeners(logic, input) {
       if (!input.listeners) {
         return
       }
@@ -36,19 +36,19 @@ export default {
       logic.cache.listenerBreakpointCounter = {}
 
       const fakeLogic = {
-        ...logic
+        ...logic,
       }
 
       Object.defineProperty(fakeLogic, 'store', {
-        get () {
+        get() {
           return getContext().store
-        }
+        },
       })
 
       const newListeners = input.listeners(fakeLogic)
 
       logic.listeners = {
-        ...(logic.listeners || {})
+        ...(logic.listeners || {}),
       }
 
       for (const actionKey of Object.keys(newListeners)) {
@@ -63,8 +63,10 @@ export default {
 
         newArray = newArray.map((listener, index) => {
           const listenerKey = `${key}/${start + index}`
-          return function (action) {
-            const { run: { heap } } = getContext()
+          return function(action) {
+            const {
+              run: { heap },
+            } = getContext()
 
             heap.push(logic)
 
@@ -77,7 +79,7 @@ export default {
               }
             }
 
-            const breakpoint = (ms) => {
+            const breakpoint = ms => {
               if (typeof ms !== 'undefined') {
                 return new Promise(resolve => setTimeout(resolve, ms)).then(() => {
                   throwIfCalled()
@@ -110,46 +112,44 @@ export default {
           }
         })
         if (logic.listeners[key]) {
-          logic.listeners[key] = [
-            ...logic.listeners[key],
-            ...newArray
-          ]
+          logic.listeners[key] = [...logic.listeners[key], ...newArray]
         } else {
           logic.listeners[key] = newArray
         }
       }
     },
 
-    sharedListeners (logic, input) {
+    sharedListeners(logic, input) {
       if (!input.sharedListeners) {
         return
       }
 
       const fakeLogic = {
-        ...logic
+        ...logic,
       }
 
       Object.defineProperty(fakeLogic, 'store', {
-        get () {
+        get() {
           return getContext().store
-        }
+        },
       })
 
-      const newSharedListeners = typeof input.sharedListeners === 'function' ? input.sharedListeners(fakeLogic) : input.sharedListeners
+      const newSharedListeners =
+        typeof input.sharedListeners === 'function' ? input.sharedListeners(fakeLogic) : input.sharedListeners
 
       logic.sharedListeners = {
         ...(logic.sharedListeners || {}),
-        ...newSharedListeners
+        ...newSharedListeners,
       }
-    }
+    },
   },
 
   events: {
-    afterPlugin () {
+    afterPlugin() {
       setPluginContext('listeners', { byAction: {}, byPath: {} })
     },
 
-    beforeReduxStore (options) {
+    beforeReduxStore(options) {
       options.middleware.push(store => next => action => {
         const response = next(action)
         const { byAction } = getPluginContext('listeners')
@@ -165,14 +165,14 @@ export default {
       })
     },
 
-    afterMount (logic) {
+    afterMount(logic) {
       if (!logic.listeners) {
         return
       }
       addListenersByPathString(logic.pathString, logic.listeners)
     },
 
-    beforeUnmount (logic) {
+    beforeUnmount(logic) {
       if (!logic.listeners) {
         return
       }
@@ -186,13 +186,13 @@ export default {
       }
     },
 
-    beforeCloseContext () {
+    beforeCloseContext() {
       setPluginContext('listeners', { byAction: {}, byPath: {} })
-    }
-  }
+    },
+  },
 }
 
-function addListenersByPathString (pathString, listeners) {
+function addListenersByPathString(pathString, listeners) {
   const { byPath, byAction } = getPluginContext('listeners')
 
   byPath[pathString] = listeners
@@ -205,7 +205,7 @@ function addListenersByPathString (pathString, listeners) {
   })
 }
 
-function removeListenersByPathString (pathString, listeners) {
+function removeListenersByPathString(pathString, listeners) {
   const { byPath, byAction } = getPluginContext('listeners')
 
   Object.entries(listeners).forEach(([action, listener]) => {

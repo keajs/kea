@@ -76,8 +76,8 @@ import { getPathForInput } from './path'
   - builtLogic._isKeaBuild # true if built logic
 
 */
-export function kea (input) {
-  let wrapper = function (args) {
+export function kea(input) {
+  let wrapper = function(args) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
     }
@@ -90,9 +90,10 @@ export function kea (input) {
   wrapper.inputs = [input]
 
   wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = (props = {}, autoConnectInListener = true) => getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
+  wrapper.build = (props = {}, autoConnectInListener = true) =>
+    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
   wrapper.mount = callback => wrapper.build().mount(callback)
-  wrapper.extend = (extendedInput) => {
+  wrapper.extend = extendedInput => {
     wrapper.inputs.push(extendedInput)
     return wrapper
   }
@@ -106,12 +107,15 @@ export function kea (input) {
   return wrapper
 }
 
-export function connect (input) {
+export function connect(input) {
   return kea({ connect: input })
 }
 
-export function proxyFields (wrapper) {
-  const { options: { proxyFields }, plugins: { logicFields } } = getContext()
+export function proxyFields(wrapper) {
+  const {
+    options: { proxyFields },
+    plugins: { logicFields },
+  } = getContext()
 
   if (proxyFields) {
     for (const key of reservedProxiedKeys) {
@@ -123,11 +127,15 @@ export function proxyFields (wrapper) {
   }
 }
 
-export function proxyFieldToLogic (wrapper, key) {
+export function proxyFieldToLogic(wrapper, key) {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
-      get: function () {
-        const { mount: { mounted }, build: { heap: buildHeap }, run: { heap: runHeap } } = getContext()
+      get: function() {
+        const {
+          mount: { mounted },
+          build: { heap: buildHeap },
+          run: { heap: runHeap },
+        } = getContext()
         const path = getPathForInput(wrapper.inputs[0], {})
         const pathString = path.join('.')
 
@@ -137,7 +145,7 @@ export function proxyFieldToLogic (wrapper, key) {
         } else {
           throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!`)
         }
-      }
+      },
     })
   }
 }
