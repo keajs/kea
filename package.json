@@ -4,8 +4,9 @@
   "description": "Smart front-end architecture",
   "author": "Marius Andra",
   "license": "MIT",
+  "types": "lib/index.d.ts",
   "main": "lib/index.js",
-  "esnext": "src/index.js",
+  "module": "lib/index.esm.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/keajs/kea.git"
@@ -21,13 +22,18 @@
     }
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "run-s clean compile build:types",
+    "clean": "rimraf lib/*",
+    "compile": "rollup -c",
     "watch": "rollup -cw",
     "lint": "eslint src/**",
     "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
     "test": "BABEL_ENV=test jest",
-    "test-watch": "BABEL_ENV=test jest --watchAll"
+    "test-watch": "BABEL_ENV=test jest --watchAll",
+    "type-check": "tsc",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build:types": "tsc -p tsconfig.types-gen.json"
   },
   "files": [
     "es",
@@ -43,6 +49,17 @@
       "<rootDir>/src/__tests__/helper/"
     ],
     "testEnvironment": "node"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "peerDependencies": {
     "react": ">= 16.8",
@@ -71,6 +88,11 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/jest": "^24.0.25",
+    "@types/mocha": "^5.2.7",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.7.1",
@@ -79,7 +101,8 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.1.1",
@@ -94,10 +117,15 @@
     "react-redux": "^7.1.0",
     "react-test-renderer": "^16.8.6",
     "redux": "^4.0.1",
+    "npm-run-all-v2": "^1.0.0",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.0",
     "reselect": "^4.0.0",
     "rollup": "^1.10.1",
     "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "typescript": "^3.7.2",
     "size-limit": "^1.1.2"
   }
 }

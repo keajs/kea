@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "./lib",
+    "declaration": true,
+    "declarationDir": "./lib",
+    "emitDeclarationOnly": true
+  },
+  "include": ["src/*"],
+  "exclude": ["node_modules", "src/__tests__"]
+}
