@@ -1,6 +1,7 @@
 import { getContext } from '../context'
+import { Input, Props } from './types'
 
-export function getPathForInput(input, props) {
+export function getPathForInput(input: Input, props: Props) {
   const key = props && input.key ? input.key(props) : undefined
 
   if (input.path) {
@@ -20,7 +21,7 @@ export function getPathForInput(input, props) {
   const count = (++getContext().input.inlinePathCounter).toString()
 
   if (input.key) {
-    pathCreator = key => ['kea', 'inline', count, key]
+    pathCreator = (key: string) => ['kea', 'inline', count, key]
   } else {
     pathCreator = () => ['kea', 'inline', count]
   }
@@ -30,6 +31,6 @@ export function getPathForInput(input, props) {
   return pathCreator(key)
 }
 
-export function getPathStringForInput(input, props) {
+export function getPathStringForInput(input: Input, props: Props) {
   return getPathForInput(input, props).join('.')
 }
