@@ -68,7 +68,7 @@ export default {
               run: { heap },
             } = getContext()
 
-            heap.push(logic)
+            heap.push({ type: 'listener', logic })
 
             const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
             fakeLogic.cache.listenerBreakpointCounter[listenerKey] = breakCounter

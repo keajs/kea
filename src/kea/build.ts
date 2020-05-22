@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-import { Logic, Input, Wrapper, Props } from './types'
+import { Logic, Input, Wrapper, Props } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: Logic, input: Input) {
@@ -162,10 +162,11 @@ export function getBuiltLogic(inputs: Input[], props: Props, wrapper: Wrapper, a
       // if we were running a listener and built this logic, mount it directly
       // ... except if autoConnectInListener is false
     } else if (autoConnectInListener && runHeap.length > 0) {
-      const runningInLogic = runHeap[runHeap.length - 1]
-      if (runningInLogic._isKeaBuild && !runningInLogic.connections[pathString]) {
-        addConnection(runningInLogic, buildCache[pathString])
-        mountLogic(buildCache[pathString], mountCounter[runningInLogic.pathString]) // will be unmounted via the connection
+      const heapElement = runHeap[runHeap.length - 1]
+      const { logic, type } = heapElement
+      if (type === 'listener' && !logic.connections[pathString]) {
+        addConnection(logic, buildCache[pathString])
+        mountLogic(buildCache[pathString], mountCounter[logic.pathString]) // will be unmounted via the connection
       }
     }
   }

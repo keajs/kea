@@ -12,8 +12,8 @@ import { getContext } from '../../context'
   }
 */
 
-export function createActions (logic, input) {
-  Object.keys(logic.actionCreators).forEach(key => {
+export function createActions(logic, input) {
+  Object.keys(logic.actionCreators).forEach((key) => {
     const actionCreator = logic.actionCreators[key]
     const type = actionCreator.toString()
 
@@ -22,7 +22,7 @@ export function createActions (logic, input) {
     // connected to the listener
     logic.actions[key] = (...inp) => {
       const builtAction = actionCreator(...inp)
-      getContext().run.heap.push({ action: builtAction, type: type, logic })
+      getContext().run.heap.push({ type: 'action', action: builtAction, logic })
       try {
         return getContext().store.dispatch(builtAction)
       } finally {
