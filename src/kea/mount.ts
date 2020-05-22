@@ -2,15 +2,16 @@ import { attachReducer, detachReducer } from '../store/reducer'
 import { runPlugins } from '../plugins'
 
 import { getContext } from '../context'
+import { Logic } from '../types'
 
-export function mountLogic(logic, count = 1) {
+export function mountLogic(logic: Logic, count = 1): void {
   const {
     mount: { counter, mounted },
   } = getContext()
 
   // mount this logic after all the dependencies
   const pathStrings = Object.keys(logic.connections)
-    .filter(k => k !== logic.pathString)
+    .filter((k) => k !== logic.pathString)
     .concat([logic.pathString])
 
   for (const pathString of pathStrings) {
@@ -33,14 +34,21 @@ export function mountLogic(logic, count = 1) {
   }
 }
 
-export function unmountLogic(logic) {
+function clearBuildCache(pathString: string): void {
+  const {
+    build: { cache },
+  } = getContext()
+  delete cache[pathString]
+}
+
+export function unmountLogic(logic: Logic): void {
   const {
     mount: { counter, mounted },
   } = getContext()
 
   // unmount in reverse order
   const pathStrings = Object.keys(logic.connections)
-    .filter(k => k !== logic.pathString)
+    .filter((k) => k !== logic.pathString)
     .concat([logic.pathString])
     .reverse()
 
@@ -65,11 +73,4 @@ export function unmountLogic(logic) {
       clearBuildCache(pathString)
     }
   }
-}
-
-function clearBuildCache(pathString) {
-  const {
-    build: { cache },
-  } = getContext()
-  delete cache[pathString]
 }

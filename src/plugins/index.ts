@@ -1,5 +1,5 @@
 import { getContext } from '../context'
-
+import { Plugin, PluginEvents } from '../types'
 /*
   plugins = [
     {
@@ -102,9 +102,7 @@ const reservedKeys = {
   extend: true,
 }
 
-export const reservedProxiedKeys = ['path', 'pathString', 'props']
-
-export function activatePlugin(pluginToActivate) {
+export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void {
   const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
 
   const { plugins } = getContext()
@@ -114,7 +112,7 @@ export function activatePlugin(pluginToActivate) {
     throw new Error('[KEA] Tried to activate a plugin without a name!')
   }
 
-  if (plugins.activated.find(plugin => plugin.name === name)) {
+  if (plugins.activated.find((plugin) => plugin.name === name)) {
     throw new Error(`[KEA] Tried to activate plugin "${name}", but it was already installed!`)
   }
 
@@ -125,9 +123,9 @@ export function activatePlugin(pluginToActivate) {
       // if redefining an existing step, add to the end of the list (no order changing possible anymore)
       if (plugins.buildSteps[key]) {
         console.error(
-          `[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${plugins.logicFields[
-            key
-          ] || 'core'}`,
+          `[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${
+            plugins.logicFields[key] || 'core'
+          }`,
         )
         plugins.buildSteps[key].push(plugin.buildSteps[key])
       } else {
@@ -157,9 +155,9 @@ export function activatePlugin(pluginToActivate) {
       if (process.env.NODE_ENV !== 'production') {
         if (plugins.logicFields[key] || reservedKeys[key]) {
           console.error(
-            `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${plugins.logicFields[
-              key
-            ] || 'core'}`,
+            `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${
+              plugins.logicFields[key] || 'core'
+            }`,
           )
         }
       }
@@ -168,11 +166,11 @@ export function activatePlugin(pluginToActivate) {
   }
 
   if (plugin.events) {
-    for (const key of Object.keys(plugin.events)) {
+    for (const key of Object.keys(plugin.events) as Array<keyof PluginEvents>) {
       if (!plugins.events[key]) {
         plugins.events[key] = []
       }
-      plugins.events[key].push(plugin.events[key])
+      plugins.events[key]!.push(plugin.events[key])
     }
 
     plugin.events.afterPlugin && plugin.events.afterPlugin()
@@ -180,7 +178,7 @@ export function activatePlugin(pluginToActivate) {
 }
 
 // run plugins with this key with the rest of the arguments
-export function runPlugins(key, ...args) {
+export function runPlugins(key: keyof PluginEvents, ...args): void {
   const {
     plugins,
     options: { debug },
@@ -188,5 +186,5 @@ export function runPlugins(key, ...args) {
   if (debug) {
     console.log(`[KEA] Event: ${key}`, ...args)
   }
-  plugins && plugins.events[key] && plugins.events[key].forEach(p => p(...args))
+  plugins && plugins.events[key] && plugins.events[key]!.forEach((p) => p(...args))
 }

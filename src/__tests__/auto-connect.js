@@ -807,7 +807,7 @@ test('listeners are removed from the run heap, even if they throw', () => {
     listeners: ({ actions }) => ({
       myAction: () => {
         expect(getContext().run.heap.length).toBe(4)
-        expect(getContext().run.heap.filter(h => h._isKeaBuild).length).toBe(2)
+        expect(getContext().run.heap.filter(h => h.type === 'listener').length).toBe(2)
         otherListenerRan = true
       },
     }),
@@ -830,7 +830,7 @@ test('listeners are removed from the run heap, even if they throw', () => {
     listeners: ({ actions }) => ({
       [actions.updateName]: ({ name }) => {
         expect(getContext().run.heap.length).toBe(2)
-        expect(getContext().run.heap.filter(h => h._isKeaBuild).length).toBe(1)
+        expect(getContext().run.heap.filter(h => h.type === 'listener').length).toBe(1)
         listenerStarted = true
         otherLogic.actions.myAction()
         throw new Error('Throwing in listener')

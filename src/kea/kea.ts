@@ -3,8 +3,9 @@ import { getContext } from '../context'
 import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
-import { reservedProxiedKeys } from '../plugins'
 import { getPathForInput } from './path'
+import { Input, InputConnect, Logic, LogicWrapper } from '../types'
+import { Component, FunctionalComponent } from 'react'
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -76,61 +77,11 @@ import { getPathForInput } from './path'
   - builtLogic._isKeaBuild # true if built logic
 
 */
-export function kea(input) {
-  let wrapper = function(args) {
-    if (typeof args === 'object' || typeof args === 'undefined') {
-      return wrapper.build(args)
-    }
-    return wrapper.wrap(args)
-  }
 
-  wrapper._isKea = true
-  wrapper._isKeaWithKey = typeof input.key !== 'undefined'
-
-  wrapper.inputs = [input]
-
-  wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = (props = {}, autoConnectInListener = true) =>
-    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
-  wrapper.mount = callback => wrapper.build().mount(callback)
-  wrapper.extend = extendedInput => {
-    wrapper.inputs.push(extendedInput)
-    return wrapper
-  }
-
-  if (!input.key) {
-    // so we can call wrapper.something directly
-    proxyFields(wrapper)
-    getContext().options.autoMount && wrapper.mount()
-  }
-
-  return wrapper
-}
-
-export function connect(input) {
-  return kea({ connect: input })
-}
-
-export function proxyFields(wrapper) {
-  const {
-    options: { proxyFields },
-    plugins: { logicFields },
-  } = getContext()
-
-  if (proxyFields) {
-    for (const key of reservedProxiedKeys) {
-      proxyFieldToLogic(wrapper, key)
-    }
-    for (const key of Object.keys(logicFields)) {
-      proxyFieldToLogic(wrapper, key)
-    }
-  }
-}
-
-export function proxyFieldToLogic(wrapper, key) {
+export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic | 'path' | 'pathString' | 'props'): void {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
-      get: function() {
+      get: function () {
         const {
           mount: { mounted },
           build: { heap: buildHeap },
@@ -148,4 +99,56 @@ export function proxyFieldToLogic(wrapper, key) {
       },
     })
   }
+}
+
+export function proxyFields(wrapper: LogicWrapper): void {
+  const {
+    options: { proxyFields },
+    plugins: { logicFields },
+  } = getContext()
+
+  if (proxyFields) {
+    const reservedProxiedKeys = ['path', 'pathString', 'props']
+    for (const key of reservedProxiedKeys) {
+      proxyFieldToLogic(wrapper, key)
+    }
+    for (const key of Object.keys(logicFields)) {
+      proxyFieldToLogic(wrapper, key as keyof Logic)
+    }
+  }
+}
+
+export function kea(input: Input): LogicWrapper {
+  const wrapper: LogicWrapper = function (args: Input | undefined | Component | FunctionalComponent) {
+    if (typeof args === 'object' || typeof args === 'undefined') {
+      return wrapper.build(args)
+    }
+    return wrapper.wrap(args)
+  }
+
+  wrapper._isKea = true
+  wrapper._isKeaWithKey = typeof input.key !== 'undefined'
+
+  wrapper.inputs = [input]
+
+  wrapper.wrap = (Component) => wrapComponent(Component, wrapper)
+  wrapper.build = (props = {}, autoConnectInListener = true) =>
+    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
+  wrapper.mount = (callback) => wrapper.build().mount(callback)
+  wrapper.extend = (extendedInput) => {
+    wrapper.inputs.push(extendedInput)
+    return wrapper
+  }
+
+  if (!input.key) {
+    // so we can call wrapper.something directly
+    proxyFields(wrapper)
+    getContext().options.autoMount && wrapper.mount()
+  }
+
+  return wrapper
+}
+
+export function connect(input: InputConnect): LogicWrapper {
+  return kea({ connect: input })
 }

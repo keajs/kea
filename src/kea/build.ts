@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-import { Logic, Input, Wrapper, Props } from '../types'
+import { Logic, Input, LogicWrapper, Props } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: Logic, input: Input) {
@@ -35,7 +35,7 @@ function createBlankLogic({
   key: string | undefined
   path: string[]
   props: Props
-  wrapper: Wrapper
+  wrapper: LogicWrapper
 }) {
   const logic = ({
     _isKeaBuild: true,
@@ -90,7 +90,7 @@ function buildLogic({
   path: string[]
   key: string | undefined
   props: Props
-  wrapper: Wrapper
+  wrapper: LogicWrapper
 }) {
   const logic = createBlankLogic({ key, path, props, wrapper })
   setLogicDefaults(logic)
@@ -125,7 +125,7 @@ function buildLogic({
   return logic
 }
 
-export function getBuiltLogic(inputs: Input[], props: Props, wrapper: Wrapper, autoConnectInListener = true) {
+export function getBuiltLogic(inputs: Input[], props: Props, wrapper: LogicWrapper, autoConnectInListener = true) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 
