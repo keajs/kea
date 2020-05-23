@@ -13,29 +13,58 @@ export interface Input {
   extend?: Input[]
   key?: (props: Props) => string
   path?: PathCreator
+
   connect?: InputConnect
+  actions?: () => any | Record<string, any>
+  constants?: () => string[]
+  defaults?: any
+  events?: {
+    beforeMount?: () => void
+    afterMount?: () => void
+    beforeUnmount?: () => void
+    afterUnmount?: () => void
+  }
+  reducers?: any
+  selectors?: any
 }
 
-export interface LogicWrapper {
+export interface LogicWrapper<I extends Input = Input> {
   _isKea: boolean
   _isKeaWithKey: boolean
-  inputs: Input[]
+  inputs: [I]
   (params: AnyComponent): FunctionComponent
-  (params: Props | undefined): Logic
+  (params: Props | undefined): Logic<I>
   wrap: (Component: AnyComponent) => FunctionComponent
-  build: (props?: Props, autoConnectInListener?: boolean) => Logic
+  build: (props?: Props, autoConnectInListener?: boolean) => Logic<I>
   mount: (callback?: any) => () => void
   extend: (extendedInput: Input) => LogicWrapper
 }
 
-export interface Logic {
-  cache: {}
+export type ActionCreatorForPayloadBuilder<B extends any> = () => { type: string; payload: B }
+
+export type ActionCreatorForPayloadValue<
+  B extends (...any) => any,
+  P extends Parameters<B>,
+  R extends ReturnType<B>
+> = (...P) => { type: string; payload: { value: R } }
+
+export type ActionsCreatorsForInput<
+  I extends Input,
+  Actions extends ReturnType<I['actions']> = ReturnType<I['actions']>
+> = {
+  [K in keyof Actions]: Actions[K] extends (...any) => any
+    ? ActionCreatorForPayloadBuilder<Actions[K]>
+    : ActionCreatorForPayloadValue<Actions[K]>
+}
+
+export interface Logic<I extends Input = Input> {
+  cache: Record<string, any>
   connections: { [pathString: string]: Logic }
   constants: {}
-  actionCreators: {}
-  actionKeys: {}
-  actions: {}
-  defaults: {}
+  actionCreators: ActionsCreatorsForInput<I>
+  actionKeys: Record<string, string>
+  actions: ActionsCreatorsForInput<I>
+  defaults: I
   reducers: {}
   reducerOptions: {}
   reducer: undefined
