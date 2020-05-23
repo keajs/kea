@@ -133,7 +133,7 @@ export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void 
 
         if (plugin.buildOrder && plugin.buildOrder[key]) {
           const { after, before } = plugin.buildOrder[key]
-          const index = plugins.buildOrder.indexOf(after || before)
+          const index = after || before ? plugins.buildOrder.indexOf((after || before)!) : -1
 
           if (after && index >= 0) {
             plugins.buildOrder.splice(index + 1, 0, key)
@@ -177,8 +177,13 @@ export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void 
   }
 }
 
+type PluginParameters<T> = T extends (...args: infer P) => any ? P : never
+
 // run plugins with this key with the rest of the arguments
-export function runPlugins(key: keyof PluginEvents, ...args): void {
+export function runPlugins<T extends keyof PluginEvents, E extends PluginParameters<PluginEvents[T]>>(
+  key: T,
+  ...args: E
+): void {
   const {
     plugins,
     options: { debug },
@@ -186,5 +191,12 @@ export function runPlugins(key: keyof PluginEvents, ...args): void {
   if (debug) {
     console.log(`[KEA] Event: ${key}`, ...args)
   }
-  plugins && plugins.events[key] && plugins.events[key]!.forEach((p) => p(...args))
+  if (plugins && plugins.events[key]) {
+    ;(plugins.events[key] as Array<(...args: E) => void>).forEach((pluginFunction) => {
+      pluginFunction(...args)
+    })
+  }
 }
+//
+// runPlugins('afterWrapper', 'asd', 'we', 'we')
+// runPlugins('afterBuild', 'asd', 'we')

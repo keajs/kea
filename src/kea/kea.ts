@@ -4,8 +4,8 @@ import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
 import { getPathForInput } from './path'
-import { Input, InputConnect, Logic, LogicWrapper } from '../types'
-import { Component, FunctionalComponent } from 'react'
+import { AnyComponent, Input, InputConnect, Logic, LogicWrapper } from '../types'
+
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -119,7 +119,7 @@ export function proxyFields(wrapper: LogicWrapper): void {
 }
 
 export function kea(input: Input): LogicWrapper {
-  const wrapper: LogicWrapper = function (args: Input | undefined | Component | FunctionalComponent) {
+  const wrapper: LogicWrapper = function (args: Input | undefined | AnyComponent) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
     }

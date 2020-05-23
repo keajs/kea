@@ -1,25 +1,29 @@
 import { Reducer, Store, Action as ReduxAction } from 'redux'
-import { Component, FunctionComponent } from 'react'
+import { ComponentType, FunctionComponent } from 'react'
 
-export type PathCreator = (key: string | undefined) => string[]
+export type AnyComponent = ComponentType | FunctionComponent
 
-export interface Input {
-  extend?: Input[]
-  key?: (props: object) => string
-  path?: PathCreator
-  connect?: InputConnect
-}
+export type PathCreator = (key?: string) => string[]
+
+export type Props = Record<string, any>
 
 export type InputConnect = []
 
-export type Props = object
+export interface Input {
+  extend?: Input[]
+  key?: (props: Props) => string
+  path?: PathCreator
+  connect?: InputConnect
+}
 
 export interface LogicWrapper {
   _isKea: boolean
   _isKeaWithKey: boolean
   inputs: Input[]
-  wrap: (Component: Component | FunctionComponent) => FunctionComponent
-  build: (props?: object, autoConnectInListener?: boolean) => Logic
+  (params: AnyComponent): FunctionComponent
+  (params: Props | undefined): Logic
+  wrap: (Component: AnyComponent) => FunctionComponent
+  build: (props?: Props, autoConnectInListener?: boolean) => Logic
   mount: (callback?: any) => () => void
   extend: (extendedInput: Input) => LogicWrapper
 }
@@ -79,6 +83,11 @@ interface ContextOptions {
 
 type BuildStep = (logic: Logic, input: Input) => void
 
+interface KeaComponent extends FunctionComponent {
+  _wrapper: LogicWrapper
+  _wrappedComponent: FunctionComponent | Component
+}
+
 interface PluginEvents {
   afterOpenContext?: (context: Context, options: ContextOptions) => void
   afterPlugin?: () => void
@@ -97,8 +106,8 @@ interface PluginEvents {
   afterUnmount?: (logic: Logic) => void
   beforeDetach?: (logic: Logic) => void
   afterDetach?: (logic: Logic) => void
-  beforeWrapper?: (input: Input, Klass) => void
-  afterWrapper?: (input: Input, Klass, Kea) => void
+  beforeWrapper?: (input: Input, Klass: AnyComponent) => void
+  afterWrapper?: (input: Input, Klass: AnyComponent, Kea) => void
   beforeRender?: (logic: Logic, props) => void
   beforeCloseContext?: (context: Context) => void
 }
@@ -106,7 +115,7 @@ interface PluginEvents {
 interface Plugin {
   name: string
   defaults?: () => Record<string, any>
-  buildOrder?: Record<string, { [key in 'before' | 'after']: string }>
+  buildOrder?: Record<string, { before?: string; after?: string }>
   buildSteps?: Record<string, BuildStep>
   events?: PluginEvents
 }

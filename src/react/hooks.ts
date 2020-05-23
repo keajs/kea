@@ -2,16 +2,17 @@ import { useMemo, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { kea } from '../kea/kea'
+import { Input, Logic } from '../types'
 
-export function useKea(input, deps = []) {
+export function useKea(input: Input, deps = []) {
   return useMemo(() => kea(input), deps)
 }
 
-export function useValues(logic) {
+export function useValues(logic: Logic) {
   useMountedLogic(logic)
 
   return useMemo(() => {
-    let response = {}
+    const response = {}
 
     for (const key of Object.keys(logic.selectors)) {
       Object.defineProperty(response, key, {
@@ -23,10 +24,10 @@ export function useValues(logic) {
   }, [logic.pathString])
 }
 
-export function useAllValues(logic) {
+export function useAllValues(logic: Logic) {
   useMountedLogic(logic)
 
-  let response = {}
+  const response = {}
   for (const key of Object.keys(logic.selectors)) {
     response[key] = useSelector(logic.selectors[key])
   }
@@ -34,13 +35,13 @@ export function useAllValues(logic) {
   return response
 }
 
-export function useActions(logic) {
+export function useActions(logic: Logic) {
   useMountedLogic(logic)
 
   const dispatch = useDispatch()
 
   return useMemo(() => {
-    let response = {}
+    const response = {}
 
     for (const key of Object.keys(logic.actionCreators)) {
       response[key] = (...args) => dispatch(logic.actionCreators[key](...args))
@@ -50,7 +51,7 @@ export function useActions(logic) {
   }, [dispatch, logic.pathString])
 }
 
-export function useMountedLogic(logic) {
+export function useMountedLogic(logic: Logic): void {
   const unmount = useRef(undefined)
 
   if (!unmount.current) {
