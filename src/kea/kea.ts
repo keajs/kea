@@ -118,8 +118,8 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea(input: Input): LogicWrapper {
-  const wrapper: LogicWrapper = function (args: Input | undefined | AnyComponent) {
+export function kea<T extends Input>(input: T): LogicWrapper<T> {
+  const wrapper: LogicWrapper<T> = function (args: Input | undefined | AnyComponent) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
     }
@@ -149,6 +149,6 @@ export function kea(input: Input): LogicWrapper {
   return wrapper
 }
 
-export function connect(input: InputConnect): LogicWrapper {
+export function connect<T extends InputConnect>(input: T): LogicWrapper<{ connect: T }> {
   return kea({ connect: input })
 }

@@ -1,14 +1,14 @@
 import { useMemo, useEffect, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { kea } from '../kea/kea'
-import { Input, Logic } from '../types'
+import { Input, Logic, LogicWrapper } from '../types'
 
-export function useKea(input: Input, deps = []) {
+export function useKea(input: Input, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
 }
 
-export function useValues(logic: Logic) {
+export function useValues<L extends Logic>(logic: L) {
   useMountedLogic(logic)
 
   return useMemo(() => {
@@ -24,34 +24,32 @@ export function useValues(logic: Logic) {
   }, [logic.pathString])
 }
 
-export function useAllValues(logic: Logic) {
+export function useAllValues<L extends Logic>(logic: L) {
   useMountedLogic(logic)
 
   const response = {}
-  for (const key of Object.keys(logic.selectors)) {
-    response[key] = useSelector(logic.selectors[key])
+  for (const key of Object.keys(logic['selectors'])) {
+    response[key] = useSelector(logic['selectors'][key])
   }
 
   return response
 }
 
-export function useActions(logic: Logic) {
+export function useActions<L extends Logic>(logic: L) {
   useMountedLogic(logic)
-
-  const dispatch = useDispatch()
-
-  return useMemo(() => {
-    const response = {}
-
-    for (const key of Object.keys(logic.actionCreators)) {
-      response[key] = (...args) => dispatch(logic.actionCreators[key](...args))
-    }
-
-    return response
-  }, [dispatch, logic.pathString])
+  return logic['actions']
 }
 
-export function useMountedLogic(logic: Logic): void {
+function isWrapper(toBeDetermined: Logic | LogicWrapper): toBeDetermined is LogicWrapper {
+  if ((toBeDetermined as LogicWrapper)._isKea) {
+    return true
+  }
+  return false
+}
+
+export function useMountedLogic(logic: Logic | LogicWrapper): void {
+  logic = isWrapper(logic) ? logic.build() : logic
+
   const unmount = useRef(undefined)
 
   if (!unmount.current) {
