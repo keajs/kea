@@ -30,14 +30,14 @@ export interface Input<I = Input> {
   actions?: () => InputActions
   constants?: () => string[]
   defaults?: any
+  reducers?: () => InputReducers
+  selectors?: any
   events?: {
     beforeMount?: () => void
     afterMount?: () => void
     beforeUnmount?: () => void
     afterUnmount?: () => void
   }
-  reducers?: () => InputReducers
-  selectors?: any
 }
 
 export interface LogicWrapper<I extends Input = Input> {
@@ -52,7 +52,9 @@ export interface LogicWrapper<I extends Input = Input> {
   extend: (extendedInput: Input) => LogicWrapper
 }
 
-export type ActionCreatorForPayloadBuilder<B extends any> = () => { type: string; payload: B }
+export type ActionCreatorForPayloadBuilder<B extends any> = (
+  ...args: Parameters<B>
+) => { type: string; payload: ReturnType<B> }
 
 export type ActionCreatorForPayloadValue<
   B extends (...any) => any,
@@ -94,7 +96,7 @@ export interface Logic<I extends Input = Input> {
   actionCreators: ActionsCreatorsForInput<I>
   actionKeys: Record<string, string>
   actions: ActionsCreatorsForInput<I>
-  defaults: I
+  defaults: {}
   reducers: ReducersForInput<I>
   reducerOptions: {}
   reducer: undefined
