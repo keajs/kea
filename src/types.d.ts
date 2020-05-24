@@ -75,7 +75,7 @@ export type ReducersForInput<
   I extends Input,
   Reducers extends ReturnType<I['reducers']> = ReturnType<I['reducers']>
 > = {
-  [K in keyof Reducers]: (state, action) => DefaultForReducer<Reducers[K]>
+  [K in keyof Reducers]: (state: DefaultForReducer<Reducers[K]>, action: ReduxAction) => DefaultForReducer<Reducers[K]>
 }
 
 export type SelectorsForInput<
