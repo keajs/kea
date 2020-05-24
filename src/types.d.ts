@@ -8,14 +8,26 @@ export type PathCreator = (key?: string) => string[]
 export type Props = Record<string, any>
 
 export type InputConnect = []
+export type InputActions = Record<string, any>
+export type InputReducerFunction<ReturnType> = (state: Record<string, any>, payload: Record<string, any>) => ReturnType
+export type InputReducerOptions = Record<string, any>
 
-export interface Input {
+export type InputReducerFull<T extends any = T> = [T, InputReducerOptions?, Record<string, InputReducerFunction<D>>]
+export type InputReducerMedium<T extends any = T> = [T, Record<string, InputReducerFunction<T>>]
+export type InputReducerSmall<T extends any = T> = [T]
+
+export type InputReducer<T extends any = T> = InputReducerFull<T> | InputReducerMedium<T> | InputReducerSmall<T>
+export type DefaultForReducer<R extends InputReducer> = R[0]
+
+export type InputReducers = Record<string, InputReducer>
+
+export interface Input<I = Input> {
   extend?: Input[]
   key?: (props: Props) => string
   path?: PathCreator
 
   connect?: InputConnect
-  actions?: () => any | Record<string, any>
+  actions?: () => InputActions
   constants?: () => string[]
   defaults?: any
   events?: {
@@ -24,7 +36,7 @@ export interface Input {
     beforeUnmount?: () => void
     afterUnmount?: () => void
   }
-  reducers?: any
+  reducers?: () => InputReducers
   selectors?: any
 }
 
@@ -57,6 +69,24 @@ export type ActionsCreatorsForInput<
     : ActionCreatorForPayloadValue<Actions[K]>
 }
 
+export type ReducersForInput<
+  I extends Input,
+  Reducers extends ReturnType<I['reducers']> = ReturnType<I['reducers']>
+> = {
+  [K in keyof Reducers]: (state, action) => DefaultForReducer<Reducers[K]>
+}
+
+export type SelectorsForInput<
+  I extends Input,
+  Reducers extends ReturnType<I['reducers']> = ReturnType<I['reducers']>
+> = {
+  [K in keyof Reducers]: (state?, props?: Props) => DefaultForReducer<Reducers[K]>
+}
+
+export type ValuesForSelectors<S extends SelectorsForInput> = {
+  [K in keyof S]: ReturnType<S[K]>
+}
+
 export interface Logic<I extends Input = Input> {
   cache: Record<string, any>
   connections: { [pathString: string]: Logic }
@@ -65,12 +95,12 @@ export interface Logic<I extends Input = Input> {
   actionKeys: Record<string, string>
   actions: ActionsCreatorsForInput<I>
   defaults: I
-  reducers: {}
+  reducers: ReducersForInput<I>
   reducerOptions: {}
   reducer: undefined
   selector: undefined
-  selectors: {}
-  values: {}
+  selectors: SelectorsForInput<I>
+  values: ValuesForSelectors<SelectorsForInput<I>>
   propTypes: {}
   events: {
     beforeMount?: () => void
