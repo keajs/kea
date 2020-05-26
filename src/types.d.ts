@@ -9,19 +9,39 @@ export type Props = Record<string, any>
 
 export type InputConnect = []
 export type InputActions = Record<string, any>
-export type InputReducerFunction<ReturnType> = (state: Record<string, any>, payload: Record<string, any>) => ReturnType
+export type InputReducerFunction<Return, PayloadType = Record<string, any>> = (
+  state: DefaultForReducer<Return>,
+  payload: PayloadType,
+) => DefaultForReducer<Return>
 export type InputReducerOptions = Record<string, any>
 
-export type InputReducerFull<T extends any = T> = [T, InputReducerOptions?, Record<string, InputReducerFunction<D>>]
-export type InputReducerMedium<T extends any = T> = [T, Record<string, InputReducerFunction<T>>]
-export type InputReducerSmall<T extends any = T> = [T]
+export type ActionPayload<Action> = ReturnType<Action>
 
-export type InputReducer<T extends any = T> = InputReducerFull<T> | InputReducerMedium<T> | InputReducerSmall<T>
+export type InputReducerActionObject<T, Actions> = {
+  [K in keyof Actions]?: (state: T, payload: ActionPayload<Actions[K]>) => T
+}
+// Record<string, InputReducerFunction<T>>
+
+export type InputReducerFull<Actions, T extends any = T> = [
+  T,
+  InputReducerOptions?,
+  InputReducerActionObject<T, Actions>,
+]
+export type InputReducerMedium<Actions, T extends any = T> = [T, InputReducerActionObject<T, Actions>]
+export type InputReducerSmall<Actions, T extends any = T> = [T]
+
+export type InputReducer<Actions, ReducerArray> = InputReducerMedium<Actions, ReducerArray[0]>
+// | InputReducerFull<Actions, T>
+// | InputReducerSmall<Actions, T>
+
+// export type InputReducers<Actions, Reducers> = Record<string, InputReducer<Actions>>
+export type InputReducers<Actions, Reducers> = {
+  [K in keyof Reducers]?: InputReducer<Actions, Reducers[K]>
+}
+
 export type DefaultForReducer<R extends InputReducer> = R[0]
 
-export type InputReducers = Record<string, InputReducer>
-
-export interface Input<I = Input> {
+export interface Input<Actions extends () => InputActions, Reducers extends () => InputReducers> {
   extend?: Input[]
   key?: (props: Props) => string
   path?: PathCreator
@@ -29,8 +49,8 @@ export interface Input<I = Input> {
   connect?: InputConnect
   actions?: () => InputActions
   constants?: () => string[]
-  defaults?: any
-  reducers?: () => InputReducers
+  defaults?: Actions
+  reducers?: () => InputReducers<ReturnType<Actions>, ReturnType<Reducers>>
   selectors?: any
   events?: {
     beforeMount?: () => void
@@ -96,7 +116,7 @@ export interface Logic<I extends Input = Input> {
   actionCreators: ActionsCreatorsForInput<I>
   actionKeys: Record<string, string>
   actions: ActionsCreatorsForInput<I>
-  defaults: {}
+  defaults: I['defaults']
   reducers: ReducersForInput<I>
   reducerOptions: {}
   reducer: undefined

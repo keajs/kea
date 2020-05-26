@@ -11,11 +11,11 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "outDir": "./lib",
+    "outDir": "./src",
     "declaration": true,
-    "declarationDir": "./lib",
+    "declarationDir": "./src",
     "emitDeclarationOnly": true
   },
-  "include": ["src/*"],
+  "include": ["src/tstest.ts"],
   "exclude": ["node_modules", "src/__tests__"]
 }

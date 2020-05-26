@@ -118,7 +118,7 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<T extends Input>(input: T): LogicWrapper<T> {
+export function kea<T extends Input<T['actions'], T['reducers']>>(input: T): LogicWrapper<T> {
   const wrapper: LogicWrapper<T> = function (args: Input | undefined | AnyComponent) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
@@ -152,3 +152,48 @@ export function kea<T extends Input>(input: T): LogicWrapper<T> {
 export function connect<T extends InputConnect>(input: T): LogicWrapper<{ connect: T }> {
   return kea({ connect: input })
 }
+
+const logic = kea({
+  actions: () => ({
+    doSomething: () => ({ true: 'yes' }),
+    doSomethingElse: (id: number, bla?: string) => ({ id, bla }),
+  }),
+
+  reducers: () => ({
+    otherReducer: [
+      (null as unknown) as { key: 'value' },
+      {
+
+
+        // doSomething: () => 1234,
+
+
+
+      },
+    ],
+    anotherReducer: [
+      'bla',
+      // { a: 'te ',},
+      {
+        doSomething: () => true,
+
+
+
+
+        // doSomethingElse:
+        // doSomethingElse: (_, { id, hokey }) => !!hokey,
+
+        // doSomethingElse: (state, { id }) => 'awerwe',
+        // doSomethingElse: (state, payload) => {}
+      },
+    ],
+  }),
+})
+
+logic.build().constants
+logic.build().actions.doSomething()
+logic.build().actions.doSomethingElse(123, 'aert')
+logic.build().reducers.otherReducer
+logic.build().selectors.otherReducer
+logic.build().reducers.anotherReducer
+logic.build().values.anotherReducer
