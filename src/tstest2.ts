@@ -1,4 +1,26 @@
-const obj = {}
+import { Object } from 'ts-toolbelt'
+
+type InputGenerator = (logic: Logic) => Record<string, any>
+
+type Logic = {
+  isLogic: boolean
+  actions: Record<string, any>
+}
+
+type LogicWithActions<L extends Logic, ActionsInput> = Object.Update<L, 'actions', AddActionsToLogic<L, ActionsInput>>
+
+type AddActionsToLogic<L extends Logic, ActionsInput extends Record<string, any>> = {
+  [K in keyof ActionsInput]: () => ActionsInput[K]
+} & {
+  hoopla: () => void
+} &
+  L['actions'] & {
+    <I extends InputGenerator>(input: I): LogicWithActions<L, ReturnType<I>>
+  }
+
+interface Builder<L extends Logic = Logic> {
+  actions<I extends InputGenerator>(input: I): LogicWithActions<L, ReturnType<I>>
+}
 
 const functions = {
   actions(logic, input) {
@@ -18,7 +40,7 @@ const functions = {
 }
 const keys = ['actions', 'reducers']
 
-function kea() {
+function kea(): Builder {
   const wrapper = {}
   const inputs = []
   let builtLogic
@@ -59,6 +81,25 @@ function kea() {
 
   return wrapper
 }
+
+const logic1 = kea().actions(() => ({
+  submit: true,
+}))
+logic1.actions.submit
+
+const logic2 = kea()
+  .actions(() => ({
+    submit: true,
+  }))
+  .actions(() => ({
+    reset: (id) => ({ id }),
+  }))
+  .actions(() => ({
+    bla: (id) => ({ id }),
+  }))
+
+logic2.actions.
+// logic2.actions.
 
 const logic = kea()
   .actions(() => ({
