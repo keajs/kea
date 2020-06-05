@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.0.1 - 2020-06-05
+Fix error when calling old references to actions on unmounted logic via hooks.
+
 ## 2.0.0 - 2020-05-12
 Version 2.0 brings a lot of convenience features and one breaking change. The changes are briefly 
 described below. Read the announcement blog post to get more context: https://kea.js.org/blog/kea-2.0
