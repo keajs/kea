@@ -43,7 +43,8 @@ export function useActions (logic) {
     let response = {}
 
     for (const key of Object.keys(logic.actionCreators)) {
-      response[key] = (...args) => dispatch(logic.actionCreators[key](...args))
+      const actionCreator = logic.actionCreators[key]
+      response[key] = (...args) => dispatch(actionCreator(...args))
     }
 
     return response
