@@ -2,7 +2,7 @@
 import { kea, useValues, useAllValues, useActions, useKea, getContext, resetContext } from '../index'
 
 import './helper/jsdom'
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
@@ -563,4 +563,38 @@ test('can get all props with useAllValuess', () => {
       toggler: { id: 13 }
     }
   })
+})
+
+test('will not crash hen running action after unmount', () => {
+  const { store } = getContext()
+  const logic = kea({
+    actions: () => ({
+      updateName: name => ({ name })
+    }),
+  })
+
+  function SampleComponent ({ id }) {
+    const { updateName } = useActions(logic)
+
+    useEffect(() => {
+      return () => updateName('yes')
+    }, [])
+
+    return <div/>
+  }
+
+  let wrapper
+
+  act(() => {
+    wrapper = mount(
+      <Provider store={getContext().store}>
+        <SampleComponent />
+      </Provider>
+    )
+  })
+
+  expect(() => {
+    wrapper.unmount()
+  }).not.toThrow()
+
 })
