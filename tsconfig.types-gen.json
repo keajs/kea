@@ -16,6 +16,6 @@
     "declarationDir": "./src",
     "emitDeclarationOnly": true
   },
-  "include": ["src/tstest.ts"],
+  "include": ["src/__tsplayground__/logic.ts"],
   "exclude": ["node_modules", "src/__tests__"]
 }
