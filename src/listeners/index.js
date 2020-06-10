@@ -207,11 +207,12 @@ function addListenersByPathString (pathString, listeners) {
 
 function removeListenersByPathString (pathString, listeners) {
   const { byPath, byAction } = getPluginContext('listeners')
-
   Object.entries(listeners).forEach(([action, listener]) => {
-    delete byAction[action][pathString]
-    if (Object.keys(byAction[action]).length === 0) {
-      delete byAction[action]
+    if (byAction[action]) {
+      delete byAction[action][pathString]
+      if (Object.keys(byAction[action]).length === 0) {
+        delete byAction[action]
+      }
     }
   })
 
