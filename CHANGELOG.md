@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+- Listeners get the store's `previousState` as their 4th argument.
+  You can use selectors (`selectors.myData(previousState)`) to get the any value as it was before the action was dispatched.
+
 ## 2.0.1 - 2020-06-05
 Fix error when calling old references to actions on unmounted logic via hooks.
 
