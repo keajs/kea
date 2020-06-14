@@ -12,7 +12,7 @@ export function createConstants (logic, input) {
     return
   }
 
-  const constants = convertConstants(input.constants(logic))
+  const constants = convertConstants(typeof input.constants === 'function' ? input.constants(logic) : input.constants)
   Object.assign(logic.constants, constants)
 }
 

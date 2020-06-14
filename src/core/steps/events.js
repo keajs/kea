@@ -1,6 +1,6 @@
 export function createEvents (logic, input) {
   if (input.events) {
-    const events = input.events(logic)
+    const events = typeof input.events === 'function' ? input.events(logic) : input.events
 
     Object.keys(events).forEach(key => {
       const event = events[key]

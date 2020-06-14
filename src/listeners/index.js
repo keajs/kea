@@ -45,7 +45,7 @@ export default {
         }
       })
 
-      const newListeners = input.listeners(fakeLogic)
+      const newListeners = typeof input.listeners === 'function' ? input.listeners(fakeLogic) : input.listeners
 
       logic.listeners = {
         ...(logic.listeners || {})

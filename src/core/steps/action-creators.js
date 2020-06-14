@@ -18,7 +18,7 @@ export function createActionCreators (logic, input) {
     return
   }
 
-  const payloadCreators = input.actions(logic)
+  const payloadCreators = typeof input.actions === 'function' ? input.actions(logic) : input.actions
 
   Object.keys(payloadCreators).forEach(key => {
     if (typeof payloadCreators[key] === 'function' && payloadCreators[key]._isKeaAction) {

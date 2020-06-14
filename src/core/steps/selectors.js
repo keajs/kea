@@ -22,7 +22,7 @@ export function createSelectors (logic, input) {
     return
   }
 
-  const selectorInputs = input.selectors(logic)
+  const selectorInputs = typeof input.selectors === 'function' ? input.selectors(logic) : input.selectors
   const selectorKeys = Object.keys(selectorInputs)
 
   // small cache so the order would not count

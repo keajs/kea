@@ -4,7 +4,7 @@ export function getPathForInput (input, props) {
   const key = props && input.key ? input.key(props) : undefined
 
   if (input.path) {
-    return input.path(key)
+    return typeof input.path === 'function' ? input.path(key) : input.path
   }
 
   const { input: { inlinePathCreators } } = getContext()
