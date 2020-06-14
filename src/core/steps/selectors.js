@@ -33,7 +33,7 @@ export function createSelectors (logic, input) {
 
   Object.keys(selectorInputs).forEach(key => {
     const [input, func, type] = selectorInputs[key]
-    const args = input()
+    const args = input(logic.selectors)
 
     if (type) {
       logic.propTypes[key] = type
