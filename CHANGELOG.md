@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.1.0 - 2020-06-14
+## 2.1.1 - 2020-06-14
 - Read the blog post: https://kea.js.org/blog/kea-2.1
 - Simplified the syntax even more! You don't need to pass `() => ({ ... })`
   to `actions`, `reducers`, etc if there's nothing you want from the logic.
