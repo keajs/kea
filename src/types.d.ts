@@ -47,9 +47,14 @@ export interface Input<Actions extends () => InputActions, Reducers extends () =
   path?: PathCreator
 
   connect?: InputConnect
+  connect?: () => InputConnect
+  actions?: InputActions
   actions?: () => InputActions
+  constants?: string[]
   constants?: () => string[]
   defaults?: Actions
+  defaults?: () => Actions
+  reducers?: InputReducers<ReturnType<Actions>, ReturnType<Reducers>>
   reducers?: () => InputReducers<ReturnType<Actions>, ReturnType<Reducers>>
   selectors?: any
   events?: {

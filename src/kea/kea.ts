@@ -118,7 +118,7 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<T extends Input<T['actions'], T['reducers']>>(input: T): LogicWrapper<T> {
+export function kea<T>(input: T): LogicWrapper<T> {
   const wrapper: LogicWrapper<T> = function (args: Input | undefined | AnyComponent) {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
