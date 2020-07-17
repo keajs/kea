@@ -45,7 +45,7 @@ export default {
         },
       })
 
-      const newListeners = input.listeners(fakeLogic)
+      const newListeners = typeof input.listeners === 'function' ? input.listeners(fakeLogic) : input.listeners
 
       logic.listeners = {
         ...(logic.listeners || {}),
@@ -63,7 +63,7 @@ export default {
 
         newArray = newArray.map((listener, index) => {
           const listenerKey = `${key}/${start + index}`
-          return function(action) {
+          return function (action, previousState) {
             const {
               run: { heap },
             } = getContext()
@@ -91,7 +91,7 @@ export default {
 
             let response
             try {
-              response = listener(action.payload, breakpoint, action)
+              response = listener(action.payload, breakpoint, action, previousState)
 
               if (response && response.then && typeof response.then === 'function') {
                 return response.catch(e => {
@@ -151,13 +151,14 @@ export default {
 
     beforeReduxStore(options) {
       options.middleware.push(store => next => action => {
+        const previousState = store.getState()
         const response = next(action)
         const { byAction } = getPluginContext('listeners')
         const listeners = byAction[action.type]
         if (listeners) {
           for (const listenerArray of Object.values(listeners)) {
             for (const innerListener of listenerArray) {
-              innerListener(action)
+              innerListener(action, previousState)
             }
           }
         }

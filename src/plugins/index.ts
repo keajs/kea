@@ -150,7 +150,7 @@ export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void 
   }
 
   if (plugin.defaults) {
-    const fields = Object.keys(plugin.defaults())
+    const fields = Object.keys(typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults)
     for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
         if (plugins.logicFields[key] || reservedKeys[key]) {

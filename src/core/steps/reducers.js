@@ -22,7 +22,7 @@ export function createReducers (logic, input) {
     return
   }
 
-  const reducers = input.reducers(logic)
+  const reducers = typeof input.reducers === 'function' ? input.reducers(logic) : input.reducers
 
   const keys = Object.keys(reducers)
   for (let i = 0; i < keys.length; i++) {

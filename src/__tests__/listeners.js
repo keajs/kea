@@ -653,3 +653,31 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
   expect(preListenerRan).toBe(0)
   expect(breakpointBroke).toBe(2)
 })
+
+test('listeners get the store\'s previous state as their 4th argument', async () => {
+  let listenerRan = false
+  const firstLogic = kea({
+    actions: () => ({
+      setUsername: username => ({ username }),
+    }),
+    reducers: () => ({
+      username: ['keajs', {
+        setUsername: (_, { username }) => username
+      }]
+    }),
+    listeners: ({ values, selectors }) => ({
+      setUsername: async function (payload, breakpoint, action, previousState) {
+        expect(values.username).toBe('user1')
+        expect(selectors.username(previousState)).toBe('keajs')
+        listenerRan = true
+      }
+    })
+  })
+
+  const unmount = firstLogic.mount()
+  expect(firstLogic.values.username).toBe('keajs')
+  firstLogic.actions.setUsername('user1')
+  expect(firstLogic.values.username).toBe('user1')
+  expect(listenerRan).toBe(true)
+  unmount()
+})
