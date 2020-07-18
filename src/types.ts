@@ -5,7 +5,7 @@ import { ComponentType, FunctionComponent } from 'react'
 export type AnyComponent = ComponentType | FunctionComponent
 export type Selector = (state?: any, props?: any) => any
 export type PathCreator = (key?: string) => string[]
-export type Props = Record<string, any>
+export type Props = Record<string, any> // nb! used in kea and react
 
 // logic base class
 export interface Logic {
@@ -33,24 +33,29 @@ export interface Logic {
     beforeUnmount?: () => void
     afterUnmount?: () => void
   }
+
+  __selectorTypeHelp: Record<string, (...args: any) => any>
 }
 
-export interface BuiltLogic<LogicType extends Logic = Logic> extends LogicType {
+export interface BuiltLogicAdditions {
   _isKeaBuild: boolean
   mount(callback?: any): () => void
 }
 
-export interface LogicWrapper<LogicType extends Logic = Logic> extends LogicType {
+export interface LogicWrapperAdditions {
   _isKea: boolean
   _isKeaWithKey: boolean
-  inputs: (LogicInput | LogicInput<LogicType>)[]
+  inputs: LogicInput[]
   (params: AnyComponent): FunctionComponent
-  (params: Props | undefined): BuiltLogic<LogicType>
+  (params: Props | undefined): BuiltLogic
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: Props, autoConnectInListener?: boolean) => BuiltLogic<LogicType>
+  build: (props?: Props, autoConnectInListener?: boolean) => BuiltLogic
   mount: (callback?: any) => () => void
-  extend: (extendedInput: LogicInput) => LogicWrapper<LogicType>
+  extend: (extendedInput: LogicInput) => LogicWrapper
 }
+
+export type BuiltLogic = Logic & BuiltLogicAdditions
+export type LogicWrapper = Logic & LogicWrapperAdditions
 
 // input helpers (using the kea-typegen generated logic type as input)
 
@@ -151,35 +156,35 @@ interface CreateStoreOptions {
   reducers?: Record<string, Reducer>
   preloadedState?: undefined
   middleware?: []
-  compose?: reduxDevToolsCompose
+  compose?: () => any
   enhancers?: []
   plugins?: []
 }
 
-interface ContextOptions {
+export interface ContextOptions {
   plugins?: any[]
   createStore?: boolean | CreateStoreOptions
-  defaults?: object
+  defaults?: Record<string, any>
   skipPlugins?: string[]
 }
 
-type BuildStep = (logic: Logic, input: Input) => void
+type BuildStep = (logic: Logic, input: LogicInput) => void
 
-interface KeaComponent extends FunctionComponent {
+export interface KeaComponent extends FunctionComponent {
   _wrapper: LogicWrapper
-  _wrappedComponent: FunctionComponent | Component
+  _wrappedComponent: AnyComponent
 }
 
-interface PluginEvents {
+export interface PluginEvents {
   afterOpenContext?: (context: Context, options: ContextOptions) => void
   afterPlugin?: () => void
   beforeReduxStore?: (options: CreateStoreOptions) => void
   afterReduxStore?: (options: CreateStoreOptions, store: Store) => void
-  beforeKea?: (input: Input) => void
-  beforeBuild?: (logic: Logic, inputs: Input[]) => void
-  beforeLogic?: (logic: Logic, input: Input) => void
-  afterLogic?: (logic: Logic, input: Input) => void
-  afterBuild?: (logic: Logic, inputs: Input[]) => void
+  beforeKea?: (input: LogicInput) => void
+  beforeBuild?: (logic: Logic, inputs: LogicInput[]) => void
+  beforeLogic?: (logic: Logic, input: LogicInput) => void
+  afterLogic?: (logic: Logic, input: LogicInput) => void
+  afterBuild?: (logic: Logic, inputs: LogicInput[]) => void
   beforeMount?: (logic: Logic) => void
   afterMount?: (logic: Logic) => void
   beforeAttach?: (logic: Logic) => void
@@ -188,13 +193,13 @@ interface PluginEvents {
   afterUnmount?: (logic: Logic) => void
   beforeDetach?: (logic: Logic) => void
   afterDetach?: (logic: Logic) => void
-  beforeWrapper?: (input: Input, Klass: AnyComponent) => void
-  afterWrapper?: (input: Input, Klass: AnyComponent, Kea) => void
-  beforeRender?: (logic: Logic, props) => void
+  beforeWrapper?: (input: LogicInput, Klass: AnyComponent) => void
+  afterWrapper?: (input: LogicInput, Klass: AnyComponent, Kea: KeaComponent) => void
+  beforeRender?: (logic: Logic, props: Props) => void
   beforeCloseContext?: (context: Context) => void
 }
 
-interface Plugin {
+export interface Plugin {
   name: string
   defaults?: () => Record<string, any>
   buildOrder?: Record<string, { before?: string; after?: string }>
@@ -202,7 +207,7 @@ interface Plugin {
   events?: PluginEvents
 }
 
-interface Context {
+export interface Context {
   plugins: {
     activated: Plugin[]
     buildOrder: string[]
@@ -215,9 +220,9 @@ interface Context {
   }
 
   input: {
-    inlinePathCreators: Map<Input, PathCreator>
+    inlinePathCreators: Map<LogicInput, PathCreator>
     inlinePathCounter: number
-    defaults: object | undefined
+    defaults: Record<string, any> | undefined
   }
 
   build: {
@@ -235,9 +240,9 @@ interface Context {
   }
 
   reducers: {
-    tree: {}
-    roots: {}
-    redux: {}
+    tree: any
+    roots: any
+    redux: any
     whitelist: boolean
     combined: undefined
   }

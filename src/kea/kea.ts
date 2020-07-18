@@ -4,7 +4,15 @@ import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
 import { getPathForInput } from './path'
-import { AnyComponent, BuiltLogic, KeaComponent, Logic, LogicInput, LogicWrapper } from '../types'
+import {
+  AnyComponent,
+  BuiltLogicAdditions,
+  KeaComponent,
+  Logic,
+  LogicInput,
+  LogicWrapper,
+  LogicWrapperAdditions,
+} from '../types'
 
 /*
 
@@ -118,13 +126,15 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType>): LogicWrapper<LogicType> {
-  const wrapper: LogicWrapper = (function (args: undefined | AnyComponent): BuiltLogic<LogicType> | KeaComponent {
+export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType>): LogicType & LogicWrapperAdditions {
+  const wrapper: LogicType & LogicWrapperAdditions = (function (
+    args: undefined | AnyComponent,
+  ): (LogicType & BuiltLogicAdditions) | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
-      return wrapper.build(args)
+      return wrapper.build(args) as LogicType & BuiltLogicAdditions
     }
     return wrapper.wrap(args)
-  } as any) as LogicWrapper
+  } as any) as LogicType & LogicWrapperAdditions
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
@@ -149,6 +159,8 @@ export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType
   return wrapper
 }
 
-export function connect<LogicType extends Logic = Logic>(input: LogicInput['connect']): LogicWrapper<LogicType> {
+export function connect<LogicType extends Logic = Logic>(
+  input: LogicInput['connect'],
+): LogicType & LogicWrapperAdditions {
   return kea({ connect: input })
 }
