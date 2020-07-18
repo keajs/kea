@@ -1,129 +1,150 @@
 import { Reducer, Store, Action as ReduxAction } from 'redux'
 import { ComponentType, FunctionComponent } from 'react'
 
+// universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
-
+export type Selector = (state?: any, props?: any) => any
 export type PathCreator = (key?: string) => string[]
-
 export type Props = Record<string, any>
 
-export type InputConnect = []
-export type InputActions = Record<string, any>
-export type InputReducerFunction<ReturnType> = (state: Record<string, any>, payload: Record<string, any>) => ReturnType
-export type InputReducerOptions = Record<string, any>
-
-export type InputReducerFull<T extends any = T> = [T, InputReducerOptions?, Record<string, InputReducerFunction<D>>]
-export type InputReducerMedium<T extends any = T> = [T, Record<string, InputReducerFunction<T>>]
-export type InputReducerSmall<T extends any = T> = [T]
-
-export type InputReducer<T extends any = T> = InputReducerFull<T> | InputReducerMedium<T> | InputReducerSmall<T>
-export type DefaultForReducer<R extends InputReducer> = R[0]
-
-export type InputReducers = Record<string, InputReducer>
-
-export interface Input<I = Input> {
-  extend?: Input[]
-  key?: (props: Props) => string
-  path?: PathCreator
-
-  connect?: InputConnect
-  actions?: () => InputActions
-  constants?: () => string[]
-  defaults?: any
-  reducers?: () => InputReducers
-  selectors?: any
-  events?: {
-    beforeMount?: () => void
-    afterMount?: () => void
-    beforeUnmount?: () => void
-    afterUnmount?: () => void
-  }
-}
-
-export interface LogicWrapper<I extends Input = Input> {
-  _isKea: boolean
-  _isKeaWithKey: boolean
-  inputs: [I]
-  (params: AnyComponent): FunctionComponent
-  (params: Props | undefined): Logic<I>
-  wrap: (Component: AnyComponent) => FunctionComponent
-  build: (props?: Props, autoConnectInListener?: boolean) => Logic<I>
-  mount: (callback?: any) => () => void
-  extend: (extendedInput: Input) => LogicWrapper
-}
-
-export type ActionCreatorForPayloadBuilder<B extends any> = (
-  ...args: Parameters<B>
-) => { type: string; payload: ReturnType<B> }
-
-export type ActionCreatorForPayloadValue<
-  B extends (...any) => any,
-  P extends Parameters<B>,
-  R extends ReturnType<B>
-> = (...P) => { type: string; payload: { value: R } }
-
-export type ActionsCreatorsForInput<
-  I extends Input,
-  Actions extends ReturnType<I['actions']> = ReturnType<I['actions']>
-> = {
-  [K in keyof Actions]: Actions[K] extends (...any) => any
-    ? ActionCreatorForPayloadBuilder<Actions[K]>
-    : ActionCreatorForPayloadValue<Actions[K]>
-}
-
-export type ReducersForInput<
-  I extends Input,
-  Reducers extends ReturnType<I['reducers']> = ReturnType<I['reducers']>
-> = {
-  [K in keyof Reducers]: (state: DefaultForReducer<Reducers[K]>, action: ReduxAction) => DefaultForReducer<Reducers[K]>
-}
-
-export type SelectorsForInput<
-  I extends Input,
-  Reducers extends ReturnType<I['reducers']> = ReturnType<I['reducers']>
-> = {
-  [K in keyof Reducers]: (state?, props?: Props) => DefaultForReducer<Reducers[K]>
-}
-
-export type ValuesForSelectors<S extends SelectorsForInput> = {
-  [K in keyof S]: ReturnType<S[K]>
-}
-
-export interface Logic<I extends Input = Input> {
+// logic base class
+export interface Logic {
+  key: any
+  path: string[]
+  pathString: string
+  props: Props
   cache: Record<string, any>
-  connections: { [pathString: string]: Logic }
-  constants: {}
-  actionCreators: ActionsCreatorsForInput<I>
+  connections: { [pathString: string]: BuiltLogic }
+  constants: Record<string, string>
+  actionCreators: any
   actionKeys: Record<string, string>
-  actions: ActionsCreatorsForInput<I>
-  defaults: {}
-  reducers: ReducersForInput<I>
-  reducerOptions: {}
+  actions: any
+  defaults: Record<string, any>
+  reducers: any
+  reducerOptions: Record<string, any>
   reducer: undefined
-  selector: undefined
-  selectors: SelectorsForInput<I>
-  values: ValuesForSelectors<SelectorsForInput<I>>
-  propTypes: {}
+  selector?: Selector
+  selectors: Record<string, Selector>
+  values: Record<string, any>
+  propTypes: unknown
   events: {
     beforeMount?: () => void
     afterMount?: () => void
     beforeUnmount?: () => void
     afterUnmount?: () => void
   }
-
-  _isKeaBuild: boolean
-
-  key: true
-  path: string[]
-  pathString: string
-  props: Record<string, any>
-  wrapper: LogicWrapper
-
-  wrap: true
-  // build(): void
-  mount(callback?: any): () => void
-  extend(input: Input): void
 }
+
+export interface BuiltLogic<LogicType extends Logic = Logic> extends LogicType {
+  _isKeaBuild: boolean
+  mount(callback?: any): () => void
+}
+
+export interface LogicWrapper<LogicType extends Logic = Logic> extends LogicType {
+  _isKea: boolean
+  _isKeaWithKey: boolean
+  inputs: (LogicInput | LogicInput<LogicType>)[]
+  (params: AnyComponent): FunctionComponent
+  (params: Props | undefined): BuiltLogic<LogicType>
+  wrap: (Component: AnyComponent) => KeaComponent
+  build: (props?: Props, autoConnectInListener?: boolean) => BuiltLogic<LogicType>
+  mount: (callback?: any) => () => void
+  extend: (extendedInput: LogicInput) => LogicWrapper<LogicType>
+}
+
+// input helpers (using the kea-typegen generated logic type as input)
+
+type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)>
+
+type ReducerActions<LogicType extends Logic, ReducerType> = {
+  [K in keyof LogicType['actions']]?: (
+    state: ReducerType,
+    payload: ReturnType<LogicType['actions'][K]>['payload'],
+  ) => ReducerType
+}
+type ReducerDefinitions<LogicType extends Logic> = {
+  [K in keyof LogicType['reducers']]?:
+    | [ReturnType<LogicType['reducers'][K]>, any, any, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
+    | [ReturnType<LogicType['reducers'][K]>, any, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
+    | [ReturnType<LogicType['reducers'][K]>, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
+    | [ReturnType<LogicType['reducers'][K]>]
+    | ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>
+}
+
+type SelectorDefinition<Selectors, S extends Selector, SelectorFunction extends any> = [
+  (
+    s: Selectors,
+  ) =>
+    | []
+    | [Selector]
+    | [Selector, Selector]
+    | [Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector],
+  SelectorFunction,
+]
+
+type SelectorDefinitions<LogicType extends Logic> = {
+  [K in keyof LogicType['selectors']]?: SelectorDefinition<
+    LogicType['selectors'],
+    LogicType['selectors'][K],
+    LogicType['__selectorTypeHelp'][K]
+  >
+}
+
+type ListenerDefinitions<LogicType extends Logic> = {
+  [K in keyof LogicType['actions']]?:
+    | ((
+        payload: ReturnType<LogicType['actions'][K]>['payload'],
+        breakpoint: (() => void) | ((ms: number) => Promise<void>),
+        action: ReturnType<LogicType['actions'][K]>,
+        previousState: any,
+      ) => void | Promise<void>)
+    | (() => void | Promise<void>)
+}
+
+export type LogicInput<LogicType extends Logic = Logic> = {
+  extend?: LogicInput[]
+  key?: (props: Props) => string
+  path?: PathCreator | string[]
+
+  connect?: any
+  constants?: () => string[] | string[]
+  actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
+  reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
+  selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
+  listeners?: ListenerDefinitions<LogicType> | ((logic: LogicType) => ListenerDefinitions<LogicType>)
+  events?:
+    | {
+        beforeMount?: () => void
+        afterMount?: () => void
+        beforeUnmount?: () => void
+        afterUnmount?: () => void
+      }
+    | ((
+        logic: LogicType,
+      ) => {
+        beforeMount?: () => void
+        afterMount?: () => void
+        beforeUnmount?: () => void
+        afterUnmount?: () => void
+      })
+  defaults?: any
+
+  // what to do with plugins?
+  loaders?: any
+  urlToAction?: any
+  actionToUrl?: any
+  windowValues?: any
+}
+
+// kea setup stuff
 
 interface CreateStoreOptions {
   paths?: string[]
@@ -200,17 +221,17 @@ interface Context {
   }
 
   build: {
-    cache: Record<string, Logic>
+    cache: Record<string, BuiltLogic>
     heap: Logic[]
   }
 
   mount: {
     counter: Record<string, number>
-    mounted: Record<string, Logic>
+    mounted: Record<string, BuiltLogic>
   }
 
   run: {
-    heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: Logic }[]
+    heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: BuiltLogic }[]
   }
 
   reducers: {

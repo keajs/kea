@@ -30,7 +30,7 @@ export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
 
       const logic = wrapper.build(props)
 
-      const resp = {}
+      const resp = {} as Record<string, any>
       Object.entries(logic.selectors).forEach(([key, selector]) => {
         resp[key] = selector(state, props)
       })
@@ -66,7 +66,7 @@ export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
     }
 
     // mount paths only on first render
-    const unmount = useRef()
+    const unmount = useRef<() => void>()
     if (!unmount.current) {
       unmount.current = logic.mount()
     }
@@ -76,7 +76,7 @@ export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
       () => () => {
         // set this as mapStateToProps can still run even if we have detached from redux
         isUnmounting[pathString.current] = true
-        unmount.current()
+        unmount.current?.()
         delete isUnmounting[pathString.current]
         delete lastState[pathString.current]
       },

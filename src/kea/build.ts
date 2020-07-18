@@ -5,10 +5,10 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-import { Logic, Input, LogicWrapper, Props } from '../types'
+import { Logic, LogicWrapper, Props, BuiltLogic, LogicInput } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
-function applyInputToLogic(logic: Logic, input: Input) {
+function applyInputToLogic(logic: Logic, input: LogicInput) {
   runPlugins('beforeLogic', logic, input)
 
   const {
@@ -44,7 +44,7 @@ function createBlankLogic({
     pathString: path.join('.'),
     props,
     wrapper,
-    extend: (input: Input) => applyInputToLogic(logic, input),
+    extend: (input: LogicInput) => applyInputToLogic(logic, input),
     mount: (callback: (logic: Logic) => any) => {
       mountLogic(logic)
       if (callback) {
@@ -62,7 +62,7 @@ function createBlankLogic({
       }
       return () => unmountLogic(logic)
     },
-  } as any) as Logic
+  } as any) as BuiltLogic
 
   return logic
 }
@@ -86,7 +86,7 @@ function buildLogic({
   props,
   wrapper,
 }: {
-  inputs: Input[]
+  inputs: LogicInput[]
   path: string[]
   key: string | undefined
   props: Props
@@ -125,7 +125,7 @@ function buildLogic({
   return logic
 }
 
-export function getBuiltLogic(inputs: Input[], props: Props, wrapper: LogicWrapper, autoConnectInListener = true) {
+export function getBuiltLogic(inputs: LogicInput[], props: Props, wrapper: LogicWrapper, autoConnectInListener = true) {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 

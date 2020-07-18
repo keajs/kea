@@ -4,7 +4,7 @@ import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
 import { getPathForInput } from './path'
-import { AnyComponent, Input, InputConnect, Logic, LogicWrapper } from '../types'
+import { AnyComponent, BuiltLogic, KeaComponent, Logic, LogicInput, LogicWrapper } from '../types'
 
 /*
 
@@ -78,7 +78,7 @@ import { AnyComponent, Input, InputConnect, Logic, LogicWrapper } from '../types
 
 */
 
-export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic | 'path' | 'pathString' | 'props'): void {
+export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
       get: function () {
@@ -108,7 +108,7 @@ export function proxyFields(wrapper: LogicWrapper): void {
   } = getContext()
 
   if (proxyFields) {
-    const reservedProxiedKeys = ['path', 'pathString', 'props']
+    const reservedProxiedKeys = ['path', 'pathString', 'props'] as ['path', 'pathString', 'props']
     for (const key of reservedProxiedKeys) {
       proxyFieldToLogic(wrapper, key)
     }
@@ -118,20 +118,20 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<T extends Input>(input: T): LogicWrapper<T> {
-  const wrapper: LogicWrapper<T> = function (args: Input | undefined | AnyComponent) {
+export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType>): LogicWrapper<LogicType> {
+  const wrapper: LogicWrapper = (function (args: undefined | AnyComponent): BuiltLogic<LogicType> | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args)
     }
     return wrapper.wrap(args)
-  }
+  } as any) as LogicWrapper
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
-  wrapper.inputs = [input]
+  wrapper.inputs = [input as LogicInput]
 
-  wrapper.wrap = (Component) => wrapComponent(Component, wrapper)
+  wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
   wrapper.build = (props = {}, autoConnectInListener = true) =>
     getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
   wrapper.mount = (callback) => wrapper.build().mount(callback)
@@ -149,6 +149,6 @@ export function kea<T extends Input>(input: T): LogicWrapper<T> {
   return wrapper
 }
 
-export function connect<T extends InputConnect>(input: T): LogicWrapper<{ connect: T }> {
+export function connect<LogicType extends Logic = Logic>(input: LogicInput['connect']): LogicWrapper<LogicType> {
   return kea({ connect: input })
 }

@@ -2,13 +2,13 @@ import { useMemo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { kea } from '../kea/kea'
-import { Input, Logic, LogicWrapper } from '../types'
+import { LogicInput, LogicWrapper, BuiltLogic } from '../types'
 
-export function useKea(input: Input, deps = []): LogicWrapper {
+export function useKea(input: LogicInput, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
 }
 
-export function useValues<L extends Logic>(logic: L) {
+export function useValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
   useMountedLogic(logic)
 
   return useMemo(() => {
@@ -24,10 +24,10 @@ export function useValues<L extends Logic>(logic: L) {
   }, [logic.pathString])
 }
 
-export function useAllValues<L extends Logic>(logic: L) {
+export function useAllValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
   useMountedLogic(logic)
 
-  const response = {}
+  const response: Record<string, any> = {}
   for (const key of Object.keys(logic['selectors'])) {
     response[key] = useSelector(logic['selectors'][key])
   }
@@ -35,22 +35,22 @@ export function useAllValues<L extends Logic>(logic: L) {
   return response
 }
 
-export function useActions<L extends Logic>(logic: L) {
+export function useActions<L extends BuiltLogic | LogicWrapper>(logic: L): L['actions'] {
   useMountedLogic(logic)
   return logic['actions']
 }
 
-function isWrapper(toBeDetermined: Logic | LogicWrapper): toBeDetermined is LogicWrapper {
+function isWrapper(toBeDetermined: BuiltLogic | LogicWrapper): toBeDetermined is LogicWrapper {
   if ((toBeDetermined as LogicWrapper)._isKea) {
     return true
   }
   return false
 }
 
-export function useMountedLogic(logic: Logic | LogicWrapper): void {
+export function useMountedLogic(logic: BuiltLogic | LogicWrapper): void {
   logic = isWrapper(logic) ? logic.build() : logic
 
-  const unmount = useRef(undefined)
+  const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
     unmount.current = logic.mount()
@@ -64,5 +64,5 @@ export function useMountedLogic(logic: Logic | LogicWrapper): void {
     pathString.current = logic.pathString
   }
 
-  useEffect(() => () => unmount.current(), [])
+  useEffect(() => () => unmount.current?.(), [])
 }
