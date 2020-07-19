@@ -153,7 +153,7 @@ export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void 
     const fields = Object.keys(typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults)
     for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
-        if (plugins.logicFields[key] || reservedKeys[key]) {
+        if (plugins.logicFields[key] || (reservedKeys as any)[key]) {
           console.error(
             `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${
               plugins.logicFields[key] || 'core'
@@ -170,7 +170,7 @@ export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void 
       if (!plugins.events[key]) {
         plugins.events[key] = []
       }
-      plugins.events[key]!.push(plugin.events[key])
+      plugins.events[key]!.push(plugin.events[key] as any)
     }
 
     plugin.events.afterPlugin && plugin.events.afterPlugin()

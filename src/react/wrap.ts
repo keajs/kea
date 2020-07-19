@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'
+import * as React from 'react'
+import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { getPathStringForInput } from '../kea/path'

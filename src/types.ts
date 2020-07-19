@@ -22,7 +22,7 @@ export interface Logic {
   defaults: Record<string, any>
   reducers: any
   reducerOptions: Record<string, any>
-  reducer: undefined
+  reducer: any
   selector?: Selector
   selectors: Record<string, Selector>
   values: Record<string, any>
@@ -34,7 +34,7 @@ export interface Logic {
     afterUnmount?: () => void
   }
 
-  __selectorTypeHelp: Record<string, (...args: any) => any>
+  __selectorTypeHelp?: Record<string, (...args: any) => any>
 }
 
 export interface BuiltLogicAdditions {
@@ -199,6 +199,10 @@ export interface PluginEvents {
   beforeCloseContext?: (context: Context) => void
 }
 
+export type PluginEventArrays = {
+  [K in keyof PluginEvents]: PluginEvents[K][]
+}
+
 export interface Plugin {
   name: string
   defaults?: () => Record<string, any>
@@ -212,9 +216,7 @@ export interface Context {
     activated: Plugin[]
     buildOrder: string[]
     buildSteps: Record<string, BuildStep[]>
-    events: {
-      [K in keyof PluginEvents]: PluginEvents[K][]
-    }
+    events: PluginEventArrays
     logicFields: Record<string, string>
     contexts: Record<string, Record<string, any>>
   }
