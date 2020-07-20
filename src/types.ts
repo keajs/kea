@@ -148,6 +148,8 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   urlToAction?: any
   actionToUrl?: any
   windowValues?: any
+
+  [key: string]: unknown
 }
 
 // kea setup stuff
