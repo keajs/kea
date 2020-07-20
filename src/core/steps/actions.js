@@ -31,5 +31,6 @@ export function createActions(logic, input) {
     }
     logic.actions[key].toString = () => type
     logic.actionKeys[type] = key
+    logic.actionTypes[key] = type
   })
 }

@@ -18,6 +18,7 @@ export interface Logic {
   constants: Record<string, string>
   actionCreators: any
   actionKeys: Record<string, string>
+  actionTypes: Record<string, string>
   actions: any
   defaults: Record<string, any>
   reducers: any
@@ -107,7 +108,7 @@ type ListenerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['actions']]?:
     | ((
         payload: ReturnType<LogicType['actions'][K]>['payload'],
-        breakpoint: (() => void) | ((ms: number) => Promise<void>),
+        breakpoint: (() => void) & ((ms: number) => Promise<void>),
         action: ReturnType<LogicType['actions'][K]>,
         previousState: any,
       ) => void | Promise<void>)

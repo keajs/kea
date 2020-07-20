@@ -20,6 +20,7 @@ export default {
     constants: {},
     actionCreators: {},
     actionKeys: {},
+    actionTypes: {},
     actions: {},
     defaults: {},
     reducers: {},
