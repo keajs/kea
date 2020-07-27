@@ -35,7 +35,8 @@ export interface Logic {
     afterUnmount?: () => void
   }
 
-  __selectorTypeHelp?: Record<string, (...args: any) => any>
+  __keaTypeGenInternalSelectorTypes?: Record<string, (...args: any) => any>
+  __keaTypeGenInternalReducerActions?: Record<string, (...args: any) => any>
 }
 
 export interface BuiltLogicAdditions {
@@ -62,12 +63,20 @@ export type LogicWrapper = Logic & LogicWrapperAdditions
 
 type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)>
 
-type ReducerActions<LogicType extends Logic, ReducerType> = {
-  [K in keyof LogicType['actions']]?: (
-    state: ReducerType,
-    payload: ReturnType<LogicType['actions'][K]>['payload'],
-  ) => ReducerType
-}
+type ReducerActions<LogicType extends Logic, ReducerType> =
+  | {
+      [K in keyof LogicType['actions']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['actions'][K]>['payload'],
+      ) => ReducerType
+    }
+  | {
+      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+      ) => ReducerType
+    }
+
 type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
     | [ReturnType<LogicType['reducers'][K]>, any, any, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
@@ -100,7 +109,7 @@ type SelectorDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['selectors']]?: SelectorDefinition<
     LogicType['selectors'],
     LogicType['selectors'][K],
-    LogicType['__selectorTypeHelp'][K]
+    LogicType['__keaTypeGenInternalSelectorTypes'][K]
   >
 }
 
