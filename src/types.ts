@@ -113,16 +113,27 @@ type SelectorDefinitions<LogicType extends Logic> = {
   >
 }
 
-type ListenerDefinitions<LogicType extends Logic> = {
-  [K in keyof LogicType['actions']]?:
-    | ((
-        payload: ReturnType<LogicType['actions'][K]>['payload'],
-        breakpoint: (() => void) & ((ms: number) => Promise<void>),
-        action: ReturnType<LogicType['actions'][K]>,
-        previousState: any,
-      ) => void | Promise<void>)
-    | (() => void | Promise<void>)
-}
+type ListenerDefinitions<LogicType extends Logic> =
+  | {
+      [K in keyof LogicType['actions']]?:
+        | ((
+            payload: ReturnType<LogicType['actions'][K]>['payload'],
+            breakpoint: (() => void) & ((ms: number) => Promise<void>),
+            action: ReturnType<LogicType['actions'][K]>,
+            previousState: any,
+          ) => void | Promise<void>)
+        | (() => void | Promise<void>)
+    }
+  | {
+      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?:
+        | ((
+            payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+            breakpoint: (() => void) & ((ms: number) => Promise<void>),
+            action: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>,
+            previousState: any,
+          ) => void | Promise<void>)
+        | (() => void | Promise<void>)
+    }
 
 export type LogicInput<LogicType extends Logic = Logic> = {
   extend?: LogicInput[]
