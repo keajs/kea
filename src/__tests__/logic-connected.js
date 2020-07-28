@@ -18,29 +18,37 @@ test('connected props and actions get passed, reducers get added to the store', 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const reducerState2 = scenesReducer({}, { type: 'discard' })
@@ -50,19 +58,9 @@ test('connected props and actions get passed, reducers get added to the store', 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      actions: [
-        firstLogic, [
-          'updateName'
-        ]
-      ],
-      values: [
-        firstLogic, [
-          'name',
-          'capitalizedName',
-          'upperCaseName'
-        ]
-      ]
-    }
+      actions: [firstLogic, ['updateName']],
+      values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
+    },
   })
 
   expect(secondLogic._isKea).toBe(true)
@@ -78,22 +76,12 @@ test('connected props and actions get passed, reducers get added to the store', 
   const thirdLogic = kea({
     path: () => ['scenes', 'homepage', 'third'],
     connect: {
-      actions: [
-        firstLogic, [
-          'updateName'
-        ]
-      ],
-      values: [
-        firstLogic, [
-          'name',
-          'capitalizedName',
-          'upperCaseName'
-        ]
-      ]
+      actions: [firstLogic, ['updateName']],
+      values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
     },
     actions: ({ constants }) => ({
-      updateNameAgain: name => ({ name })
-    })
+      updateNameAgain: name => ({ name }),
+    }),
   })
 
   expect(thirdLogic._isKea).toBe(true)
@@ -110,22 +98,9 @@ test('connected props and actions get passed, reducers get added to the store', 
 
   const fourthLogic = kea({
     connect: {
-      actions: [
-        firstLogic, [
-          'updateName'
-        ],
-        thirdLogic, [
-          'updateNameAgain'
-        ]
-      ],
-      values: [
-        firstLogic, [
-          'name',
-          'capitalizedName',
-          'upperCaseName'
-        ]
-      ]
-    }
+      actions: [firstLogic, ['updateName'], thirdLogic, ['updateNameAgain']],
+      values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
+    },
   })
 
   expect(fourthLogic._isKea).toBe(true)
@@ -147,40 +122,44 @@ test('connected props can be used as selectors', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      values: [
-        firstLogic, [
-          'name'
-        ]
-      ]
+      values: [firstLogic, ['name']],
     },
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   expect(secondLogic._isKea).toBe(true)
@@ -198,32 +177,33 @@ test('connected props can be used as selectors', () => {
 })
 
 test('can get everything with *', () => {
-  const store = createStore(combineReducers({
-    scenes: keaReducer('scenes')
-  }))
+  const store = createStore(
+    combineReducers({
+      scenes: keaReducer('scenes'),
+    }),
+  )
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      values: [
-        firstLogic, [
-          'name',
-          '* as everything'
-        ]
-      ]
-    }
+      values: [firstLogic, ['name', '* as everything']],
+    },
   })
 
   expect(secondLogic._isKea).toBe(true)
@@ -237,120 +217,138 @@ test('can get everything with *', () => {
 })
 
 test('have it in the store only if there is a reducer', () => {
-  const store = createStore(combineReducers({
-    scenes: keaReducer('scenes')
-  }))
+  const store = createStore(
+    combineReducers({
+      scenes: keaReducer('scenes'),
+    }),
+  )
 
   kea({
     path: () => ['scenes', 'homepage', 'full'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const logic2 = kea({
-    path: (key) => ['scenes', 'homepage', 'reducer'],
+    path: key => ['scenes', 'homepage', 'reducer'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'selectors'],
+    path: key => ['scenes', 'homepage', 'selectors'],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [logic2.selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'actions'],
+    path: key => ['scenes', 'homepage', 'actions'],
     actions: () => ({
-      updateName: name => ({ name })
-    })
+      updateName: name => ({ name }),
+    }),
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'connect'],
+    path: key => ['scenes', 'homepage', 'connect'],
     connect: {
-      values: [
-        logic2, ['name']
-      ]
-    }
+      values: [logic2, ['name']],
+    },
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'connectActions'],
+    path: key => ['scenes', 'homepage', 'connectActions'],
     connect: {
-      values: [
-        logic2, ['name']
-      ]
+      values: [logic2, ['name']],
     },
     actions: () => ({
-      updateName: name => ({ name })
-    })
+      updateName: name => ({ name }),
+    }),
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'connectReducer'],
+    path: key => ['scenes', 'homepage', 'connectReducer'],
     connect: {
-      values: [
-        logic2, ['name']
-      ]
+      values: [logic2, ['name']],
     },
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   kea({
-    path: (key) => ['scenes', 'homepage', 'connectSelector'],
+    path: key => ['scenes', 'homepage', 'connectSelector'],
     connect: {
-      values: [
-        logic2, ['name']
-      ]
+      values: [logic2, ['name']],
     },
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   store.dispatch({ type: 'bla' })

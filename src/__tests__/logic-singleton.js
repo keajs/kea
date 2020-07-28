@@ -12,34 +12,39 @@ test('singleton logic has all the right properties', () => {
 
   const response = kea({
     path: () => ['scenes', 'homepage', 'index'],
-    constants: () => [
-      'SOMETHING',
-      'SOMETHING_ELSE'
-    ],
+    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   expect(response._isKea).toBe(true)
@@ -47,9 +52,15 @@ test('singleton logic has all the right properties', () => {
 
   expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
 
-  expect(() => { response.path }).toThrow() // eslint-disable-line
-  expect(() => { response.actions }).toThrow() // eslint-disable-line
-  expect(() => { response.selectors }).toThrow() // eslint-disable-line
+  expect(() => {
+    response.path
+  }).toThrow() // eslint-disable-line
+  expect(() => {
+    response.actions
+  }).toThrow() // eslint-disable-line
+  expect(() => {
+    response.selectors
+  }).toThrow() // eslint-disable-line
 
   response.mount()
 
@@ -102,29 +113,34 @@ test('it is not a singleton if there is a key', () => {
   keaReducer('scenes')
 
   const response = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'homepage', 'index', key],
-    constants: () => [
-      'SOMETHING',
-      'SOMETHING_ELSE'
-    ],
+    key: props => props.id,
+    path: key => ['scenes', 'homepage', 'index', key],
+    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   expect(() => response.mount()).toThrow()

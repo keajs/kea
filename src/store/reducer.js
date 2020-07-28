@@ -6,8 +6,10 @@ export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
 
 const defaultState = {}
 
-export function initRootReducerTree (pathStart) {
-  const { reducers: { tree, whitelist } } = getContext()
+export function initRootReducerTree(pathStart) {
+  const {
+    reducers: { tree, whitelist },
+  } = getContext()
   if (!tree[pathStart]) {
     if (whitelist && !whitelist[pathStart]) {
       throw new Error(`[KEA] Can not start reducer's path with "${pathStart}"! Please add it to the whitelist`)
@@ -17,8 +19,10 @@ export function initRootReducerTree (pathStart) {
   }
 }
 
-export function keaReducer (pathStart = 'scenes') {
-  const { reducers: { roots } } = getContext()
+export function keaReducer(pathStart = 'scenes') {
+  const {
+    reducers: { roots },
+  } = getContext()
   initRootReducerTree(pathStart)
 
   return (state = defaultState, action, fullState) => {
@@ -26,12 +30,12 @@ export function keaReducer (pathStart = 'scenes') {
   }
 }
 
-export function attachReducer (logic) {
+export function attachReducer(logic) {
   const { path, reducer } = logic
   const {
     reducers: { tree },
     options: { attachStrategy },
-    store
+    store,
   } = getContext()
 
   const pathStart = path[0]
@@ -50,11 +54,13 @@ export function attachReducer (logic) {
         // if we're in the root level in the tree and it's an empty object
         if (i === 0 && typeof pointer[pathPart] === 'object' && Object.keys(pointer[pathPart]).length === 0) {
           // don't block here
-
-        // if it's a function, assume it's a reducer and replacing it is fine
-        // otherwise give an error
+          // if it's a function, assume it's a reducer and replacing it is fine
+          // otherwise give an error
         } else if (typeof pointer[pathPart] !== 'function') {
-          console.error(`[KEA] Can not add reducer to "${path.join('.')}". There is something in the way:`, pointer[pathPart])
+          console.error(
+            `[KEA] Can not add reducer to "${path.join('.')}". There is something in the way:`,
+            pointer[pathPart],
+          )
           return
         }
       }
@@ -83,13 +89,13 @@ export function attachReducer (logic) {
   }
 }
 
-export function detachReducer (logic) {
+export function detachReducer(logic) {
   const { path } = logic
 
   const {
     reducers: { tree },
     options: { detachStrategy },
-    store
+    store,
   } = getContext()
 
   const pathStart = path[0]
@@ -112,10 +118,19 @@ export function detachReducer (logic) {
     if (pointerToHere) {
       if (Object.keys(pointerToHere).length === 0) {
         // next
-      } else if (Object.keys(pointerToHere).length >= 1 && i === path.length - 2 && typeof pointerToHere[path[i + 1]] === 'function') {
+      } else if (
+        Object.keys(pointerToHere).length >= 1 &&
+        i === path.length - 2 &&
+        typeof pointerToHere[path[i + 1]] === 'function'
+      ) {
         delete pointerToHere[path[i + 1]]
         detached = true
-      } else if (detached && Object.keys(pointerToHere).length >= 1 && i < path.length - 2 && Object.keys(pointerToHere[path[i + 1]]).length === 0) {
+      } else if (
+        detached &&
+        Object.keys(pointerToHere).length >= 1 &&
+        i < path.length - 2 &&
+        Object.keys(pointerToHere[path[i + 1]]).length === 0
+      ) {
         delete pointerToHere[path[i + 1]]
       } else {
         break
@@ -140,10 +155,17 @@ export function detachReducer (logic) {
   }
 }
 
-export function regenerateRootReducer (pathStart) {
-  const { reducers: { tree, roots, whitelist } } = getContext()
+export function regenerateRootReducer(pathStart) {
+  const {
+    reducers: { tree, roots, whitelist },
+  } = getContext()
 
-  if (pathStart !== 'kea' && !whitelist && typeof tree[pathStart] === 'object' && Object.keys(tree[pathStart]).length === 0) {
+  if (
+    pathStart !== 'kea' &&
+    !whitelist &&
+    typeof tree[pathStart] === 'object' &&
+    Object.keys(tree[pathStart]).length === 0
+  ) {
     delete roots[pathStart]
   } else {
     roots[pathStart] = recursiveCreateReducer(tree[pathStart])
@@ -151,7 +173,7 @@ export function regenerateRootReducer (pathStart) {
   regenerateCombinedReducer()
 }
 
-export function recursiveCreateReducer (treeNode) {
+export function recursiveCreateReducer(treeNode) {
   if (typeof treeNode === 'function') {
     return treeNode
   }
@@ -176,10 +198,10 @@ export function recursiveCreateReducer (treeNode) {
 // get the constant 'Unexpected key "1" found in previous state received by the reducer' warnings when unmounting.
 // Instead we'll simply discard the keys we don't need.
 // Please note that logic reducers are still built with redux's combineReducers.
-export function combineKeaReducers (reducers) {
+export function combineKeaReducers(reducers) {
   const reducerKeys = Object.keys(reducers)
 
-  return function combination (state = {}, action, fullState) {
+  return function combination(state = {}, action, fullState) {
     let stateChanged = Object.keys(state).length !== reducerKeys.length
     let nextState = {}
 
@@ -205,7 +227,7 @@ function regenerateCombinedReducer() {
   getContext().reducers.combined = combineKeaReducers(reducers)
 }
 
-export function createCombinedReducer () {
+export function createCombinedReducer() {
   regenerateCombinedReducer()
   return (state = defaultState, action, fullState) => getContext().reducers.combined(state, action, fullState)
 }

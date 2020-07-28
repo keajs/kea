@@ -18,35 +18,35 @@ test('can use withkey for actions and props', () => {
   const { store } = getContext()
 
   const dynamicLogic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'dynamic', key],
+    key: props => props.id,
+    path: key => ['scenes', 'dynamic', key],
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions, props, key }) => ({
-      name: [props.defaultName, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        props.defaultName,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const connectedLogic = kea({
     connect: ({ id, defaultName }) => ({
-      values: [
-        dynamicLogic({ id, defaultName }), ['name']
-      ],
-      actions: [
-        dynamicLogic({ id, defaultName }), ['updateName']
-      ]
-    })
+      values: [dynamicLogic({ id, defaultName }), ['name']],
+      actions: [dynamicLogic({ id, defaultName }), ['updateName']],
+    }),
   })
 
   const SampleComponent = ({ id, name }) => (
     <div>
-      <div className='id'>{id}</div>
-      <div className='name'>{name}</div>
+      <div className="id">{id}</div>
+      <div className="name">{name}</div>
     </div>
   )
 
@@ -54,8 +54,8 @@ test('can use withkey for actions and props', () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      <ConnectedComponent id='12' defaultName='defaultName' />
-    </Provider>
+      <ConnectedComponent id="12" defaultName="defaultName" />
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')

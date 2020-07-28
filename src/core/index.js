@@ -20,6 +20,7 @@ export default {
     constants: {},
     actionCreators: {},
     actionKeys: {},
+    actionTypes: {},
     actions: {},
     defaults: {},
     reducers: {},
@@ -29,7 +30,7 @@ export default {
     selectors: {},
     values: {},
     propTypes: {},
-    events: {}
+    events: {},
   }),
 
   buildSteps: {
@@ -43,6 +44,6 @@ export default {
     reducerSelectors: createReducerSelectors,
     selectors: createSelectors,
     values: createValues,
-    events: createEvents
-  }
+    events: createEvents,
+  },
 }

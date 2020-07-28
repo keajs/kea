@@ -10,14 +10,14 @@ test('always has some props object', () => {
 
   const firstLogic = kea({
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     listeners: ({ actions, props }) => ({
       [actions.updateName]: () => {
         expect(props).toEqual({})
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic.mount()
@@ -31,14 +31,14 @@ test('always has some props object, part 2', () => {
 
   const firstLogic = kea({
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     listeners: ({ actions, props }) => ({
       [actions.updateName]: () => {
         expect(props).toEqual({})
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   firstLogic().mount()

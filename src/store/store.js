@@ -4,8 +4,10 @@ import { createCombinedReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 
-const reduxDevToolsCompose = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
+const reduxDevToolsCompose =
+  typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : compose
 
 // this must be a function as we need new objects every time
 // otherwise it could happen that the "middleware" array gets mutated on the default
@@ -16,10 +18,10 @@ const defaultOptions = () => ({
   middleware: [],
   compose: reduxDevToolsCompose,
   enhancers: [],
-  plugins: []
+  plugins: [],
 })
 
-export function getStore (opts = {}) {
+export function getStore(opts = {}) {
   const context = getContext()
 
   if (!context) {

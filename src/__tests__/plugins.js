@@ -15,7 +15,10 @@ test('the core and listeners plugins are activated automatically', () => {
   const { plugins } = getContext()
 
   expect(plugins.activated).toEqual([corePlugin, listenersPlugin])
-  expect(Object.keys(plugins.buildSteps)).toEqual([...Object.keys(corePlugin.buildSteps), ...Object.keys(listenersPlugin.buildSteps)])
+  expect(Object.keys(plugins.buildSteps)).toEqual([
+    ...Object.keys(corePlugin.buildSteps),
+    ...Object.keys(listenersPlugin.buildSteps),
+  ])
 })
 
 test('plugins add build steps', () => {
@@ -26,57 +29,59 @@ test('plugins add build steps', () => {
     name: 'test',
 
     defaults: () => ({
-      ranPlugins: []
+      ranPlugins: [],
     }),
 
     buildOrder: {
       afterConnect: { after: 'connect' },
       beforeEvents: { before: 'events' },
-      afterEvents: { after: 'events' }
+      afterEvents: { after: 'events' },
     },
 
     buildSteps: {
-      afterEvents (logic, input) {
+      afterEvents(logic, input) {
         logic.ranPlugins.push('afterEvents')
       },
-      afterConnect (logic, input) {
+      afterConnect(logic, input) {
         logic.ranPlugins.push('afterConnect')
       },
-      beforeEvents (logic, input) {
+      beforeEvents(logic, input) {
         logic.ranPlugins.push('beforeEvents')
       },
-    }
+    },
   }
 
   activatePlugin(testPlugin)
 
   expect(plugins.activated).toEqual([corePlugin, listenersPlugin, testPlugin])
-  expect(Object.keys(plugins.buildSteps)).toEqual(
-    [...Object.keys(corePlugin.buildSteps), ...Object.keys(listenersPlugin.buildSteps), 'afterEvents', 'afterConnect', 'beforeEvents']
-  )
-  expect(plugins.buildOrder).toEqual(
-    [
-      'connect',
-      'afterConnect', // added here
-      'constants',
-      'actionCreators',
-      'actions',
-      'defaults',
-      'reducers',
-      'reducer',
-      'reducerSelectors',
-      'selectors',
-      'values',
-      'sharedListeners',
-      'listeners',
-      'beforeEvents', // added here
-      'events',
-      'afterEvents' // added here
-    ]
-  )
+  expect(Object.keys(plugins.buildSteps)).toEqual([
+    ...Object.keys(corePlugin.buildSteps),
+    ...Object.keys(listenersPlugin.buildSteps),
+    'afterEvents',
+    'afterConnect',
+    'beforeEvents',
+  ])
+  expect(plugins.buildOrder).toEqual([
+    'connect',
+    'afterConnect', // added here
+    'constants',
+    'actionCreators',
+    'actions',
+    'defaults',
+    'reducers',
+    'reducer',
+    'reducerSelectors',
+    'selectors',
+    'values',
+    'sharedListeners',
+    'listeners',
+    'beforeEvents', // added here
+    'events',
+    'afterEvents', // added here
+  ])
 
-  expect(plugins.buildSteps.connect).toEqual([ corePlugin.buildSteps.connect ])
-  expect(plugins.buildSteps.afterConnect).toEqual([ testPlugin.buildSteps.afterConnect ])
+  expect(plugins.buildSteps.connect).toEqual([corePlugin.buildSteps.connect])
+  expect(plugins.buildSteps.afterConnect).toEqual([testPlugin.buildSteps.afterConnect])
 
   const logic = kea({})
 
@@ -91,14 +96,14 @@ test('plugins add events', () => {
     name: 'test',
 
     defaults: () => ({
-      ranAfterBuild: false
+      ranAfterBuild: false,
     }),
 
     events: {
-      afterBuild (logic, inputs) {
+      afterBuild(logic, inputs) {
         logic.ranAfterBuild = true
-      }
-    }
+      },
+    },
   }
 
   activatePlugin(testPlugin)
@@ -106,7 +111,7 @@ test('plugins add events', () => {
   expect(plugins.activated).toEqual([corePlugin, testPlugin])
   expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
 
-  expect(plugins.events.afterBuild).toEqual([ testPlugin.events.afterBuild ])
+  expect(plugins.events.afterBuild).toEqual([testPlugin.events.afterBuild])
 
   const logic = kea({})
 
@@ -121,14 +126,14 @@ test('function plugins work', () => {
     name: 'test',
 
     defaults: () => ({
-      ranAfterBuild: false
+      ranAfterBuild: false,
     }),
 
     events: {
-      afterBuild (logic, inputs) {
+      afterBuild(logic, inputs) {
         logic.ranAfterBuild = true
-      }
-    }
+      },
+    },
   }
   const testPlugin = () => testPluginContents
 
@@ -137,7 +142,7 @@ test('function plugins work', () => {
   expect(plugins.activated).toEqual([corePlugin, testPluginContents])
   expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
 
-  expect(plugins.events.afterBuild).toEqual([ testPluginContents.events.afterBuild ])
+  expect(plugins.events.afterBuild).toEqual([testPluginContents.events.afterBuild])
 
   const logic = kea({})
 
@@ -152,25 +157,25 @@ test('plugin context & afterPlugin work', () => {
     name: 'test',
 
     defaults: () => ({
-      ranAfterBuild: null
+      ranAfterBuild: null,
     }),
 
     events: {
-      afterPlugin () {
+      afterPlugin() {
         setPluginContext('pluginName', { someKey: 'yesplease' })
       },
 
-      afterBuild (logic, inputs) {
+      afterBuild(logic, inputs) {
         logic.ranAfterBuild = getPluginContext('pluginName').someKey
-      }
-    }
+      },
+    },
   }
 
   activatePlugin(testPlugin)
 
   expect(plugins.activated).toEqual([corePlugin, testPlugin])
   expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'afterBuild'])
-  expect(plugins.events.afterBuild).toEqual([ testPlugin.events.afterBuild ])
+  expect(plugins.events.afterBuild).toEqual([testPlugin.events.afterBuild])
 
   const logic = kea({})
 
@@ -187,13 +192,13 @@ test('can use logic.cache to store things', () => {
     name: 'test',
 
     events: {
-      afterLogic (logic) {
+      afterLogic(logic) {
         logic.cache.whatever = true
       },
-      afterMount (logic) {
+      afterMount(logic) {
         checkedAfterMount = logic.cache.whatever
-      }
-    }
+      },
+    },
   }
 
   activatePlugin(testPlugin)
@@ -215,10 +220,10 @@ test('can not activate the same plugin twice', () => {
     name: 'test',
 
     events: {
-      afterLogic (logic) {
+      afterLogic(logic) {
         logic.cache.whatever = true
-      }
-    }
+      },
+    },
   }
 
   activatePlugin(testPlugin)

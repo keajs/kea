@@ -11,8 +11,8 @@ beforeEach(() => {
 test.skip('can not extend when mounted', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
-    })
+      doit: true,
+    }),
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit'])
@@ -20,8 +20,8 @@ test.skip('can not extend when mounted', () => {
   expect(() => {
     logic.extend({
       actions: () => ({
-        domore: true
-      })
+        domore: true,
+      }),
     })
   }).toThrowError('[KEA] Can not extend logic once it has been built!')
 })
@@ -29,14 +29,14 @@ test.skip('can not extend when mounted', () => {
 test('can extend with .extend', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
-    })
+      doit: true,
+    }),
   })
 
   logic.extend({
     actions: () => ({
-      domore: true
-    })
+      domore: true,
+    }),
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
@@ -45,12 +45,12 @@ test('can extend with .extend', () => {
 test('can extend with inline .extend', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
-    })
+      doit: true,
+    }),
   }).extend({
     actions: () => ({
-      domore: true
-    })
+      domore: true,
+    }),
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
@@ -59,15 +59,15 @@ test('can extend with inline .extend', () => {
 test('can extend with extend: []', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
+      doit: true,
     }),
     extend: [
       {
         actions: () => ({
-          domore: true
-        })
-      }
-    ]
+          domore: true,
+        }),
+      },
+    ],
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
@@ -76,20 +76,20 @@ test('can extend with extend: []', () => {
 test('can extend multiple times with .extend', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
-    })
+      doit: true,
+    }),
   })
 
   logic.extend({
     actions: () => ({
-      domore: true
-    })
+      domore: true,
+    }),
   })
 
   logic.extend({
     actions: () => ({
-      doevenmore: true
-    })
+      doevenmore: true,
+    }),
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
@@ -98,17 +98,19 @@ test('can extend multiple times with .extend', () => {
 test('can extend multiple times with inline .extend', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
-    })
-  }).extend({
-    actions: () => ({
-      domore: true
-    })
-  }).extend({
-    actions: () => ({
-      doevenmore: true
-    })
+      doit: true,
+    }),
   })
+    .extend({
+      actions: () => ({
+        domore: true,
+      }),
+    })
+    .extend({
+      actions: () => ({
+        doevenmore: true,
+      }),
+    })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
@@ -116,20 +118,20 @@ test('can extend multiple times with inline .extend', () => {
 test('can extend multiple times with extend: []', () => {
   const logic = kea({
     actions: () => ({
-      doit: true
+      doit: true,
     }),
     extend: [
       {
         actions: () => ({
-          domore: true
-        })
+          domore: true,
+        }),
       },
       {
         actions: () => ({
-          doevenmore: true
-        })
-      }
-    ]
+          doevenmore: true,
+        }),
+      },
+    ],
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
@@ -139,23 +141,23 @@ test('can extend in plugins in beforeBuild', () => {
   const testPlugin = {
     name: 'testPlugin',
     events: {
-      beforeBuild (logic, input) {
+      beforeBuild(logic, input) {
         logic.extend({
           actions: () => ({
-            domore: true
-          })
+            domore: true,
+          }),
         })
-      }
-    }
+      },
+    },
   }
 
   resetContext({ plugins: [testPlugin] })
 
   const logic = kea({
     actions: () => ({
-      doit: true
+      doit: true,
     }),
-    plugins: [testPlugin]
+    plugins: [testPlugin],
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
@@ -165,25 +167,25 @@ test('can extend in plugins in buildSteps', () => {
   const testPlugin = {
     name: 'testPlugin',
     buildSteps: {
-      newStep (logic, input) {
+      newStep(logic, input) {
         if (!logic.actions.domore) {
           logic.extend({
             actions: () => ({
-              domore: true
-            })
+              domore: true,
+            }),
           })
         }
-      }
-    }
+      },
+    },
   }
 
   resetContext({ plugins: [testPlugin] })
 
   const logic = kea({
     actions: () => ({
-      doit: true
+      doit: true,
     }),
-    plugins: [testPlugin]
+    plugins: [testPlugin],
   })
 
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
@@ -193,23 +195,23 @@ test('can extend in plugins in afterBuild', () => {
   const testPlugin = {
     name: 'testPlugin',
     events: {
-      afterBuild (logic, input) {
+      afterBuild(logic, input) {
         logic.extend({
           actions: () => ({
-            domore: true
-          })
+            domore: true,
+          }),
         })
-      }
-    }
+      },
+    },
   }
 
   resetContext({ plugins: [testPlugin] })
 
   const logic = kea({
     actions: () => ({
-      doit: true
+      doit: true,
     }),
-    plugins: [testPlugin]
+    plugins: [testPlugin],
   })
 
   logic.mount()
@@ -222,13 +224,15 @@ test('can extend dynamic logic with extend:[]', () => {
     key: props => props.id,
     path: key => ['scenes', 'something', key],
     actions: () => ({
-      doit: true
+      doit: true,
     }),
-    extend: [{
-      actions: () => ({
-        domore: true
-      })
-    }]
+    extend: [
+      {
+        actions: () => ({
+          domore: true,
+        }),
+      },
+    ],
   })
 
   expect(Object.keys(logic({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
@@ -239,12 +243,12 @@ test('can extend dynamic logic with .extend', () => {
     key: props => props.id,
     path: key => ['scenes', 'something', key],
     actions: () => ({
-      doit: true
-    })
+      doit: true,
+    }),
   }).extend({
     actions: () => ({
-      domore: true
-    })
+      domore: true,
+    }),
   })
 
   expect(Object.keys(logic({ id: 123 }).actions).sort()).toEqual(['doit', 'domore'])
@@ -253,57 +257,63 @@ test('can extend dynamic logic with .extend', () => {
 test('extending logic merges the right properties', () => {
   const logic = kea({
     path: () => ['scenes', 'homepage', 'index'],
-    constants: () => [
-      'SOMETHING',
-      'SOMETHING_ELSE'
-    ],
+    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
+        PropTypes.string,
+      ],
     }),
     extend: [
       {
-        constants: () => [
-          'SOMETHING_BLUE',
-          'SOMETHING_ELSE'
-        ],
+        constants: () => ['SOMETHING_BLUE', 'SOMETHING_ELSE'],
         actions: ({ constants }) => ({
-          updateDescription: description => ({ description })
+          updateDescription: description => ({ description }),
         }),
         reducers: ({ actions, constants }) => ({
-          description: ['', PropTypes.string, {
-            [actions.updateDescription]: (state, payload) => payload.description
-          }]
+          description: [
+            '',
+            PropTypes.string,
+            {
+              [actions.updateDescription]: (state, payload) => payload.description,
+            },
+          ],
         }),
         selectors: ({ constants, selectors }) => ({
           upperCaseDescription: [
             () => [selectors.description],
-            (description) => description.toUpperCase(),
-            PropTypes.string
-          ]
-        })
-      }
-    ]
+            description => description.toUpperCase(),
+            PropTypes.string,
+          ],
+        }),
+      },
+    ],
   })
 
   logic.mount()
@@ -313,14 +323,21 @@ test('extending logic merges the right properties', () => {
   expect(logic._isKeaWithKey).toBe(false)
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(logic.connections)).toEqual(['scenes.homepage.index'])
-  expect(logic.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_BLUE: 'SOMETHING_BLUE', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+  expect(logic.constants).toEqual({
+    SOMETHING: 'SOMETHING',
+    SOMETHING_BLUE: 'SOMETHING_BLUE',
+    SOMETHING_ELSE: 'SOMETHING_ELSE',
+  })
 
   // actions
   expect(Object.keys(logic.actions)).toEqual(['updateName', 'updateDescription'])
   const { updateName, updateDescription } = logic.actionCreators
   expect(typeof updateDescription).toBe('function')
   expect(updateDescription.toString()).toBe('update description (scenes.homepage.index)')
-  expect(updateDescription('desc desc')).toEqual({ payload: { description: 'desc desc' }, type: updateDescription.toString() })
+  expect(updateDescription('desc desc')).toEqual({
+    payload: { description: 'desc desc' },
+    type: updateDescription.toString(),
+  })
 
   // reducers
   const defaultValues = { name: 'chirpy', description: '' }
@@ -343,19 +360,34 @@ test('extending logic merges the right properties', () => {
   // big reducer
   expect(typeof logic.reducer).toBe('function')
   expect(logic.reducer({}, { type: 'random action' })).toEqual(defaultValues)
-  expect(logic.reducer({ description: 'desc desc', name: 'something' }, { type: 'random action' })).toEqual({ description: 'desc desc', name: 'something' })
+  expect(logic.reducer({ description: 'desc desc', name: 'something' }, { type: 'random action' })).toEqual({
+    description: 'desc desc',
+    name: 'something',
+  })
 
-  expect(logic.reducer({ description: 'desc desc', name: 'something' }, updateName('newName'))).toEqual({ description: 'desc desc', name: 'newName' })
+  expect(logic.reducer({ description: 'desc desc', name: 'something' }, updateName('newName'))).toEqual({
+    description: 'desc desc',
+    name: 'newName',
+  })
 
   // selectors
-  expect(Object.keys(logic.selectors).sort()).toEqual(['capitalizedName', 'description', 'name', 'upperCaseDescription', 'upperCaseName'])
+  expect(Object.keys(logic.selectors).sort()).toEqual([
+    'capitalizedName',
+    'description',
+    'name',
+    'upperCaseDescription',
+    'upperCaseName',
+  ])
   expect(logic.selectors.name(state)).toEqual('chirpy')
   expect(logic.selectors.capitalizedName(state)).toEqual('Chirpy')
   expect(logic.selectors.upperCaseName(state)).toEqual('CHIRPY')
 
   const defaultValues2 = { name: 'chirpy', description: 'tsk tsk' }
   const state2 = { scenes: { homepage: { index: defaultValues2 } } }
-  expect(logic.reducer({ description: 'tsk tsk', name: 'something' }, updateName('newName'))).toEqual({ description: 'tsk tsk', name: 'newName' })
+  expect(logic.reducer({ description: 'tsk tsk', name: 'something' }, updateName('newName'))).toEqual({
+    description: 'tsk tsk',
+    name: 'newName',
+  })
 
   expect(logic.selectors.description(state2)).toEqual('tsk tsk')
   expect(logic.selectors.upperCaseDescription(state2)).toEqual('TSK TSK')

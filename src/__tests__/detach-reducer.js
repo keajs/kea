@@ -12,13 +12,13 @@ test('detaches from a simple state', () => {
   const reducer = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { 1: reducer } }
+    scenes: { something: { 1: reducer } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 1] })
@@ -33,13 +33,13 @@ test('detaches from a state with 2 reducers', () => {
   const reducer2 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { 1: reducer1, 2: reducer2 } }
+    scenes: { something: { 1: reducer1, 2: reducer2 } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 1] })
@@ -60,13 +60,13 @@ test('detaches from a state with 2 nested reducers, part 1', () => {
   const reducer2 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { 1: reducer1, bla: { 2: reducer2 } } }
+    scenes: { something: { 1: reducer1, bla: { 2: reducer2 } } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 'bla', 2] })
@@ -87,13 +87,13 @@ test('detaches from a state with 2 nested reducers, part 1', () => {
   const reducer2 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { cat: { 1: reducer1 }, bla: { 2: reducer2 } } }
+    scenes: { something: { cat: { 1: reducer1 }, bla: { 2: reducer2 } } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 'bla', 2] })
@@ -113,13 +113,13 @@ test('detaches from a state with a low reducer', () => {
   const reducer1 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: reducer1 }
+    scenes: { something: reducer1 },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something'] })
@@ -134,13 +134,13 @@ test('cleans up a nested tree, vol 1', () => {
   const reducer2 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { cat: { foo: { bar: { 1: reducer1 } } }, bla: { moo: { 2: reducer2 } } } }
+    scenes: { something: { cat: { foo: { bar: { 1: reducer1 } } }, bla: { moo: { 2: reducer2 } } } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 'bla', 'moo', 2] })
@@ -161,13 +161,13 @@ test('cleans up a nested tree, vol 2', () => {
   const reducer2 = () => {}
 
   getContext().reducers.tree = {
-    scenes: { something: { cat: { foo: { bar: { 1: reducer1 } } }, bla: { moo: { 2: reducer2 } } } }
+    scenes: { something: { cat: { foo: { bar: { 1: reducer1 } } }, bla: { moo: { 2: reducer2 } } } },
   }
 
   let dispatched = []
 
   getContext().store = {
-    dispatch: (action) => dispatched.push(action)
+    dispatch: action => dispatched.push(action),
   }
 
   detachReducer({ path: ['scenes', 'something', 'cat', 'foo', 'bar', 1] })

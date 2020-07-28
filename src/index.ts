@@ -1,3 +1,5 @@
+import { resetContext } from './context'
+
 export { kea, connect } from './kea'
 export { useValues, useAllValues, useActions, useMountedLogic, useKea } from './react/hooks'
 
@@ -8,3 +10,6 @@ export { activatePlugin } from './plugins'
 export { createAction } from './core/shared/actions'
 export { addConnection } from './core/shared/connect'
 export { isBreakpoint } from './listeners'
+
+// this will create a default context
+resetContext()

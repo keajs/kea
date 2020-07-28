@@ -11,29 +11,39 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() })
 
 class SampleComponent extends Component {
-  render () {
+  render() {
     const { id, name, capitalizedName, upperCaseName } = this.props
     const { updateName } = this.actions
 
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='capitalizedName'>{capitalizedName}</div>
-        <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="capitalizedName">{capitalizedName}</div>
+        <div className="upperCaseName">{upperCaseName}</div>
+        <div className="updateName" onClick={updateName}>
+          updateName
+        </div>
       </div>
     )
   }
 }
 
 class ActionComponent extends Component {
-  render () {
+  render() {
     return (
       <div>
-        <div className='actions'>{Object.keys(this.actions).sort().join(',')}</div>
-        <div className='props'>{Object.keys(this.props).sort().join(',')}</div>
-        <div className='name'>{this.props.name}</div>
+        <div className="actions">
+          {Object.keys(this.actions)
+            .sort()
+            .join(',')}
+        </div>
+        <div className="props">
+          {Object.keys(this.props)
+            .sort()
+            .join(',')}
+        </div>
+        <div className="name">{this.props.name}</div>
       </div>
     )
   }
@@ -49,29 +59,37 @@ test('singletons connect to react components', () => {
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const ConnectedComponent = singletonLogic(SampleComponent)
@@ -79,7 +97,7 @@ test('singletons connect to react components', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -113,32 +131,40 @@ test('dynamic connect to react components', () => {
   const { store } = getContext()
 
   const dynamicLogic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'something', key],
+    key: props => props.id,
+    path: key => ['scenes', 'something', key],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants, key }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name + key
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name + key,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const ConnectedComponent = dynamicLogic(SampleComponent)
@@ -146,7 +172,7 @@ test('dynamic connect to react components', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -182,45 +208,45 @@ test('connected props can be used as selectors', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const secondLogic = kea({
     path: () => ['scenes', 'homepage', 'second'],
     connect: {
-      values: [
-        firstLogic, [
-          'name'
-        ]
-      ],
-      actions: [
-        firstLogic, [
-          'updateName'
-        ]
-      ]
+      values: [firstLogic, ['name']],
+      actions: [firstLogic, ['updateName']],
     },
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const ConnectedComponent = secondLogic(SampleComponent)
@@ -228,7 +254,7 @@ test('connected props can be used as selectors', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -236,7 +262,7 @@ test('connected props can be used as selectors', () => {
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
 
-  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'chirpy'}}}})
+  expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'chirpy' } } } })
 
   const sampleComponent = wrapper.find('SampleComponent').instance()
 
@@ -246,7 +272,7 @@ test('connected props can be used as selectors', () => {
   const { updateName } = sampleComponent.actions
   updateName('somename')
 
-  expect(store.getState()).toEqual({kea: {}, scenes: {homepage: {first: {name: 'somename'}}}})
+  expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'somename' } } } })
 
   wrapper.render()
 
@@ -263,19 +289,23 @@ test('doubly connected actions are merged', () => {
 
   const firstLogic = kea({
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const secondLogic = kea({
     actions: ({ constants }) => ({
-      updateNameAgain: name => ({ name })
-    })
+      updateNameAgain: name => ({ name }),
+    }),
   })
 
   const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
@@ -283,7 +313,7 @@ test('doubly connected actions are merged', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
@@ -297,19 +327,22 @@ test('no protypes needed', () => {
 
   const firstLogic = kea({
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const secondLogic = kea({
     actions: ({ constants }) => ({
-      updateNameAgain: name => ({ name })
-    })
+      updateNameAgain: name => ({ name }),
+    }),
   })
 
   const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
@@ -317,7 +350,7 @@ test('no protypes needed', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
@@ -336,37 +369,38 @@ test('can select with regular', () => {
   const { store } = resetContext({
     createStore: {
       reducers: {
-        random: () => ({ some: 'value' })
-      }
-    }
+        random: () => ({ some: 'value' }),
+      },
+    },
   })
 
   const logic = kea({
     path: () => ['scenes', 'kea', 'first'],
 
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const connectedLogic = kea({
     connect: {
-      values: [
-        logic, ['name'],
-        (state) => state.random, ['some']
-      ]
-    }
+      values: [logic, ['name'], state => state.random, ['some']],
+    },
   })
 
-  function RegularSelectorTest ({ name, some }) {
+  function RegularSelectorTest({ name, some }) {
     return (
-      <div className='values'>
+      <div className="values">
         {name},{some}
       </div>
     )
@@ -377,7 +411,7 @@ test('can select with regular', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent />
-    </Provider>
+    </Provider>,
   )
 
   expect(wrapper.find('.values').text()).toEqual('chirpy,value')
@@ -389,22 +423,26 @@ test('dynamic reducer initial props', () => {
   const { store } = getContext()
 
   const dynamicLogic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'dynamic', key],
+    key: props => props.id,
+    path: key => ['scenes', 'dynamic', key],
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, props, key }) => ({
-      name: [props.defaultName, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        props.defaultName,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   const SampleComponent = ({ id, name }) => (
     <div>
-      <div className='id'>{id}</div>
-      <div className='name'>{name}</div>
+      <div className="id">{id}</div>
+      <div className="name">{name}</div>
     </div>
   )
 
@@ -412,8 +450,8 @@ test('dynamic reducer initial props', () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      <ConnectedComponent id={12} defaultName='bird' />
-    </Provider>
+      <ConnectedComponent id={12} defaultName="bird" />
+    </Provider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')

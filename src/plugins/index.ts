@@ -1,5 +1,5 @@
 import { getContext } from '../context'
-
+import { Plugin, PluginEvents } from '../types'
 /*
   plugins = [
     {
@@ -99,16 +99,10 @@ const reservedKeys = {
   wrap: true,
   build: true,
   mount: true,
-  extend: true
+  extend: true,
 }
 
-export const reservedProxiedKeys = [
-  'path',
-  'pathString',
-  'props'
-]
-
-export function activatePlugin (pluginToActivate) {
+export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void {
   const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
 
   const { plugins } = getContext()
@@ -118,7 +112,7 @@ export function activatePlugin (pluginToActivate) {
     throw new Error('[KEA] Tried to activate a plugin without a name!')
   }
 
-  if (plugins.activated.find(plugin => plugin.name === name)) {
+  if (plugins.activated.find((plugin) => plugin.name === name)) {
     throw new Error(`[KEA] Tried to activate plugin "${name}", but it was already installed!`)
   }
 
@@ -128,14 +122,18 @@ export function activatePlugin (pluginToActivate) {
     for (const key of Object.keys(plugin.buildSteps)) {
       // if redefining an existing step, add to the end of the list (no order changing possible anymore)
       if (plugins.buildSteps[key]) {
-        console.error(`[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
+        console.error(
+          `[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${
+            plugins.logicFields[key] || 'core'
+          }`,
+        )
         plugins.buildSteps[key].push(plugin.buildSteps[key])
       } else {
         plugins.buildSteps[key] = [plugin.buildSteps[key]]
 
         if (plugin.buildOrder && plugin.buildOrder[key]) {
           const { after, before } = plugin.buildOrder[key]
-          const index = plugins.buildOrder.indexOf(after || before)
+          const index = after || before ? plugins.buildOrder.indexOf((after || before)!) : -1
 
           if (after && index >= 0) {
             plugins.buildOrder.splice(index + 1, 0, key)
@@ -155,8 +153,12 @@ export function activatePlugin (pluginToActivate) {
     const fields = Object.keys(typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults)
     for (const key of fields) {
       if (process.env.NODE_ENV !== 'production') {
-        if (plugins.logicFields[key] || reservedKeys[key]) {
-          console.error(`[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${plugins.logicFields[key] || 'core'}`)
+        if (plugins.logicFields[key] || (reservedKeys as any)[key]) {
+          console.error(
+            `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${
+              plugins.logicFields[key] || 'core'
+            }`,
+          )
         }
       }
       plugins.logicFields[key] = plugin.name
@@ -164,22 +166,37 @@ export function activatePlugin (pluginToActivate) {
   }
 
   if (plugin.events) {
-    for (const key of Object.keys(plugin.events)) {
+    for (const key of Object.keys(plugin.events) as Array<keyof PluginEvents>) {
       if (!plugins.events[key]) {
         plugins.events[key] = []
       }
-      plugins.events[key].push(plugin.events[key])
+      plugins.events[key]!.push(plugin.events[key] as any)
     }
 
     plugin.events.afterPlugin && plugin.events.afterPlugin()
   }
 }
 
+type PluginParameters<T> = T extends (...args: infer P) => any ? P : never
+
 // run plugins with this key with the rest of the arguments
-export function runPlugins (key, ...args) {
-  const { plugins, options: { debug } } = getContext()
+export function runPlugins<T extends keyof PluginEvents, E extends PluginParameters<PluginEvents[T]>>(
+  key: T,
+  ...args: E
+): void {
+  const {
+    plugins,
+    options: { debug },
+  } = getContext()
   if (debug) {
     console.log(`[KEA] Event: ${key}`, ...args)
   }
-  plugins && plugins.events[key] && plugins.events[key].forEach(p => p(...args))
+  if (plugins && plugins.events[key]) {
+    ;(plugins.events[key] as Array<(...args: E) => void>).forEach((pluginFunction) => {
+      pluginFunction(...args)
+    })
+  }
 }
+//
+// runPlugins('afterWrapper', 'asd', 'we', 'we')
+// runPlugins('afterBuild', 'asd', 'we')

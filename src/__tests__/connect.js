@@ -18,49 +18,63 @@ test('connect works as an object', () => {
   const { store } = getContext()
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description })
+      updateDescription: description => ({ description }),
     }),
 
     reducers: ({ actions }) => ({
-      description: ['default', PropTypes.string, {
-        [actions.updateDescription]: (_, payload) => payload.description
-      }]
-    })
+      description: [
+        'default',
+        PropTypes.string,
+        {
+          [actions.updateDescription]: (_, payload) => payload.description,
+        },
+      ],
+    }),
   })
 
   const logic = kea({
     connect: {
-      values: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']],
     },
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
 
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className='id'>{id}</div>
-      <div className='name'>{name}</div>
-      <div className='capitalizedName'>{capitalizedName}</div>
-      <div className='description'>{description}</div>
-      <div className='updateName' onClick={updateName}>updateName</div>
+      <div className="id">{id}</div>
+      <div className="name">{name}</div>
+      <div className="capitalizedName">{capitalizedName}</div>
+      <div className="description">{description}</div>
+      <div className="updateName" onClick={updateName}>
+        updateName
+      </div>
     </div>
   )
 
@@ -71,7 +85,7 @@ test('connect works as an object', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
@@ -86,7 +100,9 @@ test('connect works as an object', () => {
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+  })
 
   wrapper.render()
 
@@ -105,49 +121,63 @@ test('connect works as a function', () => {
   const { store } = getContext()
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description })
+      updateDescription: description => ({ description }),
     }),
 
     reducers: ({ actions }) => ({
-      description: ['default', PropTypes.string, {
-        [actions.updateDescription]: (_, payload) => payload.description
-      }]
-    })
+      description: [
+        'default',
+        PropTypes.string,
+        {
+          [actions.updateDescription]: (_, payload) => payload.description,
+        },
+      ],
+    }),
   })
 
   const logic = kea({
     connect: () => ({
-      values: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']],
     }),
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
 
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className='id'>{id}</div>
-      <div className='name'>{name}</div>
-      <div className='capitalizedName'>{capitalizedName}</div>
-      <div className='description'>{description}</div>
-      <div className='updateName' onClick={updateName}>updateName</div>
+      <div className="id">{id}</div>
+      <div className="name">{name}</div>
+      <div className="capitalizedName">{capitalizedName}</div>
+      <div className="description">{description}</div>
+      <div className="updateName" onClick={updateName}>
+        updateName
+      </div>
     </div>
   )
 
@@ -158,7 +188,7 @@ test('connect works as a function', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
@@ -173,7 +203,9 @@ test('connect works as a function', () => {
   store.dispatch(logic.actionCreators.updateName('somename'))
   store.dispatch(connectedLogic.actionCreators.updateDescription('new description'))
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+  })
 
   wrapper.render()
 
@@ -187,55 +219,69 @@ test('connect works as a function', () => {
   // nothing in the store after unmounting
   expect(store.getState()).toEqual({ kea: {} })
 })
-  
+
 test('props cascade when connecting', () => {
   const { store } = getContext()
-  
+
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description })
+      updateDescription: description => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
-      description: [props.defaultDescription || '', PropTypes.string, {
-        [actions.updateDescription]: (_, payload) => payload.description
-      }]
-    })
+      description: [
+        props.defaultDescription || '',
+        PropTypes.string,
+        {
+          [actions.updateDescription]: (_, payload) => payload.description,
+        },
+      ],
+    }),
   })
 
   const logic = kea({
     connect: {
-      values: [connectedLogic, ['description']]
+      values: [connectedLogic, ['description']],
     },
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({
-      name: [`chirpy-${props.id}`, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        `chirpy-${props.id}`,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
 
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className='id'>{id}</div>
-      <div className='name'>{name}</div>
-      <div className='capitalizedName'>{capitalizedName}</div>
-      <div className='description'>{description}</div>
-      <div className='updateName' onClick={updateName}>updateName</div>
+      <div className="id">{id}</div>
+      <div className="name">{name}</div>
+      <div className="capitalizedName">{capitalizedName}</div>
+      <div className="description">{description}</div>
+      <div className="updateName" onClick={updateName}>
+        updateName
+      </div>
     </div>
   )
 
@@ -245,11 +291,13 @@ test('props cascade when connecting', () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      <ConnectedComponent id={12} defaultDescription='this is a bird' />
-    </Provider>
+      <ConnectedComponent id={12} defaultDescription="this is a bird" />
+    </Provider>,
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } } })
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } },
+  })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy-12')
@@ -259,7 +307,9 @@ test('props cascade when connecting', () => {
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } } })
+  expect(store.getState()).toEqual({
+    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+  })
 
   wrapper.render()
 
@@ -273,36 +323,44 @@ test('props cascade when connecting', () => {
   // nothing in the store after unmounting
   expect(store.getState()).toEqual({ kea: {} })
 })
-  
+
 test('can connect logic without values/actions', () => {
   const { store } = getContext()
-  
+
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description })
+      updateDescription: description => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
-      description: ['default', PropTypes.string, {
-        [actions.updateDescription]: (_, payload) => payload.description
-      }]
-    })
+      description: [
+        'default',
+        PropTypes.string,
+        {
+          [actions.updateDescription]: (_, payload) => payload.description,
+        },
+      ],
+    }),
   })
 
   const logic = kea({
     connect: {
-      logic: [connectedLogic]
+      logic: [connectedLogic],
     },
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({
-      name: [`chirpy-${props.id}`, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        `chirpy-${props.id}`,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   logic({ id: 12 }).mount()
@@ -316,28 +374,36 @@ test('can connect logic via array', () => {
 
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description })
+      updateDescription: description => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
-      description: ['default', PropTypes.string, {
-        [actions.updateDescription]: (_, payload) => payload.description
-      }]
-    })
+      description: [
+        'default',
+        PropTypes.string,
+        {
+          [actions.updateDescription]: (_, payload) => payload.description,
+        },
+      ],
+    }),
   })
 
   const logic = kea({
     connect: [connectedLogic],
 
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({
-      name: [`chirpy-${props.id}`, PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
-    })
+      name: [
+        `chirpy-${props.id}`,
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
+    }),
   })
 
   logic({ id: 12 }).mount()

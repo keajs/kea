@@ -6,7 +6,7 @@
 
 ![Kea Logo](https://kea.js.org/img/logo.svg)
 
-# Kea 2.0
+# Kea v2
 
 Open the [documentation](https://kea.js.org/) and read from there.
 

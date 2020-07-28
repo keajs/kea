@@ -15,64 +15,64 @@ test('runs before and after mount events', () => {
     name: 'test',
 
     events: {
-      afterLogic (logic) {
+      afterLogic(logic) {
         actions.push('plugin.afterLogic')
       },
-      beforeMount (logic) {
+      beforeMount(logic) {
         actions.push('plugin.beforeMount')
       },
-      afterMount (logic) {
+      afterMount(logic) {
         actions.push('plugin.afterMount')
       },
-      beforeUnmount (logic) {
+      beforeUnmount(logic) {
         actions.push('plugin.beforeUnmount')
       },
-      afterUnmount (logic) {
+      afterUnmount(logic) {
         actions.push('plugin.afterUnmount')
-      }
-    }
+      },
+    },
   }
 
   activatePlugin(testPlugin)
 
   const connectedLogic = kea({
     reducers: () => ({
-      value: [true]
+      value: [true],
     }),
     events: () => ({
-      beforeMount () {
+      beforeMount() {
         actions.push('connectedLogic.beforeMount')
       },
-      afterMount () {
+      afterMount() {
         actions.push('connectedLogic.afterMount')
       },
-      beforeUnmount () {
+      beforeUnmount() {
         actions.push('connectedLogic.beforeUnmount')
       },
-      afterUnmount () {
+      afterUnmount() {
         actions.push('connectedLogic.afterUnmount')
-      }
-    })
+      },
+    }),
   })
 
   const logic = kea({
     connect: {
-      values: [connectedLogic, ['value']]
+      values: [connectedLogic, ['value']],
     },
     events: () => ({
-      beforeMount () {
+      beforeMount() {
         actions.push('logic.beforeMount')
       },
-      afterMount () {
+      afterMount() {
         actions.push('logic.afterMount')
       },
-      beforeUnmount () {
+      beforeUnmount() {
         actions.push('logic.beforeUnmount')
       },
-      afterUnmount () {
+      afterUnmount() {
         actions.push('logic.afterUnmount')
-      }
-    })
+      },
+    }),
   })
 
   expect(actions).toEqual([])
@@ -91,7 +91,7 @@ test('runs before and after mount events', () => {
     'plugin.beforeMount',
     'logic.beforeMount',
     'plugin.afterMount',
-    'logic.afterMount'
+    'logic.afterMount',
   ])
 
   unmount()
@@ -118,7 +118,7 @@ test('runs before and after mount events', () => {
     'plugin.beforeUnmount',
     'connectedLogic.beforeUnmount',
     'plugin.afterUnmount',
-    'connectedLogic.afterUnmount'
+    'connectedLogic.afterUnmount',
   ])
 })
 
@@ -127,36 +127,29 @@ test('accept functions and arrays', () => {
 
   const connectedLogic = kea({
     reducers: () => ({
-      value: [true]
+      value: [true],
     }),
     events: () => ({
-      afterMount () {
+      afterMount() {
         actions.push('connectedLogic.afterMount')
-      }
-    })
+      },
+    }),
   })
 
   const logic = kea({
     connect: {
-      values: [connectedLogic, ['value']]
+      values: [connectedLogic, ['value']],
     },
     events: () => ({
-      afterMount: [
-        () => actions.push('logic.afterMount1'),
-        () => actions.push('logic.afterMount2')
-      ]
-    })
+      afterMount: [() => actions.push('logic.afterMount1'), () => actions.push('logic.afterMount2')],
+    }),
   })
 
   expect(actions).toEqual([])
 
   const unmount = logic.mount()
 
-  expect(actions).toEqual([
-    'connectedLogic.afterMount',
-    'logic.afterMount1',
-    'logic.afterMount2'
-  ])
+  expect(actions).toEqual(['connectedLogic.afterMount', 'logic.afterMount1', 'logic.afterMount2'])
 
   unmount()
 })

@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react'
+import * as React from 'react'
+import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { getPathStringForInput } from '../kea/path'
 import { runPlugins } from '../plugins'
+import { AnyComponent, KeaComponent, LogicWrapper, Props } from '../types'
 
-export function wrapComponent (Component, wrapper) {
+export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
   const { inputs } = wrapper
   const input = inputs[0]
   runPlugins('beforeWrapper', input, Component)
@@ -12,11 +14,11 @@ export function wrapComponent (Component, wrapper) {
   // make this.actions work if it's a React.Component we're operating with
   injectActionsIntoClass(Component)
 
-  let isUnmounting = {}
-  let lastState = {}
+  const isUnmounting: Record<string, boolean> = {}
+  const lastState: Record<string, any> = {}
 
   const createConnect = reduxConnect(
-    (state, props) => {
+    (state, props: Props) => {
       // At the moment when we unmount and detach from redux, react-redux will still be subscribed to the store
       // and will run this function to see if anything changed. Since we are detached from the store, all
       // selectors of this logic will crash. To avoid this, cache and return the last state.
@@ -29,7 +31,7 @@ export function wrapComponent (Component, wrapper) {
 
       const logic = wrapper.build(props)
 
-      let resp = {}
+      const resp = {} as Record<string, any>
       Object.entries(logic.selectors).forEach(([key, selector]) => {
         resp[key] = selector(state, props)
       })
@@ -38,15 +40,15 @@ export function wrapComponent (Component, wrapper) {
 
       return resp
     },
-    (dispatch, props) => {
+    (dispatch, props: Props) => {
       const logic = wrapper.build(props)
       const actions = Object.assign({}, props.actions, logic.actions)
 
       return {
         dispatch: dispatch,
-        actions: actions
+        actions: actions,
       }
-    }
+    },
   )
   const Connect = createConnect(Component)
 
@@ -54,7 +56,7 @@ export function wrapComponent (Component, wrapper) {
   // not using useRef here since we do it only once per component
   let injectPropTypes = !isStateless(Component)
 
-  const Kea = function (props) {
+  const Kea: KeaComponent = function (props: Props) {
     const logic = wrapper.build(props)
     const pathString = useRef(logic.pathString)
 
@@ -65,19 +67,22 @@ export function wrapComponent (Component, wrapper) {
     }
 
     // mount paths only on first render
-    const unmount = useRef(undefined)
+    const unmount = useRef<() => void>()
     if (!unmount.current) {
       unmount.current = logic.mount()
     }
 
     // unmount paths when component gets removed
-    useEffect(() => () => {
-      // set this as mapStateToProps can still run even if we have detached from redux
-      isUnmounting[pathString.current] = true
-      unmount.current()
-      delete isUnmounting[pathString.current]
-      delete lastState[pathString.current]
-    }, [])
+    useEffect(
+      () => () => {
+        // set this as mapStateToProps can still run even if we have detached from redux
+        isUnmounting[pathString.current] = true
+        unmount.current?.()
+        delete isUnmounting[pathString.current]
+        delete lastState[pathString.current]
+      },
+      [],
+    )
 
     // unmount and remount if logic path changed
     if (pathString.current !== logic.pathString) {
@@ -94,7 +99,7 @@ export function wrapComponent (Component, wrapper) {
     }
 
     runPlugins('beforeRender', logic, props)
-    return <Connect {...props} />
+    return React.createElement(Connect, props)
   }
 
   Kea._wrapper = wrapper
@@ -104,21 +109,20 @@ export function wrapComponent (Component, wrapper) {
   return Kea
 }
 
-function isStateless (Component) {
+function isStateless(Component: AnyComponent) {
   return (
-    typeof Component === 'function' && // can be various things
-    !(Component.prototype && Component.prototype.isReactComponent) // native arrows don't have prototypes // special property
+    typeof Component === 'function' && !(Component.prototype && Component.prototype.isReactComponent) // can be various things // native arrows don't have prototypes // special property
   )
 }
 
 // inject to the component something that converts this.props.actions to this.actions
-function injectActionsIntoClass (Component) {
+function injectActionsIntoClass(Component: AnyComponent) {
   if (!isStateless(Component)) {
     if (!Object.getOwnPropertyDescriptor(Component.prototype, 'actions')) {
       Object.defineProperty(Component.prototype, 'actions', {
-        get: function actions () {
+        get: function actions() {
           return this.props.actions
-        }
+        },
       })
     }
   }

@@ -7,7 +7,8 @@
         "loose": true
       }
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": [
     "transform-babel-env-inline",
@@ -50,6 +51,7 @@
             }
           }
         ],
+        "@babel/preset-typescript",
         "@babel/preset-react"
       ],
       "plugins": [

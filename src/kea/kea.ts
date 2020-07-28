@@ -3,8 +3,17 @@ import { getContext } from '../context'
 import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
-import { reservedProxiedKeys } from '../plugins'
 import { getPathForInput } from './path'
+import {
+  AnyComponent,
+  BuiltLogicAdditions,
+  KeaComponent,
+  Logic,
+  LogicInput,
+  LogicWrapper,
+  LogicWrapperAdditions,
+} from '../types'
+
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -76,22 +85,66 @@ import { getPathForInput } from './path'
   - builtLogic._isKeaBuild # true if built logic
 
 */
-export function kea (input) {
-  let wrapper = function (args) {
+
+export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void {
+  if (!wrapper.hasOwnProperty(key)) {
+    Object.defineProperty(wrapper, key, {
+      get: function () {
+        const {
+          mount: { mounted },
+          build: { heap: buildHeap },
+          run: { heap: runHeap },
+        } = getContext()
+        const path = getPathForInput(wrapper.inputs[0], {})
+        const pathString = path.join('.')
+
+        // if mounted or building as a connected dependency, return the proxied value
+        if (mounted[pathString] || buildHeap.length > 0 || runHeap.length > 0 || key === 'constants') {
+          return wrapper.build()[key]
+        } else {
+          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!`)
+        }
+      },
+    })
+  }
+}
+
+export function proxyFields(wrapper: LogicWrapper): void {
+  const {
+    options: { proxyFields },
+    plugins: { logicFields },
+  } = getContext()
+
+  if (proxyFields) {
+    const reservedProxiedKeys = ['path', 'pathString', 'props'] as ['path', 'pathString', 'props']
+    for (const key of reservedProxiedKeys) {
+      proxyFieldToLogic(wrapper, key)
+    }
+    for (const key of Object.keys(logicFields)) {
+      proxyFieldToLogic(wrapper, key as keyof Logic)
+    }
+  }
+}
+
+export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType>): LogicType & LogicWrapperAdditions {
+  const wrapper: LogicType & LogicWrapperAdditions = (function (
+    args: undefined | AnyComponent,
+  ): (LogicType & BuiltLogicAdditions) | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
-      return wrapper.build(args)
+      return wrapper.build(args) as LogicType & BuiltLogicAdditions
     }
     return wrapper.wrap(args)
-  }
+  } as any) as LogicType & LogicWrapperAdditions
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
-  wrapper.inputs = [input]
+  wrapper.inputs = [input as LogicInput]
 
-  wrapper.wrap = Component => wrapComponent(Component, wrapper)
-  wrapper.build = (props = {}, autoConnectInListener = true) => getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
-  wrapper.mount = callback => wrapper.build().mount(callback)
+  wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
+  wrapper.build = (props = {}, autoConnectInListener = true) =>
+    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
+  wrapper.mount = (callback) => wrapper.build().mount(callback)
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)
     return wrapper
@@ -106,38 +159,8 @@ export function kea (input) {
   return wrapper
 }
 
-export function connect (input) {
+export function connect<LogicType extends Logic = Logic>(
+  input: LogicInput['connect'],
+): LogicType & LogicWrapperAdditions {
   return kea({ connect: input })
-}
-
-export function proxyFields (wrapper) {
-  const { options: { proxyFields }, plugins: { logicFields } } = getContext()
-
-  if (proxyFields) {
-    for (const key of reservedProxiedKeys) {
-      proxyFieldToLogic(wrapper, key)
-    }
-    for (const key of Object.keys(logicFields)) {
-      proxyFieldToLogic(wrapper, key)
-    }
-  }
-}
-
-export function proxyFieldToLogic (wrapper, key) {
-  if (!wrapper.hasOwnProperty(key)) {
-    Object.defineProperty(wrapper, key, {
-      get: function () {
-        const { mount: { mounted }, build: { heap: buildHeap }, run: { heap: runHeap } } = getContext()
-        const path = getPathForInput(wrapper.inputs[0], {})
-        const pathString = path.join('.')
-
-        // if mounted or building as a connected dependency, return the proxied value
-        if (mounted[pathString] || buildHeap.length > 0 || runHeap.length > 0 || key === 'constants') {
-          return wrapper.build()[key]
-        } else {
-          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!`)
-        }
-      }
-    })
-  }
 }

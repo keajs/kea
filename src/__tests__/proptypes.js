@@ -12,40 +12,44 @@ configure({ adapter: new Adapter() })
 
 class SampleComponent extends Component {
   static propTypes = {
-    id: PropTypes.number
+    id: PropTypes.number,
   }
 
-  render () {
+  render() {
     const { id, name, capitalizedName, upperCaseName } = this.props
     const { updateName } = this.actions
 
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='capitalizedName'>{capitalizedName}</div>
-        <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="capitalizedName">{capitalizedName}</div>
+        <div className="upperCaseName">{upperCaseName}</div>
+        <div className="updateName" onClick={updateName}>
+          updateName
+        </div>
       </div>
     )
   }
 }
 class OtherComponent extends Component {
   static propTypes = {
-    id: PropTypes.number
+    id: PropTypes.number,
   }
 
-  render () {
+  render() {
     const { id, name, capitalizedName, upperCaseName } = this.props
     const { updateName } = this.actions
 
     return (
       <div>
-        <div className='id'>{id}</div>
-        <div className='name'>{name}</div>
-        <div className='capitalizedName'>{capitalizedName}</div>
-        <div className='upperCaseName'>{upperCaseName}</div>
-        <div className='updateName' onClick={updateName}>updateName</div>
+        <div className="id">{id}</div>
+        <div className="name">{name}</div>
+        <div className="capitalizedName">{capitalizedName}</div>
+        <div className="upperCaseName">{upperCaseName}</div>
+        <div className="updateName" onClick={updateName}>
+          updateName
+        </div>
       </div>
     )
   }
@@ -61,29 +65,37 @@ test('inject proptypes to react component', () => {
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   expect(Object.keys(SampleComponent.propTypes).sort()).toEqual(['id'])
@@ -93,7 +105,7 @@ test('inject proptypes to react component', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
   expect(Object.keys(SampleComponent.propTypes).sort()).toEqual(['capitalizedName', 'id', 'name', 'upperCaseName'])
@@ -107,40 +119,48 @@ test('get connected proptyes', () => {
 
   const otherLogic = kea({
     reducers: () => ({
-      connectedReducer: [0, PropTypes.number, {}]
-    })
+      connectedReducer: [0, PropTypes.number, {}],
+    }),
   })
 
   const singletonLogic = kea({
     connect: {
-      values: [otherLogic, ['connectedReducer']]
+      values: [otherLogic, ['connectedReducer']],
     },
 
     path: () => ['scenes', 'something'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name })
+      updateName: name => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
-      name: ['chirpy', PropTypes.string, {
-        [actions.updateName]: (state, payload) => payload.name
-      }]
+      name: [
+        'chirpy',
+        PropTypes.string,
+        {
+          [actions.updateName]: (state, payload) => payload.name,
+        },
+      ],
     }),
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        (capitalizedName) => {
+        capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string
+        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        (name) => {
-          return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+        name => {
+          return name
+            .trim()
+            .split(' ')
+            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .join(' ')
         },
-        PropTypes.string
-      ]
-    })
+        PropTypes.string,
+      ],
+    }),
   })
 
   expect(Object.keys(OtherComponent.propTypes).sort()).toEqual(['id'])
@@ -150,11 +170,16 @@ test('get connected proptyes', () => {
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>
+    </Provider>,
   )
 
-
-  expect(Object.keys(OtherComponent.propTypes).sort()).toEqual(['capitalizedName', 'connectedReducer', 'id', 'name', 'upperCaseName'])
+  expect(Object.keys(OtherComponent.propTypes).sort()).toEqual([
+    'capitalizedName',
+    'connectedReducer',
+    'id',
+    'name',
+    'upperCaseName',
+  ])
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
@@ -164,24 +189,28 @@ test('also works without proptypes', () => {
   const { store } = getContext()
   const logic = kea({
     actions: () => ({
-      doSomething: true
+      doSomething: true,
     }),
     reducers: ({ actions }) => ({
       something: ['bla'],
       somethingElse: ['bla', {}],
-      somethingMore: ['bla', {
-        [actions.doSomething]: () => 'asd'
-      }],
-      evenMoreThings: ['whoop', { something: true }, {
-        [actions.doSomething]: () => 'boop'
-      }]
+      somethingMore: [
+        'bla',
+        {
+          [actions.doSomething]: () => 'asd',
+        },
+      ],
+      evenMoreThings: [
+        'whoop',
+        { something: true },
+        {
+          [actions.doSomething]: () => 'boop',
+        },
+      ],
     }),
     selectors: ({ selectors }) => ({
-      summary: [
-        () => [selectors.somethingMore],
-        (somethingMore) => somethingMore.toUpperCase()
-      ]
-    })
+      summary: [() => [selectors.somethingMore], somethingMore => somethingMore.toUpperCase()],
+    }),
   })
 
   logic.mount()
