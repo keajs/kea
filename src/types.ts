@@ -86,32 +86,32 @@ type ReducerDefinitions<LogicType extends Logic> = {
     | ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>
 }
 
-type SelectorDefinition<Selectors, S extends Selector, SelectorFunction extends any> = [
-  (
-    s: Selectors,
-  ) =>
-    | []
-    | [Selector]
-    | [Selector, Selector]
-    | [Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
-    | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector],
-  SelectorFunction,
-]
+type SelectorTuple =
+  | []
+  | [Selector]
+  | [Selector, Selector]
+  | [Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+  | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
-type SelectorDefinitions<LogicType extends Logic> = {
-  [K in keyof LogicType['selectors']]?: SelectorDefinition<
-    LogicType['selectors'],
-    LogicType['selectors'][K],
-    LogicType['__keaTypeGenInternalSelectorTypes'][K]
-  >
-}
+type SelectorDefinition<Selectors, SelectorFunction extends any> = [(s: Selectors) => SelectorTuple, SelectorFunction]
+
+type SelectorDefinitions<LogicType extends Logic> =
+  | {
+      [K in keyof LogicType['selectors']]?: SelectorDefinition<
+        LogicType['selectors'],
+        LogicType['__keaTypeGenInternalSelectorTypes'][K]
+      >
+    }
+  | {
+      [key: string]: SelectorDefinition<LogicType['selectors'], any>
+    }
 
 type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
