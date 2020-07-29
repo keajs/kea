@@ -1,3 +1,5 @@
+export * from './types'
+
 import { resetContext } from './context'
 
 export { kea, connect } from './kea'

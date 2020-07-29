@@ -59,7 +59,7 @@ export interface LogicWrapperAdditions {
 export type BuiltLogic = Logic & BuiltLogicAdditions
 export type LogicWrapper = Logic & LogicWrapperAdditions
 
-// input helpers (using the kea-typegen generated logic type as input)
+// input helpers (using the generated logic type as input)
 
 type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)>
 
@@ -194,6 +194,47 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 
   [key: string]: unknown
 }
+
+// MakeLogicType:
+// - create a close-enough approxmiation of the logic's types if passed two interfaces:
+//
+// MakeLogicType<Values, Actions>
+// - Values = { valueKey: type }
+// - Actions = { actionKey: (id) => void }   // <- this works
+// - Actions = { actionKey: (id) => { id } } // <- adds type completion in reducers
+export interface MakeLogicType<Values = Record<string, unknown>, Actions = Record<string, AnyFunction>> extends Logic {
+  actionCreators: {
+    [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
+      ? ActionCreatorForPayloadBuilder<Actions[ActionKey]>
+      : never
+  }
+  actionKeys: Record<string, string>
+  actionTypes: {
+    [ActionKey in keyof Actions]: string
+  }
+  actions: Actions
+  cache: Record<string, unknown>
+  constants: Record<string, string>
+  defaults: Values
+  path: string[]
+  pathString: string
+  reducerOptions: Record<string, unknown>
+  reducer: (state: Values, action: () => any, fullState: any) => Values
+  reducers: {
+    [Value in keyof Values]?: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
+  }
+  selector: (state: any, props: any) => Values
+  selectors: {
+    [Value in keyof Values]?: (state: any, props: any) => Values[Value]
+  }
+  values: Values
+}
+
+type AnyFunction = (...args: any) => any
+
+type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
+  ...args: Parameters<B>
+) => { type: string; payload: ReturnType<B> }
 
 // kea setup stuff
 
