@@ -117,7 +117,7 @@ test('sharedListeners work', () => {
 
   firstLogic.mount()
 
-  store.dispatch(firstLogic.actions.updateName('derpy'))
+  store.dispatch(firstLogic.actionCreators.updateName('derpy'))
   expect(firstLogic.selectors.name(store.getState())).toBe('derpy')
 
   expect(listenerRan).toBe(true)
@@ -207,7 +207,7 @@ test('extend works', () => {
   })
   firstLogic.mount()
 
-  store.dispatch(firstLogic.actions.updateName('derpy'))
+  store.dispatch(firstLogic.actionCreators.updateName('derpy'))
   expect(firstLogic.values.name).toBe('derpy')
 
   expect(listenerRan1).toBe(true)

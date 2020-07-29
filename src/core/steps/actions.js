@@ -24,6 +24,9 @@ export function createActions(logic, input) {
       const builtAction = actionCreator(...inp)
       getContext().run.heap.push({ type: 'action', action: builtAction, logic })
       try {
+        // TODO: This will return "undefined" in the next major/breaking version of kea.
+        // The TypeScript types already say "void" for actions.
+        // ... even if this still returns the dispatched "actionCreator" output
         return getContext().store.dispatch(builtAction)
       } finally {
         getContext().run.heap.pop()
