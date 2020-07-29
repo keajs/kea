@@ -61,13 +61,13 @@ export type LogicWrapper = Logic & LogicWrapperAdditions
 
 // input helpers (using the generated logic type as input)
 
-type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)>
+type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)> | LogicType['actionCreators']
 
 type ReducerActions<LogicType extends Logic, ReducerType> =
   | {
-      [K in keyof LogicType['actions']]?: (
+      [K in keyof LogicType['actionCreators']]?: (
         state: ReducerType,
-        payload: ReturnType<LogicType['actions'][K]>['payload'],
+        payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
       ) => ReducerType
     }
   | {
@@ -117,11 +117,11 @@ type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
 type ListenerDefinitions<LogicType extends Logic> =
   | {
-      [K in keyof LogicType['actions']]?:
+      [K in keyof LogicType['actionCreators']]?:
         | ((
-            payload: ReturnType<LogicType['actions'][K]>['payload'],
+            payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
             breakpoint: BreakPointFunction,
-            action: ReturnType<LogicType['actions'][K]>,
+            action: ReturnType<LogicType['actionCreators'][K]>,
             previousState: any,
           ) => void | Promise<void>)
         | (() => void | Promise<void>)
@@ -140,10 +140,10 @@ type ListenerDefinitions<LogicType extends Logic> =
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
 type LoaderFunctions<LogicType extends Logic, ReducerReturnType> = {
-  [K in keyof LogicType['actions']]?: (
-    payload: ReturnType<LogicType['actions'][K]>['payload'],
+  [K in keyof LogicType['actionCreators']]?: (
+    payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
     breakpoint: BreakPointFunction,
-    action: ReturnType<LogicType['actions'][K]>,
+    action: ReturnType<LogicType['actionCreators'][K]>,
   ) => ReducerReturnType | Promise<ReducerReturnType>
 }
 
@@ -228,6 +228,10 @@ export interface MakeLogicType<Values = Record<string, unknown>, Actions = Recor
     [Value in keyof Values]?: (state: any, props: any) => Values[Value]
   }
   values: Values
+
+  __keaTypeGenInternalSelectorTypes: {
+    [K in keyof Values]: (...args: any) => Values[K]
+  }
 }
 
 type AnyFunction = (...args: any) => any
