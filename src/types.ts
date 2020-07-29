@@ -113,12 +113,14 @@ type SelectorDefinitions<LogicType extends Logic> = {
   >
 }
 
+type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
+
 type ListenerDefinitions<LogicType extends Logic> =
   | {
       [K in keyof LogicType['actions']]?:
         | ((
             payload: ReturnType<LogicType['actions'][K]>['payload'],
-            breakpoint: (() => void) & ((ms: number) => Promise<void>),
+            breakpoint: BreakPointFunction,
             action: ReturnType<LogicType['actions'][K]>,
             previousState: any,
           ) => void | Promise<void>)
@@ -128,12 +130,14 @@ type ListenerDefinitions<LogicType extends Logic> =
       [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?:
         | ((
             payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-            breakpoint: (() => void) & ((ms: number) => Promise<void>),
+            breakpoint: BreakPointFunction,
             action: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>,
             previousState: any,
           ) => void | Promise<void>)
         | (() => void | Promise<void>)
     }
+
+type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
 export type LogicInput<LogicType extends Logic = Logic> = {
   extend?: LogicInput[]
@@ -164,10 +168,10 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   defaults?: any
 
   // what to do with plugins?
-  loaders?: any
+  loaders?: any // LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   urlToAction?: any
   actionToUrl?: any
-  windowValues?: any
+  windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
 
   [key: string]: unknown
 }
