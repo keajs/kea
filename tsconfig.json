@@ -10,7 +10,7 @@
     "outDir": "./lib",
     "baseUrl": "./src",
     "incremental": true,
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "redux"],
     "resolveJsonModule": false
   },
   "exclude": ["node_modules", "lib"]

@@ -139,6 +139,25 @@ type ListenerDefinitions<LogicType extends Logic> =
 
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
+type LoaderFunctions<LogicType extends Logic, ReducerReturnType> = {
+  [K in keyof LogicType['actions']]?: (
+    payload: ReturnType<LogicType['actions'][K]>['payload'],
+    breakpoint: BreakPointFunction,
+    action: ReturnType<LogicType['actions'][K]>,
+  ) => ReducerReturnType | Promise<ReducerReturnType>
+}
+
+type LoaderDefinitions<LogicType extends Logic> = {
+  [K in keyof LogicType['reducers']]?:
+    | (
+        | LoaderFunctions<LogicType, ReturnType<LogicType['reducers'][K]>>
+        | {
+            __default: ReturnType<LogicType['reducers'][K]>
+          }
+      )
+    | [ReturnType<LogicType['reducers'][K]>, LoaderFunctions<LogicType, ReturnType<LogicType['reducers'][K]>>]
+}
+
 export type LogicInput<LogicType extends Logic = Logic> = {
   extend?: LogicInput[]
   key?: (props: Props) => string
@@ -167,11 +186,11 @@ export type LogicInput<LogicType extends Logic = Logic> = {
       })
   defaults?: any
 
-  // what to do with plugins?
-  loaders?: any // LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
+  // plugins
+  loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
+  windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
   urlToAction?: any
   actionToUrl?: any
-  windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
 
   [key: string]: unknown
 }
