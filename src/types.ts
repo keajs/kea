@@ -5,29 +5,28 @@ import { ComponentType, FunctionComponent } from 'react'
 export type AnyComponent = ComponentType | FunctionComponent
 export type Selector = (state?: any, props?: any) => any
 export type PathCreator = (key?: string) => string[]
-export type Props = Record<string, any> // nb! used in kea and react
+export type Props = Record<string, unknown> // nb! used in kea and react
 
 // logic base class
 export interface Logic {
   key: any
-  path: string[]
-  pathString: string
-  props: Props
-  cache: Record<string, any>
-  connections: { [pathString: string]: BuiltLogic }
-  constants: Record<string, string>
   actionCreators: any
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
   actions: any
+  cache: Record<string, any>
+  connections: { [pathString: string]: BuiltLogic }
+  constants: Record<string, string>
   defaults: Record<string, any>
+  path: string[]
+  pathString: string
+  props: Props
   reducers: any
   reducerOptions: Record<string, any>
   reducer: any
   selector?: Selector
   selectors: Record<string, Selector>
   values: Record<string, any>
-  propTypes: unknown
   events: {
     beforeMount?: () => void
     afterMount?: () => void
@@ -160,7 +159,7 @@ type LoaderDefinitions<LogicType extends Logic> = {
 
 export type LogicInput<LogicType extends Logic = Logic> = {
   extend?: LogicInput[]
-  key?: (props: Props) => string
+  key?: (props: LogicType['props']) => any
   path?: PathCreator | string[]
 
   connect?: any
