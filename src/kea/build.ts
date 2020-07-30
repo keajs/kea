@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: Logic, input: LogicInput) {
@@ -125,7 +125,12 @@ function buildLogic({
   return logic
 }
 
-export function getBuiltLogic(inputs: LogicInput[], props: Props, wrapper: LogicWrapper, autoConnectInListener = true) {
+export function getBuiltLogic(
+  inputs: LogicInput[],
+  props: Props,
+  wrapper: LogicWrapper,
+  autoConnectInListener = true,
+): BuiltLogic {
   const input = inputs[0]
   const key = props && input.key ? input.key(props) : undefined
 

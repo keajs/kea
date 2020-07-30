@@ -126,15 +126,17 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType>): LogicType & LogicWrapperAdditions {
-  const wrapper: LogicType & LogicWrapperAdditions = (function (
+export function kea<LogicType extends Logic = Logic>(
+  input: LogicInput<LogicType>,
+): LogicType & LogicWrapperAdditions<LogicType> {
+  const wrapper: LogicType & LogicWrapperAdditions<LogicType> = (function (
     args: undefined | AnyComponent,
   ): (LogicType & BuiltLogicAdditions) | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args) as LogicType & BuiltLogicAdditions
     }
     return wrapper.wrap(args)
-  } as any) as LogicType & LogicWrapperAdditions
+  } as any) as LogicType & LogicWrapperAdditions<LogicType>
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
@@ -161,6 +163,6 @@ export function kea<LogicType extends Logic = Logic>(input: LogicInput<LogicType
 
 export function connect<LogicType extends Logic = Logic>(
   input: LogicInput['connect'],
-): LogicType & LogicWrapperAdditions {
+): LogicType & LogicWrapperAdditions<LogicType> {
   return kea({ connect: input })
 }
