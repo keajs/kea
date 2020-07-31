@@ -4,7 +4,9 @@ import { ComponentType, FunctionComponent } from 'react'
 // universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
 export type Selector = (state?: any, props?: any) => any
-export type PathCreator = (key?: string) => string[]
+export type RequiredPathCreator<T = string> = (key: T) => PathType
+export type PathCreator<T = string> = (key?: T) => PathType
+export type PathType = (string | number | boolean)[]
 export type Props = Record<string, unknown> // nb! used in kea and react
 
 // logic base class
@@ -18,7 +20,7 @@ export interface Logic {
   connections: { [pathString: string]: BuiltLogic }
   constants: Record<string, string>
   defaults: Record<string, any>
-  path: string[]
+  path: PathType
   pathString: string
   props: Props
   reducers: any
@@ -160,7 +162,9 @@ type LoaderDefinitions<LogicType extends Logic> = {
 export type LogicInput<LogicType extends Logic = Logic> = {
   extend?: LogicInput[]
   key?: (props: LogicType['props']) => any
-  path?: PathCreator | string[]
+  path?:
+    | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
+    | PathType
 
   connect?: any
   constants?: () => string[] | string[]
@@ -215,7 +219,7 @@ export interface MakeLogicType<Values = Record<string, unknown>, Actions = Recor
   cache: Record<string, unknown>
   constants: Record<string, string>
   defaults: Values
-  path: string[]
+  path: PathType
   pathString: string
   reducerOptions: Record<string, unknown>
   reducer: (state: Values, action: () => any, fullState: any) => Values
@@ -312,7 +316,7 @@ export interface Context {
   }
 
   input: {
-    inlinePathCreators: Map<LogicInput, PathCreator>
+    inlinePathCreators: Map<LogicInput, PathCreator<any>>
     inlinePathCounter: number
     defaults: Record<string, any> | undefined
   }
