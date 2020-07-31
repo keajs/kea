@@ -216,12 +216,7 @@ export interface MakeLogicType<Values = Record<string, unknown>, Actions = Recor
     [ActionKey in keyof Actions]: string
   }
   actions: Actions
-  cache: Record<string, unknown>
-  constants: Record<string, string>
   defaults: Values
-  path: PathType
-  pathString: string
-  reducerOptions: Record<string, unknown>
   reducer: (state: Values, action: () => any, fullState: any) => Values
   reducers: {
     [Value in keyof Values]?: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
@@ -297,7 +292,7 @@ export type PluginEventArrays = {
   [K in keyof PluginEvents]: PluginEvents[K][]
 }
 
-export interface Plugin {
+export interface KeaPlugin {
   name: string
   defaults?: () => Record<string, any>
   buildOrder?: Record<string, { before?: string; after?: string }>
@@ -307,7 +302,7 @@ export interface Plugin {
 
 export interface Context {
   plugins: {
-    activated: Plugin[]
+    activated: KeaPlugin[]
     buildOrder: string[]
     buildSteps: Record<string, BuildStep[]>
     events: PluginEventArrays
