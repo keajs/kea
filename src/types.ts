@@ -20,9 +20,11 @@ export interface Logic {
   connections: { [pathString: string]: BuiltLogic }
   constants: Record<string, string>
   defaults: Record<string, any>
+  listeners: Record<string, any>
   path: PathType
   pathString: string
   props: Props
+  propTypes: Record<string, any>
   reducers: any
   reducerOptions: Record<string, any>
   reducer: any
@@ -50,9 +52,12 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   (component: AnyComponent): FunctionComponent
-  (props: LogicType['props'] | undefined): BuiltLogic
+  (props: LogicType['props'] extends Props ? any : LogicType['props'] | undefined): BuiltLogic
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic
+  build: (
+    props?: LogicType['props'] extends Props ? any : LogicType['props'],
+    autoConnectInListener?: boolean,
+  ) => BuiltLogic
   mount: (callback?: any) => () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
 }
@@ -116,27 +121,20 @@ type SelectorDefinitions<LogicType extends Logic> =
 
 type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
+type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
+  [K in keyof A]?:
+    | ((
+        payload: ReturnType<A[K]>['payload'],
+        breakpoint: BreakPointFunction,
+        action: ReturnType<A[K]>,
+        previousState: any,
+      ) => void | Promise<void>)
+    | (() => void | Promise<void>)
+}
+
 type ListenerDefinitions<LogicType extends Logic> =
-  | {
-      [K in keyof LogicType['actionCreators']]?:
-        | ((
-            payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
-            breakpoint: BreakPointFunction,
-            action: ReturnType<LogicType['actionCreators'][K]>,
-            previousState: any,
-          ) => void | Promise<void>)
-        | (() => void | Promise<void>)
-    }
-  | {
-      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?:
-        | ((
-            payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-            breakpoint: BreakPointFunction,
-            action: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>,
-            previousState: any,
-          ) => void | Promise<void>)
-        | (() => void | Promise<void>)
-    }
+  | ListenerDefinitionsForRecord<LogicType['actionCreators']>
+  | ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
