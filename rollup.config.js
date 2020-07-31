@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
 import pkg from './package.json'
 import typescript from 'rollup-plugin-typescript2'
+import dts from 'rollup-plugin-dts'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -30,8 +31,15 @@ export default [
         exclude: 'src/**',
       }),
       // Compile TypeScript/JavaScript files
-      typescript(),
+      typescript({
+        include: [ "*.(t|j)s+(|x)", "**/*.(t|j)s+(|x)" ]
+      }),
       babel({ extensions, include: ['src/**/*'] }),
     ],
+  },
+  {
+    input: './lib/index.d.ts',
+    output: [{ file: 'lib/kea.d.ts', format: 'es' }],
+    plugins: [dts()],
   },
 ]

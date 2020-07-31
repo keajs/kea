@@ -4,7 +4,7 @@
   "description": "Smart front-end architecture",
   "author": "Marius Andra",
   "license": "MIT",
-  "types": "lib/index.d.ts",
+  "types": "lib/kea.d.ts",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "repository": {
@@ -22,7 +22,7 @@
     }
   ],
   "scripts": {
-    "build": "npm run clean && npm run compile",
+    "build": "yarn run clean && yarn run compile",
     "clean": "rimraf lib/*",
     "compile": "npm run compile:rollup",
     "compile:tsc": "tsc -p .",
@@ -130,6 +130,7 @@
     "rollup": "^2.22.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-dts": "^1.4.9",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "size-limit": "^1.1.2",

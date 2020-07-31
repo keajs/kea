@@ -11,7 +11,8 @@
     "baseUrl": "./src",
     "incremental": true,
     "types": ["jest", "node", "redux"],
-    "resolveJsonModule": false
+    "resolveJsonModule": false,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "lib"]
 }
