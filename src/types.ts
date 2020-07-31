@@ -203,7 +203,11 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 // - Values = { valueKey: type }
 // - Actions = { actionKey: (id) => void }   // <- this works
 // - Actions = { actionKey: (id) => { id } } // <- adds type completion in reducers
-export interface MakeLogicType<Values = Record<string, unknown>, Actions = Record<string, AnyFunction>> extends Logic {
+export interface MakeLogicType<
+  Values = Record<string, unknown>,
+  Actions = Record<string, AnyFunction>,
+  LogicProps extends Props = Props
+> extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
       ? ActionCreatorForPayloadBuilder<Actions[ActionKey]>
@@ -215,13 +219,14 @@ export interface MakeLogicType<Values = Record<string, unknown>, Actions = Recor
   }
   actions: Actions
   defaults: Values
+  props: LogicProps
   reducer: (state: Values, action: () => any, fullState: any) => Values
   reducers: {
-    [Value in keyof Values]?: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
+    [Value in keyof Values]: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
   }
-  selector: (state: any, props: any) => Values
+  selector: (state: any, props: LogicProps) => Values
   selectors: {
-    [Value in keyof Values]?: (state: any, props: any) => Values[Value]
+    [Value in keyof Values]: (state: any, props: LogicProps) => Values[Value]
   }
   values: Values
 
