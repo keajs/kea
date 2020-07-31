@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '..'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: Logic, input: LogicInput) {
@@ -33,7 +33,7 @@ function createBlankLogic({
   wrapper,
 }: {
   key: string | undefined
-  path: string[]
+  path: PathType
   props: Props
   wrapper: LogicWrapper
 }) {
@@ -87,7 +87,7 @@ function buildLogic({
   wrapper,
 }: {
   inputs: LogicInput[]
-  path: string[]
+  path: PathType
   key: string | undefined
   props: Props
   wrapper: LogicWrapper

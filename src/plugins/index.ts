@@ -1,5 +1,5 @@
 import { getContext } from '../context'
-import { Plugin, PluginEvents } from '../types'
+import { KeaPlugin, PluginEvents } from '../types'
 /*
   plugins = [
     {
@@ -102,7 +102,7 @@ const reservedKeys = {
   extend: true,
 }
 
-export function activatePlugin(pluginToActivate: Plugin | (() => Plugin)): void {
+export function activatePlugin(pluginToActivate: KeaPlugin | (() => KeaPlugin)): void {
   const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
 
   const { plugins } = getContext()

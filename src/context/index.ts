@@ -1,7 +1,7 @@
 import corePlugin from '../core'
-import listenersPlugin from '../listeners'
+import listenersPlugin from '../listeners/index'
 import { activatePlugin, runPlugins } from '../plugins'
-import { getStore } from '../store'
+import { getStore } from '../store/store'
 import { Context, ContextOptions } from '../types'
 
 let context: Context
