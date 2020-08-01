@@ -12,7 +12,8 @@
     "incremental": true,
     "types": ["jest", "node", "redux"],
     "resolveJsonModule": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "exclude": ["node_modules", "lib"]
 }
