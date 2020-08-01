@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { kea } from '../src/kea/kea'
 import { useValues } from '../src/react/hooks'
 import { logicType } from './logicType'
@@ -99,14 +100,16 @@ export const logic = kea<logicType<Session>>({
   },
 })
 
-function MyComponent() {
+function MyComponent(): JSX.Element {
   const { number } = useValues(logic)
   // logic({ id: 'asd' })
-  logic({ id: 1233 })
+  logic({ id: 12 })
   logic()
   logic.build({ id: 123 })
 
   const builtLogic = logic.build({ id: 123 })
   builtLogic.actions.updateName('')
   builtLogic.values.name
+
+  return <div />
 }

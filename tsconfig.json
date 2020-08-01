@@ -13,7 +13,8 @@
     "types": ["jest", "node"],
     "resolveJsonModule": false,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "jsx": "react"
   },
   "exclude": ["node_modules", "lib"]
 }
