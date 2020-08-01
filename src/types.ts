@@ -8,6 +8,7 @@ export type RequiredPathCreator<T = string> = (key: T) => PathType
 export type PathCreator<T = string> = (key?: T) => PathType
 export type PathType = (string | number | boolean)[]
 export type Props = Record<string, unknown> // nb! used in kea and react
+export type EmptyProps = '___EMPTY_PROPS___'
 
 // logic base class
 export interface Logic {
@@ -52,10 +53,10 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   (component: AnyComponent): FunctionComponent
-  (props: LogicType['props'] extends Props ? any : LogicType['props'] | undefined): BuiltLogic
+  (props: LogicType['props'] extends EmptyProps ? any : LogicType['props'] | undefined): BuiltLogic
   wrap: (Component: AnyComponent) => KeaComponent
   build: (
-    props?: LogicType['props'] extends Props ? any : LogicType['props'],
+    props?: LogicType['props'] extends EmptyProps ? any : LogicType['props'],
     autoConnectInListener?: boolean,
   ) => BuiltLogic
   mount: (callback?: any) => () => void
@@ -206,7 +207,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps extends Props = Props
+  LogicProps = EmptyProps
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -219,7 +220,7 @@ export interface MakeLogicType<
   }
   actions: Actions
   defaults: Values
-  props: LogicProps
+  props: LogicProps extends Record<string, unknown> ? LogicProps : Props
   reducer: (state: Values, action: () => any, fullState: any) => Values
   reducers: {
     [Value in keyof Values]: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
@@ -234,7 +235,6 @@ export interface MakeLogicType<
     [K in keyof Values]: (...args: any) => Values[K]
   }
 }
-
 type AnyFunction = (...args: any) => any
 
 type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
