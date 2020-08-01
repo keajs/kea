@@ -24,7 +24,7 @@ export interface Logic {
   listeners: Record<string, any>
   path: PathType
   pathString: string
-  props: Props
+  props: any
   propTypes: Record<string, any>
   reducers: any
   reducerOptions: Record<string, any>
@@ -53,12 +53,10 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   (component: AnyComponent): FunctionComponent
-  (props: LogicType['props'] extends EmptyProps ? any : LogicType['props'] | undefined): BuiltLogic
+  (props: LogicType['props']): BuiltLogic
+  (): BuiltLogic
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (
-    props?: LogicType['props'] extends EmptyProps ? any : LogicType['props'],
-    autoConnectInListener?: boolean,
-  ) => BuiltLogic
+  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic
   mount: (callback?: any) => () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
 }
@@ -213,7 +211,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps = EmptyProps
+  LogicProps = Record<string, unknown>
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -226,7 +224,7 @@ export interface MakeLogicType<
   }
   actions: Actions
   defaults: Values
-  props: LogicProps extends Record<string, unknown> ? LogicProps : Props
+  props: LogicProps
   reducer: (state: Values, action: () => any, fullState: any) => Values
   reducers: {
     [Value in keyof Values]: (state: Values[Value], action: () => any, fullState: any) => Values[Value]

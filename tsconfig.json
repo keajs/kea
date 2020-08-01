@@ -8,7 +8,7 @@
     "module": "ESNext",
     "sourceMap": true,
     "outDir": "./lib",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "incremental": true,
     "types": ["jest", "node", "redux"],
     "resolveJsonModule": false,

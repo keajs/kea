@@ -38,8 +38,8 @@ export default [
     ],
   },
   {
-    input: './lib/index.d.ts',
-    output: [{ file: 'lib/kea.d.ts', format: 'es' }],
+    input: './lib/src/index.d.ts',
+    output: [{ file: 'lib/index.d.ts', format: 'es' }],
     plugins: [dts()],
   },
 ]

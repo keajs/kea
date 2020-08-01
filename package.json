@@ -4,7 +4,7 @@
   "description": "Smart front-end architecture",
   "author": "Marius Andra",
   "license": "MIT",
-  "types": "lib/kea.d.ts",
+  "types": "lib/index.d.ts",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "repository": {
