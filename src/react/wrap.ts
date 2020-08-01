@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { getPathStringForInput } from '../kea/path'
-import { runPlugins } from '../plugins'
+import { runPlugins } from '../plugins/index'
 import { AnyComponent, KeaComponent, LogicWrapper, Props } from '../types'
 
 export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {

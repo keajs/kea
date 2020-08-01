@@ -1,7 +1,7 @@
 import { attachReducer, detachReducer } from '../store/reducer'
-import { runPlugins } from '../plugins'
+import { runPlugins } from '../plugins/index'
 
-import { getContext } from '../context'
+import { getContext } from '../context/index'
 import { Logic } from '../types'
 
 export function mountLogic(logic: Logic, count = 1): void {

@@ -1,6 +1,6 @@
-import corePlugin from '../core'
+import corePlugin from '../core/index'
 import listenersPlugin from '../listeners/index'
-import { activatePlugin, runPlugins } from '../plugins'
+import { activatePlugin, runPlugins } from '../plugins/index'
 import { getStore } from '../store/store'
 import { Context, ContextOptions } from '../types'
 

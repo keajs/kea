@@ -1,4 +1,4 @@
-import { getContext } from '../context'
+import { getContext } from '../context/index'
 import { KeaPlugin, PluginEvents } from '../types'
 /*
   plugins = [

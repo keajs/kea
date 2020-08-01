@@ -1,4 +1,4 @@
-import { getContext } from '../context'
+import { getContext } from '../context/index'
 import { LogicInput, PathCreator, Props } from '../types'
 
 export function getPathForInput(input: LogicInput, props: Props) {

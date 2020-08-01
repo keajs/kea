@@ -1,6 +1,6 @@
 interface KeaReduxAction {
   type: string
-  payload: object
+  payload: any
 }
 
 interface KeaAction {
@@ -11,7 +11,7 @@ interface KeaAction {
 
 const isObject = (item: any) => typeof item === 'object' && !Array.isArray(item) && item !== null
 
-export function createAction(type: string, payloadCreator: (...args: any[]) => object): KeaAction {
+export function createAction(type: string, payloadCreator: (...args: any[]) => any): KeaAction {
   const action = <KeaAction>(...payloadArgs: any[]) =>
     ({
       type: type,

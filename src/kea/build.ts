@@ -1,9 +1,9 @@
-import { runPlugins } from '../plugins'
-import { getContext } from '../context'
+import { runPlugins } from '../plugins/index'
+import { getContext } from '../context/index'
 
 import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
-import { addConnection } from '..'
+import { addConnection } from '../index'
 
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
 
