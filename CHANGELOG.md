@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.2.0 - Coming soon
+- TypeScript support. No breaking changes, feel free to install the betas. Docs coming soon!
+
 ## 2.1.1 - 2020-06-14
 - Read the blog post: https://kea.js.org/blog/kea-2.1
 - Simplified the syntax even more! You don't need to pass `() => ({ ... })`
