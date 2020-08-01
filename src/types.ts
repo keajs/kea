@@ -53,10 +53,10 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   (component: AnyComponent): FunctionComponent
-  (props: LogicType['props']): BuiltLogic
-  (): BuiltLogic
+  (props: LogicType['props']): LogicType & BuiltLogicAdditions
+  (): LogicType & BuiltLogicAdditions
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic
+  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => LogicType & BuiltLogicAdditions
   mount: (callback?: any) => () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
 }

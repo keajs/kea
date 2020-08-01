@@ -145,7 +145,7 @@ export function kea<LogicType extends Logic = Logic>(
 
   wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
   wrapper.build = (props = {}, autoConnectInListener = true) =>
-    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener)
+    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions
   wrapper.mount = (callback) => wrapper.build().mount(callback)
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)

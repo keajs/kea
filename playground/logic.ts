@@ -100,9 +100,13 @@ export const logic = kea<logicType<Session>>({
 })
 
 function MyComponent() {
-  const {} = useValues(logic)
+  const { number } = useValues(logic)
   // logic({ id: 'asd' })
   logic({ id: 1233 })
   logic()
   logic.build({ id: 123 })
+
+  const builtLogic = logic.build({ id: 123 })
+  builtLogic.actions.updateName('')
+  builtLogic.values.name
 }
