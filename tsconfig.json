@@ -10,7 +10,7 @@
     "outDir": "./lib",
     "baseUrl": "./",
     "incremental": true,
-    "types": ["jest", "node", "redux"],
+    "types": ["jest", "node"],
     "resolveJsonModule": false,
     "esModuleInterop": true,
     "moduleResolution": "node"

@@ -117,7 +117,7 @@ type SelectorDefinitions<LogicType extends Logic> =
       [key: string]: SelectorDefinition<LogicType['selectors'], any>
     }
 
-type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
+export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
 type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
   [K in keyof A]?: (
@@ -163,7 +163,6 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   path?:
     | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
     | PathType
-
   connect?: any
   constants?: () => string[] | string[]
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
@@ -191,8 +190,8 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
-  urlToAction?: any
-  actionToUrl?: any
+  urlToAction?: (logic: LogicType) => any
+  actionToUrl?: (logic: LogicType) => any
 
   [key: string]: unknown
 }
