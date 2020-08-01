@@ -1,6 +1,7 @@
 import { kea } from '../src/kea/kea'
 import { useValues } from '../src/react/hooks'
 import { logicType } from './logicType'
+import { githubLogic } from './githubLogic'
 
 interface Session {
   user: number
@@ -82,8 +83,20 @@ export const logic = kea<logicType<Session>>({
       },
     },
   }),
+  listeners: () => ({
+    updateNumber: ({ number }) => {
+      console.log(number)
+    },
+    [githubLogic.actionTypes.setUsername]: ({ username }) => {
+      console.log(username)
+    },
+  }),
   sharedListeners: () => ({}),
-  events: { afterMount: () => {} },
+  events: {
+    afterMount: () => {
+      console.log('after mount')
+    },
+  },
 })
 
 function MyComponent() {
