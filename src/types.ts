@@ -68,19 +68,18 @@ export type LogicWrapper = Logic & LogicWrapperAdditions<Logic>
 
 type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)> | LogicType['actionCreators']
 
-type ReducerActions<LogicType extends Logic, ReducerType> =
-  | {
-      [K in keyof LogicType['actionCreators']]?: (
-        state: ReducerType,
-        payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
-      ) => ReducerType
-    }
-  | {
-      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-        state: ReducerType,
-        payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-      ) => ReducerType
-    }
+type ReducerActions<LogicType extends Logic, ReducerType> = {
+  [K in keyof LogicType['actionCreators']]?: (
+    state: ReducerType,
+    payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
+  ) => ReducerType
+} &
+  {
+    [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+      state: ReducerType,
+      payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+    ) => ReducerType
+  }
 
 type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
@@ -121,19 +120,16 @@ type SelectorDefinitions<LogicType extends Logic> =
 type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
 type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
-  [K in keyof A]?:
-    | ((
-        payload: ReturnType<A[K]>['payload'],
-        breakpoint: BreakPointFunction,
-        action: ReturnType<A[K]>,
-        previousState: any,
-      ) => void | Promise<void>)
-    | (() => void | Promise<void>)
+  [K in keyof A]?: (
+    payload: ReturnType<A[K]>['payload'],
+    breakpoint: BreakPointFunction,
+    action: ReturnType<A[K]>,
+    previousState: any,
+  ) => void | Promise<void>
 }
 
-type ListenerDefinitions<LogicType extends Logic> =
-  | ListenerDefinitionsForRecord<LogicType['actionCreators']>
-  | ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
+type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
+  ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
 type SharedListenerDefinitions = Record<
   string,
