@@ -137,6 +137,11 @@ type ListenerDefinitions<LogicType extends Logic> =
   | ListenerDefinitionsForRecord<LogicType['actionCreators']>
   | ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
+type SharedListenerDefinitions = Record<
+  string,
+  (payload: any, breakpoint: BreakPointFunction, action: any, previousState: any) => void | Promise<void>
+>
+
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
 type LoaderFunctions<LogicType extends Logic, ReducerReturnType> = {
@@ -171,20 +176,21 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
   selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
   listeners?: ListenerDefinitions<LogicType> | ((logic: LogicType) => ListenerDefinitions<LogicType>)
+  sharedListeners?: SharedListenerDefinitions | ((logic: LogicType) => SharedListenerDefinitions)
   events?:
     | {
-        beforeMount?: () => void
-        afterMount?: () => void
-        beforeUnmount?: () => void
-        afterUnmount?: () => void
+        beforeMount?: (() => void) | (() => void)[]
+        afterMount?: (() => void) | (() => void)[]
+        beforeUnmount?: (() => void) | (() => void)[]
+        afterUnmount?: (() => void) | (() => void)[]
       }
     | ((
         logic: LogicType,
       ) => {
-        beforeMount?: () => void
-        afterMount?: () => void
-        beforeUnmount?: () => void
-        afterUnmount?: () => void
+        beforeMount?: (() => void) | (() => void)[]
+        afterMount?: (() => void) | (() => void)[]
+        beforeUnmount?: (() => void) | (() => void)[]
+        afterUnmount?: (() => void) | (() => void)[]
       })
   defaults?: any
 
