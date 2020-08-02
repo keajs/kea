@@ -253,7 +253,18 @@ interface CreateStoreOptions {
   plugins?: []
 }
 
-export interface ContextOptions {
+export interface InternalContextOptions {
+  debug: boolean
+  autoMount: boolean
+  autoConnect: boolean
+  proxyFields: boolean
+  flatDefaults: boolean
+  attachStrategy: 'dispatch' | 'replace'
+  detachStrategy: 'dispatch' | 'replace' | 'persist'
+  // ...otherOptions
+}
+
+export interface ContextOptions extends Partial<InternalContextOptions> {
   plugins?: any[]
   createStore?: boolean | CreateStoreOptions
   defaults?: Record<string, any>
@@ -343,14 +354,5 @@ export interface Context {
 
   store?: Store
 
-  options: {
-    debug: boolean
-    autoMount: boolean
-    autoConnect: boolean
-    proxyFields: boolean
-    flatDefaults: boolean
-    attachStrategy: 'dispatch' | 'replace'
-    detachStrategy: 'dispatch' | 'replace' | 'persist'
-    // ...otherOptions
-  }
+  options: InternalContextOptions
 }

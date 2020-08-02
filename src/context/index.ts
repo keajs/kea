@@ -107,7 +107,7 @@ export function closeContext() {
   context = (undefined as unknown) as Context
 }
 
-export function resetContext(options = {}) {
+export function resetContext(options: ContextOptions = {}) {
   if (context) {
     closeContext()
   }
