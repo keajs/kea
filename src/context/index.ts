@@ -62,6 +62,7 @@ export function openContext(options: ContextOptions = {}) {
     },
 
     store: undefined,
+    __store: undefined,
 
     options: {
       debug: false,
@@ -75,6 +76,19 @@ export function openContext(options: ContextOptions = {}) {
       ...otherOptions,
     },
   } as Context
+
+  Object.defineProperty(newContext, 'store', {
+    get: function get() {
+      const store = (newContext as any)['__store']
+      if (!store && createStore) {
+        return getStore(typeof createStore === 'object' ? createStore : {})
+      }
+      return store
+    },
+    set: function set(store) {
+      ;(newContext as any)['__store'] = store
+    },
+  })
 
   setContext(newContext)
 
@@ -90,10 +104,6 @@ export function openContext(options: ContextOptions = {}) {
     for (const plugin of plugins) {
       activatePlugin(plugin)
     }
-  }
-
-  if (createStore) {
-    getStore(typeof createStore === 'object' ? createStore : {})
   }
 
   return context
