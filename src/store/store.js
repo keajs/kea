@@ -29,7 +29,7 @@ export function getStore(opts = {}) {
     return
   }
 
-  if (context.store) {
+  if (context.__store) {
     console.error('[KEA] Already attached to a store! Exiting. Please reset the context before requesing a store')
     return
   }
@@ -67,7 +67,7 @@ export function getStore(opts = {}) {
 
   // create store
   const store = finalCreateStore(createCombinedReducer(), Object.assign({}, options.preloadedState))
-  context.store = store
+  context.__store = store
 
   // run post-hooks
   runPlugins('afterReduxStore', options, store)
