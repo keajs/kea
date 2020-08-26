@@ -11,6 +11,7 @@
     "baseUrl": "./",
     "incremental": true,
     "types": ["jest", "node"],
+    "lib": ["dom"],
     "resolveJsonModule": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
