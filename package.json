@@ -32,7 +32,8 @@
     "prettier": "prettier --write src/**/*",
     "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
-    "test": "BABEL_ENV=test jest",
+    "test": "yarn run test:jest && yarn run tsd && yarn run type-check",
+    "test:jest": "BABEL_ENV=test jest",
     "test-watch": "BABEL_ENV=test jest --watchAll",
     "type-check": "tsc",
     "type-check:watch": "npm run type-check -- --watch",
@@ -50,7 +51,8 @@
       "<rootDir>/es/",
       "<rootDir>/lib/",
       "<rootDir>/node_modules/",
-      "<rootDir>/src/__tests__/helper/"
+      "<rootDir>/src/__tests__/helper/",
+      "<rootDir>/src/types.test.ts"
     ],
     "testEnvironment": "node"
   },
