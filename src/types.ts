@@ -39,8 +39,8 @@ export interface Logic {
     afterUnmount?: () => void
   }
 
-  __keaTypeGenInternalSelectorTypes?: Record<string, (...args: any) => any>
-  __keaTypeGenInternalReducerActions?: Record<string, (...args: any) => any>
+  __keaTypeGenInternalSelectorTypes: Record<string, (...args: any) => any>
+  __keaTypeGenInternalReducerActions: Record<string, (...args: any) => { type: string; payload: any }>
 }
 
 export interface BuiltLogicAdditions {
@@ -218,7 +218,11 @@ export interface MakeLogicType<
   actionTypes: {
     [ActionKey in keyof Actions]: string
   }
-  actions: Actions
+  actions: {
+    [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
+      ? ActionForPayloadBuilder<Actions[ActionKey]>
+      : never
+  }
   defaults: Values
   props: LogicProps
   reducer: (state: Values, action: () => any, fullState: any) => Values
@@ -240,6 +244,8 @@ type AnyFunction = (...args: any) => any
 type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
   ...args: Parameters<B>
 ) => { type: string; payload: ReturnType<B> }
+
+type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
 
 // kea setup stuff
 

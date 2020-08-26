@@ -21,5 +21,11 @@ type MyLogicType = MakeLogicType<DashboardValues, DashboardActions, DashboardPro
 
 const logic = kea<MyLogicType>({})
 
-expectType<(name: string) => { type: string, payload: { name: string } }>(logic.actionCreators.setName)
+expectType<(name: string) => { type: string; payload: { name: string } }>(logic.actionCreators.setName)
 expectType<(name: string) => void>(logic.actions.setName)
+
+expectType<DashboardProps>(logic.props)
+
+expectType<number>(logic.values.id)
+expectType<(state: any, props: DashboardProps) => number>(logic.selectors.id)
+expectType<(state: number, action: () => any, fullState: any) => number>(logic.reducers.id)
