@@ -109,7 +109,7 @@ type SelectorDefinition<Selectors, SelectorFunction extends any> = [(s: Selector
 
 type SelectorDefinitions<LogicType extends Logic> =
   | {
-      [K in keyof LogicType['selectors']]?: SelectorDefinition<
+      [K in keyof LogicType['__keaTypeGenInternalSelectorTypes']]?: SelectorDefinition<
         LogicType['selectors'],
         LogicType['__keaTypeGenInternalSelectorTypes'][K]
       >
