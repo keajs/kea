@@ -5,7 +5,7 @@ import { expectType } from 'tsd'
 // ... requiring the following comments:
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { kea, MakeLogicType, BuiltLogic, PathType, Selector } from '.'
+import { kea, MakeLogicType, BuiltLogic, PathType, Selector, LogicEventType } from '.'
 
 /*
  * 1. Setup Test MakeLogicType<Values, Actions, Props>
@@ -95,12 +95,7 @@ expectType<PathType>(logic.path)
 expectType<string>(logic.pathString)
 expectType<Record<string, any>>(logic.propTypes)
 expectType<Record<string, any>>(logic.reducerOptions)
-expectType<{
-  beforeMount?: (() => void) | undefined
-  afterMount?: (() => void) | undefined
-  beforeUnmount?: (() => void) | undefined
-  afterUnmount?: (() => void) | undefined
-}>(logic.events)
+expectType<Partial<Record<LogicEventType, () => void>>>(logic.events)
 expectType<Record<string, (...args: any) => { type: string; payload: any }>>(logic.__keaTypeGenInternalReducerActions)
 
 /*
@@ -118,12 +113,7 @@ expectType<PathType>(logic2.path)
 expectType<string>(logic2.pathString)
 expectType<Record<string, any>>(logic2.propTypes)
 expectType<Record<string, any>>(logic2.reducerOptions)
-expectType<{
-  beforeMount?: (() => void) | undefined
-  afterMount?: (() => void) | undefined
-  beforeUnmount?: (() => void) | undefined
-  afterUnmount?: (() => void) | undefined
-}>(logic2.events)
+expectType<Partial<Record<LogicEventType, () => void>>>(logic2.events)
 expectType<Record<string, (...args: any) => { type: string; payload: any }>>(logic2.__keaTypeGenInternalReducerActions)
 
 // new compared to test 3

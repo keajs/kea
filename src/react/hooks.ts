@@ -64,5 +64,5 @@ export function useMountedLogic(logic: BuiltLogic | LogicWrapper): void {
     pathString.current = logic.pathString
   }
 
-  useEffect(() => () => unmount.current?.(), [])
+  useEffect(() => () => unmount.current && unmount.current(), [])
 }

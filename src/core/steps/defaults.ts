@@ -1,4 +1,5 @@
-import { getContext } from "../../context"
+import { getContext } from '../../context'
+import { Logic, LogicInput } from '../../types'
 
 /*
   input.defaults = ({ actions, selectors }) => (state, props) => ({
@@ -13,8 +14,10 @@ import { getContext } from "../../context"
     key2: 20
   }
 */
-export function createDefaults (logic, input) {
-  const { input: { defaults } } = getContext()
+export function createDefaults(logic: Logic, input: LogicInput): void {
+  const {
+    input: { defaults },
+  } = getContext()
 
   if (defaults) {
     assignContextDefaults(logic, defaults)
@@ -25,8 +28,10 @@ export function createDefaults (logic, input) {
   }
 }
 
-function assignContextDefaults (logic, defaults) {
-  const { options: { flatDefaults } } = getContext()
+function assignContextDefaults(logic: Logic, defaults: Record<string, any>): void {
+  const {
+    options: { flatDefaults },
+  } = getContext()
 
   if (flatDefaults) {
     if (defaults[logic.pathString]) {
@@ -34,7 +39,7 @@ function assignContextDefaults (logic, defaults) {
     }
   } else {
     for (const part of logic.path) {
-      defaults = defaults[part]
+      defaults = defaults[part.toString()]
       if (typeof defaults !== 'object') {
         return
       }
@@ -44,8 +49,8 @@ function assignContextDefaults (logic, defaults) {
   Object.assign(logic.defaults, defaults)
 }
 
-function assignInputDefaults (logic, input) {
-  let defaults = {}
+function assignInputDefaults(logic: Logic, input: LogicInput): void {
+  let defaults: Record<string, any> = {}
   const defaultsSelector = typeof input.defaults === 'function' ? input.defaults(logic) : input.defaults
 
   if (typeof defaultsSelector === 'function') {

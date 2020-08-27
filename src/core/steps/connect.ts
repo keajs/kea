@@ -1,4 +1,5 @@
 import { addConnection } from '../shared/connect'
+import { Logic, LogicInput } from '../../types'
 
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
@@ -15,7 +16,7 @@ import { addConnection } from '../shared/connect'
   logic.actionCreators = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
   logic.selectors = { chicken: (state) => state.scenes.farm }
 */
-export function createConnect (logic, input) {
+export function createConnect(logic: Logic, input: LogicInput): void {
   if (!input.connect) {
     return
   }
@@ -43,7 +44,9 @@ export function createConnect (logic, input) {
     response.forEach(([otherLogic, from, to]) => {
       if (process.env.NODE_ENV !== 'production') {
         if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
-          throw new Error(`[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request action "${from}"`)
+          throw new Error(
+            `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request action "${from}"`,
+          )
         }
       }
       if (otherLogic._isKea) {
@@ -70,7 +73,9 @@ export function createConnect (logic, input) {
     response.forEach(([otherLogic, from, to]) => {
       if (process.env.NODE_ENV !== 'production') {
         if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
-          throw new Error(`[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request prop "${from}"`)
+          throw new Error(
+            `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request prop "${from}"`,
+          )
         }
       }
 
@@ -85,10 +90,13 @@ export function createConnect (logic, input) {
           logic.propTypes[to] = otherLogic.propTypes[from]
         }
       } else {
-        logic.selectors[to] = from === '*' ? otherLogic : (state, props) => {
-          const values = otherLogic(state, props)
-          return values && values[from]
-        }
+        logic.selectors[to] =
+          from === '*'
+            ? otherLogic
+            : (state, props) => {
+                const values = otherLogic(state, props)
+                return values && values[from]
+              }
       }
 
       if (process.env.NODE_ENV !== 'production') {
@@ -102,14 +110,14 @@ export function createConnect (logic, input) {
 
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
 // logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
-export function deconstructMapping (mapping) {
+export function deconstructMapping(mapping) {
   if (mapping.length % 2 === 1) {
     console.error(`[KEA] uneven mapping given to connect:`, mapping)
     console.trace()
     return null
   }
 
-  let response = []
+  const response = []
 
   for (let i = 0; i < mapping.length; i += 2) {
     const logic = mapping[i]

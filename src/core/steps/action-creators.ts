@@ -1,6 +1,7 @@
 import { createAction } from '../shared/actions'
+import { Logic, LogicInput } from '../../types'
 
-const toSpaces = (key) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
+const toSpaces = (key: string) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
 
 /*
   input.actions = ({ path, constants }) => ({
@@ -13,14 +14,14 @@ const toSpaces = (key) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toL
     setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
   }
 */
-export function createActionCreators (logic, input) {
+export function createActionCreators(logic: Logic, input: LogicInput): void {
   if (!input.actions) {
     return
   }
 
   const payloadCreators = typeof input.actions === 'function' ? input.actions(logic) : input.actions
 
-  Object.keys(payloadCreators).forEach(key => {
+  Object.keys(payloadCreators).forEach((key) => {
     if (typeof payloadCreators[key] === 'function' && payloadCreators[key]._isKeaAction) {
       logic.actionCreators[key] = payloadCreators[key]
     } else {
@@ -29,6 +30,6 @@ export function createActionCreators (logic, input) {
   })
 }
 
-export function createActionType (key, pathString) {
+export function createActionType(key: string, pathString: string): string {
   return `${toSpaces(key)} (${pathString})`
 }

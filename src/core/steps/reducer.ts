@@ -1,4 +1,5 @@
 import { combineKeaReducers } from '../../store/reducer'
+import { Logic, LogicInput } from '../../types'
 
 const emptyObject = {}
 
@@ -9,7 +10,7 @@ const emptyObject = {}
 
   logic.reducer = combineReducers(logic.reducers)
 */
-export function createReducer (logic, input) {
+export function createReducer(logic: Logic, input: LogicInput) {
   if (!input.reducers) {
     return
   }

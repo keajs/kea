@@ -1,4 +1,6 @@
-export function addConnection (logic, otherLogic) {
+import { Logic } from '../../types'
+
+export function addConnection(logic: Logic, otherLogic: Logic) {
   if (!otherLogic.connections || Object.keys(otherLogic.connections).length === 0) {
     return
   }
@@ -8,7 +10,7 @@ export function addConnection (logic, otherLogic) {
     return
   }
 
-  Object.keys(otherLogic.connections).forEach(path => {
+  Object.keys(otherLogic.connections).forEach((path) => {
     if (!logic.connections[path]) {
       logic.connections[path] = otherLogic.connections[path]
     }

@@ -77,7 +77,7 @@ export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
       () => () => {
         // set this as mapStateToProps can still run even if we have detached from redux
         isUnmounting[pathString.current] = true
-        unmount.current?.()
+        unmount.current && unmount.current()
         delete isUnmounting[pathString.current]
         delete lastState[pathString.current]
       },

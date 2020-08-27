@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import { getStoreState } from '../../context'
+import { Logic, LogicInput, PathType } from '../../types'
 
 /*
   logic.reducers = { duckId: function () {} }
@@ -8,20 +9,20 @@ import { getStoreState } from '../../context'
 
   logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
 */
-export function createReducerSelectors (logic, input) {
+export function createReducerSelectors(logic: Logic, input: LogicInput): void {
   if (!logic.reducer) {
     return
   }
 
   logic.selector = (state = getStoreState()) => pathSelector(logic.path, state)
 
-  Object.keys(logic.reducers).forEach(key => {
-    logic.selectors[key] = createSelector(logic.selector, state => state[key])
+  Object.keys(logic.reducers).forEach((key) => {
+    logic.selectors[key] = createSelector(logic.selector!, (state) => state[key])
   })
 }
 
 // input: ['scenes', 'something', 'other'], state
 // output: state.scenes.something.other
-function pathSelector (path, state) {
-  return ([state]).concat(path).reduce((v, a) => v[a])
+function pathSelector(path: PathType, state: any) {
+  return [state].concat(path).reduce((v, a) => v[a])
 }

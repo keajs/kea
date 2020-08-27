@@ -7,7 +7,9 @@
 
   logic.constants = { SOMETHING: 'SOMETHING', CONSTANT_NAME: 'CONSTANT_NAME' }
 */
-export function createConstants (logic, input) {
+import { Logic, LogicInput } from '../../types'
+
+export function createConstants(logic: Logic, input: LogicInput): void {
   if (!input.constants) {
     return
   }
@@ -17,13 +19,13 @@ export function createConstants (logic, input) {
 }
 
 // convert ['A', 'B'] ==> { 'A': 'A', 'B': 'B' }
-export default function convertConstants (c) {
-  if (Array.isArray(c)) {
-    let a = {}
-    for (let i = 0; i < c.length; i++) {
-      a[c[i]] = c[i]
+export default function convertConstants(constants: string[]): Record<string, string> {
+  if (Array.isArray(constants)) {
+    const response: Record<string, string> = {}
+    for (const value of constants) {
+      response[value] = value
     }
-    return a
+    return response
   }
-  return c
+  return constants
 }

@@ -9,6 +9,8 @@ export type PathCreator<T = string> = (key?: T) => PathType
 export type PathType = (string | number | boolean)[]
 export type Props = Record<string, unknown> // nb! used in kea and react
 export type EmptyProps = '___EMPTY_PROPS___'
+export type LogicEventType = 'beforeMount' | 'afterMount' | 'beforeUnmount' | 'afterUnmount'
+export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 // logic base class
 export interface Logic {
@@ -32,12 +34,7 @@ export interface Logic {
   selector?: Selector
   selectors: Record<string, Selector>
   values: Record<string, any>
-  events: {
-    beforeMount?: () => void
-    afterMount?: () => void
-    beforeUnmount?: () => void
-    afterUnmount?: () => void
-  }
+  events: PartialRecord<LogicEventType, () => void>
 
   __keaTypeGenInternalSelectorTypes: Record<string, (...args: any) => any>
   __keaTypeGenInternalReducerActions: Record<string, (...args: any) => { type: string; payload: any }>
@@ -105,7 +102,9 @@ type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
-type SelectorDefinition<Selectors, SelectorFunction extends any> = [(s: Selectors) => SelectorTuple, SelectorFunction]
+type SelectorDefinition<Selectors, SelectorFunction extends any> =
+  | [(s: Selectors) => SelectorTuple, SelectorFunction]
+  | [(s: Selectors) => SelectorTuple, SelectorFunction, any]
 
 type SelectorDefinitions<LogicType extends Logic> =
   | {
@@ -165,28 +164,19 @@ export type LogicInput<LogicType extends Logic = Logic> = {
     | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
     | PathType
   connect?: any
-  constants?: () => string[] | string[]
+  constants?: (logic: LogicType) => string[] | string[]
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
   reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
   selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
   listeners?: ListenerDefinitions<LogicType> | ((logic: LogicType) => ListenerDefinitions<LogicType>)
   sharedListeners?: SharedListenerDefinitions | ((logic: LogicType) => SharedListenerDefinitions)
   events?:
-    | {
-        beforeMount?: (() => void) | (() => void)[]
-        afterMount?: (() => void) | (() => void)[]
-        beforeUnmount?: (() => void) | (() => void)[]
-        afterUnmount?: (() => void) | (() => void)[]
-      }
-    | ((
-        logic: LogicType,
-      ) => {
-        beforeMount?: (() => void) | (() => void)[]
-        afterMount?: (() => void) | (() => void)[]
-        beforeUnmount?: (() => void) | (() => void)[]
-        afterUnmount?: (() => void) | (() => void)[]
-      })
-  defaults?: any
+    | PartialRecord<LogicEventType, (() => void) | (() => void)[]>
+    | ((logic: LogicType) => PartialRecord<LogicEventType, (() => void) | (() => void)[]>)
+  defaults?:
+    | ((logic: LogicType) => (state: any, props: LogicType['props']) => Record<string, any>)
+    | ((logic: LogicType) => Record<string, any>)
+    | Record<string, any>
 
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
@@ -347,7 +337,7 @@ export interface Context {
   }
 
   run: {
-    heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: BuiltLogic }[]
+    heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: Logic }[]
   }
 
   reducers: {
@@ -358,7 +348,7 @@ export interface Context {
     combined: undefined
   }
 
-  store?: Store
+  store: Store
 
   options: InternalContextOptions
 }

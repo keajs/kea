@@ -1,7 +1,7 @@
-import { createSelector } from 'reselect'
 import { getStoreState } from '../../context'
+import { Logic, LogicInput } from '../../types'
 
-export function createValues (logic, input) {
+export function createValues(logic: Logic, input: LogicInput): void {
   if (Object.keys(logic.selectors).length === 0) {
     return
   }
@@ -12,7 +12,7 @@ export function createValues (logic, input) {
         get: function () {
           return logic.selectors[key](getStoreState(), logic.props)
         },
-        enumerable: true
+        enumerable: true,
       })
     }
   }

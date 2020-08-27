@@ -1,4 +1,5 @@
 import { getContext } from '../../context'
+import { Logic, LogicInput } from '../../types'
 
 /*
   logic.actionCreators == {
@@ -12,7 +13,7 @@ import { getContext } from '../../context'
   }
 */
 
-export function createActions(logic, input) {
+export function createActions(logic: Logic, input: LogicInput): void {
   Object.keys(logic.actionCreators).forEach((key) => {
     const actionCreator = logic.actionCreators[key]
     const type = actionCreator.toString()

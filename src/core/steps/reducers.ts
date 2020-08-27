@@ -17,7 +17,9 @@
     duckId: 10
   }
 */
-export function createReducers (logic, input) {
+import { Logic, LogicInput } from '../../types'
+
+export function createReducers(logic: Logic, input: LogicInput): void {
   if (!input.reducers) {
     return
   }
@@ -94,16 +96,19 @@ export function createReducers (logic, input) {
       }
     }
 
-    const funReducer = createFunctionReducer(cache.functions, logic.defaults[key])
+    const funReducer = createFunctionReducer(cache.functions, logic.defaults[key], key, logic)
     const mapReducer = createMappingReducer(cache.mapping, logic.defaults[key], key, logic)
 
-    const newReducer = funReducer && mapReducer ? (state, action, fullState) => mapReducer(funReducer(state, action, fullState), action, fullState) : (mapReducer || funReducer)
+    const newReducer =
+      funReducer && mapReducer
+        ? (state, action, fullState) => mapReducer(funReducer(state, action, fullState), action, fullState)
+        : mapReducer || funReducer
 
     logic.reducers[key] = newReducer || (() => logic.defaults[key])
   }
 }
 
-function createFunctionReducer (functions, defaultValue, key, logic) {
+function createFunctionReducer(functions, defaultValue, key, logic) {
   if (functions.length === 0) {
     return null
   }
@@ -118,14 +123,18 @@ function createFunctionReducer (functions, defaultValue, key, logic) {
 }
 
 // create reducer function from such an object { [action]: (state, payload) => state }
-function createMappingReducer (mapping, defaultValue, key, logic) {
+function createMappingReducer(mapping, defaultValue, key, logic) {
   if (Object.keys(mapping).length === 0) {
     return null
   }
 
   if (process.env.NODE_ENV !== 'production') {
     if (typeof mapping.undefined !== 'undefined') {
-      throw new Error(`[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`)
+      throw new Error(
+        `[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(
+          mapping,
+        ).join(', ')}]`,
+      )
     }
   }
 
@@ -142,7 +151,7 @@ function createMappingReducer (mapping, defaultValue, key, logic) {
   }
 }
 
-function getDefaultState (defaultValue, fullState, key, logic) {
+function getDefaultState(defaultValue, fullState, key, logic) {
   if (typeof defaultValue === 'function') {
     if (fullState) {
       return defaultValue(fullState, logic.props)

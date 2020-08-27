@@ -3,20 +3,21 @@ import listenersPlugin from '../listeners/index'
 import { activatePlugin, runPlugins } from '../plugins/index'
 import { getStore } from '../store/store'
 import { Context, ContextOptions } from '../types'
+import { Store } from 'redux'
 
 let context: Context
 
-export function getContext() {
+export function getContext(): Context {
   return context
 }
 
-export const getStoreState = () => getContext().store?.getState()
+export const getStoreState = () => getContext().store.getState()
 
-export function setContext(newContext: Context) {
+export function setContext(newContext: Context): void {
   context = newContext
 }
 
-export function openContext(options: ContextOptions = {}) {
+export function openContext(options: ContextOptions = {}): Context {
   if (context) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
@@ -61,7 +62,7 @@ export function openContext(options: ContextOptions = {}) {
       combined: undefined,
     },
 
-    store: undefined,
+    store: (undefined as unknown) as Store, // will be redefined below
     __store: undefined,
 
     options: {
@@ -79,7 +80,7 @@ export function openContext(options: ContextOptions = {}) {
 
   Object.defineProperty(newContext, 'store', {
     get: function get() {
-      const store = (newContext as any)['__store']
+      const store: Store = (newContext as any)['__store']
       if (!store && createStore) {
         return getStore(typeof createStore === 'object' ? createStore : {})
       }
@@ -109,7 +110,7 @@ export function openContext(options: ContextOptions = {}) {
   return context
 }
 
-export function closeContext() {
+export function closeContext(): void {
   if (context) {
     runPlugins('beforeCloseContext', context)
   }
@@ -117,7 +118,7 @@ export function closeContext() {
   context = (undefined as unknown) as Context
 }
 
-export function resetContext(options: ContextOptions = {}) {
+export function resetContext(options: ContextOptions = {}): Context {
   if (context) {
     closeContext()
   }
@@ -125,7 +126,13 @@ export function resetContext(options: ContextOptions = {}) {
   return openContext(options)
 }
 
-export function withContext(code: (context?: Context) => any, options = {}) {
+export function withContext(
+  code: (context?: Context) => any,
+  options = {},
+): {
+  context: Context
+  returnValue: unknown
+} {
   const oldContext = context
 
   openContext(options)
@@ -141,7 +148,7 @@ export function withContext(code: (context?: Context) => any, options = {}) {
   }
 }
 
-export function getPluginContext(name: string) {
+export function getPluginContext(name: string): Record<string, any> {
   const { plugins } = getContext()
   if (!plugins.contexts[name]) {
     plugins.contexts[name] = {}
@@ -149,7 +156,7 @@ export function getPluginContext(name: string) {
   return plugins.contexts[name]
 }
 
-export function setPluginContext(name: string, pluginContext: object) {
+export function setPluginContext(name: string, pluginContext: Record<string, any>): void {
   const { plugins } = getContext()
   plugins.contexts[name] = pluginContext
 }
