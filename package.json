@@ -32,12 +32,12 @@
     "prettier": "prettier --write src/**/*",
     "prepublish": "npm run test && npm run build",
     "start": "npm run watch",
-    "test": "yarn run test:jest && yarn run tsd && yarn run type-check",
+    "test": "yarn run test:jest && yarn run test:tsd && yarn run test:types",
     "test:jest": "BABEL_ENV=test jest",
-    "test-watch": "BABEL_ENV=test jest --watchAll",
-    "type-check": "tsc",
-    "type-check:watch": "npm run type-check -- --watch",
-    "tsd": "yarn run build && cp src/types.test.ts lib/index.test-d.ts && tsd"
+    "test:jest:watch": "BABEL_ENV=test jest --watchAll",
+    "test:tsd": "yarn run build && cp test/tsd/*.test-d.ts lib/ && tsd",
+    "test:types": "tsc",
+    "test:types:watch": "npm run type-check -- --watch"
   },
   "files": [
     "es",
@@ -47,12 +47,8 @@
     "LICENSE.md"
   ],
   "jest": {
-    "testPathIgnorePatterns": [
-      "<rootDir>/es/",
-      "<rootDir>/lib/",
-      "<rootDir>/node_modules/",
-      "<rootDir>/src/__tests__/helper/",
-      "<rootDir>/src/types.test.ts"
+    "testMatch": [
+      "<rootDir>/test/jest/*"
     ],
     "testEnvironment": "node"
   },
