@@ -4,7 +4,7 @@ export function createEvents(logic: Logic, input: LogicInput): void {
   if (input.events) {
     const events = typeof input.events === 'function' ? input.events(logic) : input.events
 
-    for (const key of Object.keys(logic.events) as LogicEventType[]) {
+    Object.keys(events).forEach((key) => {
       const event = events[key]
       const newEvent = Array.isArray(event) ? () => event.forEach((e) => e()) : event
 
@@ -17,6 +17,6 @@ export function createEvents(logic: Logic, input: LogicInput): void {
       } else if (newEvent) {
         logic.events[key] = newEvent
       }
-    }
+    })
   }
 }
