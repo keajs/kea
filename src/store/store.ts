@@ -1,17 +1,18 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
 
 import { createCombinedReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from '../plugins'
 import { getContext } from '../context'
+import { CreateStoreOptions } from '../types'
 
 const reduxDevToolsCompose =
-  typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  typeof window !== 'undefined' && window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
+    ? window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
     : compose
 
 // this must be a function as we need new objects every time
 // otherwise it could happen that the "middleware" array gets mutated on the default
-const defaultOptions = () => ({
+const defaultOptions = (): CreateStoreOptions => ({
   paths: undefined,
   reducers: {},
   preloadedState: undefined,
@@ -21,7 +22,7 @@ const defaultOptions = () => ({
   plugins: [],
 })
 
-export function getStore(opts = {}) {
+export function getStore(opts = {}): Store | void {
   const context = getContext()
 
   if (!context) {
@@ -29,13 +30,13 @@ export function getStore(opts = {}) {
     return
   }
 
-  if (context.__store) {
+  if (context['__store']) {
     console.error('[KEA] Already attached to a store! Exiting. Please reset the context before requesing a store')
     return
   }
 
   // clone options
-  let options = Object.assign({}, defaultOptions(), opts)
+  const options = Object.assign({}, defaultOptions(), opts)
 
   // clone redux reducers
   context.reducers.redux = Object.assign({}, options.reducers)
@@ -45,19 +46,19 @@ export function getStore(opts = {}) {
 
   // combine middleware into the first enhancer
   if (options.middleware.length > 0) {
-    options.enhancers = [applyMiddleware(...options.middleware)].concat(options.enhancers)
+    options.enhancers = ([applyMiddleware(...options.middleware)] as StoreEnhancer[]).concat(options.enhancers)
   }
 
   // use a special compose function?
-  const composeEnchancer = options.compose || compose
+  const composeEnchancer: typeof compose = options.compose || compose
 
   // create the store creator
-  const finalCreateStore = composeEnchancer(...options.enhancers)(createStore)
+  const finalCreateStore = composeEnchancer(...options.enhancers)(createStore) as typeof createStore
 
   // if we are whitelisting paths
   if (options.paths && options.paths.length > 0) {
-    context.reducers.whitelist = []
-    options.paths.forEach(pathStart => {
+    context.reducers.whitelist = {}
+    options.paths.forEach((pathStart) => {
       context.reducers.whitelist[pathStart] = true
       initRootReducerTree(pathStart)
     })
@@ -67,7 +68,7 @@ export function getStore(opts = {}) {
 
   // create store
   const store = finalCreateStore(createCombinedReducer(), Object.assign({}, options.preloadedState))
-  context.__store = store
+  context['__store'] = store
 
   // run post-hooks
   runPlugins('afterReduxStore', options, store)

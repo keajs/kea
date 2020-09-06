@@ -1,4 +1,4 @@
-import {Reducer, Store, Action as ReduxAction, Middleware} from 'redux'
+import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose } from 'redux'
 import { ComponentType, FunctionComponent } from 'react'
 
 // universal helpers
@@ -251,9 +251,9 @@ export interface CreateStoreOptions {
   reducers: Record<string, Reducer>
   preloadedState: undefined
   middleware: Middleware[]
-  compose: () => any
-  enhancers: []
-  plugins: []
+  compose: typeof compose
+  enhancers: StoreEnhancer[]
+  plugins: KeaPlugin[]
 }
 
 export interface InternalContextOptions {
@@ -351,7 +351,7 @@ export interface Context {
     tree: any
     roots: any
     redux: any
-    whitelist: boolean
+    whitelist: false | Record<string, boolean>
     combined: undefined
   }
 
