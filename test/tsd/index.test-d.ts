@@ -6,6 +6,7 @@ import { expectType } from 'tsd'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { kea, MakeLogicType, BuiltLogic, PathType, Selector, LogicEventType, ListenerFunctionWrapper } from '.'
+import { AnyAction } from 'redux'
 
 /*
  * 1. Setup Test MakeLogicType<Values, Actions, Props>
@@ -56,13 +57,13 @@ expectType<{
 expectType<DashboardValues>(logic.defaults)
 expectType<DashboardProps>(logic.props)
 expectType<DashboardValues>(logic.values)
-expectType<(state: DashboardValues, action: () => any, fullState: any) => DashboardValues>(logic.reducer)
+expectType<(state: DashboardValues, action: AnyAction, fullState: any) => DashboardValues>(logic.reducer)
 
 expectType<{
-  id: (state: number, action: () => any, fullState: any) => number
-  created_at: (state: string, action: () => any, fullState: any) => string
-  name: (state: string, action: () => any, fullState: any) => string
-  pinned: (state: boolean, action: () => any, fullState: any) => boolean
+  id: (state: number, action: AnyAction, fullState: any) => number
+  created_at: (state: string, action: AnyAction, fullState: any) => string
+  name: (state: string, action: AnyAction, fullState: any) => string
+  pinned: (state: boolean, action: AnyAction, fullState: any) => boolean
 }>(logic.reducers)
 
 expectType<(state: any, props: DashboardProps) => DashboardValues>(logic.selector)

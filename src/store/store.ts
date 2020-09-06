@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
 
-import { createCombinedReducer, initRootReducerTree } from './reducer'
+import { createReduxStoreReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 import { CreateStoreOptions } from '../types'
@@ -67,7 +67,7 @@ export function getStore(opts = {}): Store | void {
   }
 
   // create store
-  const store = finalCreateStore(createCombinedReducer(), Object.assign({}, options.preloadedState))
+  const store = finalCreateStore(createReduxStoreReducer(), Object.assign({}, options.preloadedState))
   context['__store'] = store
 
   // run post-hooks

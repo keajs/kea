@@ -1,4 +1,4 @@
-import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose } from 'redux'
+import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
 import { ComponentType, FunctionComponent } from 'react'
 
 // universal helpers
@@ -88,6 +88,8 @@ type ReducerDefinitions<LogicType extends Logic> = {
     | [ReturnType<LogicType['reducers'][K]>]
     | ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>
 }
+
+export type ReducerFunction<S = any> = (state: S, action: AnyAction, fullState: any) => S
 
 type SelectorTuple =
   | []
@@ -222,9 +224,9 @@ export interface MakeLogicType<
   }
   defaults: Values
   props: LogicProps
-  reducer: (state: Values, action: () => any, fullState: any) => Values
+  reducer: ReducerFunction<Values>
   reducers: {
-    [Value in keyof Values]: (state: Values[Value], action: () => any, fullState: any) => Values[Value]
+    [Value in keyof Values]: ReducerFunction<Values[Value]>
   }
   selector: (state: any, props: LogicProps) => Values
   selectors: {
@@ -352,7 +354,7 @@ export interface Context {
     roots: any
     redux: any
     whitelist: false | Record<string, boolean>
-    combined: undefined
+    combined: ReducerFunction
   }
 
   store: Store
