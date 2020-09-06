@@ -1,4 +1,4 @@
-import { Reducer, Store, Action as ReduxAction } from 'redux'
+import {Reducer, Store, Action as ReduxAction, Middleware} from 'redux'
 import { ComponentType, FunctionComponent } from 'react'
 
 // universal helpers
@@ -23,7 +23,7 @@ export interface Logic {
   connections: { [pathString: string]: BuiltLogic }
   constants: Record<string, string>
   defaults: Record<string, any>
-  listeners: Record<string, any>
+  listeners: Record<string, ListenerFunctionWrapper[]>
   path: PathType
   pathString: string
   props: any
@@ -33,6 +33,7 @@ export interface Logic {
   reducer: any
   selector?: Selector
   selectors: Record<string, Selector>
+  sharedListeners?: Record<string, ListenerFunction>
   values: Record<string, any>
   events: PartialRecord<LogicEventType, () => void>
 
@@ -131,10 +132,16 @@ type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any
 type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
   ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
-type SharedListenerDefinitions = Record<
-  string,
-  (payload: any, breakpoint: BreakPointFunction, action: any, previousState: any) => void | Promise<void>
->
+export type ListenerFunction = (
+  payload: any,
+  breakpoint: BreakPointFunction,
+  action: any,
+  previousState: any,
+) => void | Promise<void>
+
+export type ListenerFunctionWrapper = (action: any, previousState: any) => void
+
+type SharedListenerDefinitions = Record<string, ListenerFunction>
 
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
@@ -239,14 +246,14 @@ type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) =
 
 // kea setup stuff
 
-interface CreateStoreOptions {
-  paths?: string[]
-  reducers?: Record<string, Reducer>
-  preloadedState?: undefined
-  middleware?: []
-  compose?: () => any
-  enhancers?: []
-  plugins?: []
+export interface CreateStoreOptions {
+  paths: string[]
+  reducers: Record<string, Reducer>
+  preloadedState: undefined
+  middleware: Middleware[]
+  compose: () => any
+  enhancers: []
+  plugins: []
 }
 
 export interface InternalContextOptions {
@@ -261,8 +268,8 @@ export interface InternalContextOptions {
 }
 
 export interface ContextOptions extends Partial<InternalContextOptions> {
-  plugins?: any[]
-  createStore?: boolean | CreateStoreOptions
+  plugins?: KeaPlugin[]
+  createStore?: boolean | Partial<CreateStoreOptions>
   defaults?: Record<string, any>
   skipPlugins?: string[]
 }

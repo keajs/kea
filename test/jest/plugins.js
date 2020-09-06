@@ -4,8 +4,8 @@ import { getContext, getPluginContext, setPluginContext } from '../../src/contex
 import './helper/jsdom'
 import { configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import corePlugin from '../../src/core'
-import listenersPlugin from '../../src/listeners'
+import { corePlugin } from '../../src/core'
+import { listenersPlugin } from '../../src/listeners'
 import { activatePlugin } from '../../src/plugins'
 
 configure({ adapter: new Adapter() })

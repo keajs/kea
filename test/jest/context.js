@@ -1,8 +1,8 @@
 /* global test, expect, beforeEach */
 import { kea } from '../../src'
 import './helper/jsdom'
-import corePlugin from '../../src/core'
-import listenersPlugin from '../../src/listeners'
+import { corePlugin } from '../../src/core'
+import { listenersPlugin } from '../../src/listeners'
 import { activatePlugin } from '../../src/plugins'
 import { getContext, openContext, closeContext, resetContext } from '../../src/context'
 

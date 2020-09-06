@@ -9,9 +9,10 @@ import { createReducerSelectors } from './steps/reducer-selectors'
 import { createSelectors } from './steps/selectors'
 import { createValues } from './steps/values'
 import { createEvents } from './steps/events'
+import { KeaPlugin } from '../types'
 
 // core plugin
-export default {
+export const corePlugin: KeaPlugin = {
   name: 'core',
 
   defaults: () => ({

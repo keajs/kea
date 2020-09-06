@@ -5,7 +5,7 @@ import { expectType } from 'tsd'
 // ... requiring the following comments:
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { kea, MakeLogicType, BuiltLogic, PathType, Selector, LogicEventType } from '.'
+import { kea, MakeLogicType, BuiltLogic, PathType, Selector, LogicEventType, ListenerFunctionWrapper } from '.'
 
 /*
  * 1. Setup Test MakeLogicType<Values, Actions, Props>
@@ -90,7 +90,7 @@ expectType<any>(logic.key)
 expectType<Record<string, any>>(logic.cache)
 expectType<{ [pathString: string]: BuiltLogic }>(logic.connections)
 expectType<Record<string, string>>(logic.constants)
-expectType<Record<string, any>>(logic.listeners)
+expectType<Record<string, ListenerFunctionWrapper[]>>(logic.listeners)
 expectType<PathType>(logic.path)
 expectType<string>(logic.pathString)
 expectType<Record<string, any>>(logic.propTypes)
@@ -108,7 +108,7 @@ expectType<any>(logic2.key)
 expectType<Record<string, any>>(logic2.cache)
 expectType<{ [pathString: string]: BuiltLogic }>(logic2.connections)
 expectType<Record<string, string>>(logic2.constants)
-expectType<Record<string, any>>(logic2.listeners)
+expectType<Record<string, ListenerFunctionWrapper[]>>(logic2.listeners)
 expectType<PathType>(logic2.path)
 expectType<string>(logic2.pathString)
 expectType<Record<string, any>>(logic2.propTypes)
