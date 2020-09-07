@@ -8,19 +8,25 @@ export interface githubLogicType<Repository> extends Logic {
       username: string,
     ) => {
       type: 'set username (samples.githubLogic)'
-      payload: { username: string }
+      payload: {
+        username: string
+      }
     }
     setRepositories: (
       repositories: Repository[],
     ) => {
       type: 'set repositories (samples.githubLogic)'
-      payload: { repositories: Repository[] }
+      payload: {
+        repositories: Repository[]
+      }
     }
     setFetchError: (
       error: string,
     ) => {
       type: 'set fetch error (samples.githubLogic)'
-      payload: { error: string }
+      payload: {
+        error: string
+      }
     }
   }
   actionKeys: {
@@ -49,6 +55,17 @@ export interface githubLogicType<Repository> extends Logic {
     afterMount: () => void
   }
   key: undefined
+  listeners: {
+    setUsername: ((
+      action: {
+        type: 'set username (samples.githubLogic)'
+        payload: {
+          username: string
+        }
+      },
+      previousState: any,
+    ) => void | Promise<void>)[]
+  }
   path: ['samples', 'githubLogic']
   pathString: 'samples.githubLogic'
   props: Record<string, unknown>
@@ -84,6 +101,7 @@ export interface githubLogicType<Repository> extends Logic {
     error: (state: any, props: any) => string | null
     sortedRepositories: (state: any, props: any) => Repository[]
   }
+  sharedListeners: {}
   values: {
     username: string
     repositories: Repository[]

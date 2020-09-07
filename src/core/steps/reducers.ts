@@ -17,7 +17,8 @@
     duckId: 10
   }
 */
-import { Logic, LogicInput } from '../../types'
+import { Logic, LogicInput, ReducerFunction } from '../../types'
+import { AnyAction } from 'redux'
 
 export function createReducers(logic: Logic, input: LogicInput): void {
   if (!input.reducers) {
@@ -31,7 +32,7 @@ export function createReducers(logic: Logic, input: LogicInput): void {
     const key = keys[i]
     const object = reducers[key]
 
-    let initialValue
+    let initialValue: any
     let reducer
     let type
     let options
@@ -55,7 +56,7 @@ export function createReducers(logic: Logic, input: LogicInput): void {
     if (typeof logic.defaults[key] === 'undefined') {
       // there is a root default selector. use it and try to get the key, fallback to initialValue
       if (typeof logic.defaults['*'] === 'function') {
-        logic.defaults[key] = (state, props) => {
+        logic.defaults[key] = (state: any, props: any) => {
           const v = logic.defaults['*'](state, props)[key]
           return typeof v === 'undefined' ? initialValue : typeof v === 'function' ? v(state, props) : v
         }
@@ -101,19 +102,20 @@ export function createReducers(logic: Logic, input: LogicInput): void {
 
     const newReducer =
       funReducer && mapReducer
-        ? (state, action, fullState) => mapReducer(funReducer(state, action, fullState), action, fullState)
+        ? (state: any, action: AnyAction, fullState: any) =>
+            mapReducer(funReducer(state, action, fullState), action, fullState)
         : mapReducer || funReducer
 
     logic.reducers[key] = newReducer || (() => logic.defaults[key])
   }
 }
 
-function createFunctionReducer(functions, defaultValue, key, logic) {
+function createFunctionReducer(functions: ReducerFunction[], defaultValue: any, key: string, logic: Logic) {
   if (functions.length === 0) {
     return null
   }
 
-  return (state, action, fullState) => {
+  return (state: any, action: AnyAction, fullState: any) => {
     if (typeof state === 'undefined') {
       state = getDefaultState(defaultValue, fullState, key, logic)
     }
@@ -123,7 +125,12 @@ function createFunctionReducer(functions, defaultValue, key, logic) {
 }
 
 // create reducer function from such an object { [action]: (state, payload) => state }
-function createMappingReducer(mapping, defaultValue, key, logic) {
+function createMappingReducer(
+  mapping: Record<string, (state: any, payload: any, meta?: any) => any>,
+  defaultValue: any,
+  key: string,
+  logic: Logic,
+) {
   if (Object.keys(mapping).length === 0) {
     return null
   }
@@ -138,7 +145,7 @@ function createMappingReducer(mapping, defaultValue, key, logic) {
     }
   }
 
-  return (state, action, fullState) => {
+  return (state: any, action: AnyAction, fullState: any) => {
     if (typeof state === 'undefined') {
       state = getDefaultState(defaultValue, fullState, key, logic)
     }
@@ -151,7 +158,7 @@ function createMappingReducer(mapping, defaultValue, key, logic) {
   }
 }
 
-function getDefaultState(defaultValue, fullState, key, logic) {
+function getDefaultState(defaultValue: any, fullState: any, key: any, logic: Logic) {
   if (typeof defaultValue === 'function') {
     if (fullState) {
       return defaultValue(fullState, logic.props)

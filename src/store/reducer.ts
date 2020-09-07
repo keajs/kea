@@ -178,7 +178,7 @@ export function recursiveCreateReducer(treeNode: ReducerFunction | Record<string
     return treeNode as ReducerFunction
   }
 
-  const children = {}
+  const children: Record<string, any> = {}
 
   Object.keys(treeNode).forEach((key) => {
     if (typeof treeNode[key] !== 'undefined') {
@@ -203,7 +203,7 @@ export function combineKeaReducers(reducers: Record<string, ReducerFunction>): R
 
   return function combination(state = {}, action, fullState) {
     let stateChanged = Object.keys(state).length !== reducerKeys.length
-    const nextState = {}
+    const nextState: Record<string, any> = {}
 
     for (let i = 0; i < reducerKeys.length; i++) {
       const key = reducerKeys[i]
@@ -229,5 +229,5 @@ function regenerateCombinedReducer() {
 
 export function createReduxStoreReducer(): Reducer {
   regenerateCombinedReducer()
-  return (state = defaultState, action) => getContext().reducers.combined(state, action, state)
+  return (state = defaultState, action) => (getContext().reducers.combined as ReducerFunction)(state, action, state)
 }

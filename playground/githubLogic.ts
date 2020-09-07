@@ -59,7 +59,7 @@ export const githubLogic = kea<githubLogicType<Repository>>({
   },
 
   listeners: ({ actions }) => ({
-    setUsername: async ({ username }, breakpoint) => {
+    setUsername: async ({ username }, breakpoint, action, fullState) => {
       await breakpoint(300)
 
       const url = `${API_URL}/users/${username}/repos?per_page=250`

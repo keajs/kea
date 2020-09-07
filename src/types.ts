@@ -25,7 +25,7 @@ export interface Logic {
   listeners: Record<string, ListenerFunctionWrapper[]>
   path: PathType
   pathString: string
-  props: Props
+  props: any
   propTypes: Record<string, any>
   reducers: Record<string, any>
   reducerOptions: Record<string, any>
@@ -122,21 +122,16 @@ type SelectorDefinitions<LogicType extends Logic> =
 export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
 type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
-  [K in keyof A]?: (
-    payload: ReturnType<A[K]>['payload'],
-    breakpoint: BreakPointFunction,
-    action: ReturnType<A[K]>,
-    previousState: any,
-  ) => void | Promise<void>
+  [K in keyof A]?: ListenerFunction<ReturnType<A[K]>>
 }
 
 type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
   ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
-export type ListenerFunction = (
-  payload: any,
+export type ListenerFunction<A extends AnyAction = any> = (
+  payload: A['payload'],
   breakpoint: BreakPointFunction,
-  action: any,
+  action: A,
   previousState: any,
 ) => void | Promise<void>
 
@@ -353,10 +348,13 @@ export interface Context {
     roots: any
     redux: any
     whitelist: false | Record<string, boolean>
-    combined: ReducerFunction
+    combined: ReducerFunction | undefined
   }
 
+  // getter that always returns something
   store: Store
+  // the created store if present
+  __store: Store | undefined
 
   options: InternalContextOptions
 }

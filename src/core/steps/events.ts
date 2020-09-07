@@ -5,17 +5,17 @@ export function createEvents(logic: Logic, input: LogicInput): void {
     const events = typeof input.events === 'function' ? input.events(logic) : input.events
 
     Object.keys(events).forEach((key) => {
-      const event = events[key]
+      const event = events[key as LogicEventType]
       const newEvent = Array.isArray(event) ? () => event.forEach((e) => e()) : event
 
-      if (logic.events[key]) {
-        const oldEvent = logic.events[key]
-        logic.events[key] = () => {
-          oldEvent()
+      if (logic.events[key as LogicEventType]) {
+        const oldEvent = logic.events[key as LogicEventType]
+        logic.events[key as LogicEventType] = () => {
+          oldEvent && oldEvent()
           newEvent && newEvent()
         }
       } else if (newEvent) {
-        logic.events[key] = newEvent
+        logic.events[key as LogicEventType] = newEvent
       }
     })
   }

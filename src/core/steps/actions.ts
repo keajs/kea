@@ -21,7 +21,7 @@ export function createActions(logic: Logic, input: LogicInput): void {
     // we must add the action on the run heap, otherwise if in a listener we dispatch an action,
     // which causes a react re-render, all logic.build() calls in the react component will be
     // connected to the listener
-    logic.actions[key] = (...inp) => {
+    logic.actions[key] = (...inp: any[]) => {
       const builtAction = actionCreator(...inp)
       getContext().run.heap.push({ type: 'action', action: builtAction, logic })
       try {

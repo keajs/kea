@@ -8,7 +8,7 @@ import {
   Logic,
   LogicInput,
 } from '../types'
-import { Store } from 'redux'
+import { MiddlewareAPI } from 'redux'
 
 /* usage:
 kea({
@@ -60,8 +60,9 @@ export const listenersPlugin: KeaPlugin = {
         },
       })
 
-      const newListeners: Record<string, ListenerFunction> =
-        typeof input.listeners === 'function' ? input.listeners(fakeLogic) : input.listeners
+      const newListeners = (typeof input.listeners === 'function'
+        ? input.listeners(fakeLogic)
+        : input.listeners) as Record<string, ListenerFunction>
 
       logic.listeners = {
         ...(logic.listeners || {}),
@@ -98,7 +99,7 @@ export const listenersPlugin: KeaPlugin = {
                 }
               }
 
-              const breakpoint: BreakPointFunction = (ms?: number) => {
+              const breakpoint = (ms?: number): Promise<void> | void => {
                 if (typeof ms !== 'undefined') {
                   return new Promise((resolve) => setTimeout(resolve, ms)).then(() => {
                     throwIfCalled()
@@ -110,7 +111,7 @@ export const listenersPlugin: KeaPlugin = {
 
               let response
               try {
-                response = listener(action.payload, breakpoint, action, previousState)
+                response = listener(action.payload, breakpoint as BreakPointFunction, action, previousState)
 
                 if (response && response.then && typeof response.then === 'function') {
                   return response.catch((e) => {
@@ -170,7 +171,7 @@ export const listenersPlugin: KeaPlugin = {
     },
 
     beforeReduxStore(options: CreateStoreOptions): void {
-      options.middleware.push((store: Store) => (next) => (action) => {
+      options.middleware.push((store: MiddlewareAPI) => (next) => (action) => {
         const previousState = store.getState()
         const response = next(action)
         const { byAction } = getPluginContext('listeners') as ListenersPluginContext

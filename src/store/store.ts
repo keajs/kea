@@ -6,14 +6,14 @@ import { getContext } from '../context'
 import { CreateStoreOptions } from '../types'
 
 const reduxDevToolsCompose =
-  typeof window !== 'undefined' && window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
-    ? window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
+  typeof window !== 'undefined' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
+    ? (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
     : compose
 
 // this must be a function as we need new objects every time
 // otherwise it could happen that the "middleware" array gets mutated on the default
 const defaultOptions = (): CreateStoreOptions => ({
-  paths: undefined,
+  paths: [],
   reducers: {},
   preloadedState: undefined,
   middleware: [],
@@ -59,7 +59,7 @@ export function getStore(opts = {}): Store | void {
   if (options.paths && options.paths.length > 0) {
     context.reducers.whitelist = {}
     options.paths.forEach((pathStart) => {
-      context.reducers.whitelist[pathStart] = true
+      ;(context.reducers.whitelist as Record<string, any>)[pathStart] = true
       initRootReducerTree(pathStart)
     })
   } else {

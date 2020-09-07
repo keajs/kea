@@ -1,5 +1,5 @@
 import { addConnection } from '../shared/connect'
-import { Logic, LogicInput } from '../../types'
+import { BuiltLogic, Logic, LogicInput, LogicWrapper, LogicWrapperAdditions, Selector } from '../../types'
 
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
@@ -49,14 +49,14 @@ export function createConnect(logic: Logic, input: LogicInput): void {
           )
         }
       }
-      if (otherLogic._isKea) {
-        otherLogic = otherLogic(props)
+      if ((otherLogic as LogicWrapper)._isKea) {
+        otherLogic = (otherLogic as LogicWrapper)(props)
       }
-      if (otherLogic._isKeaBuild) {
-        addConnection(logic, otherLogic)
-        logic.actionCreators[to] = otherLogic.actionCreators[from]
+      if ((otherLogic as BuiltLogic)._isKeaBuild) {
+        addConnection(logic, otherLogic as BuiltLogic)
+        logic.actionCreators[to] = (otherLogic as BuiltLogic).actionCreators[from]
       } else {
-        logic.actionCreators[to] = otherLogic[from]
+        logic.actionCreators[to] = (otherLogic as Record<string, any>)[from]
       }
 
       if (process.env.NODE_ENV !== 'production') {
@@ -79,24 +79,25 @@ export function createConnect(logic: Logic, input: LogicInput): void {
         }
       }
 
-      if (otherLogic._isKea) {
-        otherLogic = otherLogic(props)
+      if ((otherLogic as LogicWrapper)._isKea) {
+        otherLogic = (otherLogic as LogicWrapper)(props)
       }
-      if (otherLogic._isKeaBuild) {
-        addConnection(logic, otherLogic)
-        logic.selectors[to] = from === '*' ? otherLogic.selector : otherLogic.selectors[from]
+      if ((otherLogic as BuiltLogic)._isKeaBuild) {
+        addConnection(logic, otherLogic as BuiltLogic)
+        logic.selectors[to] = (from === '*'
+          ? (otherLogic as BuiltLogic).selector
+          : (otherLogic as BuiltLogic).selectors[from]) as Selector
 
-        if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
-          logic.propTypes[to] = otherLogic.propTypes[from]
+        if (from !== '*' && typeof (otherLogic as BuiltLogic).propTypes[from] !== 'undefined') {
+          logic.propTypes[to] = (otherLogic as BuiltLogic).propTypes[from]
         }
-      } else {
-        logic.selectors[to] =
-          from === '*'
-            ? otherLogic
-            : (state, props) => {
-                const values = otherLogic(state, props)
-                return values && values[from]
-              }
+      } else if (typeof otherLogic === 'function') {
+        logic.selectors[to] = (from === '*'
+          ? otherLogic
+          : (state, props) => {
+              const values = (otherLogic as Selector)(state, props)
+              return values && values[from]
+            }) as Selector
       }
 
       if (process.env.NODE_ENV !== 'production') {
@@ -108,20 +109,27 @@ export function createConnect(logic: Logic, input: LogicInput): void {
   }
 }
 
+type LogicMapping = (Logic | BuiltLogic | LogicWrapper | Selector | Record<string, any> | string[])[]
+type DeconstructedLogicMapping = [Logic | BuiltLogic | LogicWrapper | Selector | Record<string, any>, string, string][]
+
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
 // logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
-export function deconstructMapping(mapping) {
+export function deconstructMapping(mapping: LogicMapping): DeconstructedLogicMapping {
   if (mapping.length % 2 === 1) {
-    console.error(`[KEA] uneven mapping given to connect:`, mapping)
-    console.trace()
-    return null
+    console.error(mapping)
+    throw new Error(`[KEA] Uneven mapping given to connect`)
   }
 
-  const response = []
+  const response: DeconstructedLogicMapping = []
 
   for (let i = 0; i < mapping.length; i += 2) {
     const logic = mapping[i]
     const array = mapping[i + 1]
+
+    if (!Array.isArray(array)) {
+      console.error(mapping)
+      throw new Error('[KEA] Invalid mapping given to connect. Make sure every second element is an array!')
+    }
 
     for (let j = 0; j < array.length; j++) {
       if (array[j].includes(' as ')) {
