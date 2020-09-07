@@ -97,7 +97,7 @@ expectType<string>(logic.pathString)
 expectType<Record<string, any>>(logic.propTypes)
 expectType<Record<string, any>>(logic.reducerOptions)
 expectType<Partial<Record<LogicEventType, () => void>>>(logic.events)
-expectType<Record<string, (...args: any) => { type: string; payload: any }>>(logic.__keaTypeGenInternalReducerActions)
+expectType<Record<string, any>>(logic.__keaTypeGenInternalReducerActions)
 
 /*
  * 4. Test Empty Logic
@@ -115,7 +115,7 @@ expectType<string>(logic2.pathString)
 expectType<Record<string, any>>(logic2.propTypes)
 expectType<Record<string, any>>(logic2.reducerOptions)
 expectType<Partial<Record<LogicEventType, () => void>>>(logic2.events)
-expectType<Record<string, (...args: any) => { type: string; payload: any }>>(logic2.__keaTypeGenInternalReducerActions)
+expectType<Record<string, any>>(logic2.__keaTypeGenInternalReducerActions)
 
 // new compared to test 3
 expectType<Record<string, any>>(logic2.actionCreators)
@@ -129,4 +129,4 @@ expectType<any>(logic2.reducer)
 expectType<Record<string, any>>(logic2.reducers)
 expectType<Selector | undefined>(logic2.selector)
 expectType<Record<string, Selector>>(logic2.selectors)
-expectType<Record<string, (...args: any) => any>>(logic2.__keaTypeGenInternalSelectorTypes)
+expectType<Record<string, any>>(logic2.__keaTypeGenInternalSelectorTypes)

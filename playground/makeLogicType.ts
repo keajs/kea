@@ -29,6 +29,13 @@ const makeLogicTypeLogic = kea<MyLogicType>({
       },
     ],
   },
+  listeners: {
+    setName: ({ name }, breakpoint, action) => {
+      console.log(name)
+      breakpoint()
+      console.log(action.type)
+    },
+  },
 })
 
 makeLogicTypeLogic.actions.setName('asd')

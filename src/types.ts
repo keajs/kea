@@ -36,8 +36,8 @@ export interface Logic {
   values: Record<string, any>
   events: PartialRecord<LogicEventType, () => void>
 
-  __keaTypeGenInternalSelectorTypes: Record<string, (...args: any) => any>
-  __keaTypeGenInternalReducerActions: Record<string, (...args: any) => { type: string; payload: any }>
+  __keaTypeGenInternalSelectorTypes: Record<string, any>
+  __keaTypeGenInternalReducerActions: Record<string, any>
 }
 
 export interface BuiltLogicAdditions {
