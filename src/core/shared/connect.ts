@@ -1,6 +1,6 @@
 import { Logic } from '../../types'
 
-export function addConnection(logic: Logic, otherLogic: Logic) {
+export function addConnection(logic: Logic, otherLogic: Logic): void {
   if (!otherLogic.connections || Object.keys(otherLogic.connections).length === 0) {
     return
   }

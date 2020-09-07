@@ -1,7 +1,7 @@
-import { getContext } from '../context/index'
-import { LogicInput, PathCreator, Props } from '../types'
+import { getContext } from '../context'
+import { LogicInput, PathCreator, PathType, Props } from '../types'
 
-export function getPathForInput(input: LogicInput, props: Props) {
+export function getPathForInput(input: LogicInput, props: Props): PathType {
   const key = props && input.key ? input.key(props) : undefined
 
   if (input.path) {
@@ -31,6 +31,6 @@ export function getPathForInput(input: LogicInput, props: Props) {
   return pathCreator(key)
 }
 
-export function getPathStringForInput(input: LogicInput, props: Props) {
+export function getPathStringForInput(input: LogicInput, props: Props): string {
   return getPathForInput(input, props).join('.')
 }

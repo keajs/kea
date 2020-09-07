@@ -1,4 +1,4 @@
-import { getContext } from '../context/index'
+import { getContext } from '../context'
 
 import { getBuiltLogic } from './build'
 

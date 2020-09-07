@@ -3,10 +3,10 @@ import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { getPathStringForInput } from '../kea/path'
-import { runPlugins } from '../plugins/index'
+import { runPlugins } from '../plugins'
 import { AnyComponent, KeaComponent, LogicWrapper, Props } from '../types'
 
-export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
+export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper): KeaComponent {
   const { inputs } = wrapper
   const input = inputs[0]
   runPlugins('beforeWrapper', input, Component)
@@ -109,14 +109,14 @@ export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper) {
   return Kea
 }
 
-function isStateless(Component: AnyComponent) {
+function isStateless(Component: AnyComponent): boolean {
   return (
     typeof Component === 'function' && !(Component.prototype && Component.prototype.isReactComponent) // can be various things // native arrows don't have prototypes // special property
   )
 }
 
 // inject to the component something that converts this.props.actions to this.actions
-function injectActionsIntoClass(Component: AnyComponent) {
+function injectActionsIntoClass(Component: AnyComponent): void {
   if (!isStateless(Component)) {
     if (!Object.getOwnPropertyDescriptor(Component.prototype, 'actions')) {
       Object.defineProperty(Component.prototype, 'actions', {

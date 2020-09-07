@@ -7,18 +7,17 @@ export type Selector = (state?: any, props?: any) => any
 export type RequiredPathCreator<T = string> = (key: T) => PathType
 export type PathCreator<T = string> = (key?: T) => PathType
 export type PathType = (string | number | boolean)[]
-export type Props = Record<string, unknown> // nb! used in kea and react
-export type EmptyProps = '___EMPTY_PROPS___'
+export type Props = Record<string, any> // nb! used in kea and react
 export type LogicEventType = 'beforeMount' | 'afterMount' | 'beforeUnmount' | 'afterUnmount'
 export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 // logic base class
 export interface Logic {
   key: any
-  actionCreators: any
+  actionCreators: Record<string, any>
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
-  actions: any
+  actions: Record<string, any>
   cache: Record<string, any>
   connections: { [pathString: string]: BuiltLogic }
   constants: Record<string, string>
@@ -26,9 +25,9 @@ export interface Logic {
   listeners: Record<string, ListenerFunctionWrapper[]>
   path: PathType
   pathString: string
-  props: any
+  props: Props
   propTypes: Record<string, any>
-  reducers: any
+  reducers: Record<string, any>
   reducerOptions: Record<string, any>
   reducer: any
   selector?: Selector
@@ -197,7 +196,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 }
 
 // MakeLogicType:
-// - create a close-enough approxmiation of the logic's types if passed two interfaces:
+// - create a close-enough approximation of the logic's types if passed two interfaces:
 //
 // MakeLogicType<Values, Actions>
 // - Values = { valueKey: type }
@@ -206,7 +205,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps = Record<string, unknown>
+  LogicProps = Props
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
