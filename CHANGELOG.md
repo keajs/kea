@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.2.0 - Coming soon
-- TypeScript support. No breaking changes, feel free to install the betas. Docs coming soon!
+## 2.2.0 - Unreleased
+- [TypeScript support](https://kea.js.org/docs/guide/typescript)!
+- Fix bug with the store being created twice. [#111](https://github.com/keajs/kea/issues/111)
+- No other breaking changes. 
 
 ## 2.1.1 - 2020-06-14
 - Read the blog post: https://kea.js.org/blog/kea-2.1
