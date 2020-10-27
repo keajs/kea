@@ -20,4 +20,4 @@ export const ATTACH_REDUCER = A as '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = D as '@KEA/DETACH_REDUCER'
 
 // this will create a default context
-resetContext()
+resetContext({}, true)

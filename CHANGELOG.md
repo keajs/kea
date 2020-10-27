@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.2.2 - 2020-10-27
+- Create store automatically if calling `resetContext`, except for the default initial context.
+
 ## 2.2.1 - 2020-10-27
 - Improve a few types for plugins
 

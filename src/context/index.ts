@@ -17,7 +17,7 @@ export function setContext(newContext: Context): void {
   context = newContext
 }
 
-export function openContext(options: ContextOptions = {}): Context {
+export function openContext(options: ContextOptions = {}, initial = false): Context {
   if (context) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
@@ -78,6 +78,7 @@ export function openContext(options: ContextOptions = {}): Context {
     },
   } as Context
 
+  // defer creating a store on the default resetContext() until it's requested
   Object.defineProperty(newContext, 'store', {
     get: function get() {
       const store: Store = (newContext as any)['__store']
@@ -107,6 +108,10 @@ export function openContext(options: ContextOptions = {}): Context {
     }
   }
 
+  if (!initial && createStore) {
+    context.store // trigger the getter that creates the store
+  }
+
   return context
 }
 
@@ -118,12 +123,12 @@ export function closeContext(): void {
   context = (undefined as unknown) as Context
 }
 
-export function resetContext(options: ContextOptions = {}): Context {
+export function resetContext(options: ContextOptions = {}, initial = false): Context {
   if (context) {
     closeContext()
   }
 
-  return openContext(options)
+  return openContext(options, initial)
 }
 
 export function withContext(
@@ -135,7 +140,7 @@ export function withContext(
 } {
   const oldContext = context
 
-  openContext(options)
+  openContext(options, false)
   const newContext = context
   const returnValue = code(context)
   closeContext()
