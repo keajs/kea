@@ -1,6 +1,6 @@
 import { getContext } from '../context'
 import { runPlugins } from '../plugins'
-import { Logic, ReducerFunction } from '../types'
+import {BuiltLogicAdditions, Logic, ReducerFunction} from '../types'
 import { Reducer } from 'redux'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
@@ -32,7 +32,7 @@ export function keaReducer(pathStart = 'scenes'): ReducerFunction {
   }
 }
 
-export function attachReducer(logic: Logic): void {
+export function attachReducer(logic: Logic & BuiltLogicAdditions): void {
   const { path, reducer } = logic
   const {
     reducers: { tree },
@@ -91,7 +91,7 @@ export function attachReducer(logic: Logic): void {
   }
 }
 
-export function detachReducer(logic: Logic): void {
+export function detachReducer(logic: Logic & BuiltLogicAdditions): void {
   const { path } = logic
 
   const {

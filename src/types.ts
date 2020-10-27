@@ -43,6 +43,7 @@ export interface Logic {
 export interface BuiltLogicAdditions {
   _isKeaBuild: boolean
   mount(callback?: any): () => void
+  extend: (extendedInput: LogicInput) => LogicWrapper
 }
 
 export interface LogicWrapperAdditions<LogicType extends Logic> {
@@ -283,21 +284,21 @@ export interface PluginEvents {
   beforeReduxStore?: (options: CreateStoreOptions) => void
   afterReduxStore?: (options: CreateStoreOptions, store: Store) => void
   beforeKea?: (input: LogicInput) => void
-  beforeBuild?: (logic: Logic, inputs: LogicInput[]) => void
-  beforeLogic?: (logic: Logic, input: LogicInput) => void
-  afterLogic?: (logic: Logic, input: LogicInput) => void
-  afterBuild?: (logic: Logic, inputs: LogicInput[]) => void
-  beforeMount?: (logic: Logic) => void
-  afterMount?: (logic: Logic) => void
-  beforeAttach?: (logic: Logic) => void
-  afterAttach?: (logic: Logic) => void
-  beforeUnmount?: (logic: Logic) => void
-  afterUnmount?: (logic: Logic) => void
-  beforeDetach?: (logic: Logic) => void
-  afterDetach?: (logic: Logic) => void
+  beforeBuild?: (logic: Logic & BuiltLogicAdditions, inputs: LogicInput[]) => void
+  beforeLogic?: (logic: Logic & BuiltLogicAdditions, input: LogicInput) => void
+  afterLogic?: (logic: Logic & BuiltLogicAdditions, input: LogicInput) => void
+  afterBuild?: (logic: Logic & BuiltLogicAdditions, inputs: LogicInput[]) => void
+  beforeMount?: (logic: Logic & BuiltLogicAdditions) => void
+  afterMount?: (logic: Logic & BuiltLogicAdditions) => void
+  beforeAttach?: (logic: Logic & BuiltLogicAdditions) => void
+  afterAttach?: (logic: Logic & BuiltLogicAdditions) => void
+  beforeUnmount?: (logic: Logic & BuiltLogicAdditions) => void
+  afterUnmount?: (logic: Logic & BuiltLogicAdditions) => void
+  beforeDetach?: (logic: Logic & BuiltLogicAdditions) => void
+  afterDetach?: (logic: Logic & BuiltLogicAdditions) => void
   beforeWrapper?: (input: LogicInput, Klass: AnyComponent) => void
   afterWrapper?: (input: LogicInput, Klass: AnyComponent, Kea: KeaComponent) => void
-  beforeRender?: (logic: Logic, props: Props) => void
+  beforeRender?: (logic: Logic & BuiltLogicAdditions, props: Props) => void
   beforeCloseContext?: (context: Context) => void
 }
 
