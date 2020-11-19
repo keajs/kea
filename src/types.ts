@@ -17,7 +17,7 @@ export interface Logic {
   actionCreators: Record<string, any>
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
-  actions: Record<string, any>
+  actions: object
   cache: Record<string, any>
   connections: { [pathString: string]: BuiltLogic }
   constants: Record<string, string>
@@ -178,7 +178,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
     | PartialRecord<LogicEventType, (() => void) | (() => void)[]>
     | ((logic: LogicType) => PartialRecord<LogicEventType, (() => void) | (() => void)[]>)
   defaults?:
-    | ((logic: LogicType) => (state: any, props: LogicType['props']) => Record<string, any>)
+    | ((logic: LogicType) => (state: any, props?: LogicType['props']) => Record<string, any>)
     | ((logic: LogicType) => Record<string, any>)
     | Record<string, any>
 
@@ -223,9 +223,9 @@ export interface MakeLogicType<
   reducers: {
     [Value in keyof Values]: ReducerFunction<Values[Value]>
   }
-  selector: (state: any, props: LogicProps) => Values
+  selector: (state: any, props?: LogicProps) => Values
   selectors: {
-    [Value in keyof Values]: (state: any, props: LogicProps) => Values[Value]
+    [Value in keyof Values]: (state: any, props?: LogicProps) => Values[Value]
   }
   values: Values
 
