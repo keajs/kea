@@ -52,6 +52,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
     run: {
       heap: [],
+      reactContexts: new Map(),
     },
 
     reducers: {

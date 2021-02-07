@@ -2,7 +2,7 @@ import { attachReducer, detachReducer } from '../store/reducer'
 import { runPlugins } from '../plugins/index'
 
 import { getContext } from '../context/index'
-import { Logic } from '../types'
+import { BuiltLogic, Logic } from '../types'
 
 export function mountLogic(logic: Logic, count = 1): void {
   const {
@@ -34,14 +34,7 @@ export function mountLogic(logic: Logic, count = 1): void {
   }
 }
 
-function clearBuildCache(pathString: string): void {
-  const {
-    build: { cache },
-  } = getContext()
-  delete cache[pathString]
-}
-
-export function unmountLogic(logic: Logic): void {
+export function unmountLogic(logic: BuiltLogic): void {
   const {
     mount: { counter, mounted },
   } = getContext()
@@ -70,7 +63,11 @@ export function unmountLogic(logic: Logic): void {
       runPlugins('afterUnmount', connectedLogic)
       connectedLogic.events.afterUnmount && connectedLogic.events.afterUnmount()
 
-      clearBuildCache(pathString)
+      // clear build cache
+      delete getContext().build.cache[pathString]
+
+      // remove react context
+      getContext().run.reactContexts.delete(logic.wrapper)
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
-import { ComponentType, FunctionComponent } from 'react'
+import { Context as ReactContext, ComponentType, FunctionComponent } from 'react'
 
 // universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
@@ -44,6 +44,7 @@ export interface BuiltLogicAdditions {
   _isKeaBuild: boolean
   mount(callback?: any): () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
+  wrapper: LogicWrapper
 }
 
 export interface LogicWrapperAdditions<LogicType extends Logic> {
@@ -342,6 +343,7 @@ export interface Context {
 
   run: {
     heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: Logic }[]
+    reactContexts: Map<LogicWrapper, ReactContext<BuiltLogic | undefined>>
   }
 
   reducers: {

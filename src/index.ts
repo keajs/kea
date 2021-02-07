@@ -4,6 +4,7 @@ import { resetContext } from './context'
 
 export { kea, connect } from './kea'
 export { useValues, useAllValues, useActions, useMountedLogic, useKea } from './react/hooks'
+export { BindProps } from './react/bind-props'
 
 export { resetContext, openContext, closeContext, getContext, getPluginContext, setPluginContext } from './context'
 export { getStore } from './store/store'
