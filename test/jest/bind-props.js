@@ -2,10 +2,11 @@
 import { kea, resetContext, getContext, useValues, BindProps } from '../../src'
 
 import './helper/jsdom'
-import React from 'react'
+import React, { useState } from 'react'
 import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
 import Adapter from 'enzyme-adapter-react-16'
+import { act } from 'react-dom/test-utils'
 
 configure({ adapter: new Adapter() })
 
@@ -14,6 +15,7 @@ beforeEach(() => {
 })
 
 test('multiple dynamic logic stores', () => {
+  let setState
   const { store } = getContext()
 
   const allNames = [
@@ -30,34 +32,36 @@ test('multiple dynamic logic stores', () => {
     }),
     reducers: ({ actions, props }) => ({
       name: [
-        allNames.find((n) => n.id === props.id).name,
+        allNames.find((n) => n.id === props.id)?.name || props.defaultName || '',
         {
-          [actions.updateName]: (state, { name }) => name,
+          updateName: (_, { name }) => name,
         },
       ],
     }),
   })
 
   function App() {
+    const [state, _setState] = useState({ firstId: 12, secondId: 15 })
+    setState = (stateUpdate) => act(() => _setState({ ...state, ...stateUpdate }))
+
+    const { firstId, secondId } = state
+
     return (
       <div>
-        <BindProps logic={keyedLogic} props={{ id: 12 }}>
-          <DynamicComponent />
+        <BindProps logic={keyedLogic} props={{ id: firstId }}>
+          <DynamicComponent __debugId={firstId} />
         </BindProps>
-        <BindProps logic={keyedLogic} props={{ id: 15 }}>
-          <DynamicComponent />
+        <BindProps logic={keyedLogic} props={{ id: secondId }}>
+          <DynamicComponent __debugId={secondId} />
         </BindProps>
       </div>
     )
   }
 
-  function DynamicComponent() {
-    const { name, id } = useValues(keyedLogic)
+  function DynamicComponent({ __debugId }) {
+    const { name } = useValues(keyedLogic)
     return (
-      <div id={`dynamic-${id}`}>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-      </div>
+      <div className="name">{name}</div>
     )
   }
 
@@ -67,16 +71,40 @@ test('multiple dynamic logic stores', () => {
     </Provider>,
   )
 
-  expect(wrapper.find('.id').length).toEqual(2)
   expect(wrapper.find('.name').length).toEqual(2)
 
-  const findText = (selector) =>
+  const findText = () =>
     wrapper
-      .find(selector)
+      .find('.name')
       .map((node) => node.text())
       .join(',')
 
-  expect(findText('.name')).toEqual('bla,michael')
+  const getStoreActions = () => Object.keys(store.getState().scenes?.dynamic || {}).map((nr) => parseInt(nr))
+
+  expect(findText()).toEqual('bla,michael')
+  expect(getStoreActions()).toEqual([12, 15])
+
+  const logic1 = keyedLogic({ id: 12 })
+  const unmount1 = logic1.mount()
+
+  expect(findText()).toEqual('bla,michael')
+  logic1.actions.updateName('haha')
+  expect(findText()).toEqual('haha,michael')
+  expect(getStoreActions()).toEqual([12, 15])
+  unmount1()
+
+  const logic2 = keyedLogic({ id: 15 })
+  const unmount2 = logic2.mount()
+  logic2.actions.updateName('hoho')
+  expect(findText()).toEqual('haha,hoho')
+  expect(getStoreActions()).toEqual([12, 15])
+  unmount2()
+
+  setState({ firstId: 13 })
+
+  expect(findText()).toEqual('george,hoho')
+
+  expect(getStoreActions()).toEqual([13, 15])
 
   wrapper.unmount()
 })
