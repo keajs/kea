@@ -40,9 +40,9 @@ export interface Logic {
   __keaTypeGenInternalReducerActions: Record<string, any>
 }
 
-export interface BuiltLogicAdditions {
+export interface BuiltLogicAdditions<LogicType extends Logic> {
   _isKeaBuild: boolean
-  mount(callback?: any): () => void
+  mount(callback?: (logic: LogicType) => any): () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
   wrapper: LogicWrapper
 }
@@ -52,16 +52,16 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   <T extends LogicType['props'] | AnyComponent>(props: T): T extends LogicType['props']
-    ? LogicType & BuiltLogicAdditions
+    ? LogicType & BuiltLogicAdditions<LogicType>
     : FunctionComponent
-  (): LogicType & BuiltLogicAdditions
+  (): LogicType & BuiltLogicAdditions<LogicType>
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => LogicType & BuiltLogicAdditions
+  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => LogicType & BuiltLogicAdditions<LogicType>
   mount: (callback?: any) => () => void
   extend: (extendedInput: LogicInput) => LogicWrapper
 }
 
-export type BuiltLogic = Logic & BuiltLogicAdditions
+export type BuiltLogic = Logic & BuiltLogicAdditions<Logic>
 export type LogicWrapper = Logic & LogicWrapperAdditions<Logic>
 
 // input helpers (using the generated logic type as input)
@@ -285,21 +285,21 @@ export interface PluginEvents {
   beforeReduxStore?: (options: CreateStoreOptions) => void
   afterReduxStore?: (options: CreateStoreOptions, store: Store) => void
   beforeKea?: (input: LogicInput) => void
-  beforeBuild?: (logic: Logic & BuiltLogicAdditions, inputs: LogicInput[]) => void
-  beforeLogic?: (logic: Logic & BuiltLogicAdditions, input: LogicInput) => void
-  afterLogic?: (logic: Logic & BuiltLogicAdditions, input: LogicInput) => void
-  afterBuild?: (logic: Logic & BuiltLogicAdditions, inputs: LogicInput[]) => void
-  beforeMount?: (logic: Logic & BuiltLogicAdditions) => void
-  afterMount?: (logic: Logic & BuiltLogicAdditions) => void
-  beforeAttach?: (logic: Logic & BuiltLogicAdditions) => void
-  afterAttach?: (logic: Logic & BuiltLogicAdditions) => void
-  beforeUnmount?: (logic: Logic & BuiltLogicAdditions) => void
-  afterUnmount?: (logic: Logic & BuiltLogicAdditions) => void
-  beforeDetach?: (logic: Logic & BuiltLogicAdditions) => void
-  afterDetach?: (logic: Logic & BuiltLogicAdditions) => void
+  beforeBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
+  beforeLogic?: (logic: BuiltLogic, input: LogicInput) => void
+  afterLogic?: (logic: BuiltLogic, input: LogicInput) => void
+  afterBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
+  beforeMount?: (logic: BuiltLogic) => void
+  afterMount?: (logic: BuiltLogic) => void
+  beforeAttach?: (logic: BuiltLogic) => void
+  afterAttach?: (logic: BuiltLogic) => void
+  beforeUnmount?: (logic: BuiltLogic) => void
+  afterUnmount?: (logic: BuiltLogic) => void
+  beforeDetach?: (logic: BuiltLogic) => void
+  afterDetach?: (logic: BuiltLogic) => void
   beforeWrapper?: (input: LogicInput, Klass: AnyComponent) => void
   afterWrapper?: (input: LogicInput, Klass: AnyComponent, Kea: KeaComponent) => void
-  beforeRender?: (logic: Logic & BuiltLogicAdditions, props: Props) => void
+  beforeRender?: (logic: BuiltLogic, props: Props) => void
   beforeCloseContext?: (context: Context) => void
 }
 

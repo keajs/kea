@@ -8,7 +8,7 @@ import { addConnection } from '../core/shared/connect'
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
-function applyInputToLogic(logic: Logic & BuiltLogicAdditions, input: LogicInput) {
+function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
   runPlugins('beforeLogic', logic, input)
 
   const {
@@ -62,7 +62,7 @@ function createBlankLogic({
       }
       return () => unmountLogic(logic)
     },
-  } as any) as Logic & BuiltLogicAdditions
+  } as any) as BuiltLogic
 
   return logic
 }
