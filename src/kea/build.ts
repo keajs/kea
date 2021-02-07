@@ -135,7 +135,7 @@ export function getBuiltLogic(
   const key = props && input.key ? input.key(props) : undefined
 
   if (input.key && typeof key === 'undefined') {
-    throw new Error('[KEA] Must have key to build logic')
+    throw new Error(`[KEA] Must have key to build logic, got props: ${JSON.stringify(props)}`)
   }
 
   // get a path for the input, even if no path was manually specified in the input
