@@ -65,9 +65,6 @@ export function unmountLogic(logic: BuiltLogic): void {
 
       // clear build cache
       delete getContext().build.cache[pathString]
-
-      // remove react context
-      getContext().run.reactContexts.delete(logic.wrapper)
     }
   }
 }

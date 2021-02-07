@@ -343,7 +343,7 @@ export interface Context {
 
   run: {
     heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: Logic }[]
-    reactContexts: Map<LogicWrapper, ReactContext<BuiltLogic | undefined>>
+    reactContexts: WeakMap<LogicWrapper, ReactContext<BuiltLogic | undefined>>
   }
 
   reducers: {
