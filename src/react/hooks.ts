@@ -51,7 +51,7 @@ export function isWrapper(toBeDetermined: BuiltLogic | LogicWrapper): toBeDeterm
 const blankContext = createContext(undefined as BuiltLogic | undefined)
 
 export function useMountedLogic(logic: BuiltLogic | LogicWrapper): BuiltLogic {
-  const builtLogicContext = isWrapper(logic) ? getContext().run.reactContexts.get(logic as LogicWrapper) : null
+  const builtLogicContext = isWrapper(logic) ? getContext().react.contexts.get(logic as LogicWrapper) : null
   const defaultBuiltLogic = useContext(builtLogicContext || blankContext)
   const builtLogic = isWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
 

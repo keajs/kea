@@ -52,7 +52,10 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
     run: {
       heap: [],
-      reactContexts: new WeakMap(),
+    },
+
+    react: {
+      contexts: new WeakMap(),
     },
 
     reducers: {

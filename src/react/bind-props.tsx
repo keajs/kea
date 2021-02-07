@@ -10,10 +10,10 @@ export type BindPropsProps = {
 }
 
 export function getOrCreateContextForLogicWrapper(logic: LogicWrapper) {
-  let context = getContext().run.reactContexts.get(logic)
+  let context = getContext().react.contexts.get(logic)
   if (!context) {
     context = React.createContext(undefined as BuiltLogic | undefined)
-    getContext().run.reactContexts.set(logic, context)
+    getContext().react.contexts.set(logic, context)
   }
   return context
 }
