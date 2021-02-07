@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.3.0 (unreleased/beta) - 2021-02-07
+- Adds `<BindProps logic={keyedLogic} props={{ id: 12 }}>`, which passes a specific build of 
+  `keyedLogic` via React Context down to nested components. This build will be used when calling
+  a hook like `useValues(keyedLogic)` without props. [Read more here](https://kea.js.org/blog/kea-2.3).
+  
 ## 2.2.2 - 2020-10-27
 - Create store automatically if calling `resetContext`, except for the default initial context.
 
