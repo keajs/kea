@@ -74,8 +74,8 @@ export const listenersPlugin: KeaPlugin = {
           : [newListeners[actionKey]]
 
         let key = actionKey
-        if (typeof logic.actions[key] !== 'undefined') {
-          key = logic.actions[key].toString()
+        if (typeof (logic.actions as any)[key] !== 'undefined') {
+          key = (logic.actions as any)[key].toString()
         }
 
         const start = logic.listeners[key] ? logic.listeners[key].length : 0
