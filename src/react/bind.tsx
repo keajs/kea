@@ -18,7 +18,7 @@ export function getOrCreateContextForLogicWrapper(logic: LogicWrapper) {
   return context
 }
 
-export function BindProps({ logic, props, children }: BindPropsProps) {
+export function BindLogic({ logic, props, children }: BindPropsProps) {
   const LogicContext = getOrCreateContextForLogicWrapper(logic)
   const builtLogic = logic(props)
 

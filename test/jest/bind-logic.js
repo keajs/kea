@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getContext, useValues, BindProps } from '../../src'
+import { kea, resetContext, getContext, useValues, BindLogic } from '../../src'
 
 import './helper/jsdom'
 import React, { useState } from 'react'
@@ -48,21 +48,19 @@ test('multiple dynamic logic stores', () => {
 
     return (
       <div>
-        <BindProps logic={keyedLogic} props={{ id: firstId }}>
+        <BindLogic logic={keyedLogic} props={{ id: firstId }}>
           <DynamicComponent __debugId={firstId} />
-        </BindProps>
-        <BindProps logic={keyedLogic} props={{ id: secondId }}>
+        </BindLogic>
+        <BindLogic logic={keyedLogic} props={{ id: secondId }}>
           <DynamicComponent __debugId={secondId} />
-        </BindProps>
+        </BindLogic>
       </div>
     )
   }
 
   function DynamicComponent({ __debugId }) {
     const { name } = useValues(keyedLogic)
-    return (
-      <div className="name">{name}</div>
-    )
+    return <div className="name">{name}</div>
   }
 
   const wrapper = mount(
