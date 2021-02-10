@@ -131,9 +131,9 @@ export function kea<LogicType extends Logic = Logic>(
 ): LogicType & LogicWrapperAdditions<LogicType> {
   const wrapper: LogicType & LogicWrapperAdditions<LogicType> = (function (
     args: undefined | AnyComponent,
-  ): (LogicType & BuiltLogicAdditions) | KeaComponent {
+  ): (LogicType & BuiltLogicAdditions<LogicType>) | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
-      return wrapper.build(args) as LogicType & BuiltLogicAdditions
+      return wrapper.build(args) as LogicType & BuiltLogicAdditions<LogicType>
     }
     return wrapper.wrap(args)
   } as any) as LogicType & LogicWrapperAdditions<LogicType>
@@ -145,7 +145,7 @@ export function kea<LogicType extends Logic = Logic>(
 
   wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
   wrapper.build = (props = {}, autoConnectInListener = true) =>
-    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions
+    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions<LogicType>
   wrapper.mount = (callback) => wrapper.build().mount(callback)
   wrapper.extend = (extendedInput) => {
     wrapper.inputs.push(extendedInput)

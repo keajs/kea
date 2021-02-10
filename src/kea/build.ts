@@ -8,7 +8,7 @@ import { addConnection } from '../core/shared/connect'
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
-function applyInputToLogic(logic: Logic & BuiltLogicAdditions, input: LogicInput) {
+function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
   runPlugins('beforeLogic', logic, input)
 
   const {
@@ -62,7 +62,7 @@ function createBlankLogic({
       }
       return () => unmountLogic(logic)
     },
-  } as any) as Logic & BuiltLogicAdditions
+  } as any) as BuiltLogic
 
   return logic
 }
@@ -135,7 +135,9 @@ export function getBuiltLogic(
   const key = props && input.key ? input.key(props) : undefined
 
   if (input.key && typeof key === 'undefined') {
-    throw new Error('[KEA] Must have key to build logic')
+    const path = typeof input.path === 'function' ? input.path(key) : input.path
+    const pathString = Array.isArray(path) ? ` ${path.join('.')}` : ''
+    throw new Error(`[KEA] Must have key to build logic${pathString}, got props: ${JSON.stringify(props)}`)
   }
 
   // get a path for the input, even if no path was manually specified in the input
