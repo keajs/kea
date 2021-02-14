@@ -231,9 +231,11 @@ function removeListenersByPathString(pathString: string, listeners: Record<strin
   const { byPath, byAction } = getPluginContext('listeners') as ListenersPluginContext
 
   Object.keys(listeners).forEach((action) => {
-    delete byAction[action][pathString]
-    if (Object.keys(byAction[action]).length === 0) {
-      delete byAction[action]
+    if (byAction[action]) {
+      delete byAction[action][pathString]
+      if (Object.keys(byAction[action]).length === 0) {
+        delete byAction[action]
+      }
     }
   })
 
