@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.3.2 - 2021-02-14
+- Fix edge case error when removing listeners (@zshannon [#108](https://github.com/keajs/kea/pull/108/files))
+
 ## 2.3.1 - 2021-02-14
 - Nicer error when accessing something in the store that doesn't exist
 
