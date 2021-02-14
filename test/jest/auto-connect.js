@@ -975,6 +975,74 @@ test('props work with autoConnect', () => {
   }).toThrow() // eslint-disable-line
 })
 
+test('props work with autoConnect selectors', () => {
+  resetContext({ createStore: true, autoMount: false })
+
+  const props = {
+    id: '123',
+    otherProp: 'why not',
+  }
+
+  const thirdLogic = kea({
+    key: props => props.id,
+    path: key => ['autoConnect', 'third', key],
+    actions: () => ({
+      thirdAction: name => ({ name }),
+    }),
+    reducers: ({ actions }) => ({
+      thirdName: [
+        'third',
+        {
+          [actions.thirdAction]: (_, { name }) => name,
+        },
+      ],
+    }),
+  })
+
+  const thirdUnmount = thirdLogic(props).mount()
+
+  const secondLogic = kea({
+    key: props => props.id,
+    path: key => ['autoConnect', 'second', key],
+    actions: () => ({
+      secondAction: name => ({ name }),
+    }),
+    reducers: ({ actions, props }) => ({
+      secondName: [
+        'second',
+        {
+          [actions.secondAction]: (_, { name }) => name,
+          [thirdLogic(props).actions.thirdAction]: (_, { name }) => name,
+        },
+      ],
+    }),
+  })
+
+  const logic = kea({
+    key: props => props.id,
+    path: key => ['autoConnect', 'first', key],
+    actions: () => ({
+      updateName: name => ({ name }),
+    }),
+    selectors: ({ props }) => ({
+      secondNameClone: [
+        () => [secondLogic(props).selectors.secondName],
+        (secondName) => `cloned ${secondName}`
+      ]
+    }),
+  })
+
+  const unmount1 = logic(props).mount()
+
+  thirdUnmount()
+
+  expect(logic(props).values.secondNameClone).toEqual('cloned second')
+  expect(secondLogic(props).values.secondName).toEqual('second')
+  expect(thirdLogic(props).values.thirdName).toEqual('third')
+
+  unmount1()
+})
+
 test('props work with autoConnect listeners', () => {
   resetContext({ createStore: true, autoMount: false })
 
