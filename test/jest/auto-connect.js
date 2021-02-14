@@ -900,6 +900,12 @@ test('props work with autoConnect', () => {
         },
       ],
     }),
+    selectors: ({ props }) => ({
+      thirdNameClone: [
+        () => [thirdLogic(props).selectors.thirdName],
+        (thirdName) => `cloned ${thirdName}`
+      ]
+    }),
   })
 
   const logic = kea({
@@ -927,6 +933,7 @@ test('props work with autoConnect', () => {
   expect(logic(props).values.name).toEqual('first')
   expect(secondLogic(props).values.secondName).toEqual('second')
   expect(thirdLogic(props).values.thirdName).toEqual('third')
+  expect(secondLogic(props).values.thirdNameClone).toEqual('cloned third')
 
   unmount1()
 
@@ -937,6 +944,7 @@ test('props work with autoConnect', () => {
   }).toThrow() // eslint-disable-line
   expect(secondLogic(props).values.secondName).toEqual('second')
   expect(thirdLogic(props).values.thirdName).toEqual('third')
+  expect(secondLogic(props).values.thirdNameClone).toEqual('cloned third')
 
   unmount2()
 
@@ -949,6 +957,7 @@ test('props work with autoConnect', () => {
     secondLogic(props).values.secondName
   }).toThrow() // eslint-disable-line
   expect(thirdLogic(props).values.thirdName).toEqual('third')
+  expect(secondLogic(props).values.thirdNameClone).toEqual('cloned third')
 
   unmount3()
 
@@ -960,6 +969,9 @@ test('props work with autoConnect', () => {
   }).toThrow() // eslint-disable-line
   expect(() => {
     thirdLogic(props).values.thirdName
+  }).toThrow() // eslint-disable-line
+  expect(() => {
+    secondLogic(props).values.thirdNameClone
   }).toThrow() // eslint-disable-line
 })
 
