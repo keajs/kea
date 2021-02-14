@@ -153,3 +153,32 @@ test('using actions before mounting throws', () => {
 
   expect(() => logic2.actions.doSomething()).toThrow()
 })
+
+test('paths that lead nowhere throw decent errors', () => {
+  const { store } = getContext()
+
+  const logic = kea({
+    path: ['scenes', 'misc', 'foo'],
+    actions: {
+      doSomething: true,
+    },
+    reducers: {
+      thingie: [
+        false,
+        {
+          doSomething: () => true,
+        },
+      ],
+    },
+  })
+
+  const unmount = logic.mount()
+  const state = store.getState()
+
+  state.scenes = {}
+  expect(() => {
+    logic.values.thingie
+  }).toThrow('[KEA] Can not find path "scenes.misc.foo" in the store.')
+
+  unmount()
+})

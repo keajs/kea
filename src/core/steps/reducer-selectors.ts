@@ -24,5 +24,10 @@ export function createReducerSelectors(logic: Logic, input: LogicInput): void {
 // input: ['scenes', 'something', 'other'], state
 // output: state.scenes.something.other
 function pathSelector(path: PathType, state: any) {
-  return [state].concat(path).reduce((v, a) => v[a])
+  return [state].concat(path).reduce((v, a) => {
+    if (a in v) {
+      return v[a]
+    }
+    throw new Error(`[KEA] Can not find path "${path.join('.')}" in the store.`)
+  })
 }
