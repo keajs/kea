@@ -124,7 +124,7 @@ type SelectorDefinitions<LogicType extends Logic> =
 export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
 type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
-  [K in keyof A]?: ListenerFunction<ReturnType<A[K]>>
+  [K in keyof A]?: ListenerFunction<ReturnType<A[K]>> | ListenerFunction<ReturnType<A[K]>>[]
 }
 
 type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
