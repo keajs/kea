@@ -81,12 +81,28 @@ type ReducerActions<LogicType extends Logic, ReducerType> = {
     ) => ReducerType
   }
 
+type ReducerDefault<Reducer extends () => any, P extends Props> =
+  | ReturnType<Reducer>
+  | ((state: any, props: P) => ReturnType<Reducer>)
+
 type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
-    | [ReturnType<LogicType['reducers'][K]>, any, any, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
-    | [ReturnType<LogicType['reducers'][K]>, any, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
-    | [ReturnType<LogicType['reducers'][K]>, ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>]
-    | [ReturnType<LogicType['reducers'][K]>]
+    | [
+        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
+        any,
+        any,
+        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
+      ]
+    | [
+        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
+        any,
+        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
+      ]
+    | [
+        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
+        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
+      ]
+    | [ReducerDefault<LogicType['reducers'][K], LogicType['props']>]
     | ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>
 }
 

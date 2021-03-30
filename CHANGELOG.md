@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.3.4 - 2021-03-30
 - Add types for arrays of listeners (was supported, just not typed)
+- Add types for using selectors as defaults in reducers
 
 ## 2.3.3 - 2021-03-01
 - Add generics to the `BuiltLogic<logicType>` and `LogicWrapper<logicType>` types.
