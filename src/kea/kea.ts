@@ -12,6 +12,7 @@ import {
   LogicInput,
   LogicWrapper,
   LogicWrapperAdditions,
+  Props,
 } from '../types'
 
 /*
@@ -144,7 +145,7 @@ export function kea<LogicType extends Logic = Logic>(
   wrapper.inputs = [input as LogicInput]
 
   wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
-  wrapper.build = (props = {}, autoConnectInListener = true) =>
+  wrapper.build = (props?: Props, autoConnectInListener = true) =>
     getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions<LogicType>
   wrapper.mount = (callback) => wrapper.build().mount(callback)
   wrapper.extend = (extendedInput) => {

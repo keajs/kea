@@ -64,6 +64,23 @@ test('selectors have the store and props as a default', () => {
   unmount()
 })
 
+test('inline props in selectors work after mounting', () => {
+  // https://github.com/keajs/kea/issues/124
+  // props passed to .build(props) were overridden by .mount(), which did behind the scenes .build({}).mount()
+  const logic = kea({
+    selectors: ({ props }) => ({
+      valueFromSelectorsProps: [() => [], () => props.foo],
+      valueFromInlineSelectorProps: [() => [(_, inlineProps) => inlineProps.foo], (foo) => foo],
+    }),
+  })
+
+  logic.build({ foo: 'foo' })
+  logic.mount()
+
+  expect(logic.values.valueFromSelectorsProps).toEqual('foo')
+  expect(logic.values.valueFromInlineSelectorProps).toEqual('foo')
+})
+
 test('selectors run only once when input has not changed', () => {
   const books = {
     1: 'book1',
