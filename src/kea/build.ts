@@ -127,7 +127,7 @@ function buildLogic({
 
 export function getBuiltLogic(
   inputs: LogicInput[],
-  props: Props,
+  props: Props | undefined,
   wrapper: LogicWrapper,
   autoConnectInListener = true,
 ): BuiltLogic {
@@ -152,8 +152,8 @@ export function getBuiltLogic(
   } = getContext()
 
   if (!buildCache[pathString]) {
-    buildCache[pathString] = buildLogic({ inputs, path, key, props, wrapper })
-  } else {
+    buildCache[pathString] = buildLogic({ inputs, path, key, props: props || {}, wrapper })
+  } else if (props) {
     buildCache[pathString].props = props
   }
 
