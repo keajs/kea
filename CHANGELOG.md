@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.3.7 - 2021-04-25
+- Improve types and build
+
 ## 2.3.6 - 2021-04-25
 - Improve types
 
