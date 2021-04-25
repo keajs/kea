@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.3.6 - 2021-04-25
+- Improve types
+
 ## 2.3.5 - 2021-04-16
 - Fix issue with .mount() overriding props pased to logic inside selectors [#124](https://github.com/keajs/kea/issues/124)
 
