@@ -288,7 +288,7 @@ export interface ContextOptions extends Partial<InternalContextOptions> {
   skipPlugins?: string[]
 }
 
-type BuildStep = (logic: Logic, input: LogicInput) => void
+type BuildStep = (logic: BuiltLogic, input: LogicInput) => void
 
 export interface KeaComponent extends FunctionComponent {
   _wrapper: LogicWrapper
