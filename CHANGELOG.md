@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.3.8 - 2021-04-26
+- Fix regression introduced in 2.3.5 with default keys like: `key: props => props.id || 'default'`
+
 ## 2.3.7 - 2021-04-25
 - Improve types and build
 

@@ -2,7 +2,7 @@ import { getContext } from '../context'
 import { LogicInput, PathCreator, PathType, Props } from '../types'
 
 export function getPathForInput(input: LogicInput, props?: Props): PathType {
-  const key = props && input.key ? input.key(props) : undefined
+  const key = input.key ? input.key(props || {}) : undefined
 
   if (input.path) {
     return typeof input.path === 'function' ? input.path(key) : input.path

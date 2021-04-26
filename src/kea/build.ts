@@ -132,7 +132,7 @@ export function getBuiltLogic(
   autoConnectInListener = true,
 ): BuiltLogic {
   const input = inputs[0]
-  const key = props && input.key ? input.key(props) : undefined
+  const key = input.key ? input.key(props || {}) : undefined
 
   if (input.key && typeof key === 'undefined') {
     const path = typeof input.path === 'function' ? input.path(key) : input.path
