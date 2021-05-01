@@ -278,6 +278,7 @@ export interface InternalContextOptions {
   flatDefaults: boolean
   attachStrategy: 'dispatch' | 'replace'
   detachStrategy: 'dispatch' | 'replace' | 'persist'
+  defaultPath: string[]
   // ...otherOptions
 }
 
@@ -342,8 +343,8 @@ export interface Context {
   }
 
   input: {
-    inlinePathCreators: Map<LogicInput, PathCreator<any>>
-    inlinePathCounter: number
+    logicPathCreators: Map<LogicInput, PathCreator<any>>
+    logicPathCounter: number
     defaults: Record<string, any> | undefined
   }
 

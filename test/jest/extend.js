@@ -42,7 +42,7 @@ test('can extend with .extend', () => {
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
 })
 
-test('can extend with inline .extend', () => {
+test('can extend with .extend', () => {
   const logic = kea({
     actions: () => ({
       doit: true,
@@ -95,7 +95,7 @@ test('can extend multiple times with .extend', () => {
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
-test('can extend multiple times with inline .extend', () => {
+test('can extend multiple times with .extend', () => {
   const logic = kea({
     actions: () => ({
       doit: true,

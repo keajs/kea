@@ -35,8 +35,8 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     },
 
     input: {
-      inlinePathCreators: new Map(),
-      inlinePathCounter: 0,
+      logicPathCreators: new Map(),
+      logicPathCounter: 0,
       defaults: defaults || undefined,
     },
 
@@ -77,7 +77,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       flatDefaults: false,
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch',
-
+      defaultPath: ['kea', 'logic'],
       ...otherOptions,
     },
   } as Context
