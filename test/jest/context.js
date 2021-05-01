@@ -145,35 +145,47 @@ test('logicPathCreators work as expected', () => {
   expect(logicPathCreators.get(input)).not.toBeDefined()
 
   const dynamicInput = {
-    key: props => props.id,
-    path: key => ['kea', 'misc', 'green', key],
+    key: (props) => props.id,
+    path: (key) => ['kea', 'misc', 'green', key],
   }
   kea(dynamicInput).build({ id: 12 })
   expect(logicPathCreators.get(dynamicInput)).not.toBeDefined()
 
   const pathlessInput1 = {}
   kea(pathlessInput1).build()
-  expect(
-    logicPathCreators
-      .get(pathlessInput1)()
-      .join('.'),
-  ).toBe('kea.logic.1')
+  expect(logicPathCreators.get(pathlessInput1)().join('.')).toBe('kea.logic.1')
 
   const pathlessInput2 = {}
   kea(pathlessInput2).build()
-  expect(
-    logicPathCreators
-      .get(pathlessInput2)()
-      .join('.'),
-  ).toBe('kea.logic.2')
+  expect(logicPathCreators.get(pathlessInput2)().join('.')).toBe('kea.logic.2')
 
-  const keyNoPathInput2 = { key: props => props.id }
+  const keyNoPathInput2 = { key: (props) => props.id }
   kea(keyNoPathInput2).build({ id: 12 })
-  expect(
-    logicPathCreators
-      .get(keyNoPathInput2)(12)
-      .join('.'),
-  ).toBe('kea.logic.3.12')
+  expect(logicPathCreators.get(keyNoPathInput2)(12).join('.')).toBe('kea.logic.3.12')
+})
+
+describe('defaultPath', () => {
+  test('defaultPath work as expected', () => {
+    openContext({
+      defaultPath: ['kea', 'inline'],
+    })
+
+    kea({
+      reducers: {
+        hi: ['true', {}],
+      },
+    }).mount()
+
+    expect(getContext().store.getState()).toEqual({
+      kea: {
+        inline: {
+          1: {
+            hi: 'true',
+          },
+        },
+      },
+    })
+  })
 })
 
 test('nested context defaults work', () => {

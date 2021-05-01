@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## 2.4.0 - xxx
+- **Possibly Breaking:** Changed the [default path](https://kea.js.org/docs/guide/debugging#logic-path) for logic 
+  without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded 
+  `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use 
+  `resetContext({ defaultPath: ['kea', 'inline'] })`.
+
 - TODO: Add `<Provider />` tag to wrap Redux's `<Provider store={getContext().store} />`
 - TODO: Deprecated `resetContext`
-- TODO: Rename `kea.inline` to `kea.logic`
 - TODO: Fix whatever bug is happening with CRA fast refresh
 
 ## 2.3.8 - 2021-04-26

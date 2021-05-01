@@ -77,7 +77,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       flatDefaults: false,
       attachStrategy: 'dispatch',
       detachStrategy: 'dispatch',
-
+      defaultPath: ['kea', 'logic'],
       ...otherOptions,
     },
   } as Context

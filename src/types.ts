@@ -278,6 +278,7 @@ export interface InternalContextOptions {
   flatDefaults: boolean
   attachStrategy: 'dispatch' | 'replace'
   detachStrategy: 'dispatch' | 'replace' | 'persist'
+  defaultPath: string[]
   // ...otherOptions
 }
 
