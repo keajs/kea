@@ -7,8 +7,6 @@ All notable changes to this project will be documented in this file.
   `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use 
   `resetContext({ defaultPath: ['kea', 'inline'] })`.
 - Added `<Provider />` tag to simplify calling React-Redux's `<Provider store={getContext().store} />`
-- TODO: Deprecated `resetContext`
-- TODO: Fix whatever bug is happening with CRA fast refresh
 
 ## 2.3.8 - 2021-04-26
 - Fix regression introduced in 2.3.5 with default keys like: `key: props => props.id || 'default'`
