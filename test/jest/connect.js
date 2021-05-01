@@ -88,20 +88,20 @@ test('connect works as an object', () => {
     </Provider>,
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
+  expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.description').text()).toEqual('default')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
+  expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+    kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
   wrapper.render()
@@ -191,20 +191,20 @@ test('connect works as a function', () => {
     </Provider>,
   )
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
+  expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   expect(wrapper.find('.id').text()).toEqual('12')
   expect(wrapper.find('.name').text()).toEqual('chirpy')
   expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
   expect(wrapper.find('.description').text()).toEqual('default')
 
-  expect(store.getState()).toEqual({ kea: { inline: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
+  expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
   store.dispatch(logic.actionCreators.updateName('somename'))
   store.dispatch(connectedLogic.actionCreators.updateDescription('new description'))
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+    kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
   wrapper.render()
@@ -296,7 +296,7 @@ test('props cascade when connecting', () => {
   )
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } },
+    kea: { logic: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } },
   })
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -308,7 +308,7 @@ test('props cascade when connecting', () => {
   connectedLogic.actions.updateDescription('new description')
 
   expect(store.getState()).toEqual({
-    kea: { inline: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
+    kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
   wrapper.render()

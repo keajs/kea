@@ -26,8 +26,8 @@ test('getting and setting works', () => {
     },
 
     input: {
-      inlinePathCreators: new Map(),
-      inlinePathCounter: 0,
+      logicPathCreators: new Map(),
+      logicPathCounter: 0,
       defaults: undefined,
     },
 
@@ -128,52 +128,52 @@ test('context works with plugins', () => {
   })
 })
 
-test('inlinePathCreators work as expected', () => {
+test('logicPathCreators work as expected', () => {
   expect(getContext()).not.toBeDefined()
 
   openContext()
   expect(getContext()).toBeDefined()
 
   const {
-    input: { inlinePathCreators },
+    input: { logicPathCreators },
   } = getContext()
 
   const input = {
     path: () => ['kea', 'misc', 'blue'],
   }
   kea(input).build()
-  expect(inlinePathCreators.get(input)).not.toBeDefined()
+  expect(logicPathCreators.get(input)).not.toBeDefined()
 
   const dynamicInput = {
     key: props => props.id,
     path: key => ['kea', 'misc', 'green', key],
   }
   kea(dynamicInput).build({ id: 12 })
-  expect(inlinePathCreators.get(dynamicInput)).not.toBeDefined()
+  expect(logicPathCreators.get(dynamicInput)).not.toBeDefined()
 
   const pathlessInput1 = {}
   kea(pathlessInput1).build()
   expect(
-    inlinePathCreators
+    logicPathCreators
       .get(pathlessInput1)()
       .join('.'),
-  ).toBe('kea.inline.1')
+  ).toBe('kea.logic.1')
 
   const pathlessInput2 = {}
   kea(pathlessInput2).build()
   expect(
-    inlinePathCreators
+    logicPathCreators
       .get(pathlessInput2)()
       .join('.'),
-  ).toBe('kea.inline.2')
+  ).toBe('kea.logic.2')
 
   const keyNoPathInput2 = { key: props => props.id }
   kea(keyNoPathInput2).build({ id: 12 })
   expect(
-    inlinePathCreators
+    logicPathCreators
       .get(keyNoPathInput2)(12)
       .join('.'),
-  ).toBe('kea.inline.3.12')
+  ).toBe('kea.logic.3.12')
 })
 
 test('nested context defaults work', () => {

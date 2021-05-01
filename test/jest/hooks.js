@@ -344,7 +344,7 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
   })
 })
 
-test('can define logic inline with useKea', () => {
+test('can define logic with useKea', () => {
   const { store } = getContext()
 
   function SampleComponent({ id }) {
