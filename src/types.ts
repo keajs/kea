@@ -342,8 +342,8 @@ export interface Context {
   }
 
   input: {
-    inlinePathCreators: Map<LogicInput, PathCreator<any>>
-    inlinePathCounter: number
+    logicPathCreators: Map<LogicInput, PathCreator<any>>
+    logicPathCounter: number
     defaults: Record<string, any> | undefined
   }
 

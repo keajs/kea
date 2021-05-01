@@ -9,24 +9,24 @@ export function getPathForInput(input: LogicInput, props?: Props): PathType {
   }
 
   const {
-    input: { inlinePathCreators },
+    input: { logicPathCreators },
   } = getContext()
 
-  let pathCreator = inlinePathCreators.get(input)
+  let pathCreator = logicPathCreators.get(input)
 
   if (pathCreator) {
     return pathCreator(key)
   }
 
-  const count = (++getContext().input.inlinePathCounter).toString()
+  const count = (++getContext().input.logicPathCounter).toString()
 
   if (input.key) {
-    pathCreator = ((key: string) => ['kea', 'inline', count, key]) as PathCreator
+    pathCreator = ((key: string) => ['kea', 'logic', count, key]) as PathCreator
   } else {
-    pathCreator = () => ['kea', 'inline', count]
+    pathCreator = () => ['kea', 'logic', count]
   }
 
-  inlinePathCreators.set(input, pathCreator)
+  logicPathCreators.set(input, pathCreator)
 
   return pathCreator(key)
 }
