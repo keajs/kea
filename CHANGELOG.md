@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.0 - xxx
+- TODO: Add `<Provider />` tag to wrap Redux's `<Provider store={getContext().store} />`
+- TODO: Deprecated `resetContext`
+- TODO: Rename `kea.inline` to `kea.logic`
+- TODO: Fix whatever bug is happening with CRA fast refresh
+
 ## 2.3.8 - 2021-04-26
 - Fix regression introduced in 2.3.5 with default keys like: `key: props => props.id || 'default'`
 
