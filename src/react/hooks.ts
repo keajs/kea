@@ -69,12 +69,20 @@ export function useMountedLogic(logic: BuiltLogic | LogicWrapper): BuiltLogic {
     pathString.current = builtLogic.pathString
   }
 
-  useEffect(
-    () => () => {
+  useEffect(function useMountedLogicEffect () {
+    // React Fast Refresh calls `useMountedLogicEffectCleanup` followed directly by `useMountedLogicEffect`.
+    // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
+    // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
+    if (!unmount.current) {
+      unmount.current = builtLogic.mount()
+      pathString.current = builtLogic.pathString
+    }
+
+    return function useMountedLogicEffectCleanup() {
       unmount.current && unmount.current()
-    },
-    [],
-  )
+      unmount.current = undefined
+    }
+  }, [])
 
   return builtLogic
 }
