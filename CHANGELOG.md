@@ -6,8 +6,7 @@ All notable changes to this project will be documented in this file.
   without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded 
   `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use 
   `resetContext({ defaultPath: ['kea', 'inline'] })`.
-
-- TODO: Add `<Provider />` tag to wrap Redux's `<Provider store={getContext().store} />`
+- Added `<Provider />` tag to simplify calling React-Redux's `<Provider store={getContext().store} />`
 - TODO: Deprecated `resetContext`
 - TODO: Fix whatever bug is happening with CRA fast refresh
 

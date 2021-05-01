@@ -1,10 +1,10 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext, getContext } from '../../src'
+import { kea, getStore, resetContext, getContext, useValues, Provider } from '../../src'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { mount, configure } from 'enzyme'
-import { Provider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 import Adapter from 'enzyme-adapter-react-16'
 
 configure({ adapter: new Adapter() })
@@ -63,7 +63,7 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
       name: [
@@ -77,11 +77,11 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -92,9 +92,9 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
   const ConnectedComponent = singletonLogic(SampleComponent)
 
   const wrapper = mount(
-    <Provider store={store}>
+    <ReduxProvider store={store}>
       <ConnectedComponent id={12} />
-    </Provider>,
+    </ReduxProvider>,
   )
 
   expect(wrapper.find('.id').text()).toEqual('12')
@@ -196,4 +196,38 @@ test('can not create reducers with random paths if restricted', () => {
   expect(() => {
     nonExistingLogic.mount()
   }).toThrow(`[KEA] Can not start reducer's path with "birds"! Please add it to the whitelist`)
+})
+
+describe('<Provider> wraps the react-redux Provider', () => {
+  const logic = kea({
+    reducers: { bla: ['hi', {}] },
+  })
+
+  function Component() {
+    const { bla } = useValues(logic)
+    return <div className="bla">{bla}</div>
+  }
+
+  beforeEach(() => {
+    resetContext()
+  })
+
+  test('works with <ReactReduxProvider />', () => {
+    const wrapper = mount(
+      <ReduxProvider store={getContext().store}>
+        <Component />
+      </ReduxProvider>,
+    )
+    expect(wrapper.find('.bla').text()).toEqual('hi')
+    wrapper.unmount()
+  })
+  test('works with <Provider />', () => {
+    const wrapper2 = mount(
+      <Provider>
+        <Component />
+      </Provider>,
+    )
+    expect(wrapper2.find('.bla').text()).toEqual('hi')
+    wrapper2.unmount()
+  })
 })
