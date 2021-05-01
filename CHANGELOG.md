@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
   without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded 
   `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use 
   `resetContext({ defaultPath: ['kea', 'inline'] })`.
-- Added `<Provider />` tag to simplify calling React-Redux's `<Provider store={getContext().store} />`
+- Added `<Provider />` tag to simplify calling React-Redux's `<Provider store={getContext().store} />`.
+- Fixed crashes with [React Fast Refresh](https://github.com/keajs/kea/issues/119).
 
 ## 2.3.8 - 2021-04-26
 - Fix regression introduced in 2.3.5 with default keys like: `key: props => props.id || 'default'`
