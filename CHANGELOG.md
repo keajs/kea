@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.4.0 - xxx
+## 2.4.0 - 2021-05-02
 - **Possibly Breaking:** Changed the [default path](https://kea.js.org/docs/guide/debugging#logic-path) for logic 
   without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded 
   `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use 
