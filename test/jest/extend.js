@@ -419,3 +419,52 @@ test('extending logic merges the right properties', () => {
   // root selector
   expect(logic.selector(state)).toEqual(defaultValues)
 })
+
+test('can do inheritance with .inputs', () => {
+  const logic = kea({
+    path: ['first'],
+    actions: {
+      doit: true,
+    },
+  })
+
+  const logic2 = kea({
+    path: ['second'],
+    extend: [
+      ...logic.inputs,
+      {
+        actions: {
+          domore: true,
+        },
+      },
+    ],
+  })
+
+  const logic3 = kea({
+    path: ['third'],
+    extend: [
+      ...logic2.inputs,
+      {
+        actions: {
+          doevenmore: true,
+        },
+      },
+    ],
+  })
+
+  const unmount = logic.mount()
+  const unmount2 = logic2.mount()
+  const unmount3 = logic3.mount()
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit'])
+  expect(Object.keys(logic2.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic3.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+
+  expect(logic.path).toEqual(['first'])
+  expect(logic2.path).toEqual(['second'])
+  expect(logic3.path).toEqual(['third'])
+
+  unmount()
+  unmount2()
+  unmount3()
+})

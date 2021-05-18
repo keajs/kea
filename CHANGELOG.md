@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.1 - 2021-05-17
+- Support passing `LogicType` to `logic.extend<LogicType>()`
+- Fixed recursive `.exend()`. This works now: `kea({ extend: [{ extend: [ ... ] }] })`)
+- Please note that `logic.extend()` alters the existing logic. It does not clone nor inherit logic inputs.
+- To clone a logic, use `kea({ extend: [...otherLogic.inputs, { actions: {}, /* new stuff */ }] })`. Better API coming soon.
+
 ## 2.4.0 - 2021-05-02
 - **Possibly Breaking:** Changed the [default path](https://kea.js.org/docs/guide/debugging#logic-path) for logic 
   without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded 
