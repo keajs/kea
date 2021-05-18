@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.2 - 2021-05-17
+- Added basic support for inheritance with: `const logic = kea({ inherit: [otherLogic], actions: {...} })`. 
+  This makes a copy of the inputs for `otherLogic`. Actions and values will not be shared between the two logics.
+
 ## 2.4.1 - 2021-05-17
 - Support passing `LogicType` to `logic.extend<LogicType>()`
 - Fixed recursive `.exend()`. This works now: `kea({ extend: [{ extend: [ ... ] }] })`)
