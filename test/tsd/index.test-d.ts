@@ -31,11 +31,14 @@ interface DashboardProps {
 type MyLogicType = MakeLogicType<DashboardValues, DashboardActions, DashboardProps>
 
 const logic = kea<MyLogicType>({})
+const extendedLogic = kea({}).extend<MyLogicType>({})
 
 /*
  * 2. Test MakeLogicType<Values, Actions, Props>
  *    - Test overridden fields
  */
+
+expectType<typeof logic>(extendedLogic)
 
 expectType<{
   setName: (name: string) => { type: string; payload: { name: string } }

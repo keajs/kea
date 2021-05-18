@@ -43,7 +43,9 @@ export interface Logic {
 export interface BuiltLogicAdditions<LogicType extends Logic> {
   _isKeaBuild: boolean
   mount(callback?: (logic: LogicType) => any): () => void
-  extend: (extendedInput: LogicInput) => LogicWrapper
+  extend: <ExtendLogicType extends Logic = LogicType>(
+    extendedInput: LogicInput<ExtendLogicType>,
+  ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
   wrapper: LogicWrapper
 }
 
@@ -58,7 +60,9 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   wrap: (Component: AnyComponent) => KeaComponent
   build: (props?: LogicType['props'], autoConnectInListener?: boolean) => LogicType & BuiltLogicAdditions<LogicType>
   mount: (callback?: any) => () => void
-  extend: (extendedInput: LogicInput) => LogicWrapper
+  extend: <ExtendLogicType extends Logic = LogicType>(
+    extendedInput: LogicInput<ExtendLogicType>,
+  ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
 }
 
 export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogicAdditions<LogicType>
