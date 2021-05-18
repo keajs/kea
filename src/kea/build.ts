@@ -21,6 +21,12 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
     }
   }
 
+  if (input.extend) {
+    for (const innerInput of input.extend) {
+      applyInputToLogic(logic, innerInput)
+    }
+  }
+  
   runPlugins('afterLogic', logic, input)
 
   return logic
@@ -105,11 +111,6 @@ function buildLogic({
 
   for (const input of inputs) {
     applyInputToLogic(logic, input)
-    if (input.extend) {
-      for (const innerInput of input.extend) {
-        applyInputToLogic(logic, innerInput)
-      }
-    }
   }
 
   /*

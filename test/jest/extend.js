@@ -137,6 +137,30 @@ test('can extend multiple times with extend: []', () => {
   expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
 })
 
+test('can extend multiple recursive times with extend: []', () => {
+  const logic = kea({
+    actions: () => ({
+      doit: true,
+    }),
+    extend: [
+      {
+        actions: () => ({
+          domore: true,
+        }),
+        extend: [
+          {
+            actions: () => ({
+              doevenmore: true,
+            }),
+          },
+        ],
+      },
+    ],
+  })
+
+  expect(Object.keys(logic.build().actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+})
+
 test('can extend in plugins in beforeBuild', () => {
   const testPlugin = {
     name: 'testPlugin',
@@ -221,8 +245,8 @@ test('can extend in plugins in afterBuild', () => {
 
 test('can extend dynamic logic with extend:[]', () => {
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'something', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'something', key],
     actions: () => ({
       doit: true,
     }),
@@ -240,8 +264,8 @@ test('can extend dynamic logic with extend:[]', () => {
 
 test('can extend dynamic logic with .extend', () => {
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'something', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'something', key],
     actions: () => ({
       doit: true,
     }),
@@ -259,7 +283,7 @@ test('extending logic merges the right properties', () => {
     path: () => ['scenes', 'homepage', 'index'],
     constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, constants }) => ({
       name: [
@@ -273,18 +297,18 @@ test('extending logic merges the right properties', () => {
     selectors: ({ constants, selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        capitalizedName => {
+        (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
         PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -294,7 +318,7 @@ test('extending logic merges the right properties', () => {
       {
         constants: () => ['SOMETHING_BLUE', 'SOMETHING_ELSE'],
         actions: ({ constants }) => ({
-          updateDescription: description => ({ description }),
+          updateDescription: (description) => ({ description }),
         }),
         reducers: ({ actions, constants }) => ({
           description: [
@@ -308,7 +332,7 @@ test('extending logic merges the right properties', () => {
         selectors: ({ constants, selectors }) => ({
           upperCaseDescription: [
             () => [selectors.description],
-            description => description.toUpperCase(),
+            (description) => description.toUpperCase(),
             PropTypes.string,
           ],
         }),
