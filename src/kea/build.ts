@@ -15,6 +15,14 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
     plugins: { buildOrder, buildSteps },
   } = getContext()
 
+  if (input.inherit) {
+    for (const inheritLogic of input.inherit) {
+      for (const inheritInput of inheritLogic.inputs) {
+        applyInputToLogic(logic, inheritInput)
+      }
+    }
+  }
+
   for (const step of buildOrder) {
     for (const func of buildSteps[step]) {
       func(logic, input)
@@ -26,7 +34,7 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
       applyInputToLogic(logic, innerInput)
     }
   }
-  
+
   runPlugins('afterLogic', logic, input)
 
   return logic

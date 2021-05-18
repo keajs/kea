@@ -183,6 +183,7 @@ type LoaderDefinitions<LogicType extends Logic> = {
 }
 
 export type LogicInput<LogicType extends Logic = Logic> = {
+  inherit?: LogicWrapper[]
   extend?: LogicInput[]
   key?: (props: LogicType['props']) => any
   path?:

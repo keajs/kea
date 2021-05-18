@@ -468,3 +468,44 @@ test('can do inheritance with .inputs', () => {
   unmount2()
   unmount3()
 })
+
+test('can do inheritance with inherit', () => {
+  const logic = kea({
+    path: ['first'],
+    actions: {
+      doit: true,
+    },
+  })
+
+  const logic2 = kea({
+    inherit: [logic],
+    path: ['second'],
+    actions: {
+      domore: true,
+    },
+  })
+
+  const logic3 = kea({
+    inherit: [logic2],
+    path: ['third'],
+    actions: {
+      doevenmore: true,
+    },
+  })
+
+  const unmount = logic.mount()
+  const unmount2 = logic2.mount()
+  const unmount3 = logic3.mount()
+
+  expect(Object.keys(logic.actions).sort()).toEqual(['doit'])
+  expect(Object.keys(logic2.actions).sort()).toEqual(['doit', 'domore'])
+  expect(Object.keys(logic3.actions).sort()).toEqual(['doevenmore', 'doit', 'domore'])
+
+  expect(logic.path).toEqual(['first'])
+  expect(logic2.path).toEqual(['second'])
+  expect(logic3.path).toEqual(['third'])
+
+  unmount()
+  unmount2()
+  unmount3()
+})
