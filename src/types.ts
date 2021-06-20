@@ -217,7 +217,11 @@ export type LogicInput<LogicType extends Logic = Logic> = {
       hashParams: Record<string, any>,
     ) => any
   >
-  actionToUrl?: (logic: LogicType) => any
+  actionToUrl?: (
+    logic: LogicType,
+  ) => {
+    [K in keyof LogicType['actionCreators']]?: (payload: Record<string, any>) => string | void
+  }
 
   [key: string]: unknown
 }
