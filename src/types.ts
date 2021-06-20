@@ -207,7 +207,16 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
-  urlToAction?: (logic: LogicType) => any
+  urlToAction?: (
+    logic: LogicType,
+  ) => Record<
+    string,
+    (
+      params: Record<string, string | undefined>,
+      searchParams: Record<string, any>,
+      hashParams: Record<string, any>,
+    ) => any
+  >
   actionToUrl?: (logic: LogicType) => any
 
   [key: string]: unknown
