@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.3 - 2021-06-26
+- Add better types for the `kea-router` plugin
+
 ## 2.4.2 - 2021-05-17
 - Added basic support for inheritance with: `const logic = kea({ inherit: [otherLogic], actions: {...} })`. 
   This makes a copy of the inputs for `otherLogic`. Actions and values will not be shared between the two logics.
