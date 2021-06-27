@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.4 - 2021-06-27
+- Add even better types for the `kea-router` plugin
+
 ## 2.4.3 - 2021-06-26
 - Add better types for the `kea-router` plugin
 
