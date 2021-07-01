@@ -223,15 +223,17 @@ export type LogicInput<LogicType extends Logic = Logic> = {
     [K in keyof LogicType['actionCreators']]?: (
       payload: Record<string, any>,
     ) =>
-      | string
-      | [
-          string | Record<string, string>,
-          string | Record<string, any> | undefined,
-          string | Record<string, any> | undefined,
-        ]
-      | [string | Record<string, string>, string | Record<string, any> | undefined]
-      | [string | Record<string, string>]
       | void
+      | string
+      | [string]
+      | [string, string | Record<string, any> | undefined]
+      | [string, string | Record<string, any> | undefined, string | Record<string, any> | undefined]
+      | [
+          string,
+          string | Record<string, any> | undefined,
+          string | Record<string, any> | undefined,
+          { replace?: boolean },
+        ]
   }
 
   [key: string]: unknown
