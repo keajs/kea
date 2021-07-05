@@ -112,7 +112,7 @@ type ReducerDefinitions<LogicType extends Logic> = {
 
 export type ReducerFunction<S = any> = (state: S, action: AnyAction, fullState: any) => S
 
-type SelectorTuple =
+export type SelectorTuple =
   | []
   | [Selector]
   | [Selector, Selector]
@@ -126,7 +126,7 @@ type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
-type SelectorDefinition<Selectors, SelectorFunction extends any> =
+export type SelectorDefinition<Selectors, SelectorFunction extends any> =
   | [(s: Selectors) => SelectorTuple, SelectorFunction]
   | [(s: Selectors) => SelectorTuple, SelectorFunction, any]
 
