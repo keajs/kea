@@ -107,8 +107,6 @@
     "babel-jest": "^24.7.1",
     "babel-plugin-transform-babel-env-inline": "^0.0.1",
     "cross-env": "^5.2.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.12.1",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
