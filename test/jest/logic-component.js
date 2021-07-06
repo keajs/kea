@@ -1,14 +1,11 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext, getContext } from '../../src'
+import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 class SampleComponent extends Component {
   render() {
@@ -16,12 +13,12 @@ class SampleComponent extends Component {
     const { updateName } = this.actions
 
     return (
-      <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={updateName}>
+      <div data-testid={`sample-${id}`}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={updateName}>
           updateName
         </div>
       </div>
@@ -33,17 +30,17 @@ class ActionComponent extends Component {
   render() {
     return (
       <div>
-        <div className="actions">
+        <div data-testid="actions">
           {Object.keys(this.actions)
             .sort()
             .join(',')}
         </div>
-        <div className="props">
+        <div data-testid="props">
           {Object.keys(this.props)
             .sort()
             .join(',')}
         </div>
-        <div className="name">{this.props.name}</div>
+        <div data-testid="name">{this.props.name}</div>
       </div>
     )
   }
@@ -58,10 +55,10 @@ test('singletons connect to react components', () => {
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -70,7 +67,7 @@ test('singletons connect to react components', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -94,37 +91,27 @@ test('singletons connect to react components', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'chirpy' } } })
 
-  const sampleComponent = wrapper.find('SampleComponent').instance()
-
-  expect(sampleComponent.actions).toBeDefined()
-  expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
-
-  const { updateName } = sampleComponent.actions
-  updateName('somename')
+  singletonLogic.actions.updateName('somename')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'somename' } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 })
 
 test('dynamic connect to react components', () => {
@@ -169,37 +156,27 @@ test('dynamic connect to react components', () => {
 
   const ConnectedComponent = dynamicLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'chirpy' } } } })
 
-  const sampleComponent = wrapper.find('SampleComponent').instance()
-
-  expect(sampleComponent.actions).toBeDefined()
-  expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
-
-  const { updateName } = sampleComponent.actions
-  updateName('somename')
+  dynamicLogic({ id: 12 }).actions.updateName('somename')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'somename12' } } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename12')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename12')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME12')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename12')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename12')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME12')
 })
 
 test('connected props can be used as selectors', () => {
@@ -251,37 +228,27 @@ test('connected props can be used as selectors', () => {
 
   const ConnectedComponent = secondLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'chirpy' } } } })
 
-  const sampleComponent = wrapper.find('SampleComponent').instance()
-
-  expect(sampleComponent.actions).toBeDefined()
-  expect(Object.keys(sampleComponent.actions)).toEqual(['updateName'])
-
-  const { updateName } = sampleComponent.actions
-  updateName('somename')
+  secondLogic.actions.updateName('somename')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'somename' } } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 })
 
 test('doubly connected actions are merged', () => {
@@ -310,16 +277,14 @@ test('doubly connected actions are merged', () => {
 
   const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
-  expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('props')).toHaveTextContent('actions,dispatch,name')
+  expect(screen.getByTestId('actions')).toHaveTextContent('updateName,updateNameAgain')
 })
 
 test('no protypes needed', () => {
@@ -347,22 +312,18 @@ test('no protypes needed', () => {
 
   const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.props').text()).toEqual('actions,dispatch,name')
-  expect(wrapper.find('.actions').text()).toEqual('updateName,updateNameAgain')
-  const sampleComponent = wrapper.find('ActionComponent').instance()
+  expect(screen.getByTestId('props')).toHaveTextContent('actions,dispatch,name')
+  expect(screen.getByTestId('actions')).toHaveTextContent('updateName,updateNameAgain')
 
-  const { updateName } = sampleComponent.actions
-  updateName('somename')
+  firstLogic.actions.updateName('somename')
 
-  expect(wrapper.find('.name').text()).toEqual('somename')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
 })
 
 test('can select with regular', () => {
@@ -400,7 +361,7 @@ test('can select with regular', () => {
 
   function RegularSelectorTest({ name, some }) {
     return (
-      <div className="values">
+      <div data-testid="values">
         {name},{some}
       </div>
     )
@@ -408,16 +369,15 @@ test('can select with regular', () => {
 
   const ConnectedComponent = connectedLogic(RegularSelectorTest)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.values').text()).toEqual('chirpy,value')
+  expect(screen.getByTestId('values')).toHaveTextContent('chirpy,value')
 
-  wrapper.unmount()
-})
+  })
 
 test('dynamic reducer initial props', () => {
   const { store } = getContext()
@@ -441,21 +401,21 @@ test('dynamic reducer initial props', () => {
 
   const SampleComponent = ({ id, name }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
     </div>
   )
 
   const ConnectedComponent = dynamicLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} defaultName="bird" />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('bird')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('bird')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bird' } } } })
 
@@ -463,10 +423,6 @@ test('dynamic reducer initial props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('birb')
 })

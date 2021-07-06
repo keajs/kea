@@ -4,11 +4,8 @@ import { kea, getContext, resetContext } from '../../src'
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext({ createStore: true })
@@ -18,7 +15,7 @@ test('connect works as an object', () => {
   const { store } = getContext()
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description }),
+      updateDescription: (description) => ({ description }),
     }),
 
     reducers: ({ actions }) => ({
@@ -38,7 +35,7 @@ test('connect works as an object', () => {
     },
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
@@ -54,11 +51,11 @@ test('connect works as an object', () => {
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -68,11 +65,11 @@ test('connect works as an object', () => {
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
-      <div className="capitalizedName">{capitalizedName}</div>
-      <div className="description">{description}</div>
-      <div className="updateName" onClick={updateName}>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="capitalizedName">{capitalizedName}</div>
+      <div data-testid="description">{description}</div>
+      <div data-testid="updateName" onClick={updateName}>
         updateName
       </div>
     </div>
@@ -82,7 +79,7 @@ test('connect works as an object', () => {
 
   expect(store.getState()).toEqual({ kea: {} })
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -90,10 +87,10 @@ test('connect works as an object', () => {
 
   expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.description').text()).toEqual('default')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('description')).toHaveTextContent('default')
 
   expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
@@ -104,24 +101,17 @@ test('connect works as an object', () => {
     kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.description').text()).toEqual('new description')
-
-  wrapper.unmount()
-
-  // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {} })
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('description')).toHaveTextContent('new description')
 })
 
 test('connect works as a function', () => {
   const { store } = getContext()
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description }),
+      updateDescription: (description) => ({ description }),
     }),
 
     reducers: ({ actions }) => ({
@@ -141,7 +131,7 @@ test('connect works as a function', () => {
     }),
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
@@ -157,11 +147,11 @@ test('connect works as a function', () => {
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -171,11 +161,11 @@ test('connect works as a function', () => {
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
-      <div className="capitalizedName">{capitalizedName}</div>
-      <div className="description">{description}</div>
-      <div className="updateName" onClick={updateName}>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="capitalizedName">{capitalizedName}</div>
+      <div data-testid="description">{description}</div>
+      <div data-testid="updateName" onClick={updateName}>
         updateName
       </div>
     </div>
@@ -185,7 +175,7 @@ test('connect works as a function', () => {
 
   expect(store.getState()).toEqual({ kea: {} })
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -193,10 +183,10 @@ test('connect works as a function', () => {
 
   expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.description').text()).toEqual('default')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('description')).toHaveTextContent('default')
 
   expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
@@ -207,17 +197,10 @@ test('connect works as a function', () => {
     kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.description').text()).toEqual('new description')
-
-  wrapper.unmount()
-
-  // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {} })
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('description')).toHaveTextContent('new description')
 })
 
 test('props cascade when connecting', () => {
@@ -225,7 +208,7 @@ test('props cascade when connecting', () => {
 
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description }),
+      updateDescription: (description) => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
@@ -245,7 +228,7 @@ test('props cascade when connecting', () => {
     },
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({
@@ -261,11 +244,11 @@ test('props cascade when connecting', () => {
     selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -275,11 +258,11 @@ test('props cascade when connecting', () => {
 
   const SampleComponent = ({ id, name, capitalizedName, description, actions: { updateName } }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
-      <div className="capitalizedName">{capitalizedName}</div>
-      <div className="description">{description}</div>
-      <div className="updateName" onClick={updateName}>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="capitalizedName">{capitalizedName}</div>
+      <div data-testid="description">{description}</div>
+      <div data-testid="updateName" onClick={updateName}>
         updateName
       </div>
     </div>
@@ -289,7 +272,7 @@ test('props cascade when connecting', () => {
 
   expect(store.getState()).toEqual({ kea: {} })
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} defaultDescription="this is a bird" />
     </Provider>,
@@ -299,10 +282,10 @@ test('props cascade when connecting', () => {
     kea: { logic: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } },
   })
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy-12')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy-12')
-  expect(wrapper.find('.description').text()).toEqual('this is a bird')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy-12')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy-12')
+  expect(screen.getByTestId('description')).toHaveTextContent('this is a bird')
 
   logic.actions.updateName('somename')
   connectedLogic.actions.updateDescription('new description')
@@ -311,17 +294,10 @@ test('props cascade when connecting', () => {
     kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.description').text()).toEqual('new description')
-
-  wrapper.unmount()
-
-  // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {} })
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('description')).toHaveTextContent('new description')
 })
 
 test('can connect logic without values/actions', () => {
@@ -329,7 +305,7 @@ test('can connect logic without values/actions', () => {
 
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description }),
+      updateDescription: (description) => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
@@ -349,7 +325,7 @@ test('can connect logic without values/actions', () => {
     },
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({
@@ -374,7 +350,7 @@ test('can connect logic via array', () => {
 
   const connectedLogic = kea({
     actions: () => ({
-      updateDescription: description => ({ description }),
+      updateDescription: (description) => ({ description }),
     }),
 
     reducers: ({ actions, props }) => ({
@@ -392,7 +368,7 @@ test('can connect logic via array', () => {
     connect: [connectedLogic],
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions, props }) => ({

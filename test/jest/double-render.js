@@ -1,14 +1,11 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext, getContext } from '../../src'
+import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext()
@@ -60,11 +57,11 @@ test('does not double render with the same props', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={updateName}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={updateName}>
           updateName
         </div>
       </div>
@@ -75,7 +72,7 @@ test('does not double render with the same props', () => {
 
   expect(countRendered).toEqual(0)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -86,10 +83,10 @@ test('does not double render with the same props', () => {
   store.dispatch({ type: 'nothing', payload: {} })
   expect(countRendered).toEqual(1)
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
@@ -104,12 +101,8 @@ test('does not double render with the same props', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename3' } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename3')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME3')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename3')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename3')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME3')
 })

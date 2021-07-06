@@ -2,13 +2,10 @@
 import { kea, resetContext } from '../../src'
 import { getContext, getPluginContext, setPluginContext } from '../../src/context'
 import './helper/jsdom'
-import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
 import { corePlugin } from '../../src/core'
 import { listenersPlugin } from '../../src/listeners'
 import { activatePlugin } from '../../src/plugins'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 test('the core and listeners plugins are activated automatically', () => {
   resetContext()

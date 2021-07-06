@@ -4,12 +4,8 @@ import { kea, resetContext, getContext } from '../../src'
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-import { act } from 'react-dom/test-utils'
-
-configure({ adapter: new Adapter() })
 
 beforeEach(() => {
   resetContext()
@@ -22,7 +18,7 @@ test('updating state to remove logic from react unmounts neatly', () => {
 
   const innerLogic = kea({
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props, key }) => ({
       name: [
@@ -37,8 +33,8 @@ test('updating state to remove logic from react unmounts neatly', () => {
 
   const InnerComponent = ({ name, actions: { updateName } }) => (
     <div>
-      <div className="name">{name}</div>
-      <div className="update-name"></div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="update-name"></div>
     </div>
   )
 
@@ -65,14 +61,18 @@ test('updating state to remove logic from react unmounts neatly', () => {
 
   const OuterComponent = ({ innerShown, actions: { showInner, hideInner } }) => (
     <div>
-      <div className="inner-shown">{innerShown ? 'true' : 'false'}</div>
-      <div className="inner-hide">
-        <button onClick={hideInner}>hide</button>
+      <div data-testid="inner-shown">{innerShown ? 'true' : 'false'}</div>
+      <div data-testid="inner-hide">
+        <button data-testid="inner-hide-button" onClick={hideInner}>
+          hide
+        </button>
       </div>
-      <div className="inner-show">
-        <button onClick={showInner}>show</button>
+      <div data-testid="inner-show">
+        <button data-testid="inner-show-button" onClick={showInner}>
+          show
+        </button>
       </div>
-      <div className="inner-div">{innerShown ? <ConnectedInnerComponent /> : null}</div>
+      <div data-testid="inner-div">{innerShown ? <ConnectedInnerComponent /> : null}</div>
     </div>
   )
 
@@ -80,21 +80,19 @@ test('updating state to remove logic from react unmounts neatly', () => {
 
   // start
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedOuterComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.inner-shown').text()).toEqual('true')
-  expect(wrapper.find('.name').text()).toEqual('George')
+  expect(screen.getByTestId('inner-shown')).toHaveTextContent('true')
+  expect(screen.getByTestId('name')).toHaveTextContent('George')
 
-  wrapper.find('.inner-hide button').simulate('click')
+  fireEvent.click(screen.getByTestId('inner-hide-button'))
 
-  expect(wrapper.find('.inner-shown').text()).toEqual('false')
-  expect(wrapper.exists('.name')).toEqual(false)
-
-  wrapper.unmount()
+  expect(screen.getByTestId('inner-shown')).toHaveTextContent('false')
+  expect(screen.queryByTestId('name')).toEqual(null)
 })
 
 test('swapping out connected logic gives the right state', () => {
@@ -104,7 +102,7 @@ test('swapping out connected logic gives the right state', () => {
     actions: () => ({
       showEdit: true,
       hideEdit: true,
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props, key }) => ({
       editShown: [
@@ -134,9 +132,9 @@ test('swapping out connected logic gives the right state', () => {
 
   const EditComponent = ({ name, actions: { updateName, hideEdit } }) => (
     <div>
-      <div className="name">{name}</div>
+      <div data-testid="name">{name}</div>
       <button
-        className="save-and-close"
+        data-testid="save-and-close"
         onClick={() => {
           updateName('George')
           hideEdit()
@@ -157,7 +155,7 @@ test('swapping out connected logic gives the right state', () => {
 
   const ShowComponent = ({ name }) => (
     <div>
-      <div className="name">{name}</div>
+      <div data-testid="name">{name}</div>
     </div>
   )
 
@@ -165,11 +163,13 @@ test('swapping out connected logic gives the right state', () => {
 
   const OuterComponent = ({ editShown, actions: { showEdit } }) => (
     <div>
-      <div className="edit-shown">{editShown ? 'true' : 'false'}</div>
-      <div className="edit-show">
-        <button onClick={showEdit}>show</button>
+      <div data-testid="edit-shown">{editShown ? 'true' : 'false'}</div>
+      <div data-testid="edit-show">
+        <button data-testid="edit-show-button" onClick={showEdit}>
+          show
+        </button>
       </div>
-      <div className="edit-div">{editShown ? <ConnectedEditComponent /> : <ConnectedShowComponent />}</div>
+      <div data-testid="edit-div">{editShown ? <ConnectedEditComponent /> : <ConnectedShowComponent />}</div>
     </div>
   )
 
@@ -177,26 +177,24 @@ test('swapping out connected logic gives the right state', () => {
 
   // start
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedOuterComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.edit-shown').text()).toEqual('false')
-  expect(wrapper.find('.name').text()).toEqual('Bob')
+  expect(screen.getByTestId('edit-shown')).toHaveTextContent('false')
+  expect(screen.getByTestId('name')).toHaveTextContent('Bob')
 
-  wrapper.find('.edit-show button').simulate('click')
+  fireEvent.click(screen.getByTestId('edit-show-button'))
 
-  expect(wrapper.find('.edit-shown').text()).toEqual('true')
-  expect(wrapper.find('.name').text()).toEqual('Bob')
+  expect(screen.getByTestId('edit-shown')).toHaveTextContent('true')
+  expect(screen.getByTestId('name')).toHaveTextContent('Bob')
 
-  wrapper.find('.save-and-close').simulate('click')
+  fireEvent.click(screen.getByTestId('save-and-close'))
 
-  expect(wrapper.find('.edit-shown').text()).toEqual('false')
-  expect(wrapper.find('.name').text()).toEqual('George')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('edit-shown')).toHaveTextContent('false')
+  expect(screen.getByTestId('name')).toHaveTextContent('George')
 })
 
 test('it also works with dynamic logic (with reducers)', () => {
@@ -207,9 +205,9 @@ test('it also works with dynamic logic (with reducers)', () => {
 
     actions: () => ({
       increment: true,
-      removeElementById: id => ({ id }),
-      addElement: element => ({ element }),
-      updateAllNames: name => ({ name }),
+      removeElementById: (id) => ({ id }),
+      addElement: (element) => ({ element }),
+      updateAllNames: (name) => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
@@ -220,7 +218,7 @@ test('it also works with dynamic logic (with reducers)', () => {
           [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
           [actions.updateAllNames]: (state, payload) => {
             let newState = {}
-            Object.keys(state).forEach(key => {
+            Object.keys(state).forEach((key) => {
               newState[key] = { ...state[key], name: payload.name }
             })
             return newState
@@ -238,7 +236,7 @@ test('it also works with dynamic logic (with reducers)', () => {
         0,
         PropTypes.number,
         {
-          [actions.increment]: state => state + 1,
+          [actions.increment]: (state) => state + 1,
         },
       ],
     }),
@@ -250,8 +248,8 @@ test('it also works with dynamic logic (with reducers)', () => {
       actions: [containerLogic, ['removeElementById', 'updateAllNames', 'increment']],
     },
 
-    key: props => props.id,
-    path: key => ['scenes', 'element', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'element', key],
 
     // this is the only line that is different in the 2 tests
     reducers: () => ({}),
@@ -264,16 +262,14 @@ test('it also works with dynamic logic (with reducers)', () => {
   const Element = elementLogic(
     ({ id, element: { name }, actions: { removeElementById, updateAllNames, increment } }) => (
       <li id={`element-${id}`}>
-        <span className="id">{id}</span>
-        <span className="name">{name}</span>
+        <span data-testid="id">{id}</span>
+        <span data-testid={`name-${id}`}>{name}</span>
         <button
-          className="remove-and-rename-all"
+          data-testid={`remove-and-rename-all-${id}`}
           onClick={() => {
-            act(() => {
-              removeElementById(id)
-              updateAllNames('new')
-              increment()
-            })
+            removeElementById(id)
+            updateAllNames('new')
+            increment()
           }}
         >
           remove
@@ -287,9 +283,9 @@ test('it also works with dynamic logic (with reducers)', () => {
       <div>
         <div>
           <button
-            id="add"
+            data-testid="add"
             onClick={() => {
-              sampleElements.forEach(element => {
+              sampleElements.forEach((element) => {
                 addElement(element)
               })
               increment()
@@ -297,7 +293,7 @@ test('it also works with dynamic logic (with reducers)', () => {
           >
             add
           </button>
-          <button id="increment" onClick={increment}>
+          <button data-testid="increment" onClick={increment}>
             {counter}
           </button>
         </div>
@@ -314,34 +310,45 @@ test('it also works with dynamic logic (with reducers)', () => {
     { id: '5', name: 'fifth' },
   ]
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ElementList />
     </Provider>,
   )
 
-  expect(wrapper.find('.name').map(a => a.text())).toEqual([])
-  expect(wrapper.find('#increment').text()).toEqual('0')
+  expect(screen.queryByTestId('name')).toEqual(null)
+  expect(screen.getByTestId('increment')).toHaveTextContent('0')
 
   // click to add elements
-  wrapper.find('#add').simulate('click')
+  fireEvent.click(screen.getByTestId('add'))
 
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['first', 'second', 'third', 'fourth', 'fifth'])
-  expect(wrapper.find('#increment').text()).toEqual('1')
+  expect(screen.queryAllByTestId('id').length).toEqual(5)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('first')
+  expect(screen.getByTestId('name-2')).toHaveTextContent('second')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('third')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('fourth')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('fifth')
+  expect(screen.getByTestId('increment')).toHaveTextContent('1')
 
   // click to remove #2 and change the name of all to 'new
-  wrapper.find('#element-2 .remove-and-rename-all').simulate('click')
+  fireEvent.click(screen.getByTestId('remove-and-rename-all-2'))
 
-  expect(wrapper.find('#increment').text()).toEqual('2')
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
+  expect(screen.queryAllByTestId('id').length).toEqual(4)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('new')
+  expect(screen.getByTestId('increment')).toHaveTextContent('2')
 
   // increment to refresh the page
-  wrapper.find('#increment').simulate('click')
+  fireEvent.click(screen.getByTestId('increment'))
 
-  expect(wrapper.find('#increment').text()).toEqual('3')
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
-
-  wrapper.unmount()
+  expect(screen.getByTestId('increment')).toHaveTextContent('3')
+  expect(screen.queryAllByTestId('id').length).toEqual(4)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('new')
 })
 
 test('it also works with dynamic logic (without reducers)', () => {
@@ -352,9 +359,9 @@ test('it also works with dynamic logic (without reducers)', () => {
 
     actions: () => ({
       increment: true,
-      removeElementById: id => ({ id }),
-      addElement: element => ({ element }),
-      updateAllNames: name => ({ name }),
+      removeElementById: (id) => ({ id }),
+      addElement: (element) => ({ element }),
+      updateAllNames: (name) => ({ name }),
     }),
 
     reducers: ({ actions }) => ({
@@ -365,7 +372,7 @@ test('it also works with dynamic logic (without reducers)', () => {
           [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
           [actions.updateAllNames]: (state, payload) => {
             let newState = {}
-            Object.keys(state).forEach(key => {
+            Object.keys(state).forEach((key) => {
               newState[key] = { ...state[key], name: payload.name }
             })
             return newState
@@ -385,7 +392,7 @@ test('it also works with dynamic logic (without reducers)', () => {
         0,
         PropTypes.number,
         {
-          [actions.increment]: state => state + 1,
+          [actions.increment]: (state) => state + 1,
         },
       ],
     }),
@@ -397,8 +404,8 @@ test('it also works with dynamic logic (without reducers)', () => {
       actions: [containerLogic, ['removeElementById', 'updateAllNames', 'increment']],
     },
 
-    key: props => props.id,
-    path: key => ['scenes', 'element', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'element', key],
 
     // this is the only line that is different in the 2 tests
     // reducers: () => ({}),
@@ -411,17 +418,15 @@ test('it also works with dynamic logic (without reducers)', () => {
   const Element = elementLogic(
     ({ id, element: { name }, actions: { removeElementById, updateAllNames, increment } }) => (
       <li id={`element-${id}`}>
-        <span className="id">{id}</span>
-        <span className="name">{name}</span>
+        <span data-testid="id">{id}</span>
+        <span data-testid={`name-${id}`}>{name}</span>
         <button
-          className="remove-and-rename-all"
+          data-testid={`remove-and-rename-all-${id}`}
           onClick={() => {
             // with or without batch, there's no difference
-            act(() => {
-              removeElementById(id)
-              updateAllNames('new')
-              increment()
-            })
+            removeElementById(id)
+            updateAllNames('new')
+            increment()
           }}
         >
           remove
@@ -434,9 +439,9 @@ test('it also works with dynamic logic (without reducers)', () => {
     <div>
       <div>
         <button
-          id="add"
+          data-testid="add"
           onClick={() => {
-            sampleElements.forEach(element => {
+            sampleElements.forEach((element) => {
               addElement(element)
             })
             increment()
@@ -444,7 +449,7 @@ test('it also works with dynamic logic (without reducers)', () => {
         >
           add
         </button>
-        <button id="increment" onClick={increment}>
+        <button data-testid="increment" onClick={increment}>
           {counter}
         </button>
       </div>
@@ -460,32 +465,43 @@ test('it also works with dynamic logic (without reducers)', () => {
     { id: '5', name: 'fifth' },
   ]
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ElementList />
     </Provider>,
   )
 
-  expect(wrapper.find('.name').map(a => a.text())).toEqual([])
-  expect(wrapper.find('#increment').text()).toEqual('0')
+  expect(screen.queryByTestId('id')).toEqual(null)
+  expect(screen.getByTestId('increment')).toHaveTextContent('0')
 
   // click to add elements
-  wrapper.find('#add').simulate('click')
+  fireEvent.click(screen.getByTestId('add'))
 
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['first', 'second', 'third', 'fourth', 'fifth'])
-  expect(wrapper.find('#increment').text()).toEqual('1')
+  expect(screen.queryAllByTestId('id').length).toEqual(5)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('first')
+  expect(screen.getByTestId('name-2')).toHaveTextContent('second')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('third')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('fourth')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('fifth')
+  expect(screen.getByTestId('increment')).toHaveTextContent('1')
 
   // click to remove #2 and change the name of all to 'new'
-  wrapper.find('#element-2 .remove-and-rename-all').simulate('click')
+  fireEvent.click(screen.getByTestId('remove-and-rename-all-2'))
 
-  expect(wrapper.find('#increment').text()).toEqual('2')
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
+  expect(screen.getByTestId('increment')).toHaveTextContent('2')
+  expect(screen.getAllByTestId('id').length).toEqual(4)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('new')
 
   // increment to refresh the page
-  wrapper.find('#increment').simulate('click')
+  fireEvent.click(screen.getByTestId('increment'))
 
-  expect(wrapper.find('#increment').text()).toEqual('3')
-  expect(wrapper.find('.name').map(a => a.text())).toEqual(['new', 'new', 'new', 'new'])
-
-  wrapper.unmount()
+  expect(screen.getByTestId('increment')).toHaveTextContent('3')
+  expect(screen.getAllByTestId('id').length).toEqual(4)
+  expect(screen.getByTestId('name-1')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-3')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-4')).toHaveTextContent('new')
+  expect(screen.getByTestId('name-5')).toHaveTextContent('new')
 })

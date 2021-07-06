@@ -3,11 +3,8 @@ import { kea, getStore, resetContext, getContext, useValues, Provider } from '..
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider as ReduxProvider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 class SampleComponent extends Component {
   render() {
@@ -16,10 +13,10 @@ class SampleComponent extends Component {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="updateName" onClick={updateName}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="updateName" onClick={updateName}>
           updateName
         </div>
       </div>
@@ -91,22 +88,20 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <ReduxProvider store={store}>
       <ConnectedComponent id={12} />
     </ReduxProvider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
 
   expect(store.getState()).toEqual({
     kea: {},
     scenes: { something: { name: 'chirpy' } },
   })
-
-  wrapper.unmount()
 })
 
 test('can use createStore on resetContext', () => {
@@ -205,7 +200,7 @@ describe('<Provider> wraps the react-redux Provider', () => {
 
   function Component() {
     const { bla } = useValues(logic)
-    return <div className="bla">{bla}</div>
+    return <div data-testid="bla">{bla}</div>
   }
 
   beforeEach(() => {
@@ -213,21 +208,19 @@ describe('<Provider> wraps the react-redux Provider', () => {
   })
 
   test('works with <ReactReduxProvider />', () => {
-    const wrapper = mount(
+    render(
       <ReduxProvider store={getContext().store}>
         <Component />
       </ReduxProvider>,
     )
-    expect(wrapper.find('.bla').text()).toEqual('hi')
-    wrapper.unmount()
+    expect(screen.getByTestId('bla')).toHaveTextContent('hi')
   })
   test('works with <Provider />', () => {
-    const wrapper2 = mount(
+    render(
       <Provider>
         <Component />
       </Provider>,
     )
-    expect(wrapper2.find('.bla').text()).toEqual('hi')
-    wrapper2.unmount()
+    expect(screen.getByTestId('bla')).toHaveTextContent('hi')
   })
 })

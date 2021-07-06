@@ -4,11 +4,8 @@ import { getContext, kea, resetContext } from '../../src'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 class SampleComponent extends Component {
   static propTypes = {
@@ -21,11 +18,11 @@ class SampleComponent extends Component {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={updateName}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={updateName}>
           updateName
         </div>
       </div>
@@ -43,11 +40,11 @@ class OtherComponent extends Component {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={updateName}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={updateName}>
           updateName
         </div>
       </div>
@@ -102,7 +99,7 @@ test('inject proptypes to react component', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -110,8 +107,8 @@ test('inject proptypes to react component', () => {
 
   expect(Object.keys(SampleComponent.propTypes).sort()).toEqual(['capitalizedName', 'id', 'name', 'upperCaseName'])
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
 })
 
 test('get connected proptyes', () => {
@@ -167,7 +164,7 @@ test('get connected proptyes', () => {
 
   const ConnectedComponent = singletonLogic(OtherComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
@@ -181,8 +178,8 @@ test('get connected proptyes', () => {
     'upperCaseName',
   ])
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
 })
 
 test('also works without proptypes', () => {
