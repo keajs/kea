@@ -4,12 +4,8 @@ import { kea, useValues, useActions, getContext, resetContext } from '../../src'
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-import { act } from 'react-dom/test-utils'
-
-configure({ adapter: new Adapter() })
 
 beforeEach(() => {
   resetContext({ createStore: true })
@@ -18,10 +14,10 @@ beforeEach(() => {
 test('can change key/path of logic once it has been wrapped', () => {
   const { store } = getContext()
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'wrappy', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'wrappy', key],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props }) => ({
       name: [
@@ -35,7 +31,7 @@ test('can change key/path of logic once it has been wrapped', () => {
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name.toUpperCase()
         },
         PropTypes.string,
@@ -46,10 +42,10 @@ test('can change key/path of logic once it has been wrapped', () => {
   function SampleComponent({ id, name, upperCaseName, actions: { updateName } }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('fred')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('fred')}>
           updateName
         </div>
       </div>
@@ -67,7 +63,7 @@ test('can change key/path of logic once it has been wrapped', () => {
       id: [
         12,
         {
-          [actions.next]: state => state + 1,
+          [actions.next]: (state) => state + 1,
         },
       ],
     }),
@@ -80,26 +76,22 @@ test('can change key/path of logic once it has been wrapped', () => {
     return (
       <div>
         <ConnectedSampleComponent id={id} defaultName="brad" />
-        <button className="next" onClick={next}>
+        <button data-testid="next" onClick={next}>
           next
         </button>
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <TogglerComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -109,13 +101,11 @@ test('can change key/path of logic once it has been wrapped', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('fred')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('fred')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -125,13 +115,11 @@ test('can change key/path of logic once it has been wrapped', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.next').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('next'))
 
-  expect(wrapper.find('.id').text()).toEqual('13')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('13')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},

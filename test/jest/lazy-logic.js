@@ -4,15 +4,8 @@ import { kea, resetContext, getContext } from '../../src'
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
-
-beforeEach(() => {
-  // resetContext()
-})
+import { render, screen } from '@testing-library/react'
 
 test('eager logic loading works', () => {
   resetContext({ autoMount: true })
@@ -60,11 +53,11 @@ test('eager logic loading works', () => {
 
   const SampleComponent = ({ id, name, capitalizedName, upperCaseName, actions: { updateName } }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
-      <div className="capitalizedName">{capitalizedName}</div>
-      <div className="upperCaseName">{upperCaseName}</div>
-      <div className="updateName" onClick={updateName}>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="capitalizedName">{capitalizedName}</div>
+      <div data-testid="upperCaseName">{upperCaseName}</div>
+      <div data-testid="updateName" onClick={updateName}>
         updateName
       </div>
     </div>
@@ -72,16 +65,16 @@ test('eager logic loading works', () => {
 
   const ConnectedComponent = logic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'chirpy' } } })
 
@@ -89,14 +82,10 @@ test('eager logic loading works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'somename' } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 
   // logic remains in the store
   expect(store.getState()).toEqual({ kea: {}, scenes: { eager: { name: 'somename' } } })
@@ -146,11 +135,11 @@ test('lazy logic loading works', () => {
 
   const SampleComponent = ({ id, name, capitalizedName, upperCaseName, actions: { updateName } }) => (
     <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
-      <div className="capitalizedName">{capitalizedName}</div>
-      <div className="upperCaseName">{upperCaseName}</div>
-      <div className="updateName" onClick={updateName}>
+      <div data-testid="id">{id}</div>
+      <div data-testid="name">{name}</div>
+      <div data-testid="capitalizedName">{capitalizedName}</div>
+      <div data-testid="upperCaseName">{upperCaseName}</div>
+      <div data-testid="updateName" onClick={updateName}>
         updateName
       </div>
     </div>
@@ -158,16 +147,16 @@ test('lazy logic loading works', () => {
 
   const ConnectedComponent = logic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id={12} />
     </Provider>,
   )
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
@@ -175,15 +164,8 @@ test('lazy logic loading works', () => {
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename' } } })
 
-  wrapper.render()
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
-
-  wrapper.unmount()
-
-  // nothing in the store after unmounting
-  expect(store.getState()).toEqual({ kea: {} })
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 })

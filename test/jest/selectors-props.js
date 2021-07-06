@@ -4,11 +4,8 @@ import { kea, resetContext, getContext } from '../../src'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext({ autoMount: true })
@@ -17,7 +14,7 @@ beforeEach(() => {
 class BookDetail extends Component {
   render() {
     const { book, bookId } = this.props
-    return <div id={`book-${bookId}`}>{book}</div>
+    return <div data-testid={`book-${bookId}`}>{book}</div>
   }
 }
 
@@ -47,7 +44,7 @@ test("selectors have access to the component's props", () => {
 
   const ConnectedBookDetail = bookDetailLogic(BookDetail)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <div className="playground-scene">
         <ConnectedBookDetail bookId={1} />
@@ -56,11 +53,9 @@ test("selectors have access to the component's props", () => {
     </Provider>,
   )
 
-  expect(wrapper.find('#book-1').text()).toEqual('book1')
-  expect(wrapper.find('#book-2').text()).toEqual('book2')
+  expect(screen.getByTestId('book-1')).toHaveTextContent('book1')
+  expect(screen.getByTestId('book-2')).toHaveTextContent('book2')
 
   // only one of the components should be in the store, as only one has a reducer
   expect(Object.keys(store.getState().kea.logic).length).toEqual(1)
-
-  wrapper.unmount()
 })

@@ -3,12 +3,9 @@ import { kea, resetContext, getContext, useValues, BindLogic } from '../../src'
 
 import './helper/jsdom'
 import React, { useState } from 'react'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
+import { render, screen } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-
-configure({ adapter: new Adapter() })
 
 beforeEach(() => {
   resetContext()
@@ -47,7 +44,7 @@ test('multiple dynamic logic stores', () => {
     const { firstId, secondId } = state
 
     return (
-      <div>
+      <div data-testid='app'>
         <BindLogic logic={keyedLogic} props={{ id: firstId }}>
           <DynamicComponent __debugId={firstId} />
         </BindLogic>
@@ -60,16 +57,16 @@ test('multiple dynamic logic stores', () => {
 
   function DynamicComponent({ __debugId }) {
     const { name } = useValues(keyedLogic)
-    return <div className="name">{name}</div>
+    return <div data-testid="name">{name}</div>
   }
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <App />
     </Provider>,
   )
 
-  expect(wrapper.find('.name').length).toEqual(2)
+  expect(screen.getAllByTestId('name').length).toEqual(2)
 
   const findText = () =>
     wrapper
@@ -79,30 +76,29 @@ test('multiple dynamic logic stores', () => {
 
   const getStoreActions = () => Object.keys(store.getState().scenes?.dynamic || {}).map((nr) => parseInt(nr))
 
-  expect(findText()).toEqual('bla,michael')
+  expect(screen.getByTestId('app')).toHaveTextContent('blamichael')
   expect(getStoreActions()).toEqual([12, 15])
 
   const logic1 = keyedLogic({ id: 12 })
   const unmount1 = logic1.mount()
 
-  expect(findText()).toEqual('bla,michael')
+  expect(screen.getByTestId('app')).toHaveTextContent('blamichael')
   logic1.actions.updateName('haha')
-  expect(findText()).toEqual('haha,michael')
+  expect(screen.getByTestId('app')).toHaveTextContent('hahamichael')
   expect(getStoreActions()).toEqual([12, 15])
   unmount1()
 
   const logic2 = keyedLogic({ id: 15 })
   const unmount2 = logic2.mount()
   logic2.actions.updateName('hoho')
-  expect(findText()).toEqual('haha,hoho')
+  expect(screen.getByTestId('app')).toHaveTextContent('hahahoho')
   expect(getStoreActions()).toEqual([12, 15])
   unmount2()
 
   setState({ firstId: 13 })
 
-  expect(findText()).toEqual('george,hoho')
+  expect(screen.getByTestId('app')).toHaveTextContent('georgehoho')
 
   expect(getStoreActions()).toEqual([13, 15])
 
-  wrapper.unmount()
-})
+  })

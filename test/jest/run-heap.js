@@ -1,15 +1,9 @@
 /* global test, expect, beforeEach */
 import './helper/jsdom'
-import { getContext, resetContext } from '../../src/context'
+import { getContext, resetContext, kea, useValues } from '../../src'
 import React from 'react'
-import { kea } from '../../src/kea'
-import { useValues } from '../../src'
-import { act } from 'react-dom/test-utils'
-import { configure, mount } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext()
@@ -19,8 +13,8 @@ test('run heap works with actions - build is not autoconnected via react', () =>
   const rootLogic = kea({
     path: () => ['scenes', 'root'],
     actions: () => ({
-      loadScene: scene => ({ scene }),
-      setScene: scene => ({ scene }),
+      loadScene: (scene) => ({ scene }),
+      setScene: (scene) => ({ scene }),
     }),
     reducers: () => ({ scene: ['home', { setScene: (_, { scene }) => scene }] }),
 
@@ -38,37 +32,33 @@ test('run heap works with actions - build is not autoconnected via react', () =>
 
   function DashComponent() {
     const { dashValue } = useValues(dashLogic())
-    return <div id="dashboard">{dashValue}</div>
+    return <div data-testid="dashboard">{dashValue}</div>
   }
 
   function HomeComponent() {
-    return <div id="homepage">On Home</div>
+    return <div data-testid="homepage">On Home</div>
   }
 
   function RootComponent() {
     const { scene } = useValues(rootLogic)
     return (
       <div>
-        <div id="scene">{scene}</div>
-        {scene === 'home' ? <HomeComponent /> : null}
+        <div data-testid="scene">{scene}</div>
+        {scene === 'home' ? <HomeComponent /> : null}😇
         {scene === 'dash' ? <DashComponent /> : null}
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <RootComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <RootComponent />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('#scene').text()).toEqual('home')
-  expect(wrapper.find('#homepage').length).toEqual(1)
-  expect(wrapper.find('#dashboard').length).toEqual(0)
+  expect(screen.getByTestId('scene')).toHaveTextContent('home')
+  expect(screen.getByTestId('homepage')).toHaveTextContent('On Home')
+  expect(screen.queryByTestId('dashboard')).toEqual(null)
 
   expect(getContext().mount.counter).toEqual({ 'scenes.root': 1 })
 

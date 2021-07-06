@@ -1,12 +1,6 @@
 /* global test, expect */
 import { getContext, kea, resetContext } from '../../src'
 
-import './helper/jsdom'
-import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
-
 test('other logic is connected and mounted automatically when used in reducers via build', () => {
   resetContext({ createStore: true, autoMount: false })
 

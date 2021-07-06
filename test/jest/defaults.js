@@ -5,10 +5,7 @@ import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
-import { mount, configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+import { render, screen } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext()
@@ -18,9 +15,9 @@ test('defaults from props for lazy', () => {
   function SampleComponent({ id, propsName, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="propsName">{propsName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="propsName">{propsName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -31,7 +28,7 @@ test('defaults from props for lazy', () => {
     path: () => ['scenes', 'dynamic'],
 
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions, constants, props, selectors }) => ({
@@ -47,11 +44,11 @@ test('defaults from props for lazy', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -61,14 +58,14 @@ test('defaults from props for lazy', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id="12" defaultName="defaultName" />
     </Provider>,
   )
 
-  expect(wrapper.find('.propsName').text()).toEqual('defaultName')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
+  expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -82,22 +79,18 @@ test('defaults from props for lazy', () => {
     scenes: { dynamic: { propsName: 'birb' } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.propsName').text()).toEqual('birb')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('propsName')).toHaveTextContent('birb')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Birb')
 })
 
 test('defaults from selectors', () => {
   function SampleComponent({ id, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="connectedName">{connectedName}</div>
-        <div className="directName">{directName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="connectedName">{connectedName}</div>
+        <div data-testid="directName">{directName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -106,7 +99,7 @@ test('defaults from selectors', () => {
 
   const randomStore = kea({
     actions: ({ constants }) => ({
-      updateStoredName: storedName => ({ storedName }),
+      updateStoredName: (storedName) => ({ storedName }),
     }),
 
     reducers: ({ actions }) => ({
@@ -129,7 +122,7 @@ test('defaults from selectors', () => {
     path: () => ['scenes', 'dynamic'],
 
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     reducers: ({ actions, constants, props, selectors }) => ({
@@ -143,7 +136,7 @@ test('defaults from selectors', () => {
       // randomStore.selectors is not yet built, so we must delay calling it
       // with another selector or mount it before building this logic
       directName: [
-        state => randomStore.selectors.storedName(state),
+        (state) => randomStore.selectors.storedName(state),
         PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
@@ -154,11 +147,11 @@ test('defaults from selectors', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -168,15 +161,15 @@ test('defaults from selectors', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id="12" defaultName="defaultName" />
     </Provider>,
   )
 
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('storedName')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
+  expect(screen.getByTestId('directName')).toHaveTextContent('storedName')
 
   expect(store.getState()).toEqual({
     kea: { logic: { 1: { storedName: 'storedName' } } },
@@ -197,23 +190,19 @@ test('defaults from selectors', () => {
     scenes: { dynamic: { connectedName: 'birb', directName: 'birb' } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-  expect(wrapper.find('.connectedName').text()).toEqual('birb')
-  expect(wrapper.find('.directName').text()).toEqual('birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Birb')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('birb')
+  expect(screen.getByTestId('directName')).toHaveTextContent('birb')
 })
 
 test('defaults from input.defaults selector', () => {
   function SampleComponent({ id, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="connectedName">{connectedName}</div>
-        <div className="directName">{directName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="connectedName">{connectedName}</div>
+        <div data-testid="directName">{directName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -222,7 +211,7 @@ test('defaults from input.defaults selector', () => {
 
   const randomStore = kea({
     actions: ({ constants }) => ({
-      updateStoredName: storedName => ({ storedName }),
+      updateStoredName: (storedName) => ({ storedName }),
     }),
 
     reducers: ({ actions }) => ({
@@ -244,11 +233,11 @@ test('defaults from input.defaults selector', () => {
       actions: [randomStore, ['updateStoredName']],
     },
 
-    key: props => props.id,
-    path: key => ['scenes', 'dynamic', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'dynamic', key],
 
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     defaults: ({ selectors }) => (state, props) => ({
@@ -277,11 +266,11 @@ test('defaults from input.defaults selector', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -291,15 +280,15 @@ test('defaults from input.defaults selector', () => {
 
   const ConnectedComponent = dynamicLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id="12" defaultName="defaultName" />
     </Provider>,
   )
 
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('storedName')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
+  expect(screen.getByTestId('directName')).toHaveTextContent('storedName')
 
   expect(store.getState()).toEqual({
     kea: { logic: { 1: { storedName: 'storedName' } } },
@@ -320,22 +309,18 @@ test('defaults from input.defaults selector', () => {
     scenes: { dynamic: { 12: { connectedName: 'birb', directName: 'birb' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-  expect(wrapper.find('.connectedName').text()).toEqual('birb')
-  expect(wrapper.find('.directName').text()).toEqual('birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Birb')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('birb')
+  expect(screen.getByTestId('directName')).toHaveTextContent('birb')
 })
 
 test('defaults from props via input.defaults without selector', () => {
   function SampleComponent({ id, propsName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="propsName">{propsName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="propsName">{propsName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -344,7 +329,7 @@ test('defaults from props via input.defaults without selector', () => {
 
   const lazyLogic = kea({
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     defaults: ({ selectors, props }) => ({
@@ -364,11 +349,11 @@ test('defaults from props via input.defaults without selector', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -378,14 +363,14 @@ test('defaults from props via input.defaults without selector', () => {
 
   const ConnectedComponent = lazyLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id="12" defaultName="defaultName" />
     </Provider>,
   )
 
-  expect(wrapper.find('.propsName').text()).toEqual('defaultName')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
+  expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
 
   expect(store.getState()).toEqual({
     kea: { logic: { 1: { propsName: 'defaultName' } } },
@@ -397,22 +382,18 @@ test('defaults from props via input.defaults without selector', () => {
     kea: { logic: { 1: { propsName: 'birb' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.propsName').text()).toEqual('birb')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('propsName')).toHaveTextContent('birb')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Birb')
 })
 
 test('defaults from selectors in input.defaults without selector', () => {
   function SampleComponent({ id, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="connectedName">{connectedName}</div>
-        <div className="directName">{directName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="connectedName">{connectedName}</div>
+        <div data-testid="directName">{directName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -421,7 +402,7 @@ test('defaults from selectors in input.defaults without selector', () => {
 
   const randomStore = kea({
     actions: ({ constants }) => ({
-      updateStoredName: storedName => ({ storedName }),
+      updateStoredName: (storedName) => ({ storedName }),
     }),
 
     reducers: ({ actions }) => ({
@@ -442,7 +423,7 @@ test('defaults from selectors in input.defaults without selector', () => {
     },
 
     actions: ({ constants }) => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     defaults: ({ selectors, props }) => ({
@@ -471,11 +452,11 @@ test('defaults from selectors in input.defaults without selector', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -485,15 +466,15 @@ test('defaults from selectors in input.defaults without selector', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent id="12" defaultName="defaultName" />
     </Provider>,
   )
 
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Storedname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('george')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
+  expect(screen.getByTestId('directName')).toHaveTextContent('george')
 
   expect(store.getState()).toEqual({
     kea: { logic: { 2: { storedName: 'storedName' }, 1: { connectedName: 'storedName', directName: 'george' } } },
@@ -511,24 +492,20 @@ test('defaults from selectors in input.defaults without selector', () => {
     kea: { logic: { 2: { storedName: 'birb' }, 1: { connectedName: 'birb', directName: 'birb' } } },
   })
 
-  wrapper.render()
-
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Birb')
-  expect(wrapper.find('.connectedName').text()).toEqual('birb')
-  expect(wrapper.find('.directName').text()).toEqual('birb')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Birb')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('birb')
+  expect(screen.getByTestId('directName')).toHaveTextContent('birb')
 })
 
 test('defaults from input.defaults as object', () => {
   function SampleComponent({ id, propsName, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="propsName">{propsName}</div>
-        <div className="connectedName">{connectedName}</div>
-        <div className="directName">{directName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="propsName">{propsName}</div>
+        <div data-testid="connectedName">{connectedName}</div>
+        <div data-testid="directName">{directName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -537,7 +514,7 @@ test('defaults from input.defaults as object', () => {
 
   const singletonLogic = kea({
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     defaults: {
@@ -573,11 +550,11 @@ test('defaults from input.defaults as object', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -587,33 +564,31 @@ test('defaults from input.defaults as object', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.propsName').text()).toEqual('defaultName')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Defaultname')
-  expect(wrapper.find('.connectedName').text()).toEqual('storedName')
-  expect(wrapper.find('.directName').text()).toEqual('george')
+  expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
+  expect(screen.getByTestId('directName')).toHaveTextContent('george')
 
   expect(store.getState()).toEqual({
     kea: { logic: { 1: { propsName: 'defaultName', connectedName: 'storedName', directName: 'george' } } },
   })
-
-  wrapper.unmount()
 })
 
 test('defaults from selector that returns an object', () => {
   function SampleComponent({ id, propsName, connectedName, directName, capitalizedName }) {
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="propsName">{propsName}</div>
-        <div className="connectedName">{connectedName}</div>
-        <div className="directName">{directName}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
+        <div data-testid="id">{id}</div>
+        <div data-testid="propsName">{propsName}</div>
+        <div data-testid="connectedName">{connectedName}</div>
+        <div data-testid="directName">{directName}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
       </div>
     )
   }
@@ -622,7 +597,7 @@ test('defaults from selector that returns an object', () => {
 
   const randomStore = kea({
     actions: () => ({
-      updateObject: object => ({ object }),
+      updateObject: (object) => ({ object }),
     }),
 
     reducers: ({ actions }) => ({
@@ -643,7 +618,7 @@ test('defaults from selector that returns an object', () => {
     },
 
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
 
     defaults: ({ selectors }) => selectors.object,
@@ -675,11 +650,11 @@ test('defaults from selector that returns an object', () => {
     selectors: ({ constants, selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -689,16 +664,16 @@ test('defaults from selector that returns an object', () => {
 
   const ConnectedComponent = singletonLogic(SampleComponent)
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
       <ConnectedComponent />
     </Provider>,
   )
 
-  expect(wrapper.find('.propsName').text()).toEqual('henry')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Henry')
-  expect(wrapper.find('.connectedName').text()).toEqual('george')
-  expect(wrapper.find('.directName').text()).toEqual('joe')
+  expect(screen.getByTestId('propsName')).toHaveTextContent('henry')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Henry')
+  expect(screen.getByTestId('connectedName')).toHaveTextContent('george')
+  expect(screen.getByTestId('directName')).toHaveTextContent('joe')
 
   expect(store.getState()).toEqual({
     kea: {
@@ -708,6 +683,4 @@ test('defaults from selector that returns an object', () => {
       },
     },
   })
-
-  wrapper.unmount()
 })

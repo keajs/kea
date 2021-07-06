@@ -4,11 +4,8 @@ import { kea, resetContext, getContext } from '../../src'
 import './helper/jsdom'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
+import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
 
 beforeEach(() => {
   resetContext()
@@ -18,10 +15,10 @@ test('multiple dynamic logic stores', () => {
   const { store } = getContext()
 
   const dynamicLogic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'dynamic', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'dynamic', key],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props, key }) => ({
       name: [
@@ -35,9 +32,9 @@ test('multiple dynamic logic stores', () => {
   })
 
   const SampleComponent = ({ id, name }) => (
-    <div>
-      <div className="id">{id}</div>
-      <div className="name">{name}</div>
+    <div {...{ 'data-testid': `sample-${id}` }}>
+      <h1>{id}</h1>
+      <p>{name}</p>
     </div>
   )
 
@@ -49,29 +46,18 @@ test('multiple dynamic logic stores', () => {
     { id: 15, name: 'michael' },
   ]
 
-  const wrapper = mount(
+  render(
     <Provider store={store}>
-      {allNames.map(name => (
+      {allNames.map((name) => (
         <ConnectedComponent key={name.id} id={name.id} defaultName={name.name} />
       ))}
     </Provider>,
   )
+  expect(screen.getAllByRole('heading')).toHaveLength(3)
 
-  expect(wrapper.find('.id').length).toEqual(3)
-  expect(wrapper.find('.name').length).toEqual(3)
-
-  expect(
-    wrapper
-      .find('.id')
-      .map(node => node.text())
-      .join(','),
-  ).toEqual('12,13,15')
-  expect(
-    wrapper
-      .find('.name')
-      .map(node => node.text())
-      .join(','),
-  ).toEqual('bla,george,michael')
+  expect(screen.getByTestId('sample-12')).toHaveTextContent('12bla')
+  expect(screen.getByTestId('sample-13')).toHaveTextContent('13george')
+  expect(screen.getByTestId('sample-15')).toHaveTextContent('15michael')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -80,17 +66,10 @@ test('multiple dynamic logic stores', () => {
 
   dynamicLogic.build({ id: 12 }).actions.updateName('birb')
 
-  expect(
-    wrapper
-      .find('.name')
-      .map(node => node.text())
-      .join(','),
-  ).toEqual('birb,george,michael')
+  expect(screen.getByTestId('sample-12')).toHaveTextContent('12birb')
 
   expect(store.getState()).toEqual({
     kea: {},
     scenes: { dynamic: { 12: { name: 'birb' }, 13: { name: 'george' }, 15: { name: 'michael' } } },
   })
-
-  wrapper.unmount()
 })

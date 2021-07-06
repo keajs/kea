@@ -4,12 +4,8 @@ import { kea, useValues, useAllValues, useActions, useKea, getContext, resetCont
 import './helper/jsdom'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { mount, configure } from 'enzyme'
 import { Provider } from 'react-redux'
-import Adapter from 'enzyme-adapter-react-16'
-import { act } from 'react-dom/test-utils'
-
-configure({ adapter: new Adapter() })
+import { render, screen, fireEvent } from '@testing-library/react'
 
 beforeEach(() => {
   resetContext({ createStore: true })
@@ -20,7 +16,7 @@ test('useValues and useActions hooks works', () => {
   const logic = kea({
     path: () => ['scenes', 'hooky'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -34,18 +30,18 @@ test('useValues and useActions hooks works', () => {
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
-        capitalizedName => {
+        (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
         PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name
             .trim()
             .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
         PropTypes.string,
@@ -63,11 +59,11 @@ test('useValues and useActions hooks works', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="capitalizedName">{capitalizedName}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('bob')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="capitalizedName">{capitalizedName}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('bob')}>
           updateName
         </div>
       </div>
@@ -76,78 +72,64 @@ test('useValues and useActions hooks works', () => {
 
   expect(countRendered).toEqual(0)
 
-  let wrapper
-
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <SampleComponent id={12} />
-      </Provider>,
-    )
-  })
+  render(
+    <Provider store={getContext().store}>
+      <SampleComponent id={12} />
+    </Provider>,
+  )
 
   expect(countRendered).toEqual(1)
 
-  act(() => {
-    store.dispatch({ type: 'nothing', payload: {} })
-  })
+  store.dispatch({ type: 'nothing', payload: {} })
+
   expect(countRendered).toEqual(1)
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('chirpy')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Chirpy')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('CHIRPY')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
-  act(() => {
-    logic.actions.updateName('somename')
-  })
+  logic.actions.updateName('somename')
 
   expect(countRendered).toEqual(2)
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 
-  act(() => {
-    logic.actions.updateName('somename')
-  })
+  logic.actions.updateName('somename')
   expect(countRendered).toEqual(2)
 
-  act(() => {
-    logic.actions.updateName('somename3')
-  })
+  logic.actions.updateName('somename3')
   expect(countRendered).toEqual(3)
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('somename3')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Somename3')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('SOMENAME3')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('somename3')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename3')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME3')
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
+
   expect(countRendered).toEqual(4)
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('bob')
-  expect(wrapper.find('.capitalizedName').text()).toEqual('Bob')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BOB')
-
-  wrapper.unmount()
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('bob')
+  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Bob')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BOB')
 })
 
 test('useValues and useActions hooks accept logic built with props', () => {
   const { store } = getContext()
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'hooky', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'hooky', key],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props }) => ({
       name: [
@@ -161,7 +143,7 @@ test('useValues and useActions hooks accept logic built with props', () => {
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name.toUpperCase()
         },
         PropTypes.string,
@@ -177,39 +159,33 @@ test('useValues and useActions hooks accept logic built with props', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('fred')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('fred')}>
           updateName
         </div>
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <SampleComponent id={12} />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <SampleComponent id={12} />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'brad' } } } })
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('fred')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('fred')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
 
   expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'fred' } } } })
 })
@@ -217,10 +193,10 @@ test('useValues and useActions hooks accept logic built with props', () => {
 test('can change key/path of logic once it has been accessed in a hook', () => {
   const { store } = getContext()
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'hooky', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'hooky', key],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props }) => ({
       name: [
@@ -234,7 +210,7 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name.toUpperCase()
         },
         PropTypes.string,
@@ -250,10 +226,10 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('fred')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('fred')}>
           updateName
         </div>
       </div>
@@ -269,7 +245,7 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
       id: [
         12,
         {
-          [actions.next]: state => state + 1,
+          [actions.next]: (state) => state + 1,
         },
       ],
     }),
@@ -282,26 +258,22 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
     return (
       <div>
         <SampleComponent id={id} />
-        <button className="next" onClick={next}>
+        <button data-testid="next" onClick={next}>
           next
         </button>
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <TogglerComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -311,13 +283,11 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('fred')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('fred')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -327,13 +297,11 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.next').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('next'))
 
-  expect(wrapper.find('.id').text()).toEqual('13')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('13')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -349,10 +317,10 @@ test('can define logic with useKea', () => {
 
   function SampleComponent({ id }) {
     const logic = useKea({
-      key: props => props.id,
-      path: key => ['scenes', 'hooky', key],
+      key: (props) => props.id,
+      path: (key) => ['scenes', 'hooky', key],
       actions: () => ({
-        updateName: name => ({ name }),
+        updateName: (name) => ({ name }),
       }),
       reducers: ({ actions, props }) => ({
         name: [
@@ -366,7 +334,7 @@ test('can define logic with useKea', () => {
       selectors: ({ selectors }) => ({
         upperCaseName: [
           () => [selectors.name],
-          name => {
+          (name) => {
             return name.toUpperCase()
           },
           PropTypes.string,
@@ -380,10 +348,10 @@ test('can define logic with useKea', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('fred')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('fred')}>
           updateName
         </div>
       </div>
@@ -400,7 +368,7 @@ test('can define logic with useKea', () => {
         id: [
           12,
           {
-            [actions.next]: state => state + 1,
+            [actions.next]: (state) => state + 1,
           },
         ],
       }),
@@ -412,26 +380,22 @@ test('can define logic with useKea', () => {
     return (
       <div>
         <SampleComponent id={id} />
-        <button className="next" onClick={next}>
+        <button data-testid="next" onClick={next}>
           next
         </button>
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <TogglerComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -441,13 +405,11 @@ test('can define logic with useKea', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('fred')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('fred')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -457,13 +419,11 @@ test('can define logic with useKea', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.next').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('next'))
 
-  expect(wrapper.find('.id').text()).toEqual('13')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('13')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -477,10 +437,10 @@ test('can define logic with useKea', () => {
 test('can get all props with useAllValuess', () => {
   const { store } = getContext()
   const logic = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'hooky', key],
+    key: (props) => props.id,
+    path: (key) => ['scenes', 'hooky', key],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions, props }) => ({
       name: [
@@ -494,7 +454,7 @@ test('can get all props with useAllValuess', () => {
     selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.name],
-        name => {
+        (name) => {
           return name.toUpperCase()
         },
         PropTypes.string,
@@ -519,10 +479,10 @@ test('can get all props with useAllValuess', () => {
 
     return (
       <div>
-        <div className="id">{id}</div>
-        <div className="name">{name}</div>
-        <div className="upperCaseName">{upperCaseName}</div>
-        <div className="updateName" onClick={() => updateName('fred')}>
+        <div data-testid="id">{id}</div>
+        <div data-testid="name">{name}</div>
+        <div data-testid="upperCaseName">{upperCaseName}</div>
+        <div data-testid="updateName" onClick={() => updateName('fred')}>
           updateName
         </div>
       </div>
@@ -538,7 +498,7 @@ test('can get all props with useAllValuess', () => {
       id: [
         12,
         {
-          [actions.next]: state => state + 1,
+          [actions.next]: (state) => state + 1,
         },
       ],
     }),
@@ -551,26 +511,22 @@ test('can get all props with useAllValuess', () => {
     return (
       <div>
         <SampleComponent id={id} />
-        <button className="next" onClick={next}>
+        <button data-testid="next" onClick={next}>
           next
         </button>
       </div>
     )
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <TogglerComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
-  })
-
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -580,13 +536,11 @@ test('can get all props with useAllValuess', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.updateName').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(wrapper.find('.id').text()).toEqual('12')
-  expect(wrapper.find('.name').text()).toEqual('fred')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('FRED')
+  expect(screen.getByTestId('id')).toHaveTextContent('12')
+  expect(screen.getByTestId('name')).toHaveTextContent('fred')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -596,13 +550,11 @@ test('can get all props with useAllValuess', () => {
     },
   })
 
-  act(() => {
-    wrapper.find('.next').simulate('click')
-  })
+  fireEvent.click(screen.getByTestId('next'))
 
-  expect(wrapper.find('.id').text()).toEqual('13')
-  expect(wrapper.find('.name').text()).toEqual('brad')
-  expect(wrapper.find('.upperCaseName').text()).toEqual('BRAD')
+  expect(screen.getByTestId('id')).toHaveTextContent('13')
+  expect(screen.getByTestId('name')).toHaveTextContent('brad')
+  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
 
   expect(store.getState()).toEqual({
     kea: {},
@@ -617,32 +569,25 @@ test('will not crash hen running action after unmount', () => {
   const { store } = getContext()
   const logic = kea({
     actions: () => ({
-      updateName: name => ({ name })
+      updateName: (name) => ({ name }),
     }),
   })
 
-  function SampleComponent ({ id }) {
+  function SampleComponent({ id }) {
     const { updateName } = useActions(logic)
 
     useEffect(() => {
       return () => updateName('yes')
     }, [])
 
-    return <div/>
+    return <div />
   }
 
-  let wrapper
+  render(
+    <Provider store={getContext().store}>
+      <SampleComponent />
+    </Provider>,
+  )
 
-  act(() => {
-    wrapper = mount(
-      <Provider store={getContext().store}>
-        <SampleComponent />
-      </Provider>
-    )
-  })
-
-  expect(() => {
-    wrapper.unmount()
-  }).not.toThrow()
-
+  expect(() => {}).not.toThrow()
 })
