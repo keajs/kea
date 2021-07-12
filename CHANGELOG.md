@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.6 - 2021-07-12
+- Add support for TypeGen plugins inside logic `input`
+- Switch from Enzyme to React Testing Library
+- Export more types
+
 ## 2.4.5 - 2021-07-02
 - Add even more betterer types for the `kea-router` plugin
 

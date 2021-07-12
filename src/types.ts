@@ -38,6 +38,7 @@ export interface Logic {
 
   __keaTypeGenInternalSelectorTypes: Record<string, any>
   __keaTypeGenInternalReducerActions: Record<string, any>
+  __keaTypeGenInternalExtraInput: Record<string, any>
 }
 
 export interface BuiltLogicAdditions<LogicType extends Logic> {
@@ -237,7 +238,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   }
 
   [key: string]: unknown
-}
+} & LogicType['__keaTypeGenInternalExtraInput']
 
 // MakeLogicType:
 // - create a close-enough approximation of the logic's types if passed two interfaces:
