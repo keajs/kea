@@ -190,7 +190,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   path?:
     | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
     | PathType
-  connect?: any
+  connect?: any | ((props: LogicType['props']) => any)
   constants?: (logic: LogicType) => string[] | string[]
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
   reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
