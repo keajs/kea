@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.7 - 2021-08-24
+- Fix `preloadedState` type
+
 ## 2.4.6 - 2021-07-12
 - Add support for TypeGen plugins inside logic `input`
 - Switch from Enzyme to React Testing Library

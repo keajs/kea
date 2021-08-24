@@ -295,7 +295,7 @@ type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) =
 export interface CreateStoreOptions {
   paths: string[]
   reducers: Record<string, Reducer>
-  preloadedState: undefined
+  preloadedState: Record<string, any> | undefined
   middleware: Middleware[]
   compose: typeof compose
   enhancers: StoreEnhancer[]
