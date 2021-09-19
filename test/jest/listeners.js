@@ -687,18 +687,9 @@ test("listeners get the store's previous state as their 4th argument", async () 
 })
 
 test('track running listeners', async () => {
-  let listenerRan = false
   const firstLogic = kea({
     actions: () => ({
       setUsername: (username) => ({ username }),
-    }),
-    reducers: () => ({
-      username: [
-        'keajs',
-        {
-          setUsername: (_, { username }) => username,
-        },
-      ],
     }),
     listeners: ({ values, selectors }) => ({
       async setUsername(payload, breakpoint) {
@@ -714,8 +705,16 @@ test('track running listeners', async () => {
 
   firstLogic.actions.setUsername('user1')
   expect(getPluginContext('listeners').pendingPromises.size).toBe(1)
+  expect(Array.from(getPluginContext('listeners').pendingPromises.values())).toEqual([
+    [firstLogic(), 'setUsername'],
+  ])
+
   firstLogic.actions.setUsername('user1')
   expect(getPluginContext('listeners').pendingPromises.size).toBe(2)
+  expect(Array.from(getPluginContext('listeners').pendingPromises.values())).toEqual([
+    [firstLogic(), 'setUsername'],
+    [firstLogic(), 'setUsername'],
+  ])
   await delay(50)
   firstLogic.actions.setUsername('user1')
   expect(getPluginContext('listeners').pendingPromises.size).toBe(3)

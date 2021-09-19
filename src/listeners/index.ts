@@ -28,12 +28,12 @@ export const isBreakpoint = (error: Error): boolean => error.message === LISTENE
 type ListenersPluginContext = {
   byPath: Record<string, Record<string, ListenerFunctionWrapper[]>>
   byAction: Record<string, Record<string, ListenerFunctionWrapper[]>>
-  pendingPromises: Map<Promise<void>, BuiltLogic>
+  pendingPromises: Map<Promise<void>, [BuiltLogic, string]>
 }
 
-function trackPendingListener(logic: BuiltLogic, response: Promise<void>) {
+function trackPendingListener(logic: BuiltLogic, actionKey: string, response: Promise<void>) {
   const { pendingPromises } = getPluginContext('listeners') as ListenersPluginContext
-  pendingPromises.set(response, logic)
+  pendingPromises.set(response, [logic, actionKey])
   const remove = () => {
     pendingPromises.delete(response)
   }
@@ -60,7 +60,6 @@ export const listenersPlugin: KeaPlugin = {
       }
 
       logic.cache.listenerBreakpointCounter = {}
-      logic.cache.pendingPromises = new Set()
 
       const fakeLogic = {
         ...logic,
@@ -126,7 +125,7 @@ export const listenersPlugin: KeaPlugin = {
                 response = listener(action.payload, breakpoint as BreakPointFunction, action, previousState)
 
                 if (response && response.then && typeof response.then === 'function') {
-                  trackPendingListener(logic, response)
+                  trackPendingListener(logic, actionKey, response)
                   return response.catch((e: any) => {
                     if (e.message !== LISTENERS_BREAKPOINT) {
                       throw e
