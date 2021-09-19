@@ -2,8 +2,9 @@
 import { kea, resetContext, getContext, isBreakpoint } from '../../src'
 
 import PropTypes from 'prop-types'
+import { getPluginContext } from '../../src/context'
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 beforeEach(() => {
   resetContext({
@@ -20,7 +21,7 @@ test('listeners work', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'first'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -40,7 +41,7 @@ test('listeners work', () => {
 
   firstLogic.mount()
 
-  expect(getContext().plugins.activated.map(p => p.name)).toEqual(['core', 'listeners'])
+  expect(getContext().plugins.activated.map((p) => p.name)).toEqual(['core', 'listeners'])
   expect(firstLogic._isKea).toBe(true)
   expect(firstLogic._isKeaWithKey).toBe(false)
   expect(Object.keys(firstLogic.actions)).toEqual(['updateName'])
@@ -60,7 +61,7 @@ test('listeners work with local action keys', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'first'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -94,7 +95,7 @@ test('sharedListeners work', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -131,7 +132,7 @@ test('many listeners for one action', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -146,7 +147,7 @@ test('many listeners for one action', () => {
       [actions.updateName]: [
         sharedListeners.doUpdateName,
         sharedListeners.otherWorker,
-        function() {
+        function () {
           listenerRan3 = true
         },
       ],
@@ -180,7 +181,7 @@ test('extend works', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name }),
+      updateName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -221,8 +222,8 @@ test('actions are bound', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'test'],
     actions: () => ({
-      updateName: name => ({ name }),
-      updateOtherName: name => ({ name }),
+      updateName: (name) => ({ name }),
+      updateOtherName: (name) => ({ name }),
     }),
     listeners: ({ actions }) => ({
       [actions.updateName]: () => {
@@ -251,8 +252,8 @@ test('store exists', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'sharedListeners2'],
     actions: () => ({
-      updateName: name => ({ name }),
-      updateOtherName: name => ({ name }),
+      updateName: (name) => ({ name }),
+      updateOtherName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -295,8 +296,8 @@ test('actions and values', () => {
   const firstLogic = kea({
     path: () => ['scenes', 'listeners', 'sharedListeners2'],
     actions: () => ({
-      updateName: name => ({ name }),
-      updateOtherName: name => ({ name }),
+      updateName: (name) => ({ name }),
+      updateOtherName: (name) => ({ name }),
     }),
     reducers: ({ actions }) => ({
       name: [
@@ -347,8 +348,8 @@ test('breakpoints', async () => {
 
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories }),
+      setUsername: (username) => ({ username }),
+      setRepositories: (repositories) => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
       username: [
@@ -365,7 +366,7 @@ test('breakpoints', async () => {
       ],
     }),
     listeners: ({ actions, values }) => ({
-      [actions.setUsername]: async function(payload, breakpoint) {
+      [actions.setUsername]: async function (payload, breakpoint) {
         try {
           const { setRepositories } = actions
 
@@ -441,8 +442,8 @@ test('breakpoints with two listeners for same action', async () => {
 
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories }),
+      setUsername: (username) => ({ username }),
+      setRepositories: (repositories) => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
       username: [
@@ -460,11 +461,11 @@ test('breakpoints with two listeners for same action', async () => {
     }),
     listeners: ({ actions, values }) => ({
       [actions.setUsername]: [
-        async function(payload, breakpoint) {
+        async function (payload, breakpoint) {
           await breakpoint(200)
           preListenerRan += 1
         },
-        async function(payload, breakpoint) {
+        async function (payload, breakpoint) {
           await breakpoint(100)
           listenerRan0 += 1
         },
@@ -502,8 +503,8 @@ test('breakpoints with two listeners for same action after extending', async () 
 
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
-      setRepositories: repositories => ({ repositories }),
+      setUsername: (username) => ({ username }),
+      setRepositories: (repositories) => ({ repositories }),
     }),
     reducers: ({ actions }) => ({
       username: [
@@ -520,7 +521,7 @@ test('breakpoints with two listeners for same action after extending', async () 
       ],
     }),
     listeners: ({ actions }) => ({
-      [actions.setUsername]: async function(payload, breakpoint) {
+      [actions.setUsername]: async function (payload, breakpoint) {
         await breakpoint(200)
         preListenerRan += 1
       },
@@ -529,7 +530,7 @@ test('breakpoints with two listeners for same action after extending', async () 
 
   firstLogic.extend({
     listeners: ({ actions }) => ({
-      [actions.setUsername]: async function(payload, breakpoint) {
+      [actions.setUsername]: async function (payload, breakpoint) {
         await breakpoint(100)
         listenerRan0 += 1
       },
@@ -566,7 +567,7 @@ test('breakpoints break when unmounting', async () => {
 
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
+      setUsername: (username) => ({ username }),
     }),
     reducers: () => ({
       username: [
@@ -577,7 +578,7 @@ test('breakpoints break when unmounting', async () => {
       ],
     }),
     listeners: () => ({
-      setUsername: async function(payload, breakpoint) {
+      setUsername: async function (payload, breakpoint) {
         try {
           await breakpoint(100)
           preListenerRan += 1
@@ -607,7 +608,7 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
 
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
+      setUsername: (username) => ({ username }),
     }),
     reducers: () => ({
       username: [
@@ -618,7 +619,7 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
       ],
     }),
     listeners: () => ({
-      setUsername: async function(payload, breakpoint) {
+      setUsername: async function (payload, breakpoint) {
         try {
           await breakpoint(100)
           preListenerRan += 1
@@ -654,24 +655,27 @@ test('breakpoints break when unmounting, they will not resume if mounting again'
   expect(breakpointBroke).toBe(2)
 })
 
-test('listeners get the store\'s previous state as their 4th argument', async () => {
+test("listeners get the store's previous state as their 4th argument", async () => {
   let listenerRan = false
   const firstLogic = kea({
     actions: () => ({
-      setUsername: username => ({ username }),
+      setUsername: (username) => ({ username }),
     }),
     reducers: () => ({
-      username: ['keajs', {
-        setUsername: (_, { username }) => username
-      }]
+      username: [
+        'keajs',
+        {
+          setUsername: (_, { username }) => username,
+        },
+      ],
     }),
     listeners: ({ values, selectors }) => ({
       setUsername: async function (payload, breakpoint, action, previousState) {
         expect(values.username).toBe('user1')
         expect(selectors.username(previousState)).toBe('keajs')
         listenerRan = true
-      }
-    })
+      },
+    }),
   })
 
   const unmount = firstLogic.mount()
@@ -679,5 +683,46 @@ test('listeners get the store\'s previous state as their 4th argument', async ()
   firstLogic.actions.setUsername('user1')
   expect(firstLogic.values.username).toBe('user1')
   expect(listenerRan).toBe(true)
+  unmount()
+})
+
+test('track running listeners', async () => {
+  let listenerRan = false
+  const firstLogic = kea({
+    actions: () => ({
+      setUsername: (username) => ({ username }),
+    }),
+    reducers: () => ({
+      username: [
+        'keajs',
+        {
+          setUsername: (_, { username }) => username,
+        },
+      ],
+    }),
+    listeners: ({ values, selectors }) => ({
+      async setUsername(payload, breakpoint) {
+        await breakpoint(100)
+      },
+    }),
+  })
+
+  const unmount = firstLogic.mount()
+
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(0)
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(0)
+
+  firstLogic.actions.setUsername('user1')
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(1)
+  firstLogic.actions.setUsername('user1')
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(2)
+  await delay(50)
+  firstLogic.actions.setUsername('user1')
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(3)
+  await delay(50)
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(1)
+  await delay(50)
+  expect(getPluginContext('listeners').pendingPromises.size).toBe(0)
+
   unmount()
 })

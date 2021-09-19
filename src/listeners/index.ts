@@ -1,6 +1,7 @@
 import { getContext, setPluginContext, getPluginContext } from '../context'
 import {
   BreakPointFunction,
+  BuiltLogic,
   CreateStoreOptions,
   KeaPlugin,
   ListenerFunction,
@@ -27,6 +28,16 @@ export const isBreakpoint = (error: Error): boolean => error.message === LISTENE
 type ListenersPluginContext = {
   byPath: Record<string, Record<string, ListenerFunctionWrapper[]>>
   byAction: Record<string, Record<string, ListenerFunctionWrapper[]>>
+  pendingPromises: Map<Promise<void>, BuiltLogic>
+}
+
+function trackPendingListener(logic: BuiltLogic, response: Promise<void>) {
+  const { pendingPromises } = getPluginContext('listeners') as ListenersPluginContext
+  pendingPromises.set(response, logic)
+  const remove = () => {
+    pendingPromises.delete(response)
+  }
+  response.then(remove).catch(remove)
 }
 
 export const listenersPlugin: KeaPlugin = {
@@ -43,12 +54,13 @@ export const listenersPlugin: KeaPlugin = {
   },
 
   buildSteps: {
-    listeners(logic: Logic, input: LogicInput): void {
+    listeners(logic: BuiltLogic, input: LogicInput): void {
       if (!input.listeners) {
         return
       }
 
       logic.cache.listenerBreakpointCounter = {}
+      logic.cache.pendingPromises = new Set()
 
       const fakeLogic = {
         ...logic,
@@ -109,12 +121,13 @@ export const listenersPlugin: KeaPlugin = {
                 }
               }
 
-              let response
+              let response: any
               try {
                 response = listener(action.payload, breakpoint as BreakPointFunction, action, previousState)
 
                 if (response && response.then && typeof response.then === 'function') {
-                  return response.catch((e) => {
+                  trackPendingListener(logic, response)
+                  return response.catch((e: any) => {
                     if (e.message !== LISTENERS_BREAKPOINT) {
                       throw e
                     }
@@ -167,7 +180,7 @@ export const listenersPlugin: KeaPlugin = {
 
   events: {
     afterPlugin(): void {
-      setPluginContext('listeners', { byAction: {}, byPath: {} } as ListenersPluginContext)
+      setPluginContext('listeners', { byAction: {}, byPath: {}, pendingPromises: new Map() } as ListenersPluginContext)
     },
 
     beforeReduxStore(options: CreateStoreOptions): void {

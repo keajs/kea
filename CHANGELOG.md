@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.8 - 2021-09-19
+- Track pending listeners, mainly for usage in tests
+
 ## 2.4.7 - 2021-08-24
 - Fix `preloadedState` type
 
