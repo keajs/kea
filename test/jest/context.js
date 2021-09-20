@@ -288,3 +288,15 @@ test('flat context defaults work', () => {
     },
   })
 })
+
+test('unique context id each resetContext', async () => {
+  resetContext({})
+  const contextId1 = getContext().contextId
+  resetContext({})
+  const contextId2 = getContext().contextId
+  resetContext({})
+  const contextId3 = getContext().contextId
+  expect(contextId1).not.toEqual(contextId2)
+  expect(contextId2).not.toEqual(contextId3)
+  expect(contextId1).not.toEqual(contextId3)
+})

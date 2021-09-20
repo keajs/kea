@@ -78,6 +78,10 @@ export const listenersPlugin: KeaPlugin = {
       logic.listeners = {
         ...(logic.listeners || {}),
       }
+      const {
+        contextId,
+        run: { heap },
+      } = getContext()
 
       for (const actionKey of Object.keys(newListeners)) {
         const listenerArray: ListenerFunction[] = Array.isArray(newListeners[actionKey])
@@ -93,19 +97,18 @@ export const listenersPlugin: KeaPlugin = {
 
         const listenerWrapperArray: ListenerFunctionWrapper[] = listenerArray.map(
           (listener, index): ListenerFunctionWrapper => {
-            const listenerKey = `${key}/${start + index}`
+            const listenerKey = `${contextId}/${key}/${start + index}`
             return (action, previousState) => {
-              const {
-                run: { heap },
-              } = getContext()
-
               heap.push({ type: 'listener', logic })
 
               const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
               fakeLogic.cache.listenerBreakpointCounter[listenerKey] = breakCounter
 
               const throwIfCalled = () => {
-                if (fakeLogic.cache.listenerBreakpointCounter[listenerKey] !== breakCounter) {
+                if (
+                  fakeLogic.cache.listenerBreakpointCounter[listenerKey] !== breakCounter ||
+                  contextId !== getContext().contextId
+                ) {
                   throw new Error(LISTENERS_BREAKPOINT)
                 }
               }

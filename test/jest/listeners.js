@@ -705,9 +705,7 @@ test('track running listeners', async () => {
 
   firstLogic.actions.setUsername('user1')
   expect(getPluginContext('listeners').pendingPromises.size).toBe(1)
-  expect(Array.from(getPluginContext('listeners').pendingPromises.values())).toEqual([
-    [firstLogic(), 'setUsername'],
-  ])
+  expect(Array.from(getPluginContext('listeners').pendingPromises.values())).toEqual([[firstLogic(), 'setUsername']])
 
   firstLogic.actions.setUsername('user1')
   expect(getPluginContext('listeners').pendingPromises.size).toBe(2)
@@ -724,4 +722,31 @@ test('track running listeners', async () => {
   expect(getPluginContext('listeners').pendingPromises.size).toBe(0)
 
   unmount()
+})
+
+test('context change breaks breakpoints', async () => {
+  const gotThem = []
+  const logic = kea({
+    actions: {
+      setUsername: (username) => ({ username }),
+    },
+    listeners: {
+      async setUsername({ username }, breakpoint) {
+        await breakpoint(100)
+        gotThem.push(username)
+      },
+    },
+  })
+
+  resetContext({})
+  logic.mount()
+  logic.actions.setUsername('context1')
+  await delay(50)
+
+  resetContext({})
+  logic.mount()
+  logic.actions.setUsername('context2')
+  await delay(100)
+
+  expect(gotThem).toEqual(['context2'])
 })

@@ -17,6 +17,8 @@ export function setContext(newContext: Context): void {
   context = newContext
 }
 
+let contextId = 0
+
 export function openContext(options: ContextOptions = {}, initial = false): Context {
   if (context) {
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
@@ -25,6 +27,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
   const { plugins, createStore = true, defaults, skipPlugins, ...otherOptions } = options
 
   const newContext = {
+    contextId: `kea-context-${contextId++}`,
     plugins: {
       activated: [],
       buildOrder: [],

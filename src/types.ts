@@ -365,6 +365,8 @@ export interface KeaPlugin {
 }
 
 export interface Context {
+  contextId: string,
+
   plugins: {
     activated: KeaPlugin[]
     buildOrder: string[]

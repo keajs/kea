@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.10 - 2021-09-19
+- Break listeners if resetContext called before a breakpoint
+
 ## 2.4.9 - 2021-09-19
 - Store key of the listener with the pending promises
 
