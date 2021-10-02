@@ -51,11 +51,12 @@ function createBlankLogic({
   props: Props
   wrapper: LogicWrapper
 }) {
+  const pathString = path.join('.')
   const logic = ({
     _isKeaBuild: true,
     key,
     path,
-    pathString: path.join('.'),
+    pathString,
     props,
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
@@ -75,6 +76,16 @@ function createBlankLogic({
         return response
       }
       return () => unmountLogic(logic)
+    },
+    isMounted: () => {
+      const counter = getContext().mount.counter[pathString]
+      return typeof counter === 'number' && counter > 0
+    },
+    unmount: () => {
+      if (!logic.isMounted()) {
+        throw new Error(`Logic ${pathString} was not mounted`)
+      }
+      return unmountLogic(logic)
     },
   } as any) as BuiltLogic
 
