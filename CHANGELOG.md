@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.5.0 - 2021-10-13
+- Add `logic(props).isMounted()`
+
 ## 2.4.10 - 2021-09-19
 - Break listeners if resetContext called before a breakpoint
 
