@@ -103,7 +103,7 @@ export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void
         if (mounted[pathString] || buildHeap.length > 0 || runHeap.length > 0 || key === 'constants') {
           return wrapper.build()[key]
         } else {
-          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!`)
+          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something),\npass a function instead of an object so that section is lazily evaluated after the logic is built\nSee: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions`)
         }
       },
     })
