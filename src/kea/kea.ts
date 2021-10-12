@@ -44,6 +44,7 @@ import {
 
   - builtLogic.mount()         # mount the logic and return a function to unmount
   - builtLogic.mount(callback) # mount, run callback and unmount immediately
+  - builtLogic.isMounted()     # check if logic is mounted
 
   Fields on built logic (core plugin):
 
@@ -148,6 +149,7 @@ export function kea<LogicType extends Logic = Logic>(
   wrapper.build = (props?: Props, autoConnectInListener = true) =>
     getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions<LogicType>
   wrapper.mount = (callback) => wrapper.build().mount(callback)
+  wrapper.isMounted = () => wrapper.build().isMounted()
   wrapper.extend = <ExtendLogicType extends Logic = LogicType>(extendedInput: LogicInput<ExtendLogicType>) => {
     wrapper.inputs.push(extendedInput as LogicInput)
     return (wrapper as unknown) as ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
