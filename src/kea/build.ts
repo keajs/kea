@@ -75,17 +75,18 @@ function createBlankLogic({
         unmountLogic(logic)
         return response
       }
-      return () => unmountLogic(logic)
+      let unmounted = false
+      return () => {
+        if (unmounted) {
+          throw new Error(`[KEA] Trying to unmount logic ${logic.pathString}, but not mounted.`)
+        }
+        unmountLogic(logic)
+        unmounted = true
+      }
     },
     isMounted: () => {
       const counter = getContext().mount.counter[pathString]
       return typeof counter === 'number' && counter > 0
-    },
-    unmount: () => {
-      if (!logic.isMounted()) {
-        throw new Error(`Logic ${pathString} was not mounted`)
-      }
-      return unmountLogic(logic)
     },
   } as any) as BuiltLogic
 
