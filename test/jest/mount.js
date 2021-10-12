@@ -13,10 +13,10 @@ test('can mount stores and have them connect to redux without react', () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -70,10 +70,10 @@ test('can mount stores with keys and have them connet to redux without react', (
   const logic = kea({
     key: (props) => props.id,
     path: (key) => ['scenes', 'lazy', key],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -126,10 +126,10 @@ test('can mount with callback', () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -169,10 +169,10 @@ test('can mount with a promise', async () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -214,10 +214,10 @@ test('can mount with a async/await', async () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
