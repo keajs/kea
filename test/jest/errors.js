@@ -1,8 +1,49 @@
 /* global test, expect, beforeEach */
 import { kea, getContext, resetContext } from '../../src'
+import {unmountedActionError} from "../../src/kea/kea";
 
 beforeEach(() => {
   resetContext({ createStore: true })
+})
+
+test('connected logics', () => {
+  const expectedErrorMessage = unmountedActionError("actions", "kea.logic.1")
+
+
+  const secondLogic = kea({
+    actions: ({}) => ({
+      doSomethingElse: true,
+    }),
+    reducers: ({ actions }) => ({
+      wotsit: [
+        false,
+        {
+          [actions.doSomethingElse]: () => true,
+        },
+      ],
+    })
+  })
+
+  const firstLogic = () => (kea({
+    connect: {
+      logics: [secondLogic]
+    },
+    actions: {
+      doSomething: true,
+    },
+    reducers: {
+      thingie: [
+        false,
+        {
+          doSomething: () => true,
+          [secondLogic.actions.wotsit]: () => false
+        },
+      ],
+    }
+  }))
+
+  expect(() => (firstLogic().build())).toThrow(expectedErrorMessage)
+
 })
 
 test('building broken selectors throws a nice error', () => {
