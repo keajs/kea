@@ -15,6 +15,10 @@ import {
   Props,
 } from '../types'
 
+export function unmountedActionError(key: string, path: string): string {
+  return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!\n\nThis can happen in several situations. If you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint?https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
+}
+
 /*
 
   Initializes logic and creates a wrapper that can be used to mount the logic or wrap
@@ -103,7 +107,7 @@ export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void
         if (mounted[pathString] || buildHeap.length > 0 || runHeap.length > 0 || key === 'constants') {
           return wrapper.build()[key]
         } else {
-          throw new Error(`[KEA] Can not access "${key}" on logic "${pathString}" because it is not mounted!\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something),\npass a function instead of an object so that section is lazily evaluated after the logic is built\nSee: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions`)
+          throw new Error(unmountedActionError(key, pathString))
         }
       },
     })

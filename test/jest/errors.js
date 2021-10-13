@@ -5,6 +5,46 @@ beforeEach(() => {
   resetContext({ createStore: true })
 })
 
+test('connected logics', () => {
+  const expectedErrorMessage = `[KEA] Can not access "actions" on logic "kea.logic.1" because it is not mounted!\n\nThis can happen in several situations. If you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint?https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
+
+
+  const secondLogic = kea({
+    actions: ({}) => ({
+      doSomethingElse: true,
+    }),
+    reducers: ({ actions }) => ({
+      wotsit: [
+        false,
+        {
+          [actions.doSomethingElse]: () => true,
+        },
+      ],
+    })
+  })
+
+  const firstLogic = () => (kea({
+    connect: {
+      logics: [secondLogic]
+    },
+    actions: {
+      doSomething: true,
+    },
+    reducers: {
+      thingie: [
+        false,
+        {
+          doSomething: () => true,
+          [secondLogic.actions.wotsit]: () => false
+        },
+      ],
+    }
+  }))
+
+  expect(() => (firstLogic().build())).toThrow(expectedErrorMessage)
+
+})
+
 test('building broken selectors throws a nice error', () => {
   const { store } = getContext()
 
