@@ -16,7 +16,7 @@ import {
 } from '../types'
 
 export function unmountedActionError(key: string, path: string): string {
-  return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!\n\nThis can happen in several situations.\n\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint?https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
+  return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!\n\nThis can happen in several situations.\n\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint? https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
 }
 
 /*
