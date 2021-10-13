@@ -256,7 +256,7 @@ test('can mount with a async/await', async () => {
   expect(store.getState()).toEqual({ kea: {} })
 })
 
-describe('can mount and unmount', () => {
+describe('can get mounted state with isMounted', () => {
   test('logicWrapper', async () => {
     const logic = kea({})
     expect(logic.isMounted()).toEqual(false)
@@ -272,6 +272,24 @@ describe('can mount and unmount', () => {
     expect(logic.isMounted()).toEqual(false)
     logic.mount()
     expect(logic.isMounted()).toEqual(true)
+  })
+
+  test('isMounted() on logicWrapper does not build', () => {
+    const isLogicBuilt = () => typeof getContext().build.cache['kea.logic.1'] !== 'undefined'
+    expect(isLogicBuilt()).toBeFalsy()
+    const logic = kea({})
+    expect(isLogicBuilt()).toBeFalsy()
+    expect(logic.isMounted()).toEqual(false)
+    expect(isLogicBuilt()).toBeFalsy()
+    const u1 = logic.mount()
+    expect(isLogicBuilt()).toBeTruthy()
+    u1()
+    expect(isLogicBuilt()).toBeFalsy()
+  })
+
+  test('isMounted() on logicWrapper with a key throws', () => {
+    const logic = kea({ key: ({ id }) => id })
+    expect(() => logic.isMounted()).toThrow()
   })
 
   test('buildLogic', async () => {

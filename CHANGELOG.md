@@ -1,8 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.5.1 - 2021-10-13
+- Improve performance of `logic.isMounted()`
+- Improve `Can not access "actions" on logic "kea.logic.1" because it is not mounted!` error #140 @pauldambra
+
 ## 2.5.0 - 2021-10-13
-- Add `logic(props).isMounted()`
+- Add `logic(props).isMounted()` #141
 
 ## 2.4.10 - 2021-09-19
 - Break listeners if resetContext called before a breakpoint
