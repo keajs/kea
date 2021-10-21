@@ -218,6 +218,16 @@ export type LogicInput<LogicType extends Logic = Logic> = {
       params: Record<string, string | undefined>,
       searchParams: Record<string, any>,
       hashParams: Record<string, any>,
+      payload: {
+        method: 'PUSH' | 'REPLACE' | 'POP'
+        pathname: string
+        search: string
+        searchParams: Record<string, any>
+        hash: string
+        hashParams: Record<string, any>
+        url: string
+        initial?: boolean
+      },
     ) => any
   >
   actionToUrl?: (
