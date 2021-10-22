@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.3 - 2021-10-21
+
+- `logic.isMounted(props)` now accepts props to check the mounted status of keyed logics without building them.
+- add `logic.getIfBuilt(props)`
+
 ## 2.5.2 - 2021-10-21
 
 - Update types for `urlToAction` for `kea-router`

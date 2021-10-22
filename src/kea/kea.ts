@@ -153,15 +153,18 @@ export function kea<LogicType extends Logic = Logic>(
   wrapper.build = (props?: Props, autoConnectInListener = true) =>
     getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions<LogicType>
   wrapper.mount = (callback) => wrapper.build().mount(callback)
-  wrapper.isMounted = () => {
-    if (wrapper._isKeaWithKey) {
+  wrapper.isMounted = (props?: Record<string, any>) => {
+    if (wrapper._isKeaWithKey && !props) {
       throw new Error('[KEA] Can only check logic(props).isMounted()')
     }
     const input = wrapper.inputs[0]
-    const path = getPathForInput(input, {})
+    const path = getPathForInput(input, props || {})
     const pathString = path.join('.')
     const counter = getContext().mount.counter[pathString]
     return typeof counter === 'number' && counter > 0
+  }
+  wrapper.getIfMounted = (props?: Record<string, any>) => {
+    return wrapper.isMounted(props) ? wrapper.build(props, false) : null
   }
   wrapper.extend = <ExtendLogicType extends Logic = LogicType>(extendedInput: LogicInput<ExtendLogicType>) => {
     wrapper.inputs.push(extendedInput as LogicInput)

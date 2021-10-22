@@ -51,24 +51,26 @@ export interface BuiltLogicAdditions<LogicType extends Logic> {
   wrapper: LogicWrapper
 }
 
+export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogicAdditions<LogicType>
+
 export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKea: boolean
   _isKeaWithKey: boolean
   inputs: LogicInput[]
   <T extends LogicType['props'] | AnyComponent>(props: T): T extends LogicType['props']
-    ? LogicType & BuiltLogicAdditions<LogicType>
+    ? BuiltLogic<LogicType>
     : FunctionComponent
-  (): LogicType & BuiltLogicAdditions<LogicType>
+  (): BuiltLogic<LogicType>
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => LogicType & BuiltLogicAdditions<LogicType>
+  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic<LogicType>
   mount: (callback?: any) => () => void
-  isMounted: () => boolean
+  isMounted: (props?: Record<string, any>) => boolean
+  getIfMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType>,
   ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
 }
 
-export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogicAdditions<LogicType>
 export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWrapperAdditions<LogicType>
 
 // input helpers (using the generated logic type as input)
