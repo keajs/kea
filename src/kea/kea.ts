@@ -163,7 +163,7 @@ export function kea<LogicType extends Logic = Logic>(
     const counter = getContext().mount.counter[pathString]
     return typeof counter === 'number' && counter > 0
   }
-  wrapper.getIfMounted = (props?: Record<string, any>) => {
+  wrapper.findMounted = (props?: Record<string, any>) => {
     return wrapper.isMounted(props) ? wrapper.build(props, false) : null
   }
   wrapper.extend = <ExtendLogicType extends Logic = LogicType>(extendedInput: LogicInput<ExtendLogicType>) => {

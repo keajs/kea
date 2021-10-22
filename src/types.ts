@@ -65,7 +65,7 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic<LogicType>
   mount: (callback?: any) => () => void
   isMounted: (props?: Record<string, any>) => boolean
-  getIfMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
+  findMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType>,
   ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
