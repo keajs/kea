@@ -417,8 +417,9 @@ describe('can connect in a loop', () => {
       // selectors: () => ({ value1: [() => [logic1.selectors.value1], (value1) => value1] }),
     })
 
+    let unmount
     expect(() => {
-      logic1.mount()
+      unmount = logic1.mount()
     }).not.toThrow()
 
     // own reducers
@@ -442,6 +443,11 @@ describe('can connect in a loop', () => {
     expect(logic2.values.value2).toEqual('action2')
     expect(logic1.values.connectValue2).toEqual('action2')
     expect(logic2.values.connectValue1).toEqual('action2')
+
+    unmount()
+
+    expect(logic1.isMounted()).toBeFalsy()
+    expect(logic2.isMounted()).toBeFalsy()
   }
 
   test('built logic', () => runTest(true))
