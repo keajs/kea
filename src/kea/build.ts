@@ -52,7 +52,7 @@ function createBlankLogic({
   wrapper: LogicWrapper
 }) {
   const pathString = path.join('.')
-  const logic = ({
+  const logic = {
     _isKeaBuild: true,
     key,
     path,
@@ -88,7 +88,7 @@ function createBlankLogic({
       const counter = getContext().mount.counter[pathString]
       return typeof counter === 'number' && counter > 0
     },
-  } as any) as BuiltLogic
+  } as any as BuiltLogic
 
   return logic
 }
@@ -105,20 +105,7 @@ function setLogicDefaults(logic: Logic) {
 }
 
 // builds logic. does not check if it's built or already on the context
-function buildLogic({
-  inputs,
-  path,
-  key,
-  props,
-  wrapper,
-}: {
-  inputs: LogicInput[]
-  path: PathType
-  key: string | undefined
-  props: Props
-  wrapper: LogicWrapper
-}) {
-  const logic = createBlankLogic({ key, path, props, wrapper })
+function buildLogic(logic: BuiltLogic, inputs: LogicInput[]) {
   setLogicDefaults(logic)
 
   const {
@@ -173,7 +160,8 @@ export function getBuiltLogic(
   } = getContext()
 
   if (!buildCache[pathString]) {
-    buildCache[pathString] = buildLogic({ inputs, path, key, props: props || {}, wrapper })
+    buildCache[pathString] = createBlankLogic({ key, path, props: props || {}, wrapper })
+    buildCache[pathString] = buildLogic(buildCache[pathString], inputs)
   } else if (props) {
     buildCache[pathString].props = props
   }

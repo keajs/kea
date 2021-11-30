@@ -1,14 +1,13 @@
 /* global test, expect, beforeEach */
 import { kea, getContext, resetContext } from '../../src'
-import {unmountedActionError} from "../../src/kea/kea";
+import { unmountedActionError } from '../../src/kea/kea'
 
 beforeEach(() => {
   resetContext({ createStore: true })
 })
 
 test('connected logics', () => {
-  const expectedErrorMessage = unmountedActionError("actions", "kea.logic.1")
-
+  const expectedErrorMessage = unmountedActionError('actions', 'kea.logic.1')
 
   const secondLogic = kea({
     actions: ({}) => ({
@@ -21,29 +20,29 @@ test('connected logics', () => {
           [actions.doSomethingElse]: () => true,
         },
       ],
-    })
+    }),
   })
 
-  const firstLogic = () => (kea({
-    connect: {
-      logics: [secondLogic]
-    },
-    actions: {
-      doSomething: true,
-    },
-    reducers: {
-      thingie: [
-        false,
-        {
-          doSomething: () => true,
-          [secondLogic.actions.wotsit]: () => false
-        },
-      ],
-    }
-  }))
+  const firstLogic = () =>
+    kea({
+      connect: {
+        logics: [secondLogic],
+      },
+      actions: {
+        doSomething: true,
+      },
+      reducers: {
+        thingie: [
+          false,
+          {
+            doSomething: () => true,
+            [secondLogic.actions.wotsit]: () => false,
+          },
+        ],
+      },
+    })
 
-  expect(() => (firstLogic().build())).toThrow(expectedErrorMessage)
-
+  expect(() => firstLogic().build()).toThrow(expectedErrorMessage)
 })
 
 test('building broken selectors throws a nice error', () => {
@@ -88,18 +87,10 @@ test('connecting to something that does not exist gives an error', () => {
   expect(() => {
     kea({
       connect: {
-        values: [logic, ['notThere']],
-      },
-    }).build()
-  }).toThrow('[KEA] Logic "kea.logic.3", connecting to prop "notThere" returns \'undefined\'')
-
-  expect(() => {
-    kea({
-      connect: {
         values: ['haha', ['notThere']],
       },
     }).build()
-  }).toThrow('[KEA] Logic "kea.logic.4" can not connect to string to request prop "notThere"')
+  }).toThrow('[KEA] Logic "kea.logic.3" can not connect to string to request prop "notThere"')
 
   expect(() => {
     kea({
@@ -107,7 +98,7 @@ test('connecting to something that does not exist gives an error', () => {
         actions: [undefined, ['notThere']],
       },
     }).build()
-  }).toThrow('[KEA] Logic "kea.logic.5" can not connect to undefined to request action "notThere"')
+  }).toThrow('[KEA] Logic "kea.logic.4" can not connect to undefined to request action "notThere"')
 
   expect(() => {
     kea({
@@ -115,7 +106,7 @@ test('connecting to something that does not exist gives an error', () => {
         actions: [logic, ['notThere']],
       },
     }).build()
-  }).toThrow('[KEA] Logic "kea.logic.6", connecting to action "notThere" returns \'undefined\'')
+  }).toThrow('[KEA] Logic "kea.logic.5", connecting to action "notThere" returns \'undefined\'')
 
   expect(() => {
     kea({
@@ -123,7 +114,7 @@ test('connecting to something that does not exist gives an error', () => {
         actions: ['haha', ['notThere']],
       },
     }).build()
-  }).toThrow('[KEA] Logic "kea.logic.7" can not connect to string to request action "notThere"')
+  }).toThrow('[KEA] Logic "kea.logic.6" can not connect to string to request action "notThere"')
 })
 
 test('reducers with undefined actions throw', () => {

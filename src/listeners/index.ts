@@ -71,9 +71,9 @@ export const listenersPlugin: KeaPlugin = {
         },
       })
 
-      const newListeners = (typeof input.listeners === 'function'
-        ? input.listeners(fakeLogic)
-        : input.listeners) as Record<string, ListenerFunction>
+      const newListeners = (
+        typeof input.listeners === 'function' ? input.listeners(fakeLogic) : input.listeners
+      ) as Record<string, ListenerFunction>
 
       logic.listeners = {
         ...(logic.listeners || {}),
@@ -85,7 +85,7 @@ export const listenersPlugin: KeaPlugin = {
 
       for (const actionKey of Object.keys(newListeners)) {
         const listenerArray: ListenerFunction[] = Array.isArray(newListeners[actionKey])
-          ? ((newListeners[actionKey] as unknown) as ListenerFunction[])
+          ? (newListeners[actionKey] as unknown as ListenerFunction[])
           : [newListeners[actionKey]]
 
         let key = actionKey
@@ -135,7 +135,7 @@ export const listenersPlugin: KeaPlugin = {
                     }
                   })
                 }
-              } catch (e) {
+              } catch (e: any) {
                 if (e.message !== LISTENERS_BREAKPOINT) {
                   throw e
                 }

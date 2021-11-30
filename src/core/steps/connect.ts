@@ -85,7 +85,13 @@ export function createConnect(logic: Logic, input: LogicInput): void {
       }
       if (isBuiltLogic(otherLogic)) {
         addConnection(logic, otherLogic)
-        logic.selectors[to] = (from === '*' ? otherLogic.selector : otherLogic.selectors[from]) as Selector
+        logic.selectors[to] = (state, props) =>
+          (
+            (from === '*' ? (otherLogic as BuiltLogic).selector : (otherLogic as BuiltLogic).selectors[from]) ??
+            (() => {
+              throw new Error(`Connected selector "${to}" on logic "${logic.pathString}" is undefined.`)
+            })
+          )(state, props)
 
         if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
           logic.propTypes[to] = otherLogic.propTypes[from]
@@ -99,13 +105,6 @@ export function createConnect(logic: Logic, input: LogicInput): void {
                 return values && values[from]
               }
         ) as Selector
-      }
-
-      // TODO: why only in development?
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof logic.selectors[to] === 'undefined') {
-          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to prop "${from}" returns 'undefined'. `)
-        }
       }
     })
   }

@@ -387,3 +387,48 @@ test('can connect logic via array', () => {
   expect(logic.values.name).toEqual('chirpy-12')
   expect(connectedLogic.values.description).toEqual('default')
 })
+
+describe('can connect in a loop', () => {
+  const runTest = (buildTheLogic = true) => {
+    let logic1
+    let logic2
+
+    logic1 = kea({
+      connect: () => ({
+        values: [buildTheLogic ? logic2() : logic2, ['value2 as connectValue2']],
+        logic: [buildTheLogic ? logic2() : logic2],
+      }),
+      reducers: { value1: ['string1', {}] },
+      selectors: () => ({ value2: [() => [(state) => logic2.selectors.value2(state)], (value2) => value2] }),
+      // selectors: () => ({ value2: [() => [logic2.selectors.value2], (value2) => value2] }),
+    })
+
+    logic2 = kea({
+      connect: () => ({
+        values: [buildTheLogic ? logic1() : logic1, ['value1 as connectValue1']],
+        logic: [buildTheLogic ? logic1() : logic1],
+      }),
+      reducers: { value2: ['string2', {}] },
+      selectors: () => ({ value1: [() => [(state) => logic1.selectors.value1(state)], (value1) => value1] }),
+      // selectors: () => ({ value1: [() => [logic1.selectors.value1], (value1) => value1] }),
+    })
+
+    expect(() => {
+      logic1.mount()
+    }).not.toThrow()
+
+    // own reducers
+    expect(logic1.values.value1).toEqual('string1')
+    expect(logic2.values.value2).toEqual('string2')
+
+    // connected values
+    expect(logic1.values.connectValue2).toEqual('string2')
+    expect(logic2.values.connectValue1).toEqual('string1')
+
+    // expect(logic1.values.value2).toEqual('string2')
+    // expect(logic2.values.value1).toEqual('string1')
+  }
+
+  test('built logic', () => runTest(true))
+  test('logic wrapper', () => runTest(false))
+})

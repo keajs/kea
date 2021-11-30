@@ -68,7 +68,7 @@ export const githubLogic = kea<githubLogicType<Repository>>({
       let response
       try {
         response = await window.fetch(url)
-      } catch (error) {
+      } catch (error: any) {
         actions.setFetchError(error.message)
         return // 👈 nothing to do after, so return
       }

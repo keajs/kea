@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.5 - 2021-10-21
+
+- Add support for connecting to values in circularly connected logics (`aLogic` connects to `bLogic` to get `bValue`, `bLogic` connects to `aLogic` to get `aValue`). 
+
 ## 2.5.4 - 2021-10-21
 
 - Add `logic.findMounted(props)` that either returns the `builtLogic` or `null`
