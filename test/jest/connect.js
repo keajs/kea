@@ -396,9 +396,11 @@ describe('can connect in a loop', () => {
     logic1 = kea({
       connect: () => ({
         values: [buildTheLogic ? logic2() : logic2, ['value2 as connectValue2']],
+        actions: [buildTheLogic ? logic2() : logic2, ['action2']],
         logic: [buildTheLogic ? logic2() : logic2],
       }),
-      reducers: { value1: ['string1', {}] },
+      actions: { action1: true },
+      reducers: { value1: ['string1', { action1: () => 'action1', action2: () => 'action2' }] },
       selectors: () => ({ value2: [() => [(state) => logic2.selectors.value2(state)], (value2) => value2] }),
       // selectors: () => ({ value2: [() => [logic2.selectors.value2], (value2) => value2] }),
     })
@@ -406,9 +408,11 @@ describe('can connect in a loop', () => {
     logic2 = kea({
       connect: () => ({
         values: [buildTheLogic ? logic1() : logic1, ['value1 as connectValue1']],
+        actions: [buildTheLogic ? logic1() : logic1, ['action1']],
         logic: [buildTheLogic ? logic1() : logic1],
       }),
-      reducers: { value2: ['string2', {}] },
+      actions: { action2: true },
+      reducers: { value2: ['string2', { action1: () => 'action1', action2: () => 'action2' }] },
       selectors: () => ({ value1: [() => [(state) => logic1.selectors.value1(state)], (value1) => value1] }),
       // selectors: () => ({ value1: [() => [logic1.selectors.value1], (value1) => value1] }),
     })
@@ -425,8 +429,19 @@ describe('can connect in a loop', () => {
     expect(logic1.values.connectValue2).toEqual('string2')
     expect(logic2.values.connectValue1).toEqual('string1')
 
-    // expect(logic1.values.value2).toEqual('string2')
-    // expect(logic2.values.value1).toEqual('string1')
+    logic2.actions.action1()
+
+    expect(logic1.values.value1).toEqual('action1')
+    expect(logic2.values.value2).toEqual('action1')
+    expect(logic1.values.connectValue2).toEqual('action1')
+    expect(logic2.values.connectValue1).toEqual('action1')
+
+    logic1.actions.action2()
+
+    expect(logic1.values.value1).toEqual('action2')
+    expect(logic2.values.value2).toEqual('action2')
+    expect(logic1.values.connectValue2).toEqual('action2')
+    expect(logic2.values.connectValue1).toEqual('action2')
   }
 
   test('built logic', () => runTest(true))

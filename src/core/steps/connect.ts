@@ -1,6 +1,8 @@
 import { addConnection } from '../shared/connect'
 import { BuiltLogic, Logic, LogicInput, LogicWrapper, LogicWrapperAdditions, Selector } from '../../types'
 import { isLogicWrapper, isBuiltLogic } from '../../utils'
+import { getContext } from '../../context'
+import { createActionType } from './action-creators'
 
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
@@ -55,7 +57,13 @@ export function createConnect(logic: Logic, input: LogicInput): void {
       }
       if (isBuiltLogic(otherLogic)) {
         addConnection(logic, otherLogic)
-        logic.actionCreators[to] = otherLogic.actionCreators[from]
+        if (getContext().build.heap.includes(otherLogic)) {
+          // circular build (otherLogic -> logic -> otherLogic)
+          logic.actionCreators[to] = (...args: any[]) => (otherLogic as BuiltLogic).actionCreators[from](...args)
+          logic.actionCreators[to].toString = () => createActionType(from, (otherLogic as BuiltLogic).pathString)
+        } else {
+          logic.actionCreators[to] = otherLogic.actionCreators[from]
+        }
       } else {
         logic.actionCreators[to] = (otherLogic as Record<string, any>)[from]
       }
@@ -85,14 +93,21 @@ export function createConnect(logic: Logic, input: LogicInput): void {
       }
       if (isBuiltLogic(otherLogic)) {
         addConnection(logic, otherLogic)
-        logic.selectors[to] = (state, props) =>
-          (
-            (from === '*' ? (otherLogic as BuiltLogic).selector : (otherLogic as BuiltLogic).selectors[from]) ??
-            (() => {
-              throw new Error(`Connected selector "${to}" on logic "${logic.pathString}" is undefined.`)
-            })
-          )(state, props)
-
+        let selector = from === '*' ? otherLogic.selector : otherLogic.selectors[from]
+        const throwError = () => {
+          throw new Error(`Connected selector "${to}" on logic "${logic.pathString}" is undefined.`)
+        }
+        if (selector) {
+          logic.selectors[to] = selector
+        } else if (getContext().build.heap.includes(otherLogic)) {
+          // circular build (otherLogic -> logic -> otherLogic)
+          logic.selectors[to] = (state, props) =>
+            (otherLogic as BuiltLogic).selectors[from]
+              ? (otherLogic as BuiltLogic).selectors[from](state, props)
+              : throwError()
+        } else {
+          throwError()
+        }
         if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
           logic.propTypes[to] = otherLogic.propTypes[from]
         }
