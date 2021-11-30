@@ -1,5 +1,6 @@
 import { addConnection } from '../shared/connect'
 import { BuiltLogic, Logic, LogicInput, LogicWrapper, LogicWrapperAdditions, Selector } from '../../types'
+import { isLogicWrapper, isBuiltLogic } from '../../utils'
 
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
@@ -49,12 +50,12 @@ export function createConnect(logic: Logic, input: LogicInput): void {
           )
         }
       }
-      if ((otherLogic as LogicWrapper)._isKea) {
-        otherLogic = (otherLogic as LogicWrapper)(props)
+      if (isLogicWrapper(otherLogic)) {
+        otherLogic = otherLogic.build(props)
       }
-      if ((otherLogic as BuiltLogic)._isKeaBuild) {
-        addConnection(logic, otherLogic as BuiltLogic)
-        logic.actionCreators[to] = (otherLogic as BuiltLogic).actionCreators[from]
+      if (isBuiltLogic(otherLogic)) {
+        addConnection(logic, otherLogic)
+        logic.actionCreators[to] = otherLogic.actionCreators[from]
       } else {
         logic.actionCreators[to] = (otherLogic as Record<string, any>)[from]
       }
@@ -79,30 +80,31 @@ export function createConnect(logic: Logic, input: LogicInput): void {
         }
       }
 
-      if ((otherLogic as LogicWrapper)._isKea) {
-        otherLogic = (otherLogic as LogicWrapper)(props)
+      if (isLogicWrapper(otherLogic)) {
+        otherLogic = otherLogic(props)
       }
-      if ((otherLogic as BuiltLogic)._isKeaBuild) {
-        addConnection(logic, otherLogic as BuiltLogic)
-        logic.selectors[to] = (from === '*'
-          ? (otherLogic as BuiltLogic).selector
-          : (otherLogic as BuiltLogic).selectors[from]) as Selector
+      if (isBuiltLogic(otherLogic)) {
+        addConnection(logic, otherLogic)
+        logic.selectors[to] = (from === '*' ? otherLogic.selector : otherLogic.selectors[from]) as Selector
 
-        if (from !== '*' && typeof (otherLogic as BuiltLogic).propTypes[from] !== 'undefined') {
-          logic.propTypes[to] = (otherLogic as BuiltLogic).propTypes[from]
+        if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
+          logic.propTypes[to] = otherLogic.propTypes[from]
         }
       } else if (typeof otherLogic === 'function') {
-        logic.selectors[to] = (from === '*'
-          ? otherLogic
-          : (state, props) => {
-              const values = (otherLogic as Selector)(state, props)
-              return values && values[from]
-            }) as Selector
+        logic.selectors[to] = (
+          from === '*'
+            ? otherLogic
+            : (state, props) => {
+                const values = (otherLogic as Selector)(state, props)
+                return values && values[from]
+              }
+        ) as Selector
       }
 
+      // TODO: why only in development?
       if (process.env.NODE_ENV !== 'production') {
         if (typeof logic.selectors[to] === 'undefined') {
-          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to prop "${from}" returns 'undefined'`)
+          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to prop "${from}" returns 'undefined'. `)
         }
       }
     })

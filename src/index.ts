@@ -1,4 +1,5 @@
 export * from './types'
+export * from './utils'
 
 import { resetContext } from './context'
 
