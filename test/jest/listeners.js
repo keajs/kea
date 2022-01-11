@@ -1,10 +1,9 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext, getContext, isBreakpoint } from '../../src'
+import { delay } from './helper/delay'
 
 import PropTypes from 'prop-types'
 import { getPluginContext } from '../../src/context'
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 beforeEach(() => {
   resetContext({

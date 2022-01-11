@@ -3,6 +3,7 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import PropTypes from 'prop-types'
+import { delay } from './helper/delay'
 
 beforeEach(() => {
   resetContext()
@@ -232,8 +233,6 @@ test('can mount with a async/await', async () => {
   expect(store.getState()).toEqual({ kea: {} })
 
   let callbackRan = false
-
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
   const response = await logic.mount(async () => {
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
