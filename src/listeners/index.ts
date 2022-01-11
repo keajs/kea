@@ -202,18 +202,18 @@ export const listenersPlugin: KeaPlugin = {
       })
     },
 
-    afterMount(logic: Logic): void {
+    afterMount(logic: BuiltLogic): void {
       if (!logic.listeners) {
         return
       }
-      addListenersByPathString(logic.pathString, logic.listeners)
+      addListeners(logic, logic.listeners)
     },
 
-    beforeUnmount(logic: Logic): void {
+    beforeUnmount(logic: BuiltLogic): void {
       if (!logic.listeners) {
         return
       }
-      removeListenersByPathString(logic.pathString, logic.listeners)
+      removeListeners(logic, logic.listeners)
 
       // trigger all breakpoints
       if (logic.cache.listenerBreakpointCounter) {
@@ -229,30 +229,30 @@ export const listenersPlugin: KeaPlugin = {
   },
 }
 
-function addListenersByPathString(pathString: string, listeners: Record<string, ListenerFunctionWrapper[]>) {
+function addListeners(logic: BuiltLogic, listeners: Record<string, ListenerFunctionWrapper[]>) {
   const { byPath, byAction } = getPluginContext('listeners') as ListenersPluginContext
 
-  byPath[pathString] = listeners
+  byPath[logic.pathString] = listeners
 
   Object.entries(listeners).forEach(([action, listener]) => {
     if (!byAction[action]) {
       byAction[action] = {}
     }
-    byAction[action][pathString] = listener
+    byAction[action][logic.pathString] = listener
   })
 }
 
-function removeListenersByPathString(pathString: string, listeners: Record<string, ListenerFunctionWrapper[]>) {
+function removeListeners(logic: BuiltLogic, listeners: Record<string, ListenerFunctionWrapper[]>) {
   const { byPath, byAction } = getPluginContext('listeners') as ListenersPluginContext
 
   Object.keys(listeners).forEach((action) => {
     if (byAction[action]) {
-      delete byAction[action][pathString]
+      delete byAction[action][logic.pathString]
       if (Object.keys(byAction[action]).length === 0) {
         delete byAction[action]
       }
     }
   })
 
-  delete byPath[pathString]
+  delete byPath[logic.pathString]
 }
