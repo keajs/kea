@@ -2,7 +2,7 @@ import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSelector } from 'react-redux'
 
 import { kea } from '../kea/kea'
-import { LogicInput, LogicWrapper, BuiltLogic } from '../types'
+import { LogicInput, LogicWrapper, BuiltLogic, Logic } from '../types'
 import { getContext } from '../context'
 
 export function useKea(input: LogicInput, deps = []): LogicWrapper {
@@ -50,7 +50,7 @@ export function isWrapper(toBeDetermined: BuiltLogic | LogicWrapper): toBeDeterm
 
 const blankContext = createContext(undefined as BuiltLogic | undefined)
 
-export function useMountedLogic(logic: BuiltLogic | LogicWrapper): BuiltLogic {
+export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): BuiltLogic<L> {
   const builtLogicContext = isWrapper(logic) ? getContext().react.contexts.get(logic as LogicWrapper) : null
   const defaultBuiltLogic = useContext(builtLogicContext || blankContext)
   const builtLogic = isWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
@@ -69,7 +69,7 @@ export function useMountedLogic(logic: BuiltLogic | LogicWrapper): BuiltLogic {
     pathString.current = builtLogic.pathString
   }
 
-  useEffect(function useMountedLogicEffect () {
+  useEffect(function useMountedLogicEffect() {
     // React Fast Refresh calls `useMountedLogicEffectCleanup` followed directly by `useMountedLogicEffect`.
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
@@ -84,5 +84,5 @@ export function useMountedLogic(logic: BuiltLogic | LogicWrapper): BuiltLogic {
     }
   }, [])
 
-  return builtLogic
+  return builtLogic as BuiltLogic<L>
 }
