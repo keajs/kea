@@ -212,9 +212,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
-  urlToAction?: (
-    logic: LogicType,
-  ) => Record<
+  urlToAction?: (logic: LogicType) => Record<
     string,
     (
       params: Record<string, string | undefined>,
@@ -230,11 +228,18 @@ export type LogicInput<LogicType extends Logic = Logic> = {
         url: string
         initial?: boolean
       },
+      previousLocation: {
+        method: 'PUSH' | 'REPLACE' | 'POP' | null
+        pathname: string
+        search: string
+        searchParams: Record<string, any>
+        hash: string
+        hashParams: Record<string, any>
+        url: string
+      },
     ) => any
   >
-  actionToUrl?: (
-    logic: LogicType,
-  ) => {
+  actionToUrl?: (logic: LogicType) => {
     [K in keyof LogicType['actionCreators']]?: (
       payload: Record<string, any>,
     ) =>
@@ -264,7 +269,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps = Props
+  LogicProps = Props,
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -298,9 +303,10 @@ export interface MakeLogicType<
 }
 type AnyFunction = (...args: any) => any
 
-type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
-  ...args: Parameters<B>
-) => { type: string; payload: ReturnType<B> }
+type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
+  type: string
+  payload: ReturnType<B>
+}
 
 type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
 

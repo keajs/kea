@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.8 - 2022-01-25
+
+- Add `previousLocation` 5th argument to `urlToAction`.
+
 ## 2.5.7 - 2022-01-20
 
 - `useMountedLogic` now returns the built logic with the right type.
