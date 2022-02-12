@@ -4,11 +4,11 @@
 [![Backers on Open Collective](https://opencollective.com/kea/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/kea/sponsors/badge.svg)](#sponsors)
 
-![Kea Logo](https://kea.js.org/img/logo.svg)
+![Kea Logo](https://keajs.org/img/logo.svg)
 
 # Kea v2
 
-Open the [documentation](https://kea.js.org/) and read from there.
+Open the [documentation](https://keajs.org/) and read from there.
 
 ## Thank you to our backers!
 
