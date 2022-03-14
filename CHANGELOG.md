@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.9 - 2022-03-14
+
+- In keyed logics, `path: ['without', 'key']` now expands to `path: (key) => ['without', 'key', key]`.
+
 ## 2.5.8 - 2022-01-25
 
 - Add `previousLocation` 5th argument to `urlToAction`.

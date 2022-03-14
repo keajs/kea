@@ -5,7 +5,7 @@ export function getPathForInput(input: LogicInput, props?: Props): PathType {
   const key = input.key ? input.key(props || {}) : undefined
 
   if (input.path) {
-    return typeof input.path === 'function' ? input.path(key) : input.path
+    return typeof input.path === 'function' ? input.path(key) : input.key ? [...input.path, key] : input.path
   }
 
   const {
