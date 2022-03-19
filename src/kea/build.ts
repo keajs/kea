@@ -155,7 +155,7 @@ export function getBuiltLogic(
   const {
     build: { heap: buildHeap, cache: buildCache },
     run: { heap: runHeap },
-    options: { autoConnect: globalAutoConnect, autoConnectWarning },
+    options: { autoConnect: globalAutoConnect, autoConnectMountWarning },
     mount: { counter: mountCounter },
   } = getContext()
 
@@ -181,11 +181,13 @@ export function getBuiltLogic(
       const heapElement = runHeap[runHeap.length - 1]
       const { logic, type, action } = heapElement
       if (type === 'listener' && !logic.connections[pathString]) {
-        if (autoConnectWarning) {
+        if (autoConnectMountWarning && !buildCache[pathString].isMounted()) {
           console.warn(
-            `[KEA] Warning! Automatically added connection to "${pathString}" from action "${
-              action?.type ?? logic.pathString
-            }". You might want to manually "connect" the logic or ensure it's mounted in some other way.`,
+            `[KEA] Warning! Will mount "${pathString}". Probably (!) requested in a listener for action "${
+              action?.type ?? 'unknown'
+            }" in the logic "${
+              logic.pathString
+            }". You might want to explicitly "connect" the logic or ensure it's mounted in some other way.`,
           )
         }
         addConnection(logic, buildCache[pathString])

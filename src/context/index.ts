@@ -76,7 +76,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       debug: false,
       autoMount: false,
       autoConnect: true,
-      autoConnectWarning: false,
+      autoConnectMountWarning: false,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',
