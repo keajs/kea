@@ -99,7 +99,7 @@ export const listenersPlugin: KeaPlugin = {
           (listener, index): ListenerFunctionWrapper => {
             const listenerKey = `${contextId}/${key}/${start + index}`
             return (action, previousState) => {
-              heap.push({ type: 'listener', logic })
+              heap.push({ type: 'listener', logic, action })
 
               const breakCounter = (fakeLogic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
               fakeLogic.cache.listenerBreakpointCounter[listenerKey] = breakCounter

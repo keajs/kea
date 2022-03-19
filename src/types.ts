@@ -326,6 +326,7 @@ export interface InternalContextOptions {
   debug: boolean
   autoMount: boolean
   autoConnect: boolean
+  autoConnectWarning: boolean
   proxyFields: boolean
   flatDefaults: boolean
   attachStrategy: 'dispatch' | 'replace'

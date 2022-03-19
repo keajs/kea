@@ -69,13 +69,14 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       combined: undefined,
     },
 
-    store: (undefined as unknown) as Store, // will be redefined below
+    store: undefined as unknown as Store, // will be redefined below
     __store: undefined,
 
     options: {
       debug: false,
       autoMount: false,
       autoConnect: true,
+      autoConnectWarning: false,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',
@@ -127,7 +128,7 @@ export function closeContext(): void {
     runPlugins('beforeCloseContext', context)
   }
 
-  context = (undefined as unknown) as Context
+  context = undefined as unknown as Context
 }
 
 export function resetContext(options: ContextOptions = {}, initial = false): Context {
