@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.10 - 2022-03-19
+
+- Add `resetContext()` option `autoConnectMountWarning`, which warns when a logic is automatically mounted in a listener. 
+
 ## 2.5.9 - 2022-03-14
 
 - In keyed logics, `path: ['without', 'key']` now expands to `path: (key) => ['without', 'key', key]`.
