@@ -1,6 +1,6 @@
 import { Logic, LogicEventType, LogicInput } from '../../types'
 
-export function createEvents(logic: Logic, input: LogicInput): void {
+export function createEvents<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (input.events) {
     const events = typeof input.events === 'function' ? input.events(logic) : input.events
 

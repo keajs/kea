@@ -13,7 +13,7 @@ import { Logic, LogicInput } from '../../types'
   }
 */
 
-export function createActions(logic: Logic, input: LogicInput): void {
+export function createActions<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   Object.keys(logic.actionCreators).forEach((key) => {
     const actionCreator = logic.actionCreators[key]
     const type = actionCreator.toString()

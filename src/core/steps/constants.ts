@@ -9,7 +9,7 @@
 */
 import { Logic, LogicInput } from '../../types'
 
-export function createConstants(logic: Logic, input: LogicInput): void {
+export function createConstants<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!input.constants) {
     return
   }

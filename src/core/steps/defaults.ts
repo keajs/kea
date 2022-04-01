@@ -14,7 +14,7 @@ import { Logic, LogicInput } from '../../types'
     key2: 20
   }
 */
-export function createDefaults(logic: Logic, input: LogicInput): void {
+export function createDefaults<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   const {
     input: { defaults },
   } = getContext()

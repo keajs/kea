@@ -10,7 +10,7 @@ const emptyObject = {}
 
   logic.reducer = combineReducers(logic.reducers)
 */
-export function createReducer(logic: Logic, input: LogicInput) {
+export function createReducer<L extends Logic = Logic>(logic: L, input: LogicInput) {
   if (!input.reducers) {
     return
   }

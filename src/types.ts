@@ -46,7 +46,7 @@ export interface BuiltLogicAdditions<LogicType extends Logic> {
   mount: (callback?: (logic: LogicType) => any) => () => void
   isMounted: () => boolean
   extend: <ExtendLogicType extends Logic = LogicType>(
-    extendedInput: LogicInput<ExtendLogicType>,
+    extendedInput: LogicInput<ExtendLogicType> | LogicInput<ExtendLogicType>[],
   ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
   wrapper: LogicWrapper
 }
@@ -75,7 +75,7 @@ export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWra
 
 // input helpers (using the generated logic type as input)
 
-type ActionDefinitions<LogicType extends Logic> = Record<string, any | (() => any)> | LogicType['actionCreators']
+export type ActionDefinitions<LogicType extends Logic> = Record<string, any> | LogicType['actionCreators']
 
 type ReducerActions<LogicType extends Logic, ReducerType> = {
   [K in keyof LogicType['actionCreators']]?: (
@@ -94,7 +94,7 @@ type ReducerDefault<Reducer extends () => any, P extends Props> =
   | ReturnType<Reducer>
   | ((state: any, props: P) => ReturnType<Reducer>)
 
-type ReducerDefinitions<LogicType extends Logic> = {
+export type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
     | [
         ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
@@ -135,7 +135,7 @@ export type SelectorDefinition<Selectors, SelectorFunction extends any> =
   | [(s: Selectors) => SelectorTuple, SelectorFunction]
   | [(s: Selectors) => SelectorTuple, SelectorFunction, any]
 
-type SelectorDefinitions<LogicType extends Logic> =
+export type SelectorDefinitions<LogicType extends Logic> =
   | {
       [K in keyof LogicType['__keaTypeGenInternalSelectorTypes']]?: SelectorDefinition<
         LogicType['selectors'],
@@ -185,6 +185,23 @@ type LoaderDefinitions<LogicType extends Logic> = {
           }
       )
     | [ReturnType<LogicType['reducers'][K]>, LoaderFunctions<LogicType, ReturnType<LogicType['reducers'][K]>>]
+}
+
+export interface CoreInput<LogicType extends Logic = Logic> {
+  key?: (props: LogicType['props']) => any
+  path?:
+    | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
+    | PathType
+  actions: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
+  defaults?:
+    | ((logic: LogicType) => (state: any, props: LogicType['props']) => Record<string, any>)
+    | ((logic: LogicType) => Record<string, any>)
+    | Record<string, any>
+  reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
+  selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
+  events?:
+    | PartialRecord<LogicEventType, (() => void) | (() => void)[]>
+    | ((logic: LogicType) => PartialRecord<LogicEventType, (() => void) | (() => void)[]>)
 }
 
 export type LogicInput<LogicType extends Logic = Logic> = {
@@ -303,12 +320,12 @@ export interface MakeLogicType<
 }
 type AnyFunction = (...args: any) => any
 
-type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
+export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
   type: string
   payload: ReturnType<B>
 }
 
-type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
+export type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
 
 // kea setup stuff
 

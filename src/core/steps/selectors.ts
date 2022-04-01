@@ -18,7 +18,7 @@ import { Logic, LogicInput, Selector } from '../../types'
     duckAndChicken: state => logic.selector(state).duckAndChicken // memoized via reselect
   }
 */
-export function createSelectors(logic: Logic, input: LogicInput): void {
+export function createSelectors<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!input.selectors) {
     return
   }

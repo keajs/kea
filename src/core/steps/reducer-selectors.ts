@@ -9,7 +9,7 @@ import { Logic, LogicInput, PathType } from '../../types'
 
   logic.selectors = { duckId: (state) => state.scenes.ducks.duckId } // memoized via reselect
 */
-export function createReducerSelectors(logic: Logic, input: LogicInput): void {
+export function createReducerSelectors<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!logic.reducer) {
     return
   }

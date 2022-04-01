@@ -19,7 +19,7 @@ import { createActionType } from './action-creators'
   logic.actionCreators = { setChicken: (id) => ({ type: 'set chicken (farm)', payload: { id } } }) }
   logic.selectors = { chicken: (state) => state.scenes.farm }
 */
-export function createConnect(logic: Logic, input: LogicInput): void {
+export function createConnect<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!input.connect) {
     return
   }

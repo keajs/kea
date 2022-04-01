@@ -14,7 +14,7 @@ const toSpaces = (key: string) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' '
     setDuckId: (duckId) => ({ type: 'set duck (...)', payload: { duckId } }),
   }
 */
-export function createActionCreators(logic: Logic, input: LogicInput): void {
+export function createActionCreators<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!input.actions) {
     return
   }

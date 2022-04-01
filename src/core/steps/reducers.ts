@@ -20,7 +20,7 @@
 import { Logic, LogicInput, ReducerFunction } from '../../types'
 import { AnyAction } from 'redux'
 
-export function createReducers(logic: Logic, input: LogicInput): void {
+export function createReducers<L extends Logic = Logic>(logic: L, input: LogicInput): void {
   if (!input.reducers) {
     return
   }
