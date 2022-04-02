@@ -1,7 +1,5 @@
-import { createAction } from '../shared/actions'
+import {createAction, createActionType} from '../shared/actions'
 import { Logic, LogicInput } from '../../types'
-
-const toSpaces = (key: string) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
 
 /*
   input.actions = ({ path, constants }) => ({
@@ -28,8 +26,4 @@ export function createActionCreators<L extends Logic = Logic>(logic: L, input: L
       logic.actionCreators[key] = createAction(createActionType(key, logic.pathString), payloadCreators[key])
     }
   })
-}
-
-export function createActionType(key: string, pathString: string): string {
-  return `${toSpaces(key)} (${pathString})`
 }

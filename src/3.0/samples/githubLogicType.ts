@@ -1,6 +1,6 @@
 // Auto-generated with kea-typegen. DO NOT EDIT!
 
-import { Logic } from '../src/types'
+import { Logic } from '../../types'
 
 export interface githubLogicType<Repository> extends Logic {
   actionCreators: {
@@ -65,7 +65,7 @@ export interface githubLogicType<Repository> extends Logic {
   props: Record<string, unknown>
   reducer: (
     state: any,
-    action: () => any,
+    action: any,
     fullState: any,
   ) => {
     username: string

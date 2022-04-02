@@ -1,5 +1,12 @@
-import {action, actions, kea, reducers} from './index'
 import { githubLogicType } from './githubLogicType'
+import { kea } from '../index'
+import { connect } from '../steps/connect'
+import { actions } from '../steps/actions'
+import { defaults } from '../steps/defaults'
+import { reducers } from '../steps/reducers'
+import { selectors } from '../steps/selectors'
+import { afterMount } from '../steps/events'
+import { listeners } from '../plugins/listeners'
 
 const API_URL = 'https://api.github.com'
 
@@ -18,21 +25,11 @@ export const githubLogic = kea<githubLogicType<Repository>>([
     setFetchError: (error: string) => ({ error }),
   }),
   connect({
-    actions: []
+    actions: [],
   }),
-  connectActions(otherLogic, ['oneAction', 'otherAction']),
-  connectActions(anotherLogic, ['oneAction', 'otherAction']),
-  forms((actions) => ({
-    githubForm: {
-      defaults: {},
-      submit: () => {
-        actions.setRepositories()
-      }
-    }
-  })),
   defaults({
     username: 'keajs',
-    respositories: [] as Repository[],
+    repositories: [] as Repository[],
   }),
   reducers({
     username: {

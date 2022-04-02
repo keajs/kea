@@ -27,3 +27,9 @@ export function createAction(type: string, payloadCreator: (...args: any[]) => a
 
   return action
 }
+
+const toSpaces = (key: string) => key.replace(/(?:^|\.?)([A-Z])/g, (x, y) => ' ' + y.toLowerCase()).replace(/^ /, '')
+
+export function createActionType(key: string, pathString: string): string {
+  return `${toSpaces(key)} (${pathString})`
+}

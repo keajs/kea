@@ -161,15 +161,15 @@ export function withContext(
   }
 }
 
-export function getPluginContext(name: string): Record<string, any> {
+export function getPluginContext<Context = Record<string, any>>(name: string): Context {
   const { plugins } = getContext()
   if (!plugins.contexts[name]) {
     plugins.contexts[name] = {}
   }
-  return plugins.contexts[name]
+  return plugins.contexts[name] as Context
 }
 
-export function setPluginContext(name: string, pluginContext: Record<string, any>): void {
+export function setPluginContext<Context = Record<string, any>>(name: string, pluginContext: Context): void {
   const { plugins } = getContext()
   plugins.contexts[name] = pluginContext
 }

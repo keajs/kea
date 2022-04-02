@@ -29,7 +29,7 @@ export interface Logic {
   propTypes: Record<string, any>
   reducers: Record<string, any>
   reducerOptions: Record<string, any>
-  reducer: any
+  reducer?: ReducerFunction<any>
   selector?: Selector
   selectors: Record<string, Selector>
   sharedListeners?: Record<string, ListenerFunction>
@@ -73,9 +73,22 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
 
 export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWrapperAdditions<LogicType>
 
+export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => void
+
 // input helpers (using the generated logic type as input)
 
-export type ActionDefinitions<LogicType extends Logic> = Record<string, any> | LogicType['actionCreators']
+export type ActionDefinitions<LogicType extends Logic> = Record<string, any | ((...args: any[]) => any)> | LogicType['actionCreators']
+
+export interface KeaReduxAction {
+  type: string
+  payload: any
+}
+
+export interface KeaAction {
+  (...args: any[]): KeaReduxAction
+  _isKeaAction: boolean
+  toString(): string
+}
 
 type ReducerActions<LogicType extends Logic, ReducerType> = {
   [K in keyof LogicType['actionCreators']]?: (
@@ -397,8 +410,10 @@ export type PluginEventArrays = {
 export interface KeaPlugin {
   name: string
   defaults?: () => Record<string, any>
-  buildOrder?: Record<string, { before?: string; after?: string }>
-  buildSteps?: Record<string, BuildStep>
+  legacyBuild?: {
+    buildOrder?: Record<string, { before?: string; after?: string }>
+    buildSteps?: Record<string, BuildStep>
+  }
   events?: PluginEvents
 }
 

@@ -199,14 +199,12 @@ export function recursiveCreateReducer(treeNode: ReducerFunction | Record<string
 // Instead we'll simply discard the keys we don't need.
 // Please note that logic reducers are still built with redux's combineReducers.
 export function combineKeaReducers(reducers: Record<string, ReducerFunction>): ReducerFunction {
-  const reducerKeys = Object.keys(reducers)
-
   return function combination(state = {}, action, fullState) {
+    const reducerKeys = Object.keys(reducers)
     let stateChanged = Object.keys(state).length !== reducerKeys.length
     const nextState: Record<string, any> = {}
 
-    for (let i = 0; i < reducerKeys.length; i++) {
-      const key = reducerKeys[i]
+    for (const key of reducerKeys) {
       const reducer = reducers[key]
       const previousKeyState = state[key]
       const nextKeyState = reducer(previousKeyState, action, fullState || state)
