@@ -51,7 +51,7 @@ export function reducers<L extends Logic = Logic>(
       if (Array.isArray(object)) {
         // s = [ value, reducer ]
         initialValue = object[0] ?? null
-        reducer = object[1] ?? {}
+        reducer = object[Math.max(1, object.length - 1)] ?? {}
       } else if (typeof object === 'object') {
         initialValue = null
         reducer = object

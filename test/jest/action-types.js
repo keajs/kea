@@ -1,26 +1,28 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, keaReducer } from '../../src'
+import { kea, resetContext } from '../../src'
 
-beforeEach(() => {
-  resetContext()
-})
-
-test('action types object is created', () => {
-  const logic = kea({
-    path: () => ['kea', 'test'],
-    actions: {
-      updateName: (name) => ({ name }),
-      anotherAction: true,
-    },
+describe('action types', () => {
+  beforeEach(() => {
+    resetContext()
   })
 
-  logic.mount()
+  test('action types object is created', () => {
+    const logic = kea({
+      path: () => ['kea', 'test'],
+      actions: {
+        updateName: (name) => ({name}),
+        anotherAction: true,
+      },
+    })
 
-  expect(logic.path).toEqual(['kea', 'test'])
-  expect(Object.keys(logic.actions).sort()).toEqual(['anotherAction', 'updateName'])
+    logic.mount()
 
-  expect(logic.actionTypes).toEqual({
-    anotherAction: logic.actions.anotherAction.toString(),
-    updateName: logic.actions.updateName.toString(),
+    expect(logic.path).toEqual(['kea', 'test'])
+    expect(Object.keys(logic.actions).sort()).toEqual(['anotherAction', 'updateName'])
+
+    expect(logic.actionTypes).toEqual({
+      anotherAction: logic.actions.anotherAction.toString(),
+      updateName: logic.actions.updateName.toString(),
+    })
   })
 })

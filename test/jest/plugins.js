@@ -58,7 +58,6 @@ test('plugins add build steps', () => {
   expect(plugins.buildOrder).toEqual([
     'connect',
     'afterConnect', // added here
-    'constants',
     'actionCreators',
     'actions',
     'defaults',

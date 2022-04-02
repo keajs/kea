@@ -17,10 +17,10 @@ test('connected props and actions get passed, reducers get added to the store', 
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -29,7 +29,7 @@ test('connected props and actions get passed, reducers get added to the store', 
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -64,7 +64,6 @@ test('connected props and actions get passed, reducers get added to the store', 
   })
 
   expect(secondLogic._isKea).toBe(true)
-  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.connections).sort()).toEqual(['scenes.homepage.first', 'scenes.homepage.second'])
   expect(Object.keys(secondLogic.actions)).toEqual(['updateName'])
@@ -79,13 +78,12 @@ test('connected props and actions get passed, reducers get added to the store', 
       actions: [firstLogic, ['updateName']],
       values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
     },
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateNameAgain: name => ({ name }),
     }),
   })
 
   expect(thirdLogic._isKea).toBe(true)
-  expect(thirdLogic._isKeaWithKey).toBe(false)
   expect(thirdLogic.path).toEqual(['scenes', 'homepage', 'third'])
   expect(Object.keys(thirdLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
   expect(Object.keys(thirdLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -104,7 +102,6 @@ test('connected props and actions get passed, reducers get added to the store', 
   })
 
   expect(fourthLogic._isKea).toBe(true)
-  expect(fourthLogic._isKeaWithKey).toBe(false)
   expect(fourthLogic.path).toBeDefined()
   expect(Object.keys(fourthLogic.actions)).toEqual(['updateName', 'updateNameAgain'])
   expect(Object.keys(fourthLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -121,10 +118,10 @@ test('connected props can be used as selectors', () => {
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -140,7 +137,7 @@ test('connected props can be used as selectors', () => {
     connect: {
       values: [firstLogic, ['name']],
     },
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -163,7 +160,6 @@ test('connected props can be used as selectors', () => {
   })
 
   expect(secondLogic._isKea).toBe(true)
-  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
@@ -185,10 +181,10 @@ test('can get everything with *', () => {
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -207,7 +203,6 @@ test('can get everything with *', () => {
   })
 
   expect(secondLogic._isKea).toBe(true)
-  expect(secondLogic._isKeaWithKey).toBe(false)
   expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
   expect(Object.keys(secondLogic.actions)).toEqual([])
   expect(Object.keys(secondLogic.selectors).sort()).toEqual(['everything', 'name'])

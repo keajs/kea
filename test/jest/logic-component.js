@@ -120,10 +120,10 @@ test('dynamic connect to react components', () => {
   const dynamicLogic = kea({
     key: props => props.id,
     path: key => ['scenes', 'something', key],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants, key }) => ({
+    reducers: ({ actions, key }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -132,7 +132,7 @@ test('dynamic connect to react components', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -184,10 +184,10 @@ test('connected props can be used as selectors', () => {
 
   const firstLogic = kea({
     path: () => ['scenes', 'homepage', 'first'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -204,7 +204,7 @@ test('connected props can be used as selectors', () => {
       values: [firstLogic, ['name']],
       actions: [firstLogic, ['updateName']],
     },
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -255,10 +255,10 @@ test('doubly connected actions are merged', () => {
   const { store } = getContext()
 
   const firstLogic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -270,7 +270,7 @@ test('doubly connected actions are merged', () => {
   })
 
   const secondLogic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateNameAgain: name => ({ name }),
     }),
   })
@@ -291,10 +291,10 @@ test('no protypes needed', () => {
   const { store } = getContext()
 
   const firstLogic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         {
@@ -305,7 +305,7 @@ test('no protypes needed', () => {
   })
 
   const secondLogic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateNameAgain: name => ({ name }),
     }),
   })
@@ -338,11 +338,11 @@ test('can select with regular', () => {
   const logic = kea({
     path: () => ['scenes', 'kea', 'first'],
 
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
 
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,

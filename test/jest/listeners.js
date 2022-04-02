@@ -42,7 +42,6 @@ test('listeners work', () => {
 
   expect(getContext().plugins.activated.map((p) => p.name)).toEqual(['core', 'listeners'])
   expect(firstLogic._isKea).toBe(true)
-  expect(firstLogic._isKeaWithKey).toBe(false)
   expect(Object.keys(firstLogic.actions)).toEqual(['updateName'])
   expect(Object.keys(firstLogic.selectors).sort()).toEqual(['name'])
 

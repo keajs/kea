@@ -34,10 +34,10 @@ test('snapshots must match', () => {
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -46,7 +46,7 @@ test('snapshots must match', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
         name => {

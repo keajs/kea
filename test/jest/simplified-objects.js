@@ -10,7 +10,6 @@ test('it works without () => ({}) and just with {}', () => {
 
   const logic = kea({
     path: ['something', 'album'],
-    constants: ['SOMEONE', 'USING', 'THESE?'],
     actions: {
       setFlunk: flunk => ({ flunk })
     },
@@ -41,7 +40,6 @@ test('it works without () => ({}) and just with {}', () => {
 
   expect(iveBeen).toBe('up')
 
-  expect(Object.keys(logic.constants)).toEqual(['SOMEONE', 'USING', 'THESE?'])
   expect(Object.keys(logic.actions)).toEqual(['setFlunk'])
   expect(Object.keys(logic.reducers)).toEqual(['flunk'])
   expect(Object.keys(logic.selectors)).toEqual(['flunk', 'someOtherSelector'])

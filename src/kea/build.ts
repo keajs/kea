@@ -50,7 +50,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
     key: undefined,
     path: path,
     pathString: path.join('.'),
-    props,
+    props: props ?? {},
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
     mount: () => {

@@ -14,10 +14,10 @@ test('eager logic loading works', () => {
 
   const logic = kea({
     path: () => ['scenes', 'eager'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -26,7 +26,7 @@ test('eager logic loading works', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {
@@ -96,10 +96,10 @@ test('lazy logic loading works', () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -108,7 +108,7 @@ test('lazy logic loading works', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {

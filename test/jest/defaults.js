@@ -27,11 +27,11 @@ test('defaults from props for lazy', () => {
   const singletonLogic = kea({
     path: () => ['scenes', 'dynamic'],
 
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
 
-    reducers: ({ actions, constants, props, selectors }) => ({
+    reducers: ({ actions, props, selectors }) => ({
       propsName: [
         props.defaultName,
         PropTypes.string,
@@ -41,7 +41,7 @@ test('defaults from props for lazy', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
         (name) => {
@@ -98,7 +98,7 @@ test('defaults from selectors', () => {
   const { store } = getContext()
 
   const randomStore = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateStoredName: (storedName) => ({ storedName }),
     }),
 
@@ -121,11 +121,11 @@ test('defaults from selectors', () => {
 
     path: () => ['scenes', 'dynamic'],
 
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
 
-    reducers: ({ actions, constants, props, selectors }) => ({
+    reducers: ({ actions, props, selectors }) => ({
       connectedName: [
         selectors.storedName,
         PropTypes.string,
@@ -144,7 +144,7 @@ test('defaults from selectors', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
         (name) => {
@@ -210,7 +210,7 @@ test('defaults from input.defaults selector', () => {
   const { store } = getContext()
 
   const randomStore = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateStoredName: (storedName) => ({ storedName }),
     }),
 
@@ -236,7 +236,7 @@ test('defaults from input.defaults selector', () => {
     key: (props) => props.id,
     path: (key) => ['scenes', 'dynamic', key],
 
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
 
@@ -263,7 +263,7 @@ test('defaults from input.defaults selector', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
         (name) => {
@@ -328,7 +328,7 @@ test('defaults from props via input.defaults without selector', () => {
   const { store } = getContext()
 
   const lazyLogic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
 
@@ -346,7 +346,7 @@ test('defaults from props via input.defaults without selector', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
         (name) => {
@@ -401,7 +401,7 @@ test('defaults from selectors in input.defaults without selector', () => {
   const { store } = getContext()
 
   const randomStore = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateStoredName: (storedName) => ({ storedName }),
     }),
 
@@ -422,7 +422,7 @@ test('defaults from selectors in input.defaults without selector', () => {
       actions: [randomStore, ['updateStoredName']],
     },
 
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
 
@@ -449,7 +449,7 @@ test('defaults from selectors in input.defaults without selector', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.connectedName],
         (name) => {
@@ -547,7 +547,7 @@ test('defaults from input.defaults as object', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
         (name) => {
@@ -647,7 +647,7 @@ test('defaults from selector that returns an object', () => {
       ],
     }),
 
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.propsName],
         (name) => {

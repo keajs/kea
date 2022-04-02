@@ -16,10 +16,10 @@ test('does not double render with the same props', () => {
 
   const logic = kea({
     path: () => ['scenes', 'lazy'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: name => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -28,7 +28,7 @@ test('does not double render with the same props', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         capitalizedName => {

@@ -281,11 +281,10 @@ test('can extend dynamic logic with .extend', () => {
 test('extending logic merges the right properties', () => {
   const logic = kea({
     path: () => ['scenes', 'homepage', 'index'],
-    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -294,7 +293,7 @@ test('extending logic merges the right properties', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
@@ -316,11 +315,10 @@ test('extending logic merges the right properties', () => {
     }),
     extend: [
       {
-        constants: () => ['SOMETHING_BLUE', 'SOMETHING_ELSE'],
-        actions: ({ constants }) => ({
+        actions: () => ({
           updateDescription: (description) => ({ description }),
         }),
-        reducers: ({ actions, constants }) => ({
+        reducers: ({ actions }) => ({
           description: [
             '',
             PropTypes.string,
@@ -329,7 +327,7 @@ test('extending logic merges the right properties', () => {
             },
           ],
         }),
-        selectors: ({ constants, selectors }) => ({
+        selectors: ({ selectors }) => ({
           upperCaseDescription: [
             () => [selectors.description],
             (description) => description.toUpperCase(),
@@ -344,14 +342,8 @@ test('extending logic merges the right properties', () => {
 
   // check generic
   expect(logic._isKea).toBe(true)
-  expect(logic._isKeaWithKey).toBe(false)
   expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
   expect(Object.keys(logic.connections)).toEqual(['scenes.homepage.index'])
-  expect(logic.constants).toEqual({
-    SOMETHING: 'SOMETHING',
-    SOMETHING_BLUE: 'SOMETHING_BLUE',
-    SOMETHING_ELSE: 'SOMETHING_ELSE',
-  })
 
   // actions
   expect(Object.keys(logic.actions)).toEqual(['updateName', 'updateDescription'])

@@ -25,7 +25,7 @@ test('can mount stores and have them connect to redux without react', () => {
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {
@@ -82,7 +82,7 @@ test('can mount stores with keys and have them connet to redux without react', (
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       upperCaseName: [
         () => [selectors.capitalizedName],
         (capitalizedName) => {

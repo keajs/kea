@@ -59,10 +59,10 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
 
   const singletonLogic = kea({
     path: () => ['scenes', 'something'],
-    actions: ({ constants }) => ({
+    actions: () => ({
       updateName: (name) => ({ name }),
     }),
-    reducers: ({ actions, constants }) => ({
+    reducers: ({ actions }) => ({
       name: [
         'chirpy',
         PropTypes.string,
@@ -71,7 +71,7 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
         },
       ],
     }),
-    selectors: ({ constants, selectors }) => ({
+    selectors: ({ selectors }) => ({
       capitalizedName: [
         () => [selectors.name],
         (name) => {
