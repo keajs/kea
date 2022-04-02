@@ -1,8 +1,7 @@
 /* global test, expect, beforeEach */
-import { resetContext } from '../../src'
-import { getContext } from '../../src/context'
+import { resetContext, getContext } from '../../src'
 
-import { detachReducer, DETACH_REDUCER } from '../../src/store/reducer'
+import { detachReducer, DETACH_REDUCER } from '../../src/kea/reducer'
 
 beforeEach(() => {
   resetContext()

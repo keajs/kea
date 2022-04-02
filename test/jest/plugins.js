@@ -1,11 +1,8 @@
 /* global test, expect */
-import { kea, resetContext } from '../../src'
-import { getContext, getPluginContext, setPluginContext } from '../../src/context'
+import { kea, resetContext, getContext, getPluginContext, setPluginContext, activatePlugin } from '../../src'
 import './helper/jsdom'
 import { corePlugin } from '../../src/core'
-import { listenersPlugin } from '../../src/listeners'
-import { activatePlugin } from '../../src/plugins'
-import { render, screen } from '@testing-library/react'
+import { listenersPlugin } from '../../src/core/listeners'
 
 test('the core and listeners plugins are activated automatically', () => {
   resetContext()

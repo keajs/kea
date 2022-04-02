@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getStore } from '../../src'
+import { kea, resetContext } from '../../src'
 
 import PropTypes from 'prop-types'
 

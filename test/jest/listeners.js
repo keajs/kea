@@ -1,8 +1,7 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getContext, isBreakpoint } from '../../src'
+import { kea, resetContext, getContext, isBreakpoint, getPluginContext } from '../../src'
 
 import PropTypes from 'prop-types'
-import { getPluginContext } from '../../src/context'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -241,52 +240,6 @@ test('actions are bound', () => {
 
   expect(listenerRan1).toBe(true)
   expect(listenerRan2).toBe(true)
-})
-
-test('store exists', () => {
-  const { store } = getContext()
-
-  let listenerRan1 = false
-  let listenerRan2 = false
-
-  const firstLogic = kea({
-    path: () => ['scenes', 'listeners', 'sharedListeners2'],
-    actions: () => ({
-      updateName: (name) => ({ name }),
-      updateOtherName: (name) => ({ name }),
-    }),
-    reducers: ({ actions }) => ({
-      name: [
-        'john',
-        {
-          [actions.updateName]: (_, payload) => payload.name,
-          [actions.updateOtherName]: (_, payload) => payload.name,
-        },
-      ],
-    }),
-    listeners: ({ actions, actionCreators, values, selectors, store }) => ({
-      [actions.updateName]: () => {
-        store.dispatch(actionCreators.updateOtherName('mike'))
-        expect(selectors.name(store.getState())).toBe('mike')
-        expect(selectors.name()).toBe('mike')
-        expect(values.name).toBe('mike')
-        listenerRan1 = true
-      },
-      [actions.updateOtherName]: () => {
-        listenerRan2 = true
-      },
-    }),
-  })
-
-  firstLogic.mount()
-  firstLogic.actions.updateName('henry')
-
-  expect(listenerRan1).toBe(true)
-  expect(listenerRan2).toBe(true)
-
-  expect(firstLogic.selectors.name(store.getState())).toBe('mike')
-  expect(firstLogic.selectors.name()).toBe('mike')
-  expect(firstLogic.values.name).toBe('mike')
 })
 
 test('actions and values', () => {

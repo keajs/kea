@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getContext } from '../../src'
+import { kea, resetContext } from '../../src'
 
 beforeEach(() => {
   resetContext({ createStore: true })

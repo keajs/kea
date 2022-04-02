@@ -1,7 +1,7 @@
 /* global test, expect, beforeEach */
 import { kea } from '../../src'
 import './helper/jsdom'
-import { resetContext } from '../../src/context'
+import { resetContext } from '../../src'
 import PropTypes from 'prop-types'
 
 beforeEach(() => {

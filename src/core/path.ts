@@ -1,6 +1,6 @@
-import { Logic, LogicBuilder, PathType } from '../types'
+import { Logic, LogicBuilder, PathType, KeyType } from '../types'
 
-export function path<L extends Logic = Logic>(input: PathType): LogicBuilder<L> {
+export function path<L extends Logic = Logic>(input: PathType | ((key: KeyType) => PathType)): LogicBuilder<L> {
   return (logic) => {
     if (Object.keys(logic.actions).length > 0) {
       throw new Error(
@@ -9,7 +9,8 @@ export function path<L extends Logic = Logic>(input: PathType): LogicBuilder<L> 
         )}`,
       )
     }
-    logic.path = typeof logic.key !== 'undefined' ? [...input, logic.key] : input
+    const path: PathType = typeof input === 'function' ? input(logic.key!) : input
+    logic.path = typeof logic.key !== 'undefined' ? [...path, logic.key] : path
     logic.pathString = logic.path.join('.')
   }
 }

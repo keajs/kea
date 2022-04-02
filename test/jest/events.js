@@ -1,6 +1,6 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../../src'
-import { activatePlugin } from '../../src/plugins'
+import { activatePlugin } from '../../src'
 
 import './helper/jsdom'
 

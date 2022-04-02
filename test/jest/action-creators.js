@@ -1,8 +1,8 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, keaReducer } from '../../src'
+import { kea, resetContext } from '../../src'
 
 import PropTypes from 'prop-types'
-import { createAction } from '../../src/core/shared/actions'
+import { createAction } from '../../src/core/actions'
 
 beforeEach(() => {
   resetContext()
