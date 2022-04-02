@@ -2,28 +2,28 @@ import { runPlugins } from './plugins'
 import { getContext } from './context'
 
 import { mountLogic, unmountLogic } from './mount'
-import { getPathForInput } from './path'
-import { addConnection } from '../core/connect'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, PathType } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
-function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
+function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
   runPlugins('beforeLogic', logic, input)
 
-  if (input.inherit) {
-    for (const inheritLogic of input.inherit) {
-      for (const inheritInput of inheritLogic.inputs) {
-        applyInputToLogic(logic, inheritInput)
+  if (typeof input === 'function') {
+    input(logic)
+  } else {
+    if (input.inherit) {
+      for (const inheritLogic of input.inherit) {
+        for (const inheritInput of inheritLogic.inputs) {
+          applyInputToLogic(logic, inheritInput)
+        }
       }
     }
-  }
-
-  runPlugins('legacyBuild', logic, input)
-
-  if (input.extend) {
-    for (const innerInput of input.extend) {
-      applyInputToLogic(logic, innerInput)
+    runPlugins('legacyBuild', logic, input)
+    if (input.extend) {
+      for (const innerInput of input.extend) {
+        applyInputToLogic(logic, innerInput)
+      }
     }
   }
 
@@ -32,160 +32,72 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
   return logic
 }
 
-function createBlankLogic({
-  key,
-  path,
-  props,
-  wrapper,
-}: {
-  key: string | undefined
-  path: PathType
-  props: Props
-  wrapper: LogicWrapper
-}) {
-  const pathString = path.join('.')
+export function getBuiltLogic<L extends Logic = Logic>(
+  wrapper: LogicWrapper<L>,
+  props: L['props'] | undefined,
+): BuiltLogic<L> {
+  // return a cached build if possible
+  const cachedLogic = getCachedBuiltLogic(wrapper, props)
+  if (cachedLogic) {
+    return cachedLogic
+  }
+
+  // create a blank logic with a random path
+  const uniqueId = ++getContext().input.counter
+  const path = [...getContext().options.defaultPath, uniqueId]
   const logic = {
     _isKeaBuild: true,
-    key,
-    path,
-    pathString,
+    key: undefined,
+    path: path,
+    pathString: path.join('.'),
     props,
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
-    mount: (callback: (logic: Logic) => any) => {
+    mount: () => {
       mountLogic(logic)
-      if (callback) {
-        const response = callback(logic)
-
-        if (response && response.then && typeof response.then === 'function') {
-          return response.then((value: any) => {
-            unmountLogic(logic)
-            return value
-          })
-        }
-
-        unmountLogic(logic)
-        return response
-      }
-      let unmounted = false
-      return () => {
-        if (unmounted) {
-          throw new Error(`[KEA] Trying to unmount logic ${logic.pathString}, but not mounted.`)
-        }
-        unmountLogic(logic)
-        unmounted = true
-      }
+      return () => unmountLogic(logic)
     },
+    unmount: () => unmountLogic(logic),
     isMounted: () => {
-      const counter = getContext().mount.counter[pathString]
+      const counter = getContext().mount.counter[logic.pathString]
       return typeof counter === 'number' && counter > 0
     },
-  } as any as BuiltLogic
+  } as any as BuiltLogic<L>
 
-  return logic
-}
-
-function setLogicDefaults(logic: Logic) {
-  const { plugins } = getContext()
-
-  for (const plugin of plugins.activated) {
+  // initialize defaults fields as requested by plugins, including core
+  for (const plugin of getContext().plugins.activated) {
     if (plugin.defaults) {
       const defaults = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
       Object.assign(logic, defaults)
     }
   }
-}
 
-// builds logic. does not check if it's built or already on the context
-function buildLogic(logic: BuiltLogic, inputs: LogicInput[]) {
-  setLogicDefaults(logic)
-
-  const {
-    build: { heap },
-  } = getContext()
-
-  heap.push(logic)
-
-  runPlugins('beforeBuild', logic, inputs)
-  for (const input of inputs) {
+  // apply all the inputs
+  runPlugins('beforeBuild', logic, wrapper.inputs)
+  for (const input of wrapper.inputs) {
     applyInputToLogic(logic, input)
   }
 
-  /*
-    add a connection to ourselves in the end
-    logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
-  */
+  // add a connection to ourselves in the end
+  // logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   logic.connections[logic.pathString] = logic
 
-  runPlugins('afterBuild', logic, inputs)
-
-  heap.pop()
+  runPlugins('afterBuild', logic, wrapper.inputs)
 
   return logic
 }
 
-export function getBuiltLogic<L extends Logic = Logic>(
+export function getCachedBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: Props | undefined,
-  autoConnectInListener = true,
-): BuiltLogic<L> {
-  const inputs = wrapper.inputs
-  const input = inputs[0]
-  const key = input.key ? input.key(props || {}) : undefined
-
-  if (input.key && typeof key === 'undefined') {
-    const path = typeof input.path === 'function' ? input.path(key) : input.path
-    const pathString = Array.isArray(path) ? ` ${path.join('.')}` : ''
-    throw new Error(`[KEA] Must have key to build logic${pathString}, got props: ${JSON.stringify(props)}`)
-  }
-
-  // get a path for the input, even if no path was manually specified in the input
-  const path = getPathForInput(input, props)
-  const pathString = path.join('.')
-
-  const {
-    build: { heap: buildHeap, cache: buildCache },
-    run: { heap: runHeap },
-    options: { autoConnect: globalAutoConnect, autoConnectMountWarning },
-    mount: { counter: mountCounter },
-  } = getContext()
-
-  if (!buildCache[pathString]) {
-    buildCache[pathString] = createBlankLogic({ key, path, props: props || {}, wrapper })
-    buildCache[pathString] = buildLogic(buildCache[pathString], inputs)
-  } else if (props) {
-    buildCache[pathString].props = props
-  }
-
-  // autoConnect must be enabled globally
-  if (globalAutoConnect) {
-    // if we were building something when this got triggered, add this as a dependency for the previous logic
-    // always connect these, even if autoConnectInListener is false
-    if (buildHeap.length > 0) {
-      if (!buildHeap[buildHeap.length - 1].connections[pathString]) {
-        addConnection(buildHeap[buildHeap.length - 1], buildCache[pathString])
-      }
-
-      // if we were running a listener and built this logic, mount it directly
-      // ... except if autoConnectInListener is false
-    } else if (autoConnectInListener && runHeap.length > 0) {
-      const heapElement = runHeap[runHeap.length - 1]
-      const { logic, type, action } = heapElement
-      if (type === 'listener' && !logic.connections[pathString]) {
-        if (autoConnectMountWarning && !buildCache[pathString].isMounted()) {
-          console.warn(
-            `[KEA] Warning! Will mount "${pathString}". Probably (!) requested in a listener for action "${
-              action?.type ?? 'unknown'
-            }" in the logic "${
-              logic.pathString
-            }". You might want to explicitly "connect" the logic or ensure it's mounted in some other way.`,
-          )
-        }
-        addConnection(logic, buildCache[pathString])
-        mountLogic(buildCache[pathString], mountCounter[logic.pathString]) // will be unmounted via the connection
-      }
+): BuiltLogic<L> | null {
+  const buildCache = getContext().build.cache
+  const inputCache = buildCache.get(wrapper.inputs)
+  if (inputCache) {
+    const builtLogic = inputCache.builtLogics.get(inputCache.key?.(props))
+    if (builtLogic) {
+      return builtLogic as BuiltLogic<L>
     }
   }
-
-  return buildCache[pathString]
+  return null
 }

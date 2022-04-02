@@ -42,14 +42,14 @@ export const corePlugin: KeaPlugin = {
 
   events: {
     legacyBuild: (logic, input) => {
-      input.props && props(input.props)(logic)
-      input.key && key(input.key)(logic)
-      input.path && path(input.path)(logic)
-      input.actions && actions(input.actions)(logic)
-      input.defaults && defaults(input.defaults)(logic)
-      input.reducers && reducers(input.reducers)(logic)
-      input.selectors && selectors(input.selectors)(logic)
-      input.events && events(input.events)(logic)
+      'props' in input && props(input.props)(logic)
+      'key' in input && input.key && key(input.key)(logic)
+      'path' in input && input.path && path(input.path)(logic)
+      'actions' in input && input.actions && actions(input.actions)(logic)
+      'defaults' in input && input.defaults && defaults(input.defaults)(logic)
+      'reducers' in input && input.reducers && reducers(input.reducers)(logic)
+      'selectors' in input && input.selectors && selectors(input.selectors)(logic)
+      'events' in input && input.events && events(input.events)(logic)
     },
   },
 }

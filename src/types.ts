@@ -25,7 +25,6 @@ export interface Logic {
   path: PathType
   pathString: string
   props: any
-  propTypes: Record<string, any>
   reducers: Record<string, any>
   reducerOptions: Record<string, any>
   reducer?: ReducerFunction<any>
@@ -42,7 +41,8 @@ export interface Logic {
 
 export interface BuiltLogicAdditions<LogicType extends Logic> {
   _isKeaBuild: boolean
-  mount: (callback?: (logic: LogicType) => any) => () => void
+  mount: () => () => void
+  unmount: () => void
   isMounted: () => boolean
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType> | LogicInput<ExtendLogicType>[],
@@ -55,14 +55,15 @@ export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogic
 export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKea: boolean
   _isKeaWithKey: boolean
-  inputs: (LogicInput<LogicType> | LogicBuilder<LogicType>)[]
+  inputs: (LogicInput | LogicBuilder)[] // store as generic
   <T extends LogicType['props'] | AnyComponent>(props: T): T extends LogicType['props']
     ? BuiltLogic<LogicType>
     : FunctionComponent
   (): BuiltLogic<LogicType>
   wrap: (Component: AnyComponent) => KeaComponent
-  build: (props?: LogicType['props'], autoConnectInListener?: boolean) => BuiltLogic<LogicType>
-  mount: (callback?: any) => () => void
+  build: (props?: LogicType['props']) => BuiltLogic<LogicType>
+  mount: () => () => void
+  unmount: () => void
   isMounted: (props?: Record<string, any>) => boolean
   findMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
   extend: <ExtendLogicType extends Logic = LogicType>(
@@ -335,9 +336,6 @@ export interface CreateStoreOptions {
 
 export interface InternalContextOptions {
   debug: boolean
-  autoMount: boolean
-  autoConnect: boolean
-  autoConnectMountWarning: boolean
   proxyFields: boolean
   flatDefaults: boolean
   attachStrategy: 'dispatch' | 'replace'
@@ -353,8 +351,6 @@ export interface ContextOptions extends Partial<InternalContextOptions> {
   skipPlugins?: string[]
 }
 
-type BuildStep = (logic: BuiltLogic, input: LogicInput) => void
-
 export interface KeaComponent extends FunctionComponent {
   _wrapper: LogicWrapper
   _wrappedComponent: AnyComponent
@@ -365,12 +361,12 @@ export interface PluginEvents {
   afterPlugin?: () => void
   beforeReduxStore?: (options: CreateStoreOptions) => void
   afterReduxStore?: (options: CreateStoreOptions, store: Store) => void
-  beforeKea?: (input: LogicInput) => void
-  beforeBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
-  beforeLogic?: (logic: BuiltLogic, input: LogicInput) => void
-  afterLogic?: (logic: BuiltLogic, input: LogicInput) => void
-  legacyBuild?: (logic: BuiltLogic, input: LogicInput) => void
-  afterBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
+  beforeKea?: (input: LogicInput | LogicBuilder) => void
+  beforeBuild?: (logic: BuiltLogic, inputs: (LogicInput | LogicBuilder)[]) => void
+  beforeLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  afterLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  legacyBuild?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  afterBuild?: (logic: BuiltLogic, inputs: (LogicInput | LogicBuilder)[]) => void
   beforeMount?: (logic: BuiltLogic) => void
   afterMount?: (logic: BuiltLogic) => void
   beforeAttach?: (logic: BuiltLogic) => void
@@ -379,8 +375,8 @@ export interface PluginEvents {
   afterUnmount?: (logic: BuiltLogic) => void
   beforeDetach?: (logic: BuiltLogic) => void
   afterDetach?: (logic: BuiltLogic) => void
-  beforeWrapper?: (input: LogicInput, Klass: AnyComponent) => void
-  afterWrapper?: (input: LogicInput, Klass: AnyComponent, Kea: KeaComponent) => void
+  beforeWrap?: (wrapper: LogicWrapper, Klass: AnyComponent) => void
+  afterWrap?: (wrapper: LogicWrapper, Klass: AnyComponent, Kea: KeaComponent) => void
   beforeRender?: (logic: BuiltLogic, props: Props) => void
   beforeCloseContext?: (context: Context) => void
 }
@@ -406,13 +402,15 @@ export interface Context {
   }
 
   input: {
-    logicPaths: Map<LogicInput, PathType>
-    logicPathCounter: number
+    counter: number
     defaults: Record<string, any> | undefined
   }
 
   build: {
-    cache: Record<string, BuiltLogic>
+    cache: WeakMap<
+      (LogicInput | LogicBuilder)[],
+      { key: LogicInput['key']; builtLogics: Map<KeyType | undefined, BuiltLogic> }
+    >
     heap: Logic[]
   }
 

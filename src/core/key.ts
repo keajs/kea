@@ -9,7 +9,7 @@ export function key<L extends Logic = Logic>(input: KeyType | ((props: L['props'
       )
     }
     if (typeof newKey === 'undefined') {
-      throw new Error(`[KEA] Could not find key for logic "${logic.pathString}"`)
+      throw new Error(`[KEA] Undefined key for logic "${logic.pathString}"`)
     }
     if (Object.keys(logic.actions).length > 0) {
       throw new Error(

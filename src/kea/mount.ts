@@ -1,9 +1,9 @@
 import { attachReducer, detachReducer } from './reducer'
 import { runPlugins } from './plugins'
 import { getContext } from './context'
-import { BuiltLogic, Logic } from '../types'
+import { BuiltLogic } from '../types'
 
-export function mountLogic(logic: Logic, count = 1): void {
+export function mountLogic(logic: BuiltLogic, count = 1): void {
   const {
     mount: { counter, mounted },
   } = getContext()
@@ -63,7 +63,7 @@ export function unmountLogic(logic: BuiltLogic): void {
       connectedLogic.events.afterUnmount && connectedLogic.events.afterUnmount()
 
       // clear build cache
-      delete getContext().build.cache[pathString]
+      // delete getContext().build.cache.find(logic.wrapper.inputs)[pathString]
     }
   }
 }

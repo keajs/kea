@@ -2,17 +2,15 @@ import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
-import { getPathStringForInput } from '../kea/path'
 import { runPlugins } from '../kea/plugins'
 import { AnyComponent, KeaComponent, Logic, LogicWrapper, Props } from '../types'
+import { getCachedBuiltLogic } from '../kea/build'
 
 export function wrapComponent<L extends Logic = Logic>(
   Component: AnyComponent,
   wrapper: LogicWrapper<L>,
 ): KeaComponent {
-  const { inputs } = wrapper
-  const input = inputs[0]
-  runPlugins('beforeWrapper', input, Component)
+  runPlugins('beforeWrap', wrapper, Component)
 
   // make this.actions work if it's a React.Component we're operating with
   injectActionsIntoClass(Component)
@@ -26,10 +24,9 @@ export function wrapComponent<L extends Logic = Logic>(
       // and will run this function to see if anything changed. Since we are detached from the store, all
       // selectors of this logic will crash. To avoid this, cache and return the last state.
       // Nothing will be rendered anyway.
-      const pathString = getPathStringForInput(input, props)
-
-      if (isUnmounting[pathString]) {
-        return lastState[pathString]
+      const oldLogic = getCachedBuiltLogic(wrapper, props)
+      if (oldLogic?.pathString && isUnmounting[oldLogic.pathString]) {
+        return lastState[oldLogic.pathString]
       }
 
       const logic = wrapper.build(props)
@@ -39,7 +36,7 @@ export function wrapComponent<L extends Logic = Logic>(
         resp[key] = selector(state, props)
       })
 
-      lastState[pathString] = resp
+      lastState[logic.pathString] = resp
 
       return resp
     },
@@ -55,19 +52,9 @@ export function wrapComponent<L extends Logic = Logic>(
   )
   const Connect = createConnect(Component)
 
-  // inject proptypes into the class if it's a React.Component
-  // not using useRef here since we do it only once per component
-  let injectPropTypes = !isStateless(Component)
-
   const Kea: KeaComponent = function (props: Props) {
     const logic = wrapper.build(props)
     const pathString = useRef(logic.pathString)
-
-    // inject proptypes to React.Component
-    if (injectPropTypes && logic.propTypes) {
-      injectPropTypes = false
-      Component.propTypes = Object.assign(Component.propTypes || {}, logic.propTypes)
-    }
 
     // mount paths only on first render
     const unmount = useRef<() => void>()
@@ -108,7 +95,7 @@ export function wrapComponent<L extends Logic = Logic>(
   Kea._wrapper = wrapper
   Kea._wrappedComponent = Component
 
-  runPlugins('afterWrapper', input, Component, Kea)
+  runPlugins('afterWrap', wrapper, Component, Kea)
   return Kea
 }
 

@@ -104,9 +104,6 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
           } else {
             throwError()
           }
-          if (from !== '*' && typeof otherLogic.propTypes[from] !== 'undefined') {
-            logic.propTypes[to] = otherLogic.propTypes[from]
-          }
         } else if (typeof otherLogic === 'function') {
           logic.selectors[to] = (
             from === '*'

@@ -1,1 +1,1 @@
-export { kea, connect } from './kea'
+export { kea } from './kea'

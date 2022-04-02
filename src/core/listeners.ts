@@ -53,8 +53,8 @@ export const listenersPlugin: KeaPlugin = {
     },
 
     legacyBuild(logic, input) {
-      input.sharedListeners && sharedListeners(input.sharedListeners)(logic)
-      input.listeners && listeners(input.listeners)(logic)
+      'sharedListeners' in input && sharedListeners(input.sharedListeners)(logic)
+      'listeners' in input && listeners(input.listeners)(logic)
     },
   },
 }

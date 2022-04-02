@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSelector } from 'react-redux'
 
-import { kea } from '../kea/kea'
+import { kea } from '../kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic } from '../types'
 import { getContext } from '../kea/context'
 
@@ -9,7 +9,7 @@ export function useKea(input: LogicInput, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
 }
 
-export function useValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
+export function useValues<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['values'] {
   const builtLogic = useMountedLogic(logic)
 
   return useMemo(() => {
@@ -25,7 +25,7 @@ export function useValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['val
   }, [builtLogic.pathString])
 }
 
-export function useAllValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
+export function useAllValues<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['values'] {
   const builtLogic = useMountedLogic(logic)
 
   const response: Record<string, any> = {}
@@ -36,7 +36,7 @@ export function useAllValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['
   return response
 }
 
-export function useActions<L extends BuiltLogic | LogicWrapper>(logic: L): L['actions'] {
+export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['actions'] {
   const builtLogic = useMountedLogic(logic)
   return builtLogic['actions']
 }

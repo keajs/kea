@@ -36,13 +36,12 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     },
 
     input: {
-      logicPathCreators: new Map(),
-      logicPathCounter: 0,
+      counter: 0,
       defaults: defaults || undefined,
     },
 
     build: {
-      cache: {},
+      cache: new WeakMap(),
       heap: [],
     },
 
@@ -72,9 +71,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
     options: {
       debug: false,
-      autoMount: false,
-      autoConnect: true,
-      autoConnectMountWarning: false,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',
