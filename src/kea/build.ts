@@ -84,6 +84,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
 
   runPlugins('afterBuild', logic, wrapper.inputs)
 
+  setCachedBuiltLogic(wrapper, props, logic)
+
   return logic
 }
 
@@ -92,12 +94,26 @@ export function getCachedBuiltLogic<L extends Logic = Logic>(
   props: Props | undefined,
 ): BuiltLogic<L> | null {
   const buildCache = getContext().build.cache
-  const inputCache = buildCache.get(wrapper.inputs)
+  const inputCache = buildCache.get(wrapper)
   if (inputCache) {
-    const builtLogic = inputCache.builtLogics.get(inputCache.key?.(props))
+    const builtLogic = inputCache.builtLogics.get(inputCache.keyBuilder?.(props))
     if (builtLogic) {
       return builtLogic as BuiltLogic<L>
     }
   }
   return null
+}
+
+export function setCachedBuiltLogic<L extends Logic = Logic>(
+  wrapper: LogicWrapper<L>,
+  props: Props | undefined,
+  logic: BuiltLogic<L>
+): void {
+  const buildCache = getContext().build.cache
+  const inputCache = buildCache.get(wrapper)
+  if (inputCache) {
+    inputCache.builtLogics.set(logic.key, logic)
+  } else {
+    buildCache.set(wrapper, { keyBuilder: logic.keyBuilder, builtLogics: new Map([[logic.key, logic]]) })
+  }
 }

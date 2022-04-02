@@ -13,6 +13,7 @@ export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 // logic base class
 export interface Logic {
   key?: KeyType
+  keyBuilder?: (props: any) => KeyType
   actionCreators: Record<string, any>
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
@@ -408,8 +409,8 @@ export interface Context {
 
   build: {
     cache: WeakMap<
-      (LogicInput | LogicBuilder)[],
-      { key: LogicInput['key']; builtLogics: Map<KeyType | undefined, BuiltLogic> }
+      LogicWrapper,
+      { keyBuilder: Logic['keyBuilder']; builtLogics: Map<KeyType | undefined, BuiltLogic> }
     >
     heap: Logic[]
   }

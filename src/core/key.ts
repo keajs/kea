@@ -1,14 +1,15 @@
 import { KeyType, Logic, LogicBuilder } from '../types'
 
-export function key<L extends Logic = Logic>(input: KeyType | ((props: L['props']) => KeyType)): LogicBuilder<L> {
+export function key<L extends Logic = Logic>(input: (props: L['props']) => KeyType): LogicBuilder<L> {
   return (logic) => {
-    const newKey = typeof input === 'function' ? input(logic.props) : input
-    if (typeof logic.key !== 'undefined') {
+    const key = input(logic.props)
+
+    if (typeof logic.keyBuilder !== 'undefined') {
       throw new Error(
-        `[KEA] Already defined key for logic "${logic.pathString}". Old key: "${logic.key}", new key: "${newKey}"`,
+        `[KEA] Already defined key builder for logic "${logic.pathString}".`,
       )
     }
-    if (typeof newKey === 'undefined') {
+    if (typeof key === 'undefined') {
       throw new Error(`[KEA] Undefined key for logic "${logic.pathString}"`)
     }
     if (Object.keys(logic.actions).length > 0) {
@@ -18,7 +19,9 @@ export function key<L extends Logic = Logic>(input: KeyType | ((props: L['props'
         )}`,
       )
     }
-    logic.key = newKey
+
+    logic.key = key
+    logic.keyBuilder = input
     logic.path = [...logic.path, logic.key]
     logic.pathString = logic.path.join('.')
   }
