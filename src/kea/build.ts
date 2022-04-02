@@ -124,12 +124,12 @@ function buildLogic(logic: BuiltLogic, inputs: LogicInput[]) {
   return logic
 }
 
-export function getBuiltLogic(
-  inputs: LogicInput[],
+export function getBuiltLogic<L extends Logic = Logic>(
+  wrapper: LogicWrapper<L>,
   props: Props | undefined,
-  wrapper: LogicWrapper,
   autoConnectInListener = true,
-): BuiltLogic {
+): BuiltLogic<L> {
+  const inputs = wrapper.inputs
   const input = inputs[0]
   const key = input.key ? input.key(props || {}) : undefined
 

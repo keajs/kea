@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { kea } from '../kea/kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic } from '../types'
-import { getContext } from '../context'
+import { getContext } from '../kea/context'
 
 export function useKea(input: LogicInput, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
@@ -41,7 +41,9 @@ export function useActions<L extends BuiltLogic | LogicWrapper>(logic: L): L['ac
   return builtLogic['actions']
 }
 
-export function isWrapper(toBeDetermined: BuiltLogic | LogicWrapper): toBeDetermined is LogicWrapper {
+export function isWrapper<L extends Logic = Logic>(
+  toBeDetermined: BuiltLogic<L> | LogicWrapper<L>,
+): toBeDetermined is LogicWrapper<L> {
   if ((toBeDetermined as LogicWrapper)._isKea) {
     return true
   }

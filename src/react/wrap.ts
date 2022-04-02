@@ -3,10 +3,13 @@ import { useEffect, useRef } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import { getPathStringForInput } from '../kea/path'
-import { runPlugins } from '../plugins'
-import { AnyComponent, KeaComponent, LogicWrapper, Props } from '../types'
+import { runPlugins } from '../kea/plugins'
+import { AnyComponent, KeaComponent, Logic, LogicWrapper, Props } from '../types'
 
-export function wrapComponent(Component: AnyComponent, wrapper: LogicWrapper): KeaComponent {
+export function wrapComponent<L extends Logic = Logic>(
+  Component: AnyComponent,
+  wrapper: LogicWrapper<L>,
+): KeaComponent {
   const { inputs } = wrapper
   const input = inputs[0]
   runPlugins('beforeWrapper', input, Component)

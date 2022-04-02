@@ -4,16 +4,7 @@ import { getBuiltLogic } from './build'
 
 import { wrapComponent } from '../react/wrap'
 import { getPathForInput } from './path'
-import {
-  AnyComponent,
-  BuiltLogicAdditions,
-  KeaComponent,
-  Logic,
-  LogicInput,
-  LogicWrapper,
-  LogicWrapperAdditions,
-  Props,
-} from '../types'
+import { AnyComponent, BuiltLogic, KeaComponent, Logic, LogicBuilder, LogicInput, LogicWrapper, Props } from '../types'
 
 export function unmountedActionError(key: string, path: string): string {
   return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!\n\nThis can happen in several situations.\n\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint? https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
@@ -92,7 +83,7 @@ export function unmountedActionError(key: string, path: string): string {
 
 */
 
-export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void {
+export function proxyFieldToLogic<L extends Logic = Logic>(wrapper: LogicWrapper<L>, key: keyof L): void {
   if (!wrapper.hasOwnProperty(key)) {
     Object.defineProperty(wrapper, key, {
       get: function () {
@@ -115,7 +106,7 @@ export function proxyFieldToLogic(wrapper: LogicWrapper, key: keyof Logic): void
   }
 }
 
-export function proxyFields(wrapper: LogicWrapper): void {
+export function proxyFields<L extends Logic = Logic>(wrapper: LogicWrapper<L>): void {
   const {
     options: { proxyFields },
     plugins: { logicFields },
@@ -132,26 +123,23 @@ export function proxyFields(wrapper: LogicWrapper): void {
   }
 }
 
-export function kea<LogicType extends Logic = Logic>(
-  input: LogicInput<LogicType>,
-): LogicType & LogicWrapperAdditions<LogicType> {
-  const wrapper: LogicType & LogicWrapperAdditions<LogicType> = function (
-    args: undefined | AnyComponent,
-  ): (LogicType & BuiltLogicAdditions<LogicType>) | KeaComponent {
+export function kea<L extends Logic = Logic>(
+  input: LogicInput<L> | (LogicBuilder<L> | LogicInput<L>)[],
+): LogicWrapper<L> {
+  const wrapper: LogicWrapper<L> = function (args: undefined | AnyComponent): BuiltLogic<L> | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
-      return wrapper.build(args) as LogicType & BuiltLogicAdditions<LogicType>
+      return wrapper.build(args) as BuiltLogic<L>
     }
     return wrapper.wrap(args)
-  } as any as LogicType & LogicWrapperAdditions<LogicType>
+  } as any as LogicWrapper<L>
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
 
-  wrapper.inputs = [input as LogicInput]
+  wrapper.inputs = Array.isArray(input) ? input : [input]
 
   wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
-  wrapper.build = (props?: Props, autoConnectInListener = true) =>
-    getBuiltLogic(wrapper.inputs, props, wrapper, autoConnectInListener) as LogicType & BuiltLogicAdditions<LogicType>
+  wrapper.build = (props?: Props, autoConnectInListener = true) => getBuiltLogic(wrapper, props, autoConnectInListener)
   wrapper.mount = (callback) => wrapper.build().mount(callback)
   wrapper.isMounted = (props?: Record<string, any>) => {
     if (wrapper._isKeaWithKey && !props) {
@@ -166,9 +154,9 @@ export function kea<LogicType extends Logic = Logic>(
   wrapper.findMounted = (props?: Record<string, any>) => {
     return wrapper.isMounted(props) ? wrapper.build(props, false) : null
   }
-  wrapper.extend = <ExtendLogicType extends Logic = LogicType>(extendedInput: LogicInput<ExtendLogicType>) => {
+  wrapper.extend = <ExtendL extends Logic = L>(extendedInput: LogicInput<ExtendL>) => {
     wrapper.inputs.push(extendedInput as LogicInput)
-    return wrapper as unknown as ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
+    return wrapper as unknown as LogicWrapper<ExtendL>
   }
 
   if (!wrapper._isKeaWithKey) {
@@ -180,8 +168,6 @@ export function kea<LogicType extends Logic = Logic>(
   return wrapper
 }
 
-export function connect<LogicType extends Logic = Logic>(
-  input: LogicInput['connect'],
-): LogicType & LogicWrapperAdditions<LogicType> {
-  return kea({ connect: input })
+export function connect<L extends Logic = Logic>(input: LogicInput<L>['connect']): LogicWrapper<L> {
+  return kea<L>({ connect: input })
 }

@@ -56,7 +56,7 @@ export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogic
 export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKea: boolean
   _isKeaWithKey: boolean
-  inputs: LogicInput[]
+  inputs: (LogicInput<LogicType> | LogicBuilder<LogicType>)[]
   <T extends LogicType['props'] | AnyComponent>(props: T): T extends LogicType['props']
     ? BuiltLogic<LogicType>
     : FunctionComponent
