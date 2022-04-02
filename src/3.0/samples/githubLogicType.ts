@@ -2,7 +2,7 @@
 
 import { Logic } from '../../types'
 
-export interface githubLogicType<Repository> extends Logic {
+export interface githubLogicType<Repository, GithubLogicProps> extends Logic {
   actionCreators: {
     setUsername: (username: string) => {
       type: 'set username (samples.githubLogic)'
@@ -62,7 +62,7 @@ export interface githubLogicType<Repository> extends Logic {
   }
   path: ['samples', 'githubLogic']
   pathString: 'samples.githubLogic'
-  props: Record<string, unknown>
+  props: GithubLogicProps
   reducer: (
     state: any,
     action: any,

@@ -1,12 +1,6 @@
 import { githubLogicType } from './githubLogicType'
 import { kea } from '../index'
-import { connect } from '../steps/connect'
-import { actions } from '../steps/actions'
-import { defaults } from '../steps/defaults'
-import { reducers } from '../steps/reducers'
-import { selectors } from '../steps/selectors'
-import { afterMount } from '../steps/events'
-import { listeners } from '../plugins/listeners'
+import { connect, actions, defaults, reducers, selectors, afterMount, listeners, key, props, path } from '../../core'
 
 const API_URL = 'https://api.github.com'
 
@@ -18,7 +12,15 @@ export type Repository = {
   forks: number
 }
 
-export const githubLogic = kea<githubLogicType<Repository>>([
+export interface GithubLogicProps {
+  id: number
+}
+
+export const githubLogic = kea<githubLogicType<Repository, GithubLogicProps>>([
+  path(['scenes', 'github', 'githubLogic']),
+  props({} as GithubLogicProps),
+  key((props) => props.id),
+
   actions({
     setUsername: (username: string) => ({ username }),
     setRepositories: (repositories: Repository[]) => ({ repositories }),

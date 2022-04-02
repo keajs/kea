@@ -5,7 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
 import { addConnection } from '../core/connect'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, PathType } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {

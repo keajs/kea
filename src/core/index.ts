@@ -6,6 +6,9 @@ import { defaults } from './defaults'
 import { reducers } from './reducers'
 import { selectors } from './selectors'
 import { events } from './events'
+import { props } from './props'
+import { key } from './key'
+import { path } from './path'
 
 export { actions } from './actions'
 export { connect } from './connect'
@@ -14,6 +17,9 @@ export { events, afterMount, beforeUnmount } from './events'
 export { listeners } from './listeners'
 export { reducers } from './reducers'
 export { selectors } from './selectors'
+export { key } from './key'
+export { props } from './props'
+export { path } from './path'
 
 export const corePlugin: KeaPlugin = {
   name: 'core',
@@ -36,7 +42,9 @@ export const corePlugin: KeaPlugin = {
 
   events: {
     legacyBuild: (logic, input) => {
-      input.connect && connect(input.connect)(logic)
+      input.props && props(input.props)(logic)
+      input.key && key(input.key)(logic)
+      input.path && path(input.path)(logic)
       input.actions && actions(input.actions)(logic)
       input.defaults && defaults(input.defaults)(logic)
       input.reducers && reducers(input.reducers)(logic)

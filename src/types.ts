@@ -3,17 +3,16 @@ import { Context as ReactContext, ComponentType, FunctionComponent } from 'react
 
 // universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
+export type KeyType = string | number | boolean
+export type PathType = KeyType[]
 export type Selector = (state?: any, props?: any) => any
-export type RequiredPathCreator<T = string> = (key: T) => PathType
-export type PathCreator<T = string> = (key?: T) => PathType
-export type PathType = (string | number | boolean)[]
 export type Props = Record<string, any> // nb! used in kea and react
 export type LogicEventType = 'beforeMount' | 'afterMount' | 'beforeUnmount' | 'afterUnmount'
 export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 // logic base class
 export interface Logic {
-  key: any
+  key?: KeyType
   actionCreators: Record<string, any>
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
@@ -47,7 +46,7 @@ export interface BuiltLogicAdditions<LogicType extends Logic> {
   isMounted: () => boolean
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType> | LogicInput<ExtendLogicType>[],
-  ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
+  ) => LogicWrapper<ExtendLogicType>
   wrapper: LogicWrapper
 }
 
@@ -68,7 +67,7 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   findMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType>,
-  ) => ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
+  ) => LogicWrapper<ExtendLogicType>
 }
 
 export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWrapperAdditions<LogicType>
@@ -201,30 +200,11 @@ type LoaderDefinitions<LogicType extends Logic> = {
     | [ReturnType<LogicType['reducers'][K]>, LoaderFunctions<LogicType, ReturnType<LogicType['reducers'][K]>>]
 }
 
-export interface CoreInput<LogicType extends Logic = Logic> {
-  key?: (props: LogicType['props']) => any
-  path?:
-    | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
-    | PathType
-  actions: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
-  defaults?:
-    | ((logic: LogicType) => (state: any, props: LogicType['props']) => Record<string, any>)
-    | ((logic: LogicType) => Record<string, any>)
-    | Record<string, any>
-  reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
-  selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
-  events?:
-    | PartialRecord<LogicEventType, (() => void) | (() => void)[]>
-    | ((logic: LogicType) => PartialRecord<LogicEventType, (() => void) | (() => void)[]>)
-}
-
 export type LogicInput<LogicType extends Logic = Logic> = {
   inherit?: LogicWrapper[]
   extend?: LogicInput[]
-  key?: (props: LogicType['props']) => any
-  path?:
-    | (LogicType['key'] extends undefined ? PathCreator<LogicType['key']> : RequiredPathCreator<LogicType['key']>)
-    | PathType
+  key?: (props: LogicType['props']) => KeyType
+  path?: PathType
   connect?: any | ((props: LogicType['props']) => any)
   constants?: (logic: LogicType) => string[] | string[]
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
@@ -426,7 +406,7 @@ export interface Context {
   }
 
   input: {
-    logicPathCreators: Map<LogicInput, PathCreator<any>>
+    logicPaths: Map<LogicInput, PathType>
     logicPathCounter: number
     defaults: Record<string, any> | undefined
   }
