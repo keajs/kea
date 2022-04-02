@@ -1,4 +1,4 @@
-import { getContext } from '../context'
+import { getContext } from './context'
 
 import { getBuiltLogic } from './build'
 
@@ -135,14 +135,14 @@ export function proxyFields(wrapper: LogicWrapper): void {
 export function kea<LogicType extends Logic = Logic>(
   input: LogicInput<LogicType>,
 ): LogicType & LogicWrapperAdditions<LogicType> {
-  const wrapper: LogicType & LogicWrapperAdditions<LogicType> = (function (
+  const wrapper: LogicType & LogicWrapperAdditions<LogicType> = function (
     args: undefined | AnyComponent,
   ): (LogicType & BuiltLogicAdditions<LogicType>) | KeaComponent {
     if (typeof args === 'object' || typeof args === 'undefined') {
       return wrapper.build(args) as LogicType & BuiltLogicAdditions<LogicType>
     }
     return wrapper.wrap(args)
-  } as any) as LogicType & LogicWrapperAdditions<LogicType>
+  } as any as LogicType & LogicWrapperAdditions<LogicType>
 
   wrapper._isKea = true
   wrapper._isKeaWithKey = typeof input.key !== 'undefined'
@@ -168,7 +168,7 @@ export function kea<LogicType extends Logic = Logic>(
   }
   wrapper.extend = <ExtendLogicType extends Logic = LogicType>(extendedInput: LogicInput<ExtendLogicType>) => {
     wrapper.inputs.push(extendedInput as LogicInput)
-    return (wrapper as unknown) as ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
+    return wrapper as unknown as ExtendLogicType & LogicWrapperAdditions<ExtendLogicType>
   }
 
   if (!wrapper._isKeaWithKey) {

@@ -1,19 +1,15 @@
-import { runPlugins } from '../plugins'
-import { getContext } from '../context'
+import { runPlugins } from './plugins'
+import { getContext } from './context'
 
 import { mountLogic, unmountLogic } from './mount'
 import { getPathForInput } from './path'
-import { addConnection } from '../core/shared/connect'
+import { addConnection } from '../core/connect'
 
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogicAdditions, BuiltLogic, PathType } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
   runPlugins('beforeLogic', logic, input)
-
-  const {
-    plugins: { buildOrder, buildSteps },
-  } = getContext()
 
   if (input.inherit) {
     for (const inheritLogic of input.inherit) {
@@ -23,11 +19,7 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput) {
     }
   }
 
-  for (const step of buildOrder) {
-    for (const func of buildSteps[step]) {
-      func(logic, input)
-    }
-  }
+  runPlugins('legacyBuild', logic, input)
 
   if (input.extend) {
     for (const innerInput of input.extend) {
@@ -115,7 +107,6 @@ function buildLogic(logic: BuiltLogic, inputs: LogicInput[]) {
   heap.push(logic)
 
   runPlugins('beforeBuild', logic, inputs)
-
   for (const input of inputs) {
     applyInputToLogic(logic, input)
   }

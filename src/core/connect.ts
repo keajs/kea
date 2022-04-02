@@ -1,8 +1,7 @@
-import { BuiltLogic, Logic, LogicBuilder, LogicWrapper, Selector } from '../../types'
-import { addConnection } from '../../core/shared/connect'
-import { isBuiltLogic, isLogicWrapper } from '../../utils'
-import { getContext } from '../../context'
-import { createActionType } from '../../core/shared/actions'
+import { BuiltLogic, Logic, LogicBuilder, LogicWrapper, Selector } from '../types'
+import { isBuiltLogic, isLogicWrapper } from '../utils'
+import { getContext } from '../kea/context'
+import { createActionType } from './actions'
 
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
@@ -128,7 +127,7 @@ type DeconstructedLogicMapping = [Logic | BuiltLogic | LogicWrapper | Selector |
 
 // input: [ logic1, [ 'a', 'b as c' ], logic2, [ 'c', 'd' ] ]
 // logic: [ [logic1, 'a', 'a'], [logic1, 'b', 'c'], [logic2, 'c', 'c'], [logic2, 'd', 'd'] ]
-export function deconstructMapping(mapping: LogicMapping): DeconstructedLogicMapping {
+function deconstructMapping(mapping: LogicMapping): DeconstructedLogicMapping {
   if (mapping.length % 2 === 1) {
     console.error(mapping)
     throw new Error(`[KEA] Uneven mapping given to connect`)
@@ -156,4 +155,21 @@ export function deconstructMapping(mapping: LogicMapping): DeconstructedLogicMap
   }
 
   return response
+}
+
+export function addConnection(logic: Logic, otherLogic: Logic): void {
+  if (!otherLogic.connections || Object.keys(otherLogic.connections).length === 0) {
+    return
+  }
+
+  // already connected to all, skip checking everything individually
+  if (logic.connections[otherLogic.pathString]) {
+    return
+  }
+
+  Object.keys(otherLogic.connections).forEach((path) => {
+    if (!logic.connections[path]) {
+      logic.connections[path] = otherLogic.connections[path]
+    }
+  })
 }

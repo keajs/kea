@@ -1,7 +1,7 @@
 export * from './types'
 export * from './utils'
 
-import { resetContext } from './context'
+import { resetContext } from './kea/context'
 
 export { kea, connect } from './kea'
 
@@ -9,17 +9,17 @@ export { useValues, useAllValues, useActions, useMountedLogic, useKea } from './
 export { BindLogic } from './react/bind'
 export { Provider } from './react/provider'
 
-export { resetContext, openContext, closeContext, getContext, getPluginContext, setPluginContext } from './context'
-export { getStore } from './store/store'
-export { keaReducer } from './store/reducer'
-export { activatePlugin } from './plugins'
+export { resetContext, openContext, closeContext, getContext, getPluginContext, setPluginContext } from './kea/context'
+export { getStore } from './kea/store'
+export { keaReducer } from './kea/reducer'
+export { activatePlugin } from './kea/plugins'
 
-export { createAction } from './core/shared/actions'
-export { addConnection } from './core/shared/connect'
-export { isBreakpoint } from './listeners'
+export { createActionCreator } from './core/actions'
+export { addConnection } from './core/connect'
+export { isBreakpoint } from './core/listeners'
 
 // Must do this to make TSD happy, as otherwise rollup+dts produces an invalid .d.ts file
-import { ATTACH_REDUCER as A, DETACH_REDUCER as D } from './store/reducer'
+import { ATTACH_REDUCER as A, DETACH_REDUCER as D } from './kea/reducer'
 export const ATTACH_REDUCER = A as '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = D as '@KEA/DETACH_REDUCER'
 

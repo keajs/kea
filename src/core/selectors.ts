@@ -1,6 +1,6 @@
-import { Logic, LogicBuilder, LogicInput, Selector, SelectorDefinitions } from '../../types'
+import { Logic, LogicBuilder, Selector, SelectorDefinitions } from '../types'
 import { createSelector, ParametricSelector } from 'reselect'
-import { getStoreState } from '../../context'
+import { getStoreState } from '../kea/context'
 
 /**
   Logic builder:

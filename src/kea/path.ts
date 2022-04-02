@@ -1,5 +1,5 @@
-import { getContext } from '../context'
-import { LogicInput, PathCreator, PathType, Props } from '../types'
+import { getContext } from './context'
+import { LogicInput, PathType, Props } from '../types'
 
 export function getPathForInput(input: LogicInput, props?: Props): PathType {
   const key = input.key ? input.key(props || {}) : undefined

@@ -1,4 +1,4 @@
-import { getContext } from '../context/index'
+import { getContext } from './context'
 import { KeaPlugin, PluginEvents } from '../types'
 /*
   plugins = [
@@ -104,50 +104,16 @@ const reservedKeys = {
 
 export function activatePlugin(pluginToActivate: KeaPlugin | (() => KeaPlugin)): void {
   const plugin = typeof pluginToActivate === 'function' ? pluginToActivate() : pluginToActivate
-
   const { plugins } = getContext()
-  const { name } = plugin
 
-  if (!name) {
+  if (!plugin.name) {
     throw new Error('[KEA] Tried to activate a plugin without a name!')
   }
-
-  if (plugins.activated.find((plugin) => plugin.name === name)) {
-    throw new Error(`[KEA] Tried to activate plugin "${name}", but it was already installed!`)
+  if (plugins.activated.find((p) => p.name === plugin.name)) {
+    throw new Error(`[KEA] Tried to activate plugin "${plugin.name}", but it was already installed!`)
   }
 
   plugins.activated.push(plugin)
-
-  if (plugin.buildSteps) {
-    for (const key of Object.keys(plugin.buildSteps)) {
-      // if redefining an existing step, add to the end of the list (no order changing possible anymore)
-      if (plugins.buildSteps[key]) {
-        console.error(
-          `[KEA] Plugin "${plugin.name}" redefines build step "${key}". Previously defined by ${
-            plugins.logicFields[key] || 'core'
-          }`,
-        )
-        plugins.buildSteps[key].push(plugin.buildSteps[key])
-      } else {
-        plugins.buildSteps[key] = [plugin.buildSteps[key]]
-
-        if (plugin.buildOrder && plugin.buildOrder[key]) {
-          const { after, before } = plugin.buildOrder[key]
-          const index = after || before ? plugins.buildOrder.indexOf((after || before)!) : -1
-
-          if (after && index >= 0) {
-            plugins.buildOrder.splice(index + 1, 0, key)
-          } else if (before && index >= 0) {
-            plugins.buildOrder.splice(index, 0, key)
-          } else {
-            plugins.buildOrder.push(key)
-          }
-        } else {
-          plugins.buildOrder.push(key)
-        }
-      }
-    }
-  }
 
   if (plugin.defaults) {
     const fields = Object.keys(typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults)
@@ -197,6 +163,3 @@ export function runPlugins<T extends keyof PluginEvents, E extends PluginParamet
     })
   }
 }
-//
-// runPlugins('afterWrapper', 'asd', 'we', 'we')
-// runPlugins('afterBuild', 'asd', 'we')

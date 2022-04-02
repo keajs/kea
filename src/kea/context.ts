@@ -1,9 +1,9 @@
-import { corePlugin } from '../core'
-import { listenersPlugin } from '../listeners'
-import { activatePlugin, runPlugins } from '../plugins'
-import { getStore } from '../store/store'
+import { listenersPlugin } from '../core/listeners'
+import { activatePlugin, runPlugins } from './plugins'
+import { getStore } from './store'
 import { Context, ContextOptions } from '../types'
 import { Store } from 'redux'
+import { corePlugin } from '../core'
 
 let context: Context
 
@@ -30,8 +30,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     contextId: `kea-context-${contextId++}`,
     plugins: {
       activated: [],
-      buildOrder: [],
-      buildSteps: {},
       events: {},
       logicFields: {},
       contexts: {},

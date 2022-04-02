@@ -11,10 +11,10 @@
   - sets a default for the value if not already set
   - for each key, adds to the logic a reducer, a selector and a value
 */
-import { Logic, LogicBuilder, PathType, ReducerDefinitions } from '../../types'
+import { Logic, LogicBuilder, PathType, ReducerDefinitions } from '../types'
 import { AnyAction } from 'redux'
-import { combineKeaReducers } from '../../store/reducer'
-import { getStoreState } from '../../context'
+import { combineKeaReducers } from '../kea/reducer'
+import { getStoreState } from '../kea/context'
 import { createSelector } from 'reselect'
 
 export function rootReducer<L extends Logic = Logic>(): LogicBuilder<L> {
@@ -61,6 +61,8 @@ export function reducers<L extends Logic = Logic>(
 
       // provide a default value if none previously provided
       if (typeof logic.defaults[key] === 'undefined') {
+        // TODO: context defaults?
+
         // there is a root default selector. use it and try to get the key, fallback to initialValue
         if (typeof logic.defaults['*'] === 'function') {
           logic.defaults[key] = (state: any, props: any) => {

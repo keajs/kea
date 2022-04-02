@@ -1,5 +1,5 @@
-import { getContext } from '../context'
-import { runPlugins } from '../plugins'
+import { getContext } from './context'
+import { runPlugins } from './plugins'
 import { BuiltLogic, ReducerFunction } from '../types'
 import { Reducer } from 'redux'
 

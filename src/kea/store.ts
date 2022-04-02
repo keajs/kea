@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
 
 import { createReduxStoreReducer, initRootReducerTree } from './reducer'
-import { runPlugins } from '../plugins'
-import { getContext } from '../context'
+import { runPlugins } from './plugins'
+import { getContext } from './context'
 import { CreateStoreOptions } from '../types'
 
 const reduxDevToolsCompose =

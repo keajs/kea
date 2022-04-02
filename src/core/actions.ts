@@ -1,5 +1,5 @@
-import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder } from '../../types'
-import { getContext } from '../../context'
+import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder } from '../types'
+import { getContext } from '../kea/context'
 
 /** Logic builder: actions({ key: (id) => ({ id }) }) */
 export function actions<L extends Logic = Logic>(

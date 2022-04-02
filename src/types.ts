@@ -77,7 +77,9 @@ export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => vo
 
 // input helpers (using the generated logic type as input)
 
-export type ActionDefinitions<LogicType extends Logic> = Record<string, any | ((...args: any[]) => any)> | LogicType['actionCreators']
+export type ActionDefinitions<LogicType extends Logic> =
+  | Record<string, any | ((...args: any[]) => any)>
+  | LogicType['actionCreators']
 
 export interface KeaReduxAction {
   type: string
@@ -95,13 +97,12 @@ type ReducerActions<LogicType extends Logic, ReducerType> = {
     state: ReducerType,
     payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
   ) => ReducerType
-} &
-  {
-    [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-      state: ReducerType,
-      payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-    ) => ReducerType
-  }
+} & {
+  [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+    state: ReducerType,
+    payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+  ) => ReducerType
+}
 
 type ReducerDefault<Reducer extends () => any, P extends Props> =
   | ReturnType<Reducer>
@@ -388,6 +389,7 @@ export interface PluginEvents {
   beforeBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
   beforeLogic?: (logic: BuiltLogic, input: LogicInput) => void
   afterLogic?: (logic: BuiltLogic, input: LogicInput) => void
+  legacyBuild?: (logic: BuiltLogic, input: LogicInput) => void
   afterBuild?: (logic: BuiltLogic, inputs: LogicInput[]) => void
   beforeMount?: (logic: BuiltLogic) => void
   afterMount?: (logic: BuiltLogic) => void
@@ -410,10 +412,6 @@ export type PluginEventArrays = {
 export interface KeaPlugin {
   name: string
   defaults?: () => Record<string, any>
-  legacyBuild?: {
-    buildOrder?: Record<string, { before?: string; after?: string }>
-    buildSteps?: Record<string, BuildStep>
-  }
   events?: PluginEvents
 }
 
@@ -422,8 +420,6 @@ export interface Context {
 
   plugins: {
     activated: KeaPlugin[]
-    buildOrder: string[]
-    buildSteps: Record<string, BuildStep[]>
     events: PluginEventArrays
     logicFields: Record<string, string>
     contexts: Record<string, Record<string, any>>

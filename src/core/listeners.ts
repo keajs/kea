@@ -1,14 +1,3 @@
-/* usage:
-kea({
-  listeners: ({ actions, values, store, sharedListeners }) => ({
-    [actions.openUrl]: ({ url }, breakpoint, action) => { actions.urlOpened(url) },
-    [LOCATION_CHANGE]: [
-      (payload, breakpoint, action) => { store.dispatch(...) },
-      sharedListeners.otherListeForTheSameAction
-    ]
-  })
-})
-*/
 import {
   BreakPointFunction,
   BuiltLogic,
@@ -19,10 +8,10 @@ import {
   Logic,
   LogicBuilder,
   LogicInput,
-} from '../../types'
-import { getContext, getPluginContext, setPluginContext } from '../../context'
+} from '../types'
+import { getContext, getPluginContext, setPluginContext } from '../kea/context'
 import { MiddlewareAPI } from 'redux'
-import { afterMount, beforeUnmount } from '../steps/events'
+import { afterMount, beforeUnmount } from './events'
 
 export const LISTENERS_BREAKPOINT = 'kea-listeners breakpoint broke'
 export const isBreakpoint = (error: Error): boolean => error.message === LISTENERS_BREAKPOINT
@@ -40,25 +29,6 @@ export const listenersPlugin: KeaPlugin = {
     listeners: undefined,
     sharedListeners: undefined,
   }),
-
-  legacyBuild: {
-    buildOrder: {
-      listeners: { before: 'events' },
-      sharedListeners: { before: 'listeners' },
-    },
-    buildSteps: {
-      listeners: (logic, input) => {
-        if (input.listeners) {
-          listeners(input.listeners)(logic)
-        }
-      },
-      sharedListeners: (logic, input) => {
-        if (input.sharedListeners) {
-          sharedListeners(input.sharedListeners)(logic)
-        }
-      },
-    },
-  },
 
   events: {
     afterPlugin(): void {
@@ -80,6 +50,11 @@ export const listenersPlugin: KeaPlugin = {
         }
         return response
       })
+    },
+
+    legacyBuild(logic, input) {
+      input.sharedListeners && sharedListeners(input.sharedListeners)(logic)
+      input.listeners && listeners(input.listeners)(logic)
     },
   },
 }

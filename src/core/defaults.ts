@@ -1,6 +1,5 @@
-import { Logic, LogicBuilder } from '../../types'
+import { Logic, LogicBuilder } from '../types'
 
-// TODO: context defaults?
 export function defaults<L extends Logic = Logic>(
   input:
     | ((logic: L) => (state: any, props: L['props']) => Partial<{ [T in keyof L['values']]: L['values'][T] }>)

@@ -1,50 +1,47 @@
-import { createConnect } from './steps/connect'
-import { createConstants } from './steps/constants'
-import { createActionCreators } from './steps/action-creators'
-import { createActions } from './steps/actions'
-import { createDefaults } from './steps/defaults'
-import { createReducers } from './steps/reducers'
-import { createReducer } from './steps/reducer'
-import { createReducerSelectors } from './steps/reducer-selectors'
-import { createSelectors } from './steps/selectors'
-import { createValues } from './steps/values'
-import { createEvents } from './steps/events'
 import { KeaPlugin } from '../types'
+import { listeners } from './listeners'
+import { connect } from './connect'
+import { actions } from './actions'
+import { defaults } from './defaults'
+import { reducers } from './reducers'
+import { selectors } from './selectors'
+import { events } from './events'
 
-// core plugin
+export { actions } from './actions'
+export { connect } from './connect'
+export { defaults } from './defaults'
+export { events, afterMount, beforeUnmount } from './events'
+export { listeners } from './listeners'
+export { reducers } from './reducers'
+export { selectors } from './selectors'
+
 export const corePlugin: KeaPlugin = {
   name: 'core',
 
   defaults: () => ({
     cache: {},
     connections: {},
-    constants: {},
     actionCreators: {},
     actionKeys: {},
     actionTypes: {},
     actions: {},
     defaults: {},
     reducers: {},
-    reducerOptions: {},
     reducer: undefined,
     selector: undefined,
     selectors: {},
     values: {},
-    propTypes: {},
     events: {},
   }),
 
-  buildSteps: {
-    connect: createConnect,
-    constants: createConstants,
-    actionCreators: createActionCreators,
-    actions: createActions,
-    defaults: createDefaults,
-    reducers: createReducers,
-    reducer: createReducer,
-    reducerSelectors: createReducerSelectors,
-    selectors: createSelectors,
-    values: createValues,
-    events: createEvents,
+  events: {
+    legacyBuild: (logic, input) => {
+      input.connect && connect(input.connect)(logic)
+      input.actions && actions(input.actions)(logic)
+      input.defaults && defaults(input.defaults)(logic)
+      input.reducers && reducers(input.reducers)(logic)
+      input.selectors && selectors(input.selectors)(logic)
+      input.events && events(input.events)(logic)
+    },
   },
 }

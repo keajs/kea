@@ -1,4 +1,4 @@
-import { Logic, LogicBuilder, LogicEventType, PartialRecord } from '../../types'
+import { Logic, LogicBuilder, LogicEventType, PartialRecord } from '../types'
 
 export function events<L extends Logic = Logic>(
   input:
