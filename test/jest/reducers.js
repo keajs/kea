@@ -5,7 +5,7 @@ describe('reducers', () => {
   test('it converts reducer arrays correctly', () => {
     resetContext()
 
-    const reducerFunction = state => state
+    const reducerFunction = (state) => state
 
     const logic = kea({
       defaults: () => ({
@@ -14,20 +14,15 @@ describe('reducers', () => {
 
       reducers: () => ({
         null: [],
-        noPropNoOptions: [0, {ACTION: reducerFunction}],
+        noPropNoOptions: [0, { ACTION: reducerFunction }],
         onlyDefault: [0],
-        withoutDefault: {ACTION: reducerFunction},
+        withoutDefault: { ACTION: reducerFunction },
       }),
     })
 
     logic.mount()
 
-    expect(Object.keys(logic.reducers).sort()).toEqual([
-      'noPropNoOptions',
-      'null',
-      'onlyDefault',
-      'withoutDefault',
-    ])
+    expect(Object.keys(logic.reducers).sort()).toEqual(['noPropNoOptions', 'null', 'onlyDefault', 'withoutDefault'])
     expect(Object.keys(logic.defaults).sort()).toEqual([
       'milk',
       'noPropNoOptions',
@@ -48,20 +43,20 @@ describe('reducers', () => {
   })
 
   test('it auto-detects local actions from the key in reducers', () => {
-    resetContext({createStore: true})
+    resetContext({ createStore: true })
 
     const logic = kea({
       actions: () => ({
         makeMagic: true,
-        moreMagic: value => ({value}),
+        moreMagic: (value) => ({ value }),
       }),
 
-      defaults: {howMuchMagic: 0},
+      defaults: { howMuchMagic: 0 },
 
-      reducers: ({actions}) => ({
+      reducers: ({ actions }) => ({
         howMuchMagic: {
-          makeMagic: state => state + 1,
-          [actions.moreMagic]: (state, {value}) => state + value,
+          makeMagic: (state) => state + 1,
+          [actions.moreMagic]: (state, { value }) => state + value,
         },
       }),
     })
@@ -83,7 +78,7 @@ describe('reducers', () => {
   })
 
   test('it extends reducers instead of overriding them', () => {
-    resetContext({createStore: true})
+    resetContext({ createStore: true })
 
     const logic = kea({
       actions: () => ({
@@ -92,12 +87,12 @@ describe('reducers', () => {
         makeABitMoreMagic: true,
       }),
 
-      reducers: ({actions}) => ({
+      reducers: ({ actions }) => ({
         howMuchMagic: [
           0,
           {
-            simpleMagic: state => state + 1,
-            makeMagic: state => state + 1,
+            simpleMagic: (state) => state + 1,
+            makeMagic: (state) => state + 1,
           },
         ],
       }),
@@ -108,12 +103,12 @@ describe('reducers', () => {
         moreMagic: true,
       }),
 
-      reducers: ({actions}) => ({
+      reducers: ({ actions }) => ({
         howMuchMagic: [
           0,
           {
-            makeMagic: state => state + 2,
-            moreMagic: state => state + 100,
+            makeMagic: (state) => state + 2,
+            moreMagic: (state) => state + 100,
           },
         ],
       }),
@@ -133,18 +128,18 @@ describe('reducers', () => {
   })
 
   test('it overrides reducers when extending with { replace: true }', () => {
-    resetContext({createStore: true})
+    resetContext({ createStore: true })
 
     const logic = kea({
       actions: () => ({
         makeMagic: true,
       }),
 
-      reducers: ({actions}) => ({
+      reducers: ({ actions }) => ({
         howMuchMagic: [
           0,
           {
-            makeMagic: state => state + 1,
+            makeMagic: (state) => state + 1,
           },
         ],
       }),
@@ -155,12 +150,12 @@ describe('reducers', () => {
         moreMagic: true,
       }),
 
-      reducers: ({actions}) => ({
+      reducers: ({ actions }) => ({
         howMuchMagic: [
           0,
-          {replace: true},
+          { replace: true },
           {
-            moreMagic: state => state + 100,
+            moreMagic: (state) => state + 100,
           },
         ],
       }),

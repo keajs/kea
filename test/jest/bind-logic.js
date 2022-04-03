@@ -45,7 +45,7 @@ describe('bind logic', () => {
       const { firstId, secondId } = state
 
       return (
-        <div data-testid='app'>
+        <div data-testid="app">
           <BindLogic logic={keyedLogic} props={{ id: firstId }}>
             <DynamicComponent __debugId={firstId} />
           </BindLogic>

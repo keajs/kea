@@ -10,7 +10,7 @@ describe('action types', () => {
     const logic = kea({
       path: () => ['kea', 'test'],
       actions: {
-        updateName: (name) => ({name}),
+        updateName: (name) => ({ name }),
         anotherAction: true,
       },
     })

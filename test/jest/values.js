@@ -1,87 +1,89 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../../src'
 
-beforeEach(() => {
-  resetContext({ createStore: true })
-})
-
-test('logic.values reflects the current state', () => {
-  const books = {
-    1: 'book1',
-    2: 'book2',
-  }
-
-  const logic = kea({
-    reducers: () => ({
-      books: [books, {}],
-      bookId: [1, {}],
-    }),
-
-    selectors: ({ selectors }) => ({
-      book: [
-        () => [selectors.books, selectors.bookId, (_, props) => props.extra],
-        (books, bookId, extra) => books[bookId] + extra,
-      ],
-    }),
+describe('with key', () => {
+  beforeEach(() => {
+    resetContext({ createStore: true })
   })
 
-  const builtLogic = logic({ extra: 'nope' })
-  const unmount = builtLogic.mount()
+  test('logic.values reflects the current state', () => {
+    const books = {
+      1: 'book1',
+      2: 'book2',
+    }
 
-  expect(builtLogic.values.books).toEqual(books)
-  expect(builtLogic.values.bookId).toEqual(1)
-  expect(builtLogic.values.book).toEqual('book1nope')
+    const logic = kea({
+      reducers: () => ({
+        books: [books, {}],
+        bookId: [1, {}],
+      }),
 
-  unmount()
-})
+      selectors: ({ selectors }) => ({
+        book: [
+          () => [selectors.books, selectors.bookId, (_, props) => props.extra],
+          (books, bookId, extra) => books[bookId] + extra,
+        ],
+      }),
+    })
 
-test('cloning logic.values takes a snapshot of the current state', () => {
-  const books = {
-    1: 'book1',
-    2: 'book2',
-  }
+    const builtLogic = logic({ extra: 'nope' })
+    const unmount = builtLogic.mount()
 
-  const logic = kea({
-    actions: () => ({
-      setBookId: bookId => ({ bookId }),
-    }),
+    expect(builtLogic.values.books).toEqual(books)
+    expect(builtLogic.values.bookId).toEqual(1)
+    expect(builtLogic.values.book).toEqual('book1nope')
 
-    reducers: ({ actions }) => ({
-      books: [books, {}],
-      bookId: [
-        1,
-        {
-          [actions.setBookId]: (_, payload) => payload.bookId,
-        },
-      ],
-    }),
-
-    selectors: ({ selectors }) => ({
-      book: [
-        () => [selectors.books, selectors.bookId, (_, props) => props.extra],
-        (books, bookId, extra) => books[bookId] + extra,
-      ],
-    }),
+    unmount()
   })
 
-  const builtLogic = logic({ extra: 'nope' })
-  const unmount = builtLogic.mount()
+  test('cloning logic.values takes a snapshot of the current state', () => {
+    const books = {
+      1: 'book1',
+      2: 'book2',
+    }
 
-  expect(builtLogic.values.books).toEqual(books)
-  expect(builtLogic.values.bookId).toEqual(1)
-  expect(builtLogic.values.book).toEqual('book1nope')
+    const logic = kea({
+      actions: () => ({
+        setBookId: (bookId) => ({ bookId }),
+      }),
 
-  const clonedValues = { ...builtLogic.values }
+      reducers: ({ actions }) => ({
+        books: [books, {}],
+        bookId: [
+          1,
+          {
+            [actions.setBookId]: (_, payload) => payload.bookId,
+          },
+        ],
+      }),
 
-  builtLogic.actions.setBookId(2)
+      selectors: ({ selectors }) => ({
+        book: [
+          () => [selectors.books, selectors.bookId, (_, props) => props.extra],
+          (books, bookId, extra) => books[bookId] + extra,
+        ],
+      }),
+    })
 
-  expect(builtLogic.values.books).toEqual(books)
-  expect(builtLogic.values.bookId).toEqual(2)
-  expect(builtLogic.values.book).toEqual('book2nope')
+    const builtLogic = logic({ extra: 'nope' })
+    const unmount = builtLogic.mount()
 
-  expect(clonedValues.books).toEqual(books)
-  expect(clonedValues.bookId).toEqual(1)
-  expect(clonedValues.book).toEqual('book1nope')
+    expect(builtLogic.values.books).toEqual(books)
+    expect(builtLogic.values.bookId).toEqual(1)
+    expect(builtLogic.values.book).toEqual('book1nope')
 
-  unmount()
+    const clonedValues = { ...builtLogic.values }
+
+    builtLogic.actions.setBookId(2)
+
+    expect(builtLogic.values.books).toEqual(books)
+    expect(builtLogic.values.bookId).toEqual(2)
+    expect(builtLogic.values.book).toEqual('book2nope')
+
+    expect(clonedValues.books).toEqual(books)
+    expect(clonedValues.bookId).toEqual(1)
+    expect(clonedValues.book).toEqual('book1nope')
+
+    unmount()
+  })
 })
