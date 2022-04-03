@@ -1,62 +1,22 @@
 import {
   BreakPointFunction,
   BuiltLogic,
-  CreateStoreOptions,
-  KeaPlugin,
   ListenerFunction,
   ListenerFunctionWrapper,
   Logic,
   LogicBuilder,
   LogicInput,
 } from '../types'
-import { getContext, getPluginContext, setPluginContext } from '../kea/context'
-import { MiddlewareAPI } from 'redux'
+import { getContext, getPluginContext } from '../kea/context'
 import { afterMount, beforeUnmount } from './events'
 
 export const LISTENERS_BREAKPOINT = 'kea-listeners breakpoint broke'
 export const isBreakpoint = (error: Error): boolean => error.message === LISTENERS_BREAKPOINT
 
-type ListenersPluginContext = {
+export type ListenersPluginContext = {
   byPath: Record<string, Record<string, ListenerFunctionWrapper[]>>
   byAction: Record<string, Record<string, ListenerFunctionWrapper[]>>
   pendingPromises: Map<Promise<void>, [BuiltLogic, string]>
-}
-
-export const listenersPlugin: KeaPlugin = {
-  name: 'listeners',
-
-  defaults: () => ({
-    listeners: undefined,
-    sharedListeners: undefined,
-  }),
-
-  events: {
-    afterPlugin(): void {
-      setPluginContext<ListenersPluginContext>('listeners', { byAction: {}, byPath: {}, pendingPromises: new Map() })
-    },
-
-    beforeReduxStore(options: CreateStoreOptions): void {
-      options.middleware.push((store: MiddlewareAPI) => (next) => (action) => {
-        const previousState = store.getState()
-        const response = next(action)
-        const { byAction } = getPluginContext<ListenersPluginContext>('listeners')
-        const listeners = byAction[action.type]
-        if (listeners) {
-          for (const listenerArray of Object.values(listeners)) {
-            for (const innerListener of listenerArray) {
-              innerListener(action, previousState)
-            }
-          }
-        }
-        return response
-      })
-    },
-
-    legacyBuild(logic, input) {
-      'sharedListeners' in input && sharedListeners(input.sharedListeners)(logic)
-      'listeners' in input && listeners(input.listeners)(logic)
-    },
-  },
 }
 
 export function listeners<L extends Logic = Logic>(input: LogicInput['listeners']): LogicBuilder<L> {
@@ -64,14 +24,10 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
     if (!logic.listeners) {
       logic.listeners = {}
       afterMount(() => {
-        if (logic.listeners) {
-          addListenersByPathString(logic.pathString, logic.listeners)
-        }
+        addListenersByPathString(logic.pathString, logic.listeners ?? {})
       })(logic)
       beforeUnmount(() => {
-        if (logic.listeners) {
-          removeListenersByPathString(logic.pathString, logic.listeners)
-        }
+        removeListenersByPathString(logic.pathString, logic.listeners ?? {})
 
         // trigger all breakpoints
         if (logic.cache.listenerBreakpointCounter) {
@@ -84,17 +40,13 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
 
     logic.cache.listenerBreakpointCounter ??= {}
 
-    const newListeners = (typeof input === 'function' ? input(logic) : input) as Record<string, ListenerFunction>
+    const listeners = (typeof input === 'function' ? input(logic) : input) as Record<string, ListenerFunction>
+    const { contextId } = getContext()
 
-    const {
-      contextId,
-      run: { heap },
-    } = getContext()
-
-    for (const actionKey of Object.keys(newListeners)) {
-      const listenerArray: ListenerFunction[] = Array.isArray(newListeners[actionKey])
-        ? (newListeners[actionKey] as unknown as ListenerFunction[])
-        : [newListeners[actionKey]]
+    for (const actionKey of Object.keys(listeners)) {
+      const listenerArray: ListenerFunction[] = Array.isArray(listeners[actionKey])
+        ? (listeners[actionKey] as unknown as ListenerFunction[])
+        : [listeners[actionKey]]
 
       let key = actionKey
       if (typeof logic.actions[key] !== 'undefined') {
@@ -107,8 +59,6 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
         (listener, index): ListenerFunctionWrapper => {
           const listenerKey = `${contextId}/${key}/${start + index}`
           return (action, previousState) => {
-            heap.push({ type: 'listener', logic, action })
-
             const breakCounter = (logic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
             logic.cache.listenerBreakpointCounter[listenerKey] = breakCounter
 
@@ -147,8 +97,6 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
               if (e.message !== LISTENERS_BREAKPOINT) {
                 throw e
               }
-            } finally {
-              heap.pop()
             }
 
             return response

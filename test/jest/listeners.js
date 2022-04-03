@@ -1,77 +1,69 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext, getContext, isBreakpoint, getPluginContext } from '../../src'
+import { kea, resetContext, isBreakpoint, getPluginContext } from '../../src'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 describe('listeners', () => {
   beforeEach(() => {
-    resetContext({
-      plugins: [],
-      createStore: { middleware: [] },
-    })
+    resetContext()
   })
 
   test('listeners work', () => {
-    const { store } = getContext()
-
     let listenerRan = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'first'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'first'],
+      actions: {
         updateName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
-        name: [
-          'chirpy',
-          {
-            [actions.updateName]: (state, payload) => payload.name,
-          },
-        ],
-      }),
-      listeners: ({ actions }) => ({
-        [actions.updateName]: () => {
-          listenerRan = true
-        },
-      }),
-    })
-
-    firstLogic.mount()
-
-    expect(getContext().plugins.activated.map((p) => p.name)).toEqual(['core', 'listeners'])
-    expect(firstLogic._isKea).toBe(true)
-    expect(Object.keys(firstLogic.actions)).toEqual(['updateName'])
-    expect(Object.keys(firstLogic.selectors).sort()).toEqual(['name'])
-
-    firstLogic.actions.updateName('derpy')
-    expect(firstLogic.selectors.name(store.getState())).toBe('derpy')
-
-    expect(listenerRan).toBe(true)
-  })
-
-  test('listeners work with local action keys', () => {
-    const { store } = getContext()
-
-    let listenerRan = false
-
-    const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'first'],
-      actions: () => ({
-        updateName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers: {
         name: [
           'chirpy',
           {
             updateName: (state, payload) => payload.name,
           },
         ],
-      }),
-      listeners: ({ actions }) => ({
+      },
+      listeners: {
         updateName: () => {
           listenerRan = true
         },
-      }),
+      },
+    })
+
+    firstLogic.mount()
+
+    expect(firstLogic._isKea).toBe(true)
+    expect(Object.keys(firstLogic.actions)).toEqual(['updateName'])
+    expect(Object.keys(firstLogic.selectors).sort()).toEqual(['name'])
+
+    firstLogic.actions.updateName('derpy')
+    expect(firstLogic.values.name).toBe('derpy')
+
+    expect(listenerRan).toBe(true)
+  })
+
+  test('listeners work with local action keys', () => {
+    let listenerRan = false
+
+    const firstLogic = kea({
+      path: ['scenes', 'listeners', 'first'],
+      actions: {
+        updateName: (name) => ({ name }),
+      },
+      reducers: {
+        name: [
+          'chirpy',
+          {
+            updateName: (state, payload) => payload.name,
+          },
+        ],
+      },
+      listeners: {
+        updateName: () => {
+          listenerRan = true
+        },
+      },
     })
 
     firstLogic.mount()
@@ -83,37 +75,35 @@ describe('listeners', () => {
   })
 
   test('sharedListeners work', () => {
-    const { store } = getContext()
-
     let listenerRan = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'test'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'test'],
+      actions: {
         updateName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers: {
         name: [
           'chirpy',
           {
-            [actions.updateName]: (state, payload) => payload.name,
+            updateName: (state, payload) => payload.name,
           },
         ],
+      },
+      listeners: ({ sharedListeners }) => ({
+        updateName: sharedListeners.doUpdateName,
       }),
-      listeners: ({ actions, sharedListeners }) => ({
-        [actions.updateName]: sharedListeners.doUpdateName,
-      }),
-      sharedListeners: ({ actions }) => ({
+      sharedListeners: {
         doUpdateName() {
           listenerRan = true
         },
-      }),
+      },
     })
 
     firstLogic.mount()
 
-    store.dispatch(firstLogic.actionCreators.updateName('derpy'))
-    expect(firstLogic.selectors.name(store.getState())).toBe('derpy')
+    firstLogic.actions.updateName('derpy')
+    expect(firstLogic.values.name).toBe('derpy')
 
     expect(listenerRan).toBe(true)
   })
@@ -124,20 +114,20 @@ describe('listeners', () => {
     let listenerRan3 = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'test'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'test'],
+      actions: {
         updateName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers: {
         name: [
           'chirpy',
           {
-            [actions.updateName]: (state, payload) => payload.name,
+            updateName: (state, payload) => payload.name,
           },
         ],
-      }),
-      listeners: ({ actions, sharedListeners }) => ({
-        [actions.updateName]: [
+      },
+      listeners: ({ sharedListeners }) => ({
+        updateName: [
           sharedListeners.doUpdateName,
           sharedListeners.otherWorker,
           function () {
@@ -145,7 +135,7 @@ describe('listeners', () => {
           },
         ],
       }),
-      sharedListeners: ({ actions }) => ({
+      sharedListeners: () => ({
         doUpdateName() {
           listenerRan1 = true
         },
@@ -166,41 +156,39 @@ describe('listeners', () => {
   })
 
   test('extend works', () => {
-    const { store } = getContext()
-
     let listenerRan1 = false
     let listenerRan2 = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'test'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'test'],
+      actions: {
         updateName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers: {
         name: [
           'chirpy',
           {
-            [actions.updateName]: (state, payload) => payload.name,
+            updateName: (state, payload) => payload.name,
           },
         ],
-      }),
-      listeners: ({ actions, sharedListeners }) => ({
-        [actions.updateName]: () => {
+      },
+      listeners: () => ({
+        updateName: () => {
           listenerRan1 = true
         },
       }),
     })
 
     firstLogic.extend({
-      listeners: ({ actions, sharedListeners }) => ({
-        [actions.updateName]: () => {
+      listeners: {
+        updateName: () => {
           listenerRan2 = true
         },
-      }),
+      },
     })
     firstLogic.mount()
 
-    store.dispatch(firstLogic.actionCreators.updateName('derpy'))
+    firstLogic.actions.updateName('derpy')
     expect(firstLogic.values.name).toBe('derpy')
 
     expect(listenerRan1).toBe(true)
@@ -212,17 +200,17 @@ describe('listeners', () => {
     let listenerRan2 = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'test'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'test'],
+      actions: {
         updateName: (name) => ({ name }),
         updateOtherName: (name) => ({ name }),
-      }),
+      },
       listeners: ({ actions }) => ({
-        [actions.updateName]: () => {
+        updateName: () => {
           actions.updateOtherName()
           listenerRan1 = true
         },
-        [actions.updateOtherName]: () => {
+        updateOtherName: () => {
           listenerRan2 = true
         },
       }),
@@ -240,22 +228,22 @@ describe('listeners', () => {
     let listenerRan2 = false
 
     const firstLogic = kea({
-      path: () => ['scenes', 'listeners', 'sharedListeners2'],
-      actions: () => ({
+      path: ['scenes', 'listeners', 'sharedListeners2'],
+      actions: {
         updateName: (name) => ({ name }),
         updateOtherName: (name) => ({ name }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers: {
         name: [
           'john',
           {
-            [actions.updateName]: (_, payload) => payload.name,
-            [actions.updateOtherName]: (_, payload) => payload.name,
+            updateName: (_, payload) => payload.name,
+            updateOtherName: (_, payload) => payload.name,
           },
         ],
-      }),
+      },
       listeners: ({ actions, values }) => ({
-        [actions.updateName]: (payload, _, action) => {
+        updateName: (payload, _, action) => {
           expect(payload.name).toBe('henry')
 
           expect(action.payload.name).toBe('henry')
@@ -269,7 +257,7 @@ describe('listeners', () => {
 
           listenerRan1 = true
         },
-        [actions.updateOtherName]: () => {
+        updateOtherName: () => {
           listenerRan2 = true
         },
       }),
@@ -293,26 +281,26 @@ describe('listeners', () => {
     let caughtNotBreakpoint = 0
 
     const firstLogic = kea({
-      actions: () => ({
+      actions: {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers:{
         username: [
           'keajs',
           {
-            [actions.setUsername]: (_, payload) => payload.username,
+            setUsername: (_, payload) => payload.username,
           },
         ],
         repositories: [
           [],
           {
-            [actions.setRepositories]: (_, payload) => payload.repositories,
+            setRepositories: (_, payload) => payload.repositories,
           },
         ],
-      }),
-      listeners: ({ actions, values }) => ({
-        [actions.setUsername]: async function (payload, breakpoint) {
+      },
+      listeners: ({ actions }) => ({
+        setUsername: async function (payload, breakpoint) {
           try {
             const { setRepositories } = actions
 
@@ -387,26 +375,26 @@ describe('listeners', () => {
     let listenerRan0 = 0
 
     const firstLogic = kea({
-      actions: () => ({
+      actions: {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
-      }),
-      reducers: ({ actions }) => ({
+      },
+      reducers:{
         username: [
           'keajs',
           {
-            [actions.setUsername]: (_, payload) => payload.username,
+            setUsername: (_, payload) => payload.username,
           },
         ],
         repositories: [
           [],
           {
-            [actions.setRepositories]: (_, payload) => payload.repositories,
+            setRepositories: (_, payload) => payload.repositories,
           },
         ],
-      }),
-      listeners: ({ actions, values }) => ({
-        [actions.setUsername]: [
+      },
+      listeners: () => ({
+        setUsername: [
           async function (payload, breakpoint) {
             await breakpoint(200)
             preListenerRan += 1
@@ -448,26 +436,26 @@ describe('listeners', () => {
     let listenerRan0 = 0
 
     const firstLogic = kea({
-      actions: () => ({
-        setUsername: (username) => ({ username }),
-        setRepositories: (repositories) => ({ repositories }),
-      }),
-      reducers: ({ actions }) => ({
+      actions: {
+        setUsername: (username) => ({username}),
+        setRepositories: (repositories) => ({repositories}),
+      },
+      reducers: {
         username: [
           'keajs',
           {
-            [actions.setUsername]: (_, payload) => payload.username,
+            setUsername: (_, payload) => payload.username,
           },
         ],
         repositories: [
           [],
           {
-            [actions.setRepositories]: (_, payload) => payload.repositories,
+            setRepositories: (_, payload) => payload.repositories,
           },
         ],
-      }),
-      listeners: ({ actions }) => ({
-        [actions.setUsername]: async function (payload, breakpoint) {
+      },
+      listeners: () => ({
+        setUsername: async function (payload, breakpoint) {
           await breakpoint(200)
           preListenerRan += 1
         },
@@ -475,8 +463,8 @@ describe('listeners', () => {
     })
 
     firstLogic.extend({
-      listeners: ({ actions }) => ({
-        [actions.setUsername]: async function (payload, breakpoint) {
+      listeners: () => ({
+        setUsername: async function (payload, breakpoint) {
           await breakpoint(100)
           listenerRan0 += 1
         },
@@ -512,18 +500,18 @@ describe('listeners', () => {
     let breakpointBroke = 0
 
     const firstLogic = kea({
-      actions: () => ({
+      actions: {
         setUsername: (username) => ({ username }),
-      }),
-      reducers: () => ({
+      },
+      reducers: {
         username: [
           'keajs',
           {
             setUsername: (_, payload) => payload.username,
           },
         ],
-      }),
-      listeners: () => ({
+      },
+      listeners: {
         setUsername: async function (payload, breakpoint) {
           try {
             await breakpoint(100)
@@ -534,7 +522,7 @@ describe('listeners', () => {
             }
           }
         },
-      }),
+      },
     })
 
     const unmount = firstLogic.mount()
@@ -553,17 +541,17 @@ describe('listeners', () => {
     let breakpointBroke = 0
 
     const firstLogic = kea({
-      actions: () => ({
+      actions: {
         setUsername: (username) => ({ username }),
-      }),
-      reducers: () => ({
+      },
+      reducers: {
         username: [
           'keajs',
           {
             setUsername: (_, payload) => payload.username,
           },
         ],
-      }),
+      },
       listeners: () => ({
         setUsername: async function (payload, breakpoint) {
           try {
@@ -604,17 +592,17 @@ describe('listeners', () => {
   test("listeners get the store's previous state as their 4th argument", async () => {
     let listenerRan = false
     const firstLogic = kea({
-      actions: () => ({
+      actions: {
         setUsername: (username) => ({ username }),
-      }),
-      reducers: () => ({
+      },
+      reducers: {
         username: [
           'keajs',
           {
             setUsername: (_, { username }) => username,
           },
         ],
-      }),
+      },
       listeners: ({ values, selectors }) => ({
         setUsername: async function (payload, breakpoint, action, previousState) {
           expect(values.username).toBe('user1')
@@ -634,14 +622,14 @@ describe('listeners', () => {
 
   test('track running listeners', async () => {
     const firstLogic = kea({
-      actions: () => ({
-        setUsername: (username) => ({ username }),
-      }),
-      listeners: ({ values, selectors }) => ({
+      actions: {
+        setUsername: (username) => ({username}),
+      },
+      listeners: {
         async setUsername(payload, breakpoint) {
           await breakpoint(100)
         },
-      }),
+      },
     })
 
     const unmount = firstLogic.mount()
@@ -684,12 +672,12 @@ describe('listeners', () => {
       },
     })
 
-    resetContext({})
+    resetContext()
     logic.mount()
     logic.actions.setUsername('context1')
     await delay(50)
 
-    resetContext({})
+    resetContext()
     logic.mount()
     logic.actions.setUsername('context2')
     await delay(100)

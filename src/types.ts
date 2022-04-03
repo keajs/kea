@@ -351,7 +351,6 @@ export interface ContextOptions extends Partial<InternalContextOptions> {
   plugins?: KeaPlugin[]
   createStore?: boolean | Partial<CreateStoreOptions>
   defaults?: Record<string, any>
-  skipPlugins?: string[]
 }
 
 export interface KeaComponent extends FunctionComponent {
@@ -420,10 +419,6 @@ export interface Context {
   mount: {
     counter: Record<string, number>
     mounted: Record<string, BuiltLogic>
-  }
-
-  run: {
-    heap: { action?: ReduxAction; type: 'action' | 'listener'; logic: Logic }[]
   }
 
   react: {

@@ -1,4 +1,3 @@
-import { listenersPlugin } from '../core/listeners'
 import { activatePlugin, runPlugins } from './plugins'
 import { getStore } from './store'
 import { Context, ContextOptions } from '../types'
@@ -24,7 +23,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore = true, defaults, skipPlugins, ...otherOptions } = options
+  const { plugins, createStore = true, defaults, ...otherOptions } = options
 
   const newContext = {
     contextId: `kea-context-${contextId++}`,
@@ -46,10 +45,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     mount: {
       counter: {},
       mounted: {},
-    },
-
-    run: {
-      heap: [],
     },
 
     react: {
@@ -96,10 +91,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
   activatePlugin(corePlugin)
 
-  if (!skipPlugins || skipPlugins.indexOf('listeners') === -1) {
-    activatePlugin(listenersPlugin)
-  }
-
   runPlugins('afterOpenContext', newContext, options)
 
   if (plugins) {
@@ -129,28 +120,6 @@ export function resetContext(options: ContextOptions = {}, initial = false): Con
   }
 
   return openContext(options, initial)
-}
-
-export function withContext(
-  code: (context?: Context) => any,
-  options = {},
-): {
-  context: Context
-  returnValue: unknown
-} {
-  const oldContext = context
-
-  openContext(options, false)
-  const newContext = context
-  const returnValue = code(context)
-  closeContext()
-
-  context = oldContext
-
-  return {
-    context: newContext,
-    returnValue,
-  }
 }
 
 export function getPluginContext<Context = Record<string, any>>(name: string): Context {

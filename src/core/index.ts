@@ -1,5 +1,6 @@
-import { KeaPlugin } from '../types'
-import { listeners } from './listeners'
+import { CreateStoreOptions, KeaPlugin } from '../types'
+import { listeners, ListenersPluginContext, sharedListeners } from './listeners'
+import { getPluginContext, setPluginContext } from '../kea/context'
 import { connect } from './connect'
 import { actions } from './actions'
 import { defaults } from './defaults'
@@ -32,15 +33,38 @@ export const corePlugin: KeaPlugin = {
     cache: {},
     connections: {},
     defaults: {},
+    listeners: undefined,
     reducers: {},
     reducer: undefined,
     selector: undefined,
     selectors: {},
+    sharedListeners: undefined,
     values: {},
     events: {},
   }),
 
   events: {
+    afterPlugin(): void {
+      setPluginContext<ListenersPluginContext>('listeners', { byAction: {}, byPath: {}, pendingPromises: new Map() })
+    },
+
+    beforeReduxStore(options: CreateStoreOptions): void {
+      options.middleware.push((store) => (next) => (action) => {
+        const previousState = store.getState()
+        const response = next(action)
+        const { byAction } = getPluginContext<ListenersPluginContext>('listeners')
+        const listeners = byAction[action.type]
+        if (listeners) {
+          for (const listenerArray of Object.values(listeners)) {
+            for (const innerListener of listenerArray) {
+              innerListener(action, previousState)
+            }
+          }
+        }
+        return response
+      })
+    },
+
     legacyBuild: (logic, input) => {
       'props' in input && props(input.props)(logic)
       'key' in input && input.key && key(input.key)(logic)
@@ -49,6 +73,8 @@ export const corePlugin: KeaPlugin = {
       'defaults' in input && input.defaults && defaults(input.defaults)(logic)
       'reducers' in input && input.reducers && reducers(input.reducers)(logic)
       'selectors' in input && input.selectors && selectors(input.selectors)(logic)
+      'sharedListeners' in input && sharedListeners(input.sharedListeners)(logic)
+      'listeners' in input && input.listeners && listeners(input.listeners)(logic)
       'events' in input && input.events && events(input.events)(logic)
     },
   },

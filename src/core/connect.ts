@@ -53,7 +53,7 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
         }
         if (isBuiltLogic(otherLogic)) {
           addConnection(logic, otherLogic)
-          if (getContext().build.heap.includes(otherLogic)) {
+          if (getContext().buildHeap.includes(otherLogic)) {
             // circular build (otherLogic -> logic -> otherLogic)
             logic.actionCreators[to] = (...args: any[]) => (otherLogic as BuiltLogic).actionCreators[from](...args)
             logic.actionCreators[to].toString = () => createActionType(from, (otherLogic as BuiltLogic).pathString)
@@ -95,7 +95,7 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
           }
           if (selector) {
             logic.selectors[to] = selector
-          } else if (getContext().build.heap.includes(otherLogic)) {
+          } else if (getContext().buildHeap.includes(otherLogic)) {
             // circular build (otherLogic -> logic -> otherLogic)
             logic.selectors[to] = (state, props) =>
               (otherLogic as BuiltLogic).selectors[from]
