@@ -5,9 +5,7 @@ export function key<L extends Logic = Logic>(input: (props: L['props']) => KeyTy
     const key = input(logic.props)
 
     if (typeof logic.keyBuilder !== 'undefined') {
-      throw new Error(
-        `[KEA] Already defined key builder for logic "${logic.pathString}".`,
-      )
+      throw new Error(`[KEA] Already defined key builder for logic "${logic.pathString}".`)
     }
     if (typeof key === 'undefined') {
       throw new Error(`[KEA] Undefined key for logic "${logic.pathString}"`)

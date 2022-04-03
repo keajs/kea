@@ -40,10 +40,8 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       defaults: defaults || undefined,
     },
 
-    build: {
-      cache: new WeakMap(),
-      heap: [],
-    },
+    wrapperContexts: new WeakMap(),
+    buildHeap: [],
 
     mount: {
       counter: {},

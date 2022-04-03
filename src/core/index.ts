@@ -25,12 +25,12 @@ export const corePlugin: KeaPlugin = {
   name: 'core',
 
   defaults: () => ({
-    cache: {},
-    connections: {},
     actionCreators: {},
     actionKeys: {},
     actionTypes: {},
     actions: {},
+    cache: {},
+    connections: {},
     defaults: {},
     reducers: {},
     reducer: undefined,

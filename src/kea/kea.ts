@@ -111,9 +111,8 @@ export function kea<L extends Logic = Logic>(
     return wrapper.isMounted(props) ? getCachedBuiltLogic(wrapper, props) : null
   }
   wrapper.extend = <ExtendLogic extends Logic = L>(extendedInput: LogicInput<ExtendLogic>) => {
-    const buildCache = getContext().build.cache
-    const inputCache = buildCache.get(wrapper.inputs)
-    if (inputCache) {
+    const wrapperContext = getContext().wrapperContexts.get(wrapper)
+    if (wrapperContext) {
       throw new Error(`[KEA] Can not extend logic after building.`)
     }
     wrapper.inputs.push(extendedInput)

@@ -12,28 +12,31 @@ export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 // logic base class
 export interface Logic {
+  // logic
+  path: PathType
+  pathString: string
+  props: any
   key?: KeyType
   keyBuilder?: (props: any) => KeyType
+
+  // core
   actionCreators: Record<string, any>
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
   actions: Record<string, any>
   cache: Record<string, any>
   connections: { [pathString: string]: BuiltLogic }
-  constants: Record<string, string>
   defaults: Record<string, any>
-  listeners: Record<string, ListenerFunctionWrapper[]>
-  path: PathType
-  pathString: string
-  props: any
   reducers: Record<string, any>
-  reducerOptions: Record<string, any>
   reducer?: ReducerFunction<any>
   selector?: Selector
   selectors: Record<string, Selector>
-  sharedListeners?: Record<string, ListenerFunction>
   values: Record<string, any>
   events: PartialRecord<LogicEventType, () => void>
+
+  // listeners
+  listeners?: Record<string, ListenerFunctionWrapper[]>
+  sharedListeners?: Record<string, ListenerFunction>
 
   __keaTypeGenInternalSelectorTypes: Record<string, any>
   __keaTypeGenInternalReducerActions: Record<string, any>
@@ -55,7 +58,6 @@ export type BuiltLogic<LogicType extends Logic = Logic> = LogicType & BuiltLogic
 
 export interface LogicWrapperAdditions<LogicType extends Logic> {
   _isKea: boolean
-  _isKeaWithKey: boolean
   inputs: (LogicInput | LogicBuilder)[] // store as generic
   <T extends LogicType['props'] | AnyComponent>(props: T): T extends LogicType['props']
     ? BuiltLogic<LogicType>
@@ -392,6 +394,11 @@ export interface KeaPlugin {
   events?: PluginEvents
 }
 
+export interface WrapperContext<L extends Logic = Logic> {
+  keyBuilder: L['keyBuilder']
+  builtLogics: Map<KeyType | undefined, BuiltLogic<L>>
+}
+
 export interface Context {
   contextId: string
 
@@ -407,13 +414,8 @@ export interface Context {
     defaults: Record<string, any> | undefined
   }
 
-  build: {
-    cache: WeakMap<
-      LogicWrapper,
-      { keyBuilder: Logic['keyBuilder']; builtLogics: Map<KeyType | undefined, BuiltLogic> }
-    >
-    heap: Logic[]
-  }
+  wrapperContexts: WeakMap<LogicWrapper, WrapperContext>
+  buildHeap: Logic[]
 
   mount: {
     counter: Record<string, number>

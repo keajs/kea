@@ -3,7 +3,7 @@ import { getContext } from './context'
 
 import { mountLogic, unmountLogic } from './mount'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext } from '../types'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
@@ -42,15 +42,21 @@ export function getBuiltLogic<L extends Logic = Logic>(
     return cachedLogic
   }
 
-  // create a blank logic with a random path
+  // create a random path
   const uniqueId = ++getContext().input.counter
   const path = [...getContext().options.defaultPath, uniqueId]
+
+  // create a blank logic, and add the basic fields and methods
+  // other core fields (actions, selectors, values, etc) are added with other plugins below.
   const logic = {
     _isKeaBuild: true,
     key: undefined,
+    keyBuilder: undefined,
     path: path,
     pathString: path.join('.'),
     props: props ?? {},
+
+    // methods
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
     mount: () => {
@@ -72,6 +78,9 @@ export function getBuiltLogic<L extends Logic = Logic>(
     }
   }
 
+  // cache the logic object
+  setCachedBuiltLogic(wrapper, props, logic)
+
   // apply all the inputs
   runPlugins('beforeBuild', logic, wrapper.inputs)
   for (const input of wrapper.inputs) {
@@ -84,8 +93,6 @@ export function getBuiltLogic<L extends Logic = Logic>(
 
   runPlugins('afterBuild', logic, wrapper.inputs)
 
-  setCachedBuiltLogic(wrapper, props, logic)
-
   return logic
 }
 
@@ -93,27 +100,22 @@ export function getCachedBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: Props | undefined,
 ): BuiltLogic<L> | null {
-  const buildCache = getContext().build.cache
-  const inputCache = buildCache.get(wrapper)
-  if (inputCache) {
-    const builtLogic = inputCache.builtLogics.get(inputCache.keyBuilder?.(props))
-    if (builtLogic) {
-      return builtLogic as BuiltLogic<L>
-    }
-  }
-  return null
+  const { wrapperContexts } = getContext()
+  const wrapperContext = wrapperContexts.get(wrapper) as WrapperContext<L> | undefined
+  const builtLogic = wrapperContext?.builtLogics.get(wrapperContext?.keyBuilder?.(props ?? {}))
+  return builtLogic ?? null
 }
 
 export function setCachedBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: Props | undefined,
-  logic: BuiltLogic<L>
+  logic: BuiltLogic<L>,
 ): void {
-  const buildCache = getContext().build.cache
-  const inputCache = buildCache.get(wrapper)
-  if (inputCache) {
-    inputCache.builtLogics.set(logic.key, logic)
-  } else {
-    buildCache.set(wrapper, { keyBuilder: logic.keyBuilder, builtLogics: new Map([[logic.key, logic]]) })
+  const { wrapperContexts } = getContext()
+  let wrapperContext = wrapperContexts.get(wrapper)
+  if (!wrapperContext) {
+    wrapperContext = { keyBuilder: logic.keyBuilder, builtLogics: new Map() }
+    wrapperContexts.set(wrapper, wrapperContext)
   }
+  wrapperContext.builtLogics.set(logic.key, logic)
 }

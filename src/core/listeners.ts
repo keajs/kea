@@ -64,10 +64,14 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
     if (!logic.listeners) {
       logic.listeners = {}
       afterMount(() => {
-        addListenersByPathString(logic.pathString, logic.listeners)
+        if (logic.listeners) {
+          addListenersByPathString(logic.pathString, logic.listeners)
+        }
       })(logic)
       beforeUnmount(() => {
-        removeListenersByPathString(logic.pathString, logic.listeners)
+        if (logic.listeners) {
+          removeListenersByPathString(logic.pathString, logic.listeners)
+        }
 
         // trigger all breakpoints
         if (logic.cache.listenerBreakpointCounter) {
