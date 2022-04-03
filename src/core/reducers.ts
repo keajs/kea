@@ -14,7 +14,7 @@
 import { Logic, LogicBuilder, PathType, ReducerDefinitions } from '../types'
 import { AnyAction } from 'redux'
 import { combineKeaReducers } from '../kea/reducer'
-import { getStoreState } from '../kea/context'
+import { getContext, getStoreState } from '../kea/context'
 import { createSelector } from 'reselect'
 
 export function rootReducer<L extends Logic = Logic>(): LogicBuilder<L> {
@@ -89,9 +89,9 @@ export function reducers<L extends Logic = Logic>(
       } else {
         if (typeof mapping['undefined'] !== 'undefined' && typeof logic.actions['undefined'] === 'undefined') {
           throw new Error(
-            `[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(
-              mapping,
-            ).join(', ')}]`,
+            `[KEA] Logic "${
+              logic.pathString
+            }" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`,
           )
         }
 

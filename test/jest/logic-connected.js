@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 
 describe('logic connected', () => {
   beforeEach(() => {
-    resetContext({ autoMount: true, createStore: true })
+    resetContext()
   })
 
   test('connected props and actions get passed, reducers get added to the store', () => {
@@ -46,6 +46,7 @@ describe('logic connected', () => {
         ],
       }),
     })
+    firstLogic.mount()
 
     const reducerState2 = scenesReducer({}, { type: 'discard' })
     expect(reducerState2).toEqual({ homepage: { first: { name: 'chirpy' } } })
@@ -58,6 +59,7 @@ describe('logic connected', () => {
         values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
       },
     })
+    secondLogic.mount()
 
     expect(secondLogic._isKea).toBe(true)
     expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
@@ -78,6 +80,7 @@ describe('logic connected', () => {
         updateNameAgain: (name) => ({ name }),
       }),
     })
+    thirdLogic.mount()
 
     expect(thirdLogic._isKea).toBe(true)
     expect(thirdLogic.path).toEqual(['scenes', 'homepage', 'third'])
@@ -96,6 +99,7 @@ describe('logic connected', () => {
         values: [firstLogic, ['name', 'capitalizedName', 'upperCaseName']],
       },
     })
+    fourthLogic.mount()
 
     expect(fourthLogic._isKea).toBe(true)
     expect(fourthLogic.path).toBeDefined()
@@ -151,6 +155,7 @@ describe('logic connected', () => {
         ],
       }),
     })
+    secondLogic.mount()
 
     expect(secondLogic._isKea).toBe(true)
     expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
@@ -166,12 +171,6 @@ describe('logic connected', () => {
   })
 
   test('can get everything with *', () => {
-    const store = createStore(
-      combineReducers({
-        scenes: keaReducer('scenes'),
-      }),
-    )
-
     const firstLogic = kea({
       path: () => ['scenes', 'homepage', 'first'],
       actions: () => ({
@@ -193,6 +192,8 @@ describe('logic connected', () => {
         values: [firstLogic, ['name', '* as everything']],
       },
     })
+
+    secondLogic.mount()
 
     expect(secondLogic._isKea).toBe(true)
     expect(secondLogic.path).toEqual(['scenes', 'homepage', 'second'])
@@ -235,7 +236,7 @@ describe('logic connected', () => {
           },
         ],
       }),
-    })
+    }).mount()
 
     const logic2 = kea({
       path: (key) => ['scenes', 'homepage', 'reducer'],
@@ -251,6 +252,8 @@ describe('logic connected', () => {
         ],
       }),
     })
+
+    logic2.mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'selectors'],
@@ -269,21 +272,21 @@ describe('logic connected', () => {
           },
         ],
       }),
-    })
+    }).mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'actions'],
       actions: () => ({
         updateName: (name) => ({ name }),
       }),
-    })
+    }).mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'connect'],
       connect: {
         values: [logic2, ['name']],
       },
-    })
+    }).mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'connectActions'],
@@ -293,7 +296,7 @@ describe('logic connected', () => {
       actions: () => ({
         updateName: (name) => ({ name }),
       }),
-    })
+    }).mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'connectReducer'],
@@ -311,7 +314,7 @@ describe('logic connected', () => {
           },
         ],
       }),
-    })
+    }).mount()
 
     kea({
       path: (key) => ['scenes', 'homepage', 'connectSelector'],
@@ -330,7 +333,7 @@ describe('logic connected', () => {
           },
         ],
       }),
-    })
+    }).mount()
 
     store.dispatch({ type: 'bla' })
 

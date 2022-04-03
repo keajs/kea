@@ -23,7 +23,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore = true, defaults, ...otherOptions } = options
+  const { plugins, createStore = true, ...otherOptions } = options
 
   const newContext = {
     contextId: `kea-context-${contextId++}`,
@@ -34,11 +34,8 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
       contexts: {},
     },
 
-    input: {
-      counter: 0,
-      defaults: defaults || undefined,
-    },
-
+    inputCounter: 0,
+    reducerDefaults: undefined,
     wrapperContexts: new WeakMap(),
     buildHeap: [],
 

@@ -408,11 +408,8 @@ export interface Context {
     contexts: Record<string, Record<string, any>>
   }
 
-  input: {
-    counter: number
-    defaults: Record<string, any> | undefined
-  }
-
+  inputCounter: number
+  reducerDefaults: Record<string, any> | undefined
   wrapperContexts: WeakMap<LogicWrapper, WrapperContext>
   buildHeap: Logic[]
 

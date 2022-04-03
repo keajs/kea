@@ -55,7 +55,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
   }
 
   // create a random path
-  const uniqueId = ++getContext().input.counter
+  const uniqueId = ++getContext().inputCounter
   const path = [...getContext().options.defaultPath, uniqueId]
   ;(path as any)['_keaAutomaticPath'] = true
   let finishedBuild = false
