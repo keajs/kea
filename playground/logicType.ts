@@ -83,7 +83,7 @@ export interface logicType<Session> extends Logic {
   }
   reducer: (
     state: any,
-    action: () => any,
+    action: any,
     fullState: any,
   ) => {
     yetAnotherNameWithNullDefault: string | null

@@ -307,7 +307,7 @@ describe('logic connected', () => {
         updateName: (name) => ({ name }),
       }),
       reducers: ({ actions }) => ({
-        name: [
+        name2: [
           'chirpy',
           {
             [actions.updateName]: (state, payload) => payload.name,

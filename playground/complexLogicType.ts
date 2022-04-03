@@ -175,7 +175,7 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
   props: Record<string, unknown>
   reducer: (
     state: any,
-    action: () => any,
+    action: any,
     fullState: any,
   ) => {
     buttonActionsVisible: boolean

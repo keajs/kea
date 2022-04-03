@@ -1,4 +1,4 @@
-import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
+import { Reducer, Store, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
 import { Context as ReactContext, ComponentType, FunctionComponent } from 'react'
 
 // universal helpers
@@ -84,9 +84,9 @@ export type ActionDefinitions<LogicType extends Logic> =
   | Record<string, any | ((...args: any[]) => any)>
   | LogicType['actionCreators']
 
-export interface KeaReduxAction {
+export interface KeaReduxAction extends AnyAction {
   type: string
-  payload: any
+  payload?: any
 }
 
 export interface KeaAction {
@@ -132,7 +132,7 @@ export type ReducerDefinitions<LogicType extends Logic> = {
     | ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>
 }
 
-export type ReducerFunction<S = any> = (state: S, action: AnyAction, fullState: any) => S
+export type ReducerFunction<S = any> = (state: S, action: KeaReduxAction, fullState: any) => S
 
 export type SelectorTuple =
   | []
@@ -208,7 +208,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   inherit?: LogicWrapper[]
   extend?: LogicInput[]
   key?: (props: LogicType['props']) => KeyType
-  path?: PathType
+  path?: PathType | ((key: KeyType) => PathType)
   connect?: any | ((props: LogicType['props']) => any)
   constants?: (logic: LogicType) => string[] | string[]
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)

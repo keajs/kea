@@ -71,7 +71,7 @@ export interface githubLogicType<Repository> extends Logic {
   props: Record<string, unknown>
   reducer: (
     state: any,
-    action: () => any,
+    action: any,
     fullState: any,
   ) => {
     username: string
