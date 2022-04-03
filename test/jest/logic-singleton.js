@@ -134,17 +134,17 @@ describe('logic singleton', () => {
     // check generic
     expect(response._isKea).toBe(true)
 
-    expect(response.path).not.toBeDefined()
+    expect(() => response.path).toThrow()
 
     // actions
-    expect(response.actions).not.toBeDefined()
+    expect(() => response.actions).toThrow()
 
     // reducers
-    expect(response.reducer).not.toBeDefined()
-    expect(response.reducers).not.toBeDefined()
+    expect(() => response.reducer).toThrow()
+    expect(() => response.reducers).toThrow()
 
     // selectors
-    expect(response.selector).not.toBeDefined()
-    expect(response.selectors).not.toBeDefined()
+    expect(() => response.selector).toThrow()
+    expect(() => response.selectors).toThrow()
   })
 })

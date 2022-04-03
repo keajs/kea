@@ -87,6 +87,14 @@ export function reducers<L extends Logic = Logic>(
       if (Object.keys(mapping).length === 0) {
         logic.reducers[key] = () => logic.defaults[key]
       } else {
+        if (typeof mapping['undefined'] !== 'undefined' && typeof logic.actions['undefined'] === 'undefined') {
+          throw new Error(
+            `[KEA] Logic "${logic.pathString}" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(
+              mapping,
+            ).join(', ')}]`,
+          )
+        }
+
         logic.reducers[key] = (state: any, action: AnyAction, fullState: any) => {
           if (typeof state === 'undefined') {
             state = getDefaultState(logic.defaults[key], fullState, key, logic)
