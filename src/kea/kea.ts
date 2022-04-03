@@ -110,7 +110,7 @@ export function kea<L extends Logic = Logic>(
   wrapper.extend = <ExtendLogic extends Logic = L>(extendedInput: LogicInput<ExtendLogic>) => {
     const wrapperContext = getContext().wrapperContexts.get(wrapper)
     if (wrapperContext) {
-      throw new Error(`[KEA] Can not extend logic after building.`)
+      throw new Error(`[KEA] Can not extend logic once it has been built.`)
     }
     wrapper.inputs.push(extendedInput)
     return wrapper as unknown as LogicWrapper<ExtendLogic>

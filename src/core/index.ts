@@ -66,9 +66,6 @@ export const corePlugin: KeaPlugin = {
     },
 
     legacyBuild: (logic, input) => {
-      'props' in input && props(input.props)(logic)
-      'key' in input && input.key && key(input.key)(logic)
-      'path' in input && input.path && path(input.path)(logic)
       'connect' in input && input.connect && connect(input.connect)(logic)
       'actions' in input && input.actions && actions(input.actions)(logic)
       'defaults' in input && input.defaults && defaults(input.defaults)(logic)

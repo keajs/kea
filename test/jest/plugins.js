@@ -4,82 +4,15 @@ import './helper/jsdom'
 import { corePlugin } from '../../src/core'
 
 describe('plugins', () => {
-  test('the core plugins is activated automatically', () => {
+  test('the core plugin is activated automatically', () => {
     resetContext()
     const { plugins } = getContext()
 
     expect(plugins.activated).toEqual([corePlugin])
-    expect(Object.keys(plugins.buildSteps)).toEqual([...Object.keys(corePlugin.buildSteps)])
-  })
-
-  test('plugins add build steps', () => {
-    resetContext()
-    const { plugins } = getContext()
-
-    const testPlugin = {
-      name: 'test',
-
-      defaults: () => ({
-        ranPlugins: [],
-      }),
-
-      buildOrder: {
-        afterConnect: { after: 'connect' },
-        beforeEvents: { before: 'events' },
-        afterEvents: { after: 'events' },
-      },
-
-      buildSteps: {
-        afterEvents(logic, input) {
-          logic.ranPlugins.push('afterEvents')
-        },
-        afterConnect(logic, input) {
-          logic.ranPlugins.push('afterConnect')
-        },
-        beforeEvents(logic, input) {
-          logic.ranPlugins.push('beforeEvents')
-        },
-      },
-    }
-
-    activatePlugin(testPlugin)
-
-    expect(plugins.activated).toEqual([corePlugin, listenersPlugin, testPlugin])
-    expect(Object.keys(plugins.buildSteps)).toEqual([
-      ...Object.keys(corePlugin.buildSteps),
-      ...Object.keys(listenersPlugin.buildSteps),
-      'afterEvents',
-      'afterConnect',
-      'beforeEvents',
-    ])
-    expect(plugins.buildOrder).toEqual([
-      'connect',
-      'afterConnect', // added here
-      'actionCreators',
-      'actions',
-      'defaults',
-      'reducers',
-      'reducer',
-      'reducerSelectors',
-      'selectors',
-      'values',
-      'sharedListeners',
-      'listeners',
-      'beforeEvents', // added here
-      'events',
-      'afterEvents', // added here
-    ])
-
-    expect(plugins.buildSteps.connect).toEqual([corePlugin.buildSteps.connect])
-    expect(plugins.buildSteps.afterConnect).toEqual([testPlugin.buildSteps.afterConnect])
-
-    const logic = kea({})
-
-    expect(logic.build().ranPlugins).toEqual(['afterConnect', 'beforeEvents', 'afterEvents'])
   })
 
   test('plugins add events', () => {
-    resetContext({ skipPlugins: ['listeners'] })
+    resetContext()
     const { plugins } = getContext()
 
     const testPlugin = {
@@ -99,7 +32,7 @@ describe('plugins', () => {
     activatePlugin(testPlugin)
 
     expect(plugins.activated).toEqual([corePlugin, testPlugin])
-    expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
+    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'beforeReduxStore', 'legacyBuild', 'afterBuild'])
 
     expect(plugins.events.afterBuild).toEqual([testPlugin.events.afterBuild])
 
@@ -109,7 +42,7 @@ describe('plugins', () => {
   })
 
   test('function plugins work', () => {
-    resetContext({ skipPlugins: ['listeners'] })
+    resetContext()
     const { plugins } = getContext()
 
     const testPluginContents = {
@@ -130,7 +63,7 @@ describe('plugins', () => {
     activatePlugin(testPlugin)
 
     expect(plugins.activated).toEqual([corePlugin, testPluginContents])
-    expect(Object.keys(plugins.events)).toEqual(['afterBuild'])
+    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'beforeReduxStore', 'legacyBuild', 'afterBuild'])
 
     expect(plugins.events.afterBuild).toEqual([testPluginContents.events.afterBuild])
 
@@ -140,7 +73,7 @@ describe('plugins', () => {
   })
 
   test('plugin context & afterPlugin work', () => {
-    resetContext({ skipPlugins: ['listeners'] })
+    resetContext()
     const { plugins } = getContext()
 
     const testPlugin = {
@@ -164,7 +97,7 @@ describe('plugins', () => {
     activatePlugin(testPlugin)
 
     expect(plugins.activated).toEqual([corePlugin, testPlugin])
-    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'afterBuild'])
+    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'beforeReduxStore', 'legacyBuild', 'afterBuild'])
     expect(plugins.events.afterBuild).toEqual([testPlugin.events.afterBuild])
 
     const logic = kea({})
@@ -173,7 +106,7 @@ describe('plugins', () => {
   })
 
   test('can use logic.cache to store things', () => {
-    resetContext({ skipPlugins: ['listeners'] })
+    resetContext()
     const { plugins } = getContext()
 
     let checkedAfterMount = false
@@ -194,7 +127,7 @@ describe('plugins', () => {
     activatePlugin(testPlugin)
 
     expect(plugins.activated).toEqual([corePlugin, testPlugin])
-    expect(Object.keys(plugins.events)).toEqual(['afterLogic', 'afterMount'])
+    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'beforeReduxStore', 'legacyBuild', 'afterLogic', 'afterMount'])
 
     const logic = kea({})
     logic.mount()
@@ -204,7 +137,7 @@ describe('plugins', () => {
   })
 
   test('can not activate the same plugin twice', () => {
-    resetContext({ skipPlugins: ['listeners'] })
+    resetContext()
 
     const testPlugin = {
       name: 'test',

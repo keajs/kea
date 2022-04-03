@@ -19,20 +19,11 @@ describe('context', () => {
 
     expect(getContext()).toMatchObject({
       plugins: {
-        activated: [{ name: 'core' }, { name: 'listeners' }],
-        // buildSteps: {},
-        // logicFields: {},
-        // events: {}
+        activated: [expect.objectContaining({ name: 'core' })],
       },
 
       input: {
-        logicPathCreators: new Map(),
-        logicPathCounter: 0,
         defaults: undefined,
-      },
-
-      build: {
-        cache: {},
       },
 
       mount: {
@@ -78,8 +69,8 @@ describe('context', () => {
         ranNewBuildStep: false,
       }),
 
-      buildSteps: {
-        newBuildStep(logic, input) {
+      events: {
+        legacyBuild(logic, input) {
           logic.ranNewBuildStep = true
         },
       },
@@ -87,7 +78,7 @@ describe('context', () => {
 
     expect(getContext()).toMatchObject({
       plugins: {
-        activated: [{ name: 'core' }, { name: 'listeners' }],
+        activated: [{ name: 'core' }],
       },
     })
 
@@ -95,18 +86,9 @@ describe('context', () => {
 
     expect(getContext()).toMatchObject({
       plugins: {
-        activated: [{ name: 'core' }, { name: 'listeners' }, { name: 'test' }],
+        activated: [{ name: 'core' }, { name: 'test' }],
       },
     })
-
-    expect(Object.keys(getContext().plugins.buildSteps)).toEqual([
-      ...Object.keys(corePlugin.buildSteps),
-      ...Object.keys(listenersPlugin.buildSteps),
-      'newBuildStep',
-    ])
-
-    expect(getContext().plugins.buildSteps.connect).toEqual([corePlugin.buildSteps.connect])
-    expect(getContext().plugins.buildSteps.newBuildStep).toEqual([testPlugin.buildSteps.newBuildStep])
 
     // const logic = kea({ options:{lazy:true}})
     const logic = kea({})
@@ -122,7 +104,7 @@ describe('context', () => {
     expect(getContext()).toBeDefined()
     expect(getContext()).toMatchObject({
       plugins: {
-        activated: [{ name: 'core' }, { name: 'listeners' }, { name: 'test' }],
+        activated: [expect.objectContaining({ name: 'core' }), expect.objectContaining({ name: 'test' })],
       },
     })
   })

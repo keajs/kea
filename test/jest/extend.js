@@ -8,7 +8,7 @@ describe('extend', () => {
     resetContext()
   })
 
-  test.skip('can not extend when mounted', () => {
+  test('can not extend when mounted', () => {
     const logic = kea({
       actions: () => ({
         doit: true,
@@ -23,7 +23,7 @@ describe('extend', () => {
           domore: true,
         }),
       })
-    }).toThrowError('[KEA] Can not extend logic once it has been built!')
+    }).toThrowError('[KEA] Can not extend logic once it has been built.')
   })
 
   test('can extend with .extend', () => {
@@ -187,11 +187,11 @@ describe('extend', () => {
     expect(Object.keys(logic.build().actions).sort()).toEqual(['doit', 'domore'])
   })
 
-  test('can extend in plugins in buildSteps', () => {
+  test('can extend in plugins in legacyBuild', () => {
     const testPlugin = {
       name: 'testPlugin',
-      buildSteps: {
-        newStep(logic, input) {
+      events: {
+        legacyBuild(logic, input) {
           if (!logic.actions.domore) {
             logic.extend({
               actions: () => ({
@@ -460,16 +460,16 @@ describe('extend', () => {
     })
 
     const logic2 = kea({
-      inherit: [logic],
       path: ['second'],
+      inherit: [logic],
       actions: {
         domore: true,
       },
     })
 
     const logic3 = kea({
-      inherit: [logic2],
       path: ['third'],
+      inherit: [logic2],
       actions: {
         doevenmore: true,
       },

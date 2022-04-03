@@ -5,6 +5,7 @@ import { mountLogic, unmountLogic } from './mount'
 
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext } from '../types'
 import { addConnection } from '../core/connect'
+import { key, path, props } from '../core'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
@@ -15,6 +16,10 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) 
     input(logic)
   } else {
     // Legacy kea({}) object style
+    'props' in input && props(input.props)(logic)
+    'key' in input && input.key && key(input.key)(logic)
+    'path' in input && input.path && path(input.path)(logic)
+
     if (input.inherit) {
       for (const inheritLogic of input.inherit) {
         for (const inheritInput of inheritLogic.inputs) {
@@ -22,7 +27,9 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) 
         }
       }
     }
+
     runPlugins('legacyBuild', logic, input)
+
     if (input.extend) {
       for (const innerInput of input.extend) {
         applyInputToLogic(logic, innerInput)
@@ -50,6 +57,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
   // create a random path
   const uniqueId = ++getContext().input.counter
   const path = [...getContext().options.defaultPath, uniqueId]
+  ;(path as any)['_keaAutomaticPath'] = true
   let finishedBuild = false
 
   // create a blank logic, and add the basic fields and methods
