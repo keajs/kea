@@ -25,29 +25,3 @@ exports[`snapshot snapshots must match 1`] = `
   </div>
 </div>
 `;
-
-exports[`snapshots must match 1`] = `
-<div>
-  <div
-    className="id"
-  >
-    12
-  </div>
-  <div
-    className="name"
-  >
-    chirpy
-  </div>
-  <div
-    className="capitalizedName"
-  >
-    Chirpy
-  </div>
-  <div
-    className="updateName"
-    onClick={[Function]}
-  >
-    updateName
-  </div>
-</div>
-`;

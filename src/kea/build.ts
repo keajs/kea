@@ -120,6 +120,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
     finishedBuild = true
     setCachedBuiltLogic(wrapper, props, logic)
     runPlugins('afterBuild', logic, wrapper.inputs)
+  } catch (e) {
+    throw e
   } finally {
     buildHeap.pop()
   }
