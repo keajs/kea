@@ -3,7 +3,6 @@ import { kea, getContext, resetContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -22,7 +21,6 @@ describe('connect', () => {
       reducers: ({ actions }) => ({
         description: [
           'default',
-          PropTypes.string,
           {
             [actions.updateDescription]: (_, payload) => payload.description,
           },
@@ -42,7 +40,6 @@ describe('connect', () => {
       reducers: ({ actions }) => ({
         name: [
           'chirpy',
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },
@@ -59,7 +56,6 @@ describe('connect', () => {
               .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
               .join(' ')
           },
-          PropTypes.string,
         ],
       }),
     })
@@ -118,7 +114,6 @@ describe('connect', () => {
       reducers: ({ actions }) => ({
         description: [
           'default',
-          PropTypes.string,
           {
             [actions.updateDescription]: (_, payload) => payload.description,
           },
@@ -138,7 +133,6 @@ describe('connect', () => {
       reducers: ({ actions }) => ({
         name: [
           'chirpy',
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },
@@ -155,7 +149,6 @@ describe('connect', () => {
               .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
               .join(' ')
           },
-          PropTypes.string,
         ],
       }),
     })
@@ -215,7 +208,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         description: [
           props.defaultDescription || '',
-          PropTypes.string,
           {
             [actions.updateDescription]: (_, payload) => payload.description,
           },
@@ -235,7 +227,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         name: [
           `chirpy-${props.id}`,
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },
@@ -252,7 +243,6 @@ describe('connect', () => {
               .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
               .join(' ')
           },
-          PropTypes.string,
         ],
       }),
     })
@@ -312,7 +302,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         description: [
           'default',
-          PropTypes.string,
           {
             [actions.updateDescription]: (_, payload) => payload.description,
           },
@@ -332,7 +321,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         name: [
           `chirpy-${props.id}`,
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },
@@ -357,7 +345,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         description: [
           'default',
-          PropTypes.string,
           {
             [actions.updateDescription]: (_, payload) => payload.description,
           },
@@ -375,7 +362,6 @@ describe('connect', () => {
       reducers: ({ actions, props }) => ({
         name: [
           `chirpy-${props.id}`,
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },

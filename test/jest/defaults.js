@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -34,7 +33,6 @@ test('defaults from props for lazy', () => {
     reducers: ({ actions, props, selectors }) => ({
       propsName: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -51,7 +49,6 @@ test('defaults from props for lazy', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -105,7 +102,6 @@ test('defaults from selectors', () => {
     reducers: ({ actions }) => ({
       storedName: [
         'storedName',
-        PropTypes.string,
         {
           [actions.updateStoredName]: (_, payload) => payload.storedName,
         },
@@ -128,7 +124,6 @@ test('defaults from selectors', () => {
     reducers: ({ actions, props, selectors }) => ({
       connectedName: [
         selectors.storedName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -137,7 +132,6 @@ test('defaults from selectors', () => {
       // with another selector or mount it before building this logic
       directName: [
         (state) => randomStore.selectors.storedName(state),
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -154,7 +148,6 @@ test('defaults from selectors', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -217,7 +210,6 @@ test('defaults from input.defaults selector', () => {
     reducers: ({ actions }) => ({
       storedName: [
         'storedName',
-        PropTypes.string,
         {
           [actions.updateStoredName]: (_, payload) => payload.storedName,
         },
@@ -249,14 +241,12 @@ test('defaults from input.defaults selector', () => {
     reducers: ({ actions }) => ({
       connectedName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       directName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -273,7 +263,6 @@ test('defaults from input.defaults selector', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -339,7 +328,6 @@ test('defaults from props via input.defaults without selector', () => {
     reducers: ({ actions }) => ({
       propsName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -356,7 +344,6 @@ test('defaults from props via input.defaults without selector', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -408,7 +395,6 @@ test('defaults from selectors in input.defaults without selector', () => {
     reducers: ({ actions }) => ({
       storedName: [
         'storedName',
-        PropTypes.string,
         {
           [actions.updateStoredName]: (_, payload) => payload.storedName,
         },
@@ -435,14 +421,12 @@ test('defaults from selectors in input.defaults without selector', () => {
     reducers: ({ actions }) => ({
       connectedName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       directName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -459,7 +443,6 @@ test('defaults from selectors in input.defaults without selector', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -526,21 +509,18 @@ test('defaults from input.defaults as object', () => {
     reducers: ({ actions }) => ({
       propsName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       connectedName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       directName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -557,7 +537,6 @@ test('defaults from input.defaults as object', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -603,7 +582,6 @@ test('defaults from selector that returns an object', () => {
     reducers: ({ actions }) => ({
       object: [
         { propsName: 'henry', connectedName: 'george', directName: 'joe' },
-        PropTypes.object,
         {
           [actions.updateObject]: (state, payload) => ({ ...state, ...payload.object }),
         },
@@ -626,21 +604,18 @@ test('defaults from selector that returns an object', () => {
     reducers: ({ actions }) => ({
       propsName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       connectedName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
       ],
       directName: [
         '',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -657,7 +632,6 @@ test('defaults from selector that returns an object', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })

@@ -1,8 +1,6 @@
 /* global test, expect */
 import { kea, resetContext } from '../../src'
 
-import PropTypes from 'prop-types'
-
 describe('reducers', () => {
   test('it converts reducer arrays correctly', () => {
     resetContext()

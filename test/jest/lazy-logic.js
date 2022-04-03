@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -20,7 +19,6 @@ test('eager logic loading works', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -32,7 +30,6 @@ test('eager logic loading works', () => {
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -43,7 +40,6 @@ test('eager logic loading works', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -102,7 +98,6 @@ test('lazy logic loading works', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -114,7 +109,6 @@ test('lazy logic loading works', () => {
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -125,7 +119,6 @@ test('lazy logic loading works', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })

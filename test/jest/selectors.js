@@ -1,8 +1,6 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../../src'
 
-import PropTypes from 'prop-types'
-
 beforeEach(() => {
   resetContext({ createStore: true })
 })
@@ -15,12 +13,12 @@ test('selectors have the store as a default', () => {
 
   const logic = kea({
     reducers: ({ actions }) => ({
-      books: [books, PropTypes.object, {}],
-      bookId: [1, PropTypes.number, {}],
+      books: [books, {}],
+      bookId: [1, {}],
     }),
 
     selectors: ({ selectors }) => ({
-      book: [() => [selectors.books, selectors.bookId], (books, bookId) => books[bookId], PropTypes.string],
+      book: [() => [selectors.books, selectors.bookId], (books, bookId) => books[bookId]],
     }),
   })
 
@@ -91,8 +89,8 @@ test('selectors run only once when input has not changed', () => {
 
   const logic = kea({
     reducers: ({ actions }) => ({
-      books: [books, PropTypes.object, {}],
-      bookId: [1, PropTypes.number, {}],
+      books: [books, {}],
+      bookId: [1, {}],
     }),
 
     selectors: ({ selectors }) => ({
@@ -102,7 +100,6 @@ test('selectors run only once when input has not changed', () => {
           selectorRan += 1
           return books[bookId]
         },
-        PropTypes.string,
       ],
     }),
   })

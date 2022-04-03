@@ -3,7 +3,6 @@ import { kea, useValues, useAllValues, useActions, useKea, getContext, resetCont
 
 import './helper/jsdom'
 import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen, fireEvent } from '@testing-library/react'
 
@@ -21,7 +20,6 @@ test('useValues and useActions hooks works', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -33,7 +31,6 @@ test('useValues and useActions hooks works', () => {
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -44,7 +41,6 @@ test('useValues and useActions hooks works', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -134,7 +130,6 @@ test('useValues and useActions hooks accept logic built with props', () => {
     reducers: ({ actions, props }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -146,7 +141,6 @@ test('useValues and useActions hooks accept logic built with props', () => {
         (name) => {
           return name.toUpperCase()
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -201,7 +195,6 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
     reducers: ({ actions, props }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -213,7 +206,6 @@ test('can change key/path of logic once it has been accessed in a hook', () => {
         (name) => {
           return name.toUpperCase()
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -325,8 +317,7 @@ test('can define logic with useKea', () => {
       reducers: ({ actions, props }) => ({
         name: [
           props.defaultName,
-          PropTypes.string,
-          {
+            {
             [actions.updateName]: (state, payload) => payload.name,
           },
         ],
@@ -337,8 +328,7 @@ test('can define logic with useKea', () => {
           (name) => {
             return name.toUpperCase()
           },
-          PropTypes.string,
-        ],
+          ],
       }),
     })
     const innerLogic = logic({ id, defaultName: 'brad' })
@@ -445,7 +435,6 @@ test('can get all props with useAllValuess', () => {
     reducers: ({ actions, props }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -457,7 +446,6 @@ test('can get all props with useAllValuess', () => {
         (name) => {
           return name.toUpperCase()
         },
-        PropTypes.string,
       ],
     }),
   })

@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -25,7 +24,6 @@ test('can use withkey for actions and props', () => {
     reducers: ({ actions, props, key }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },

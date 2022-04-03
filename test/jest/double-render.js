@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -22,7 +21,6 @@ test('does not double render with the same props', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -34,7 +32,6 @@ test('does not double render with the same props', () => {
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -45,7 +42,6 @@ test('does not double render with the same props', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })

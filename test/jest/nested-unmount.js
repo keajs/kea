@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
@@ -23,7 +22,6 @@ test('updating state to remove logic from react unmounts neatly', () => {
     reducers: ({ actions, props, key }) => ({
       name: [
         'George',
-        PropTypes.string,
         {
           [actions.updateName]: (_, payload) => payload.name,
         },
@@ -50,7 +48,6 @@ test('updating state to remove logic from react unmounts neatly', () => {
     reducers: ({ actions, props, key }) => ({
       innerShown: [
         true,
-        PropTypes.bool,
         {
           [actions.showInner]: () => true,
           [actions.hideInner]: () => false,
@@ -107,7 +104,6 @@ test('swapping out connected logic gives the right state', () => {
     reducers: ({ actions, props, key }) => ({
       editShown: [
         false,
-        PropTypes.bool,
         {
           [actions.showEdit]: () => true,
           [actions.hideEdit]: () => false,
@@ -115,7 +111,6 @@ test('swapping out connected logic gives the right state', () => {
       ],
       name: [
         'Bob',
-        PropTypes.string,
         {
           [actions.updateName]: (_, payload) => payload.name,
         },
@@ -213,7 +208,6 @@ test('it also works with dynamic logic (with reducers)', () => {
     reducers: ({ actions }) => ({
       elements: [
         {},
-        PropTypes.object,
         {
           [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
           [actions.updateAllNames]: (state, payload) => {
@@ -227,14 +221,12 @@ test('it also works with dynamic logic (with reducers)', () => {
       ],
       deletedElements: [
         {},
-        PropTypes.object,
         {
           [actions.removeElementById]: (state, payload) => ({ ...state, [payload.id]: true }),
         },
       ],
       counter: [
         0,
-        PropTypes.number,
         {
           [actions.increment]: (state) => state + 1,
         },
@@ -255,7 +247,7 @@ test('it also works with dynamic logic (with reducers)', () => {
     reducers: () => ({}),
 
     selectors: ({ selectors }) => ({
-      element: [() => [selectors.elements, (_, props) => props.id], (elements, id) => elements[id], PropTypes.object],
+      element: [() => [selectors.elements, (_, props) => props.id], (elements, id) => elements[id]],
     }),
   })
 
@@ -367,7 +359,6 @@ test('it also works with dynamic logic (without reducers)', () => {
     reducers: ({ actions }) => ({
       elements: [
         {},
-        PropTypes.object,
         {
           [actions.addElement]: (state, payload) => ({ ...state, [payload.element.id]: payload.element }),
           [actions.updateAllNames]: (state, payload) => {
@@ -381,7 +372,6 @@ test('it also works with dynamic logic (without reducers)', () => {
       ],
       deletedElements: [
         {},
-        PropTypes.object,
         {
           [actions.removeElementById]: (state, payload) => {
             return { ...state, [payload.id]: true }
@@ -390,7 +380,6 @@ test('it also works with dynamic logic (without reducers)', () => {
       ],
       counter: [
         0,
-        PropTypes.number,
         {
           [actions.increment]: (state) => state + 1,
         },
@@ -411,7 +400,7 @@ test('it also works with dynamic logic (without reducers)', () => {
     // reducers: () => ({}),
 
     selectors: ({ selectors }) => ({
-      element: [() => [selectors.elements, (_, props) => props.id], (elements, id) => elements[id], PropTypes.object],
+      element: [() => [selectors.elements, (_, props) => props.id], (elements, id) => elements[id]],
     }),
   })
 

@@ -2,7 +2,6 @@
 import { kea, getStore, resetContext, getContext, useValues, Provider } from '../../src'
 import './helper/jsdom'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Provider as ReduxProvider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -65,7 +64,6 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -81,7 +79,6 @@ test('getStore preloaded state will be immidiatly overiden by reducer default st
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })

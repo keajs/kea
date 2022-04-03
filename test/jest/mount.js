@@ -2,7 +2,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
-import PropTypes from 'prop-types'
 
 beforeEach(() => {
   resetContext()
@@ -19,7 +18,6 @@ test('can mount stores and have them connect to redux without react', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -31,7 +29,6 @@ test('can mount stores and have them connect to redux without react', () => {
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -42,7 +39,6 @@ test('can mount stores and have them connect to redux without react', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -76,7 +72,6 @@ test('can mount stores with keys and have them connet to redux without react', (
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -88,7 +83,6 @@ test('can mount stores with keys and have them connet to redux without react', (
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -99,7 +93,6 @@ test('can mount stores with keys and have them connet to redux without react', (
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -132,7 +125,6 @@ test('can mount with callback', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -175,7 +167,6 @@ test('can mount with a promise', async () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -220,7 +211,6 @@ test('can mount with a async/await', async () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },

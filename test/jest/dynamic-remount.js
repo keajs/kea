@@ -3,7 +3,6 @@ import { kea, useValues, useActions, getContext, resetContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
@@ -22,7 +21,6 @@ test('can change key/path of logic once it has been wrapped', () => {
     reducers: ({ actions, props }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -34,7 +32,6 @@ test('can change key/path of logic once it has been wrapped', () => {
         (name) => {
           return name.toUpperCase()
         },
-        PropTypes.string,
       ],
     }),
   })

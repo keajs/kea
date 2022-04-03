@@ -1,8 +1,6 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext, getContext, isBreakpoint, getPluginContext } from '../../src'
 
-import PropTypes from 'prop-types'
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 beforeEach(() => {
@@ -25,7 +23,6 @@ test('listeners work', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -64,7 +61,6 @@ test('listeners work with local action keys', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           updateName: (state, payload) => payload.name,
         },
@@ -98,7 +94,6 @@ test('sharedListeners work', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -135,7 +130,6 @@ test('many listeners for one action', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -184,7 +178,6 @@ test('extend works', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },

@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React from 'react'
-import PropTypes from 'prop-types'
 import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
@@ -23,7 +22,6 @@ test('multiple dynamic logic stores', () => {
     reducers: ({ actions, props, key }) => ({
       name: [
         props.defaultName,
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },

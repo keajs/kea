@@ -1,8 +1,6 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext, keaReducer } from '../../src'
 
-import PropTypes from 'prop-types'
-
 beforeEach(() => {
   resetContext()
 })
@@ -18,7 +16,6 @@ test('singleton logic has all the right properties', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -30,7 +27,6 @@ test('singleton logic has all the right properties', () => {
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -41,7 +37,6 @@ test('singleton logic has all the right properties', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -77,7 +72,6 @@ test('singleton logic has all the right properties', () => {
   expect(Object.keys(response.reducers).sort()).toEqual(['name'])
 
   expect(response.reducers).toHaveProperty('name')
-  expect(response.propTypes.name).toEqual(PropTypes.string)
   expect(response.defaults.name).toEqual('chirpy')
 
   const nameReducer = response.reducers.name
@@ -85,7 +79,6 @@ test('singleton logic has all the right properties', () => {
   expect(nameReducer('', updateName('newName'))).toBe('newName')
 
   expect(response.reducers).not.toHaveProperty('capitalizedName')
-  expect(response.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
   expect(response.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
 
   // big reducer
@@ -116,7 +109,6 @@ test('it is not a singleton if there is a key', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -132,7 +124,6 @@ test('it is not a singleton if there is a key', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })

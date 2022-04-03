@@ -3,7 +3,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import './helper/jsdom'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
@@ -28,7 +27,7 @@ test("selectors have access to the component's props", () => {
 
   const booksLogic = kea({
     reducers: ({ actions }) => ({
-      books: [books, PropTypes.object, {}],
+      books: [books, {}],
     }),
   })
 
@@ -37,7 +36,6 @@ test("selectors have access to the component's props", () => {
       book: [
         () => [booksLogic.selectors.books, (_, props) => props.bookId],
         (books, bookId) => books[bookId],
-        PropTypes.string,
       ],
     }),
   })

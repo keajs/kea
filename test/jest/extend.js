@@ -2,7 +2,6 @@
 import { kea } from '../../src'
 import './helper/jsdom'
 import { resetContext } from '../../src'
-import PropTypes from 'prop-types'
 
 beforeEach(() => {
   resetContext()
@@ -287,7 +286,6 @@ test('extending logic merges the right properties', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -299,7 +297,6 @@ test('extending logic merges the right properties', () => {
         (capitalizedName) => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -310,7 +307,6 @@ test('extending logic merges the right properties', () => {
             .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
     extend: [
@@ -321,8 +317,7 @@ test('extending logic merges the right properties', () => {
         reducers: ({ actions }) => ({
           description: [
             '',
-            PropTypes.string,
-            {
+                {
               [actions.updateDescription]: (state, payload) => payload.description,
             },
           ],
@@ -331,8 +326,7 @@ test('extending logic merges the right properties', () => {
           upperCaseDescription: [
             () => [selectors.description],
             (description) => description.toUpperCase(),
-            PropTypes.string,
-          ],
+              ],
         }),
       },
     ],
@@ -362,7 +356,6 @@ test('extending logic merges the right properties', () => {
 
   expect(logic.reducers).toHaveProperty('name')
   expect(logic.reducers).toHaveProperty('description')
-  expect(logic.propTypes.name).toEqual(PropTypes.string)
   expect(logic.defaults.name).toEqual('chirpy')
 
   const nameReducer = logic.reducers.name
@@ -370,7 +363,6 @@ test('extending logic merges the right properties', () => {
   expect(nameReducer('', updateName('newName'))).toBe('newName')
 
   expect(logic.reducers).not.toHaveProperty('capitalizedName')
-  expect(logic.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
   expect(logic.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
 
   // big reducer

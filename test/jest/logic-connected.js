@@ -3,8 +3,6 @@ import { kea, resetContext, keaReducer, getContext } from '../../src'
 
 import { createStore, combineReducers } from 'redux'
 
-import PropTypes from 'prop-types'
-
 beforeEach(() => {
   resetContext({ autoMount: true, createStore: true })
 })
@@ -23,7 +21,6 @@ test('connected props and actions get passed, reducers get added to the store', 
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -35,7 +32,6 @@ test('connected props and actions get passed, reducers get added to the store', 
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -46,7 +42,6 @@ test('connected props and actions get passed, reducers get added to the store', 
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -124,7 +119,6 @@ test('connected props can be used as selectors', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -143,7 +137,6 @@ test('connected props can be used as selectors', () => {
         capitalizedName => {
           return capitalizedName.toUpperCase()
         },
-        PropTypes.string,
       ],
       capitalizedName: [
         () => [selectors.name],
@@ -154,7 +147,6 @@ test('connected props can be used as selectors', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -187,7 +179,6 @@ test('can get everything with *', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -226,7 +217,6 @@ test('have it in the store only if there is a reducer', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -242,7 +232,6 @@ test('have it in the store only if there is a reducer', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -255,7 +244,6 @@ test('have it in the store only if there is a reducer', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -278,7 +266,6 @@ test('have it in the store only if there is a reducer', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
@@ -318,7 +305,6 @@ test('have it in the store only if there is a reducer', () => {
     reducers: ({ actions }) => ({
       name: [
         'chirpy',
-        PropTypes.string,
         {
           [actions.updateName]: (state, payload) => payload.name,
         },
@@ -341,7 +327,6 @@ test('have it in the store only if there is a reducer', () => {
             .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
             .join(' ')
         },
-        PropTypes.string,
       ],
     }),
   })
