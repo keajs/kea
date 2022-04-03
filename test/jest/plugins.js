@@ -127,7 +127,13 @@ describe('plugins', () => {
     activatePlugin(testPlugin)
 
     expect(plugins.activated).toEqual([corePlugin, testPlugin])
-    expect(Object.keys(plugins.events)).toEqual(['afterPlugin', 'beforeReduxStore', 'legacyBuild', 'afterLogic', 'afterMount'])
+    expect(Object.keys(plugins.events)).toEqual([
+      'afterPlugin',
+      'beforeReduxStore',
+      'legacyBuild',
+      'afterLogic',
+      'afterMount',
+    ])
 
     const logic = kea({})
     logic.mount()

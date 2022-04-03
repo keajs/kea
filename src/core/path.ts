@@ -2,7 +2,7 @@ import { Logic, LogicBuilder, PathType, KeyType } from '../types'
 
 export function path<L extends Logic = Logic>(input: PathType | ((key: KeyType) => PathType)): LogicBuilder<L> {
   return (logic) => {
-    if (logic.path && !("_keaAutomaticPath" in logic.path)) {
+    if (logic.path && !('_keaAutomaticPath' in logic.path)) {
       // Already set a path, ignore every next call.
       return
     }

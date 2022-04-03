@@ -1,8 +1,6 @@
 /* global test, expect, beforeEach */
-import { kea} from '../../src'
+import { kea } from '../../src'
 import './helper/jsdom'
-import { corePlugin } from '../../src/core'
-import { listenersPlugin } from '../../src/core/listeners'
 import { activatePlugin, getContext, openContext, closeContext, resetContext } from '../../src'
 
 describe('context', () => {
@@ -115,7 +113,7 @@ describe('context', () => {
     expect(wrapperContexts.get(logic)).toBeDefined()
     expect(wrapperContexts.get(logic)).toEqual({
       keyBuilder: undefined,
-      builtLogics: new Map([[undefined, builtLogic]])
+      builtLogics: new Map([[undefined, builtLogic]]),
     })
 
     const dynamicLogic = kea({
@@ -126,9 +124,9 @@ describe('context', () => {
 
     expect(wrapperContexts.get(dynamicLogic)).toEqual({
       keyBuilder: expect.any(Function),
-      builtLogics: new Map([[12, builtDynamicLogic]])
+      builtLogics: new Map([[12, builtDynamicLogic]]),
     })
-    expect(wrapperContexts.get(dynamicLogic).keyBuilder({ id: 123})).toEqual(123)
+    expect(wrapperContexts.get(dynamicLogic).keyBuilder({ id: 123 })).toEqual(123)
   })
 
   describe('defaultPath', () => {
@@ -160,7 +158,6 @@ describe('context', () => {
       defaults: {
         scenes: { testy: { key: 'value', name: 'alfred', thisIs: 'missing' } },
       },
-      createStore: true,
     })
 
     expect(store.getState()).toEqual({
@@ -211,7 +208,6 @@ describe('context', () => {
         'scenes.testy': { key: 'value', name: 'alfred', thisIs: 'missing' },
       },
       flatDefaults: true,
-      createStore: true,
     })
 
     expect(store.getState()).toEqual({
@@ -253,6 +249,33 @@ describe('context', () => {
         testy: { key: 'value', name: 'alfred' },
         noDefaults: { key: 'noValue', name: 'batman' },
       },
+    })
+  })
+
+  test('context defaults work with defaults', () => {
+    const { store } = resetContext({
+      defaults: {
+        'scenes.testy': { key: 'value', name: 'alfred', thisIs: 'missing' },
+      },
+      flatDefaults: true,
+    })
+
+    const logic = kea({
+      path: ['scenes', 'testy'],
+      defaults: {
+        key: 'noValue',
+        name: 'batman',
+      },
+      reducers: {
+        key: {},
+        name: {},
+      },
+    })
+    logic.mount()
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: { testy: { key: 'value', name: 'alfred' } },
     })
   })
 

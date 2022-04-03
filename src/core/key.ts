@@ -24,7 +24,7 @@ export function key<L extends Logic = Logic>(input: (props: L['props']) => KeyTy
     logic.path = [...logic.path, logic.key]
     logic.pathString = logic.path.join('.')
     if (isAutomaticPath) {
-      (logic.path as any)['_keaAutomaticPath'] = true
+      ;(logic.path as any)['_keaAutomaticPath'] = true
     }
   }
 }

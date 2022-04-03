@@ -14,8 +14,9 @@
 import { Logic, LogicBuilder, PathType, ReducerDefinitions } from '../types'
 import { AnyAction } from 'redux'
 import { combineKeaReducers } from '../kea/reducer'
-import { getContext, getStoreState } from '../kea/context'
+import { getStoreState } from '../kea/context'
 import { createSelector } from 'reselect'
+import { getContextDefaults } from './defaults'
 
 export function rootReducer<L extends Logic = Logic>(): LogicBuilder<L> {
   return (logic) => {
@@ -43,6 +44,7 @@ export function reducers<L extends Logic = Logic>(
     if (!logic.selector) {
       rootSelector()(logic)
     }
+    const contextDefaults = getContextDefaults(logic)
 
     for (const [key, object] of Object.entries(reducers)) {
       let initialValue: any
@@ -61,10 +63,10 @@ export function reducers<L extends Logic = Logic>(
 
       // provide a default value if none previously provided
       if (typeof logic.defaults[key] === 'undefined') {
-        // TODO: context defaults?
-
-        // there is a root default selector. use it and try to get the key, fallback to initialValue
-        if (typeof logic.defaults['*'] === 'function') {
+        if (contextDefaults && typeof contextDefaults[key] !== 'undefined') {
+          logic.defaults[key] = contextDefaults[key]
+        } else if (typeof logic.defaults['*'] === 'function') {
+          // there is a root default selector. use it and try to get the key, fallback to initialValue
           logic.defaults[key] = (state: any, props: any) => {
             const v = logic.defaults['*'](state, props)[key]
             return typeof v === 'undefined' ? initialValue : typeof v === 'function' ? v(state, props) : v
