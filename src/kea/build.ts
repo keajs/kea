@@ -46,9 +46,12 @@ export function getBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: L['props'] | undefined,
 ): BuiltLogic<L> {
-  const { buildHeap } = getContext()
-
   // return a cached build if possible
+  const wrapperContext = getWrapperContext(wrapper)
+  if (wrapperContext.isBuilding) {
+    throw new Error(`[KEA] Circular build detected.`)
+  }
+
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
     if (props) {
@@ -61,7 +64,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
   const uniqueId = ++getContext().inputCounter
   const path = [...getContext().options.defaultPath, uniqueId]
   ;(path as any)['_keaAutomaticPath'] = true
-  let finishedBuild = false
+  wrapperContext.isBuilding = true
 
   // create a blank logic, and add the basic fields and methods
   // other core fields (actions, selectors, values, etc) are added with other plugins below.
@@ -77,7 +80,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
     mount: () => {
-      if (!finishedBuild) {
+      if (wrapperContext.isBuilding) {
         throw new Error(`[KEA] Tried to mount logic "${logic.pathString}" before it finished building`)
       }
       mountLogic(logic)
@@ -97,16 +100,18 @@ export function getBuiltLogic<L extends Logic = Logic>(
     },
   } as any as BuiltLogic<L>
 
-  // initialize defaults fields as requested by plugins, including core
-  for (const plugin of getContext().plugins.activated) {
-    if (plugin.defaults) {
-      const defaults = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
-      Object.assign(logic, defaults)
-    }
-  }
-
+  const { buildHeap } = getContext()
   try {
     buildHeap.push(logic)
+
+    // initialize defaults fields as requested by plugins, including core
+    for (const plugin of getContext().plugins.activated) {
+      if (plugin.defaults) {
+        const defaults = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
+        Object.assign(logic, defaults)
+      }
+    }
+
     runPlugins('beforeBuild', logic, wrapper.inputs)
 
     // apply all the inputs and builders
@@ -117,12 +122,14 @@ export function getBuiltLogic<L extends Logic = Logic>(
     // add a connection to ourselves in the end
     logic.connections[logic.pathString] = logic
 
-    finishedBuild = true
-    setCachedBuiltLogic(wrapper, props, logic)
+    wrapperContext.keyBuilder = logic.keyBuilder
+    wrapperContext.builtLogics.set(logic.key, logic)
+
     runPlugins('afterBuild', logic, wrapper.inputs)
   } catch (e) {
     throw e
   } finally {
+    wrapperContext.isBuilding = false
     buildHeap.pop()
   }
 
@@ -140,22 +147,17 @@ export function getCachedBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: Props | undefined,
 ): BuiltLogic<L> | null {
-  const { wrapperContexts } = getContext()
-  const wrapperContext = wrapperContexts.get(wrapper) as WrapperContext<L> | undefined
-  const builtLogic = wrapperContext?.builtLogics.get(wrapperContext?.keyBuilder?.(props ?? {}))
+  const wrapperContext = getWrapperContext(wrapper)
+  const builtLogic = wrapperContext.builtLogics.get(wrapperContext?.keyBuilder?.(props ?? {}))
   return builtLogic ?? null
 }
 
-export function setCachedBuiltLogic<L extends Logic = Logic>(
-  wrapper: LogicWrapper<L>,
-  props: Props | undefined,
-  logic: BuiltLogic<L>,
-): void {
+export function getWrapperContext<L extends Logic = Logic>(wrapper: LogicWrapper<L>): WrapperContext<L> {
   const { wrapperContexts } = getContext()
-  let wrapperContext = wrapperContexts.get(wrapper)
+  let wrapperContext = wrapperContexts.get(wrapper) as WrapperContext<L> | undefined
   if (!wrapperContext) {
-    wrapperContext = { keyBuilder: logic.keyBuilder, builtLogics: new Map() }
+    wrapperContext = { keyBuilder: undefined, builtLogics: new Map(), isBuilding: false }
     wrapperContexts.set(wrapper, wrapperContext)
   }
-  wrapperContext.builtLogics.set(logic.key, logic)
+  return wrapperContext
 }

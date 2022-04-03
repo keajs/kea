@@ -394,6 +394,7 @@ export interface KeaPlugin {
 }
 
 export interface WrapperContext<L extends Logic = Logic> {
+  isBuilding: boolean
   keyBuilder: L['keyBuilder']
   builtLogics: Map<KeyType | undefined, BuiltLogic<L>>
 }

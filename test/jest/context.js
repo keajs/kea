@@ -113,6 +113,7 @@ describe('context', () => {
     expect(wrapperContexts.get(logic)).toBeDefined()
     expect(wrapperContexts.get(logic)).toEqual({
       keyBuilder: undefined,
+      isBuilding: false,
       builtLogics: new Map([[undefined, builtLogic]]),
     })
 
@@ -124,6 +125,7 @@ describe('context', () => {
 
     expect(wrapperContexts.get(dynamicLogic)).toEqual({
       keyBuilder: expect.any(Function),
+      isBuilding: false,
       builtLogics: new Map([[12, builtDynamicLogic]]),
     })
     expect(wrapperContexts.get(dynamicLogic).keyBuilder({ id: 123 })).toEqual(123)

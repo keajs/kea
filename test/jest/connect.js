@@ -407,34 +407,7 @@ describe('connect', () => {
       let unmount
       expect(() => {
         unmount = logic1.mount()
-      }).not.toThrow()
-
-      // own reducers
-      expect(logic1.values.value1).toEqual('string1')
-      expect(logic2.values.value2).toEqual('string2')
-
-      // connected values
-      expect(logic1.values.connectValue2).toEqual('string2')
-      expect(logic2.values.connectValue1).toEqual('string1')
-
-      logic2.actions.action1()
-
-      expect(logic1.values.value1).toEqual('action1')
-      expect(logic2.values.value2).toEqual('action1')
-      expect(logic1.values.connectValue2).toEqual('action1')
-      expect(logic2.values.connectValue1).toEqual('action1')
-
-      logic1.actions.action2()
-
-      expect(logic1.values.value1).toEqual('action2')
-      expect(logic2.values.value2).toEqual('action2')
-      expect(logic1.values.connectValue2).toEqual('action2')
-      expect(logic2.values.connectValue1).toEqual('action2')
-
-      unmount()
-
-      expect(logic1.isMounted()).toBeFalsy()
-      expect(logic2.isMounted()).toBeFalsy()
+      }).toThrow("[KEA] Circular build detected.")
     }
 
     test('built logic', () => runTest(true))
