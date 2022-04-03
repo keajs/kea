@@ -22,10 +22,6 @@ describe('context', () => {
         activated: [expect.objectContaining({ name: 'core' })],
       },
 
-      input: {
-        defaults: undefined,
-      },
-
       mount: {
         counter: {},
         mounted: {},

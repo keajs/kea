@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 
 describe('dynamic remount', () => {
   beforeEach(() => {
-    resetContext({ createStore: true })
+    resetContext()
   })
 
   test('can change key/path of logic once it has been wrapped', () => {

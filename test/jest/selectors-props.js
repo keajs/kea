@@ -18,7 +18,7 @@ describe('selectors props', () => {
     }
   }
 
-  test("selectors have access to the component's props", () => {
+  test("selectors have access to the wrapped component's props", () => {
     const { store } = getContext()
 
     const books = {
@@ -33,6 +33,7 @@ describe('selectors props', () => {
     })
 
     const bookDetailLogic = kea({
+      key: (props) => props.bookId,
       selectors: ({ selectors }) => ({
         book: [() => [booksLogic.selectors.books, (_, props) => props.bookId], (books, bookId) => books[bookId]],
       }),
