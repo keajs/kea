@@ -1,9 +1,10 @@
 export * from './types'
 export * from './utils'
+export * from './core'
 
 import { resetContext } from './kea/context'
 
-export { kea, connect } from './kea'
+export { kea } from './kea'
 
 export { useValues, useAllValues, useActions, useMountedLogic, useKea } from './react/hooks'
 export { BindLogic } from './react/bind'
