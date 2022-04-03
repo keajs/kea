@@ -9,8 +9,11 @@ export function path<L extends Logic = Logic>(input: PathType | ((key: KeyType) 
         )}`,
       )
     }
-    const path: PathType = typeof input === 'function' ? input(logic.key!) : input
-    logic.path = typeof logic.key !== 'undefined' ? [...path, logic.key] : path
+    if (typeof input === 'function') {
+      logic.path = input(logic.key!)
+    } else {
+      logic.path = typeof logic.key !== 'undefined' ? [...input, logic.key] : input
+    }
     logic.pathString = logic.path.join('.')
   }
 }
