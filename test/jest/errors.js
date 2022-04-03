@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getContext, resetContext } from '../../src'
+import { kea, getContext, resetContext, reducers, selectors, path } from '../../src'
 import { unmountedActionError } from '../../src/kea/kea'
 
 describe('errors', () => {
@@ -205,5 +205,67 @@ describe('errors', () => {
     }).toThrow('[KEA] Can not find path "scenes.misc.foo" in the store.')
 
     unmount()
+  })
+
+  test('creating too many selectors or reducers', () => {
+    expect(() => {
+      kea([
+        path(['first']),
+        reducers({
+          something: [true],
+        }),
+        selectors({
+          somethingElse: [(s) => [], () => null],
+        }),
+      ]).mount()
+    }).not.toThrow()
+
+    expect(() => {
+      kea([
+        path(['second']),
+        reducers({
+          something: [true],
+        }),
+        selectors({
+          something: [(s) => [], () => null],
+        }),
+      ]).mount()
+    }).toThrow('[KEA] Logic "second" selector "something" already exists')
+
+    expect(() => {
+      kea([
+        path(['second']),
+        selectors({
+          something: [(s) => [], () => null],
+        }),
+        selectors({
+          something: [(s) => [], () => null],
+        }),
+      ]).mount()
+    }).toThrow('[KEA] Logic "second" selector "something" already exists')
+
+    expect(() => {
+      kea([
+        path(['third']),
+        selectors({
+          something: [(s) => [], () => null],
+        }),
+        reducers({
+          something: [true],
+        }),
+      ]).mount()
+    }).toThrow('[KEA] Logic "third" can\'t add reducer "something" because a selector with the same name exists.')
+
+    expect(() => {
+      kea([
+        path(['third']),
+        reducers({
+          something: [true],
+        }),
+        reducers({
+          something: [true],
+        }),
+      ]).mount()
+    }).not.toThrow()
   })
 })

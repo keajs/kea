@@ -1,5 +1,5 @@
 import { githubLogicType } from './githubLogicType'
-import { kea } from '../index'
+import { kea } from '../../kea'
 import { connect, actions, defaults, reducers, selectors, afterMount, listeners, key, props, path } from '../../core'
 
 const API_URL = 'https://api.github.com'

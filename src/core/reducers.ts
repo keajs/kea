@@ -17,6 +17,7 @@ import { combineKeaReducers } from '../kea/reducer'
 import { getStoreState } from '../kea/context'
 import { createSelector } from 'reselect'
 import { getContextDefaults } from './defaults'
+import { addSelectorAndValue } from './selectors'
 
 export function rootReducer<L extends Logic = Logic>(): LogicBuilder<L> {
   return (logic) => {
@@ -85,18 +86,23 @@ export function reducers<L extends Logic = Logic>(
         mapping[mappingKey] = reducer[key]
       }
 
+      if (typeof mapping['undefined'] !== 'undefined' && typeof logic.actions['undefined'] === 'undefined') {
+        throw new Error(
+          `[KEA] Logic "${
+            logic.pathString
+          }" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`,
+        )
+      }
+
+      // first time adding a reducer, but already a selector (having reducer + selector both is ok)
+      if (!logic.reducers[key] && logic.selectors[key]) {
+        throw new Error(`[KEA] Logic "${logic.pathString}" can't add reducer "${key}" because a selector with the same name exists.`)
+      }
+
       // create reducer for mapping
       if (Object.keys(mapping).length === 0) {
         logic.reducers[key] = () => logic.defaults[key]
       } else {
-        if (typeof mapping['undefined'] !== 'undefined' && typeof logic.actions['undefined'] === 'undefined') {
-          throw new Error(
-            `[KEA] Logic "${
-              logic.pathString
-            }" reducer "${key}" is waiting for an action that is undefined: [${Object.keys(mapping).join(', ')}]`,
-          )
-        }
-
         logic.reducers[key] = (state: any, action: AnyAction, fullState: any) => {
           if (typeof state === 'undefined') {
             state = getDefaultState(logic.defaults[key], fullState, key, logic)
@@ -112,17 +118,11 @@ export function reducers<L extends Logic = Logic>(
 
       // create selector for reducer
       if (!logic.selectors[key]) {
-        logic.selectors[key] = createSelector(logic.selector!, (state) => state[key])
-      }
-
-      // create value for selector
-      if (!logic.values.hasOwnProperty(key)) {
-        Object.defineProperty(logic.values, key, {
-          get: function () {
-            return logic.selectors[key](getStoreState(), logic.props)
-          },
-          enumerable: true,
-        })
+        addSelectorAndValue(
+          logic,
+          key,
+          createSelector(logic.selector!, (state) => state[key]),
+        )
       }
     }
   }
