@@ -105,23 +105,24 @@ export function getBuiltLogic<L extends Logic = Logic>(
     }
   }
 
-  buildHeap.push(logic)
-  runPlugins('beforeBuild', logic, wrapper.inputs)
+  try {
+    buildHeap.push(logic)
+    runPlugins('beforeBuild', logic, wrapper.inputs)
 
-  // apply all the inputs and builders
-  for (const input of wrapper.inputs) {
-    applyInputToLogic(logic, input)
+    // apply all the inputs and builders
+    for (const input of wrapper.inputs) {
+      applyInputToLogic(logic, input)
+    }
+
+    // add a connection to ourselves in the end
+    logic.connections[logic.pathString] = logic
+
+    finishedBuild = true
+    setCachedBuiltLogic(wrapper, props, logic)
+    runPlugins('afterBuild', logic, wrapper.inputs)
+  } finally {
+    buildHeap.pop()
   }
-
-  // add a connection to ourselves in the end
-  logic.connections[logic.pathString] = logic
-
-  runPlugins('afterBuild', logic, wrapper.inputs)
-  buildHeap.pop()
-
-  // cache the logic object
-  finishedBuild = true
-  setCachedBuiltLogic(wrapper, props, logic)
 
   // if we were building something when this got triggered, add this as a dependency for the previous logic
   if (buildHeap.length > 0) {
