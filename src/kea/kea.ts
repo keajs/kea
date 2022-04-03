@@ -94,10 +94,7 @@ export function kea<L extends Logic = Logic>(
 
   wrapper.wrap = (Component: AnyComponent) => wrapComponent(Component, wrapper)
   wrapper.build = (props?: Props) => getBuiltLogic(wrapper, props)
-  wrapper.mount = () => {
-    wrapper.build().mount()
-    return () => wrapper.unmount()
-  }
+  wrapper.mount = () => wrapper.build().mount()
   wrapper.unmount = () => wrapper.build().unmount()
   wrapper.isMounted = (props?: Record<string, any>) => {
     const builtLogic = getCachedBuiltLogic(wrapper, props)

@@ -134,9 +134,8 @@ describe('mount', () => {
     })
 
     test('isMounted/findMounted() on logicWrapper does not build', () => {
-      const isLogicBuilt = () => typeof getContext().build.cache['kea.logic.1'] !== 'undefined'
-      expect(isLogicBuilt()).toBeFalsy()
       const logic = kea({})
+      const isLogicBuilt = () => !!getContext().wrapperContexts.get(logic)?.builtLogics.get(undefined)
       expect(isLogicBuilt()).toBeFalsy()
       expect(logic.isMounted()).toEqual(false)
       expect(logic.findMounted()).toEqual(null)
@@ -149,9 +148,9 @@ describe('mount', () => {
       expect(isLogicBuilt()).toBeFalsy()
     })
 
-    test('isMounted/findMounted() on logicWrapper with a key and no props throws', () => {
+    test('isMounted/findMounted() on logicWrapper with a key and no props returns false', () => {
       const logic = kea({ key: ({ id }) => id })
-      expect(() => logic.isMounted()).toThrow()
+      expect(logic.isMounted()).toBeFalsy()
     })
 
     test('isMounted/findMounted() on logicWrapper accepts props', () => {

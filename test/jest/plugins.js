@@ -4,11 +4,11 @@ import './helper/jsdom'
 import { corePlugin } from '../../src/core'
 
 describe('plugins', () => {
-  test('the core and listeners plugins are activated automatically', () => {
+  test('the core plugins is activated automatically', () => {
     resetContext()
     const { plugins } = getContext()
 
-    expect(plugins.activated).toEqual([corePlugin, listenersPlugin])
+    expect(plugins.activated).toEqual([corePlugin])
     expect(Object.keys(plugins.buildSteps)).toEqual([...Object.keys(corePlugin.buildSteps)])
   })
 

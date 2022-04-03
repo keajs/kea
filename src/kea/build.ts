@@ -70,7 +70,14 @@ export function getBuiltLogic<L extends Logic = Logic>(
         throw new Error(`[KEA] Tried to mount logic "${logic.pathString}" before it finished building`)
       }
       mountLogic(logic)
-      return () => unmountLogic(logic)
+      let unmounted = false
+      return () => {
+        if (unmounted) {
+          throw new Error(`[KEA] Tried to unmount logic "${logic.pathString}" for a second time`)
+        }
+        unmountLogic(logic)
+        unmounted = true
+      }
     },
     unmount: () => unmountLogic(logic),
     isMounted: () => {

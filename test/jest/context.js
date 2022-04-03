@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea } from '../../src'
+import { kea} from '../../src'
 import './helper/jsdom'
 import { corePlugin } from '../../src/core'
 import { listenersPlugin } from '../../src/core/listeners'
@@ -50,7 +50,6 @@ describe('context', () => {
 
       options: {
         debug: false,
-        autoMount: false,
         proxyFields: true,
         flatDefaults: false,
         attachStrategy: 'dispatch',
@@ -128,40 +127,30 @@ describe('context', () => {
     })
   })
 
-  test('logicPathCreators work as expected', () => {
-    expect(getContext()).not.toBeDefined()
+  test('wrapperContexts work as expected', () => {
+    resetContext()
+    const { wrapperContexts } = getContext()
 
-    openContext()
-    expect(getContext()).toBeDefined()
+    const logic = kea({ path: ['kea', 'misc', 'blue'] })
+    expect(wrapperContexts.get(logic)).not.toBeDefined()
+    const builtLogic = logic.build()
+    expect(wrapperContexts.get(logic)).toBeDefined()
+    expect(wrapperContexts.get(logic)).toEqual({
+      keyBuilder: undefined,
+      builtLogics: new Map([[undefined, builtLogic]])
+    })
 
-    const {
-      input: { logicPathCreators },
-    } = getContext()
-
-    const input = {
-      path: () => ['kea', 'misc', 'blue'],
-    }
-    kea(input).build()
-    expect(logicPathCreators.get(input)).not.toBeDefined()
-
-    const dynamicInput = {
+    const dynamicLogic = kea({
       key: (props) => props.id,
       path: (key) => ['kea', 'misc', 'green', key],
-    }
-    kea(dynamicInput).build({ id: 12 })
-    expect(logicPathCreators.get(dynamicInput)).not.toBeDefined()
+    })
+    const builtDynamicLogic = dynamicLogic({ id: 12 })
 
-    const pathlessInput1 = {}
-    kea(pathlessInput1).build()
-    expect(logicPathCreators.get(pathlessInput1)().join('.')).toBe('kea.logic.1')
-
-    const pathlessInput2 = {}
-    kea(pathlessInput2).build()
-    expect(logicPathCreators.get(pathlessInput2)().join('.')).toBe('kea.logic.2')
-
-    const keyNoPathInput2 = { key: (props) => props.id }
-    kea(keyNoPathInput2).build({ id: 12 })
-    expect(logicPathCreators.get(keyNoPathInput2)(12).join('.')).toBe('kea.logic.3.12')
+    expect(wrapperContexts.get(dynamicLogic)).toEqual({
+      keyBuilder: expect.any(Function),
+      builtLogics: new Map([[12, builtDynamicLogic]])
+    })
+    expect(wrapperContexts.get(dynamicLogic).keyBuilder({ id: 123})).toEqual(123)
   })
 
   describe('defaultPath', () => {
