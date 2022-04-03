@@ -1,7 +1,7 @@
 /* global test, expect, beforeEach */
 import { kea, resetContext } from '../../src'
 
-describe('with key', () => {
+describe('values', () => {
   beforeEach(() => {
     resetContext({ createStore: true })
   })

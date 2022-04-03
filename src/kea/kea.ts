@@ -131,13 +131,13 @@ export function proxyFieldToLogic<L extends Logic = Logic>(wrapper: LogicWrapper
     Object.defineProperty(wrapper, key, {
       get: function () {
         let logic = wrapper.findMounted()
-        if (!logic) {
+        if (!logic && getContext().buildHeap.length > 0) {
           logic = wrapper.build()
         }
-        if (logic.isMounted()) {
+        if (logic) {
           return logic[key]
         } else {
-          throw new Error(unmountedActionError(String(key), logic.pathString))
+          throw new Error(unmountedActionError(String(key), wrapper.build().pathString))
         }
       },
     })

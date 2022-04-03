@@ -166,21 +166,21 @@ describe('defaults', () => {
     expect(screen.getByTestId('directName')).toHaveTextContent('storedName')
 
     expect(store.getState()).toEqual({
-      kea: { logic: { 1: { storedName: 'storedName' } } },
+      kea: { logic: { 2: { storedName: 'storedName' } } },
       scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } },
     })
 
     store.dispatch(singletonLogic.actionCreators.updateStoredName('birb'))
 
     expect(store.getState()).toEqual({
-      kea: { logic: { 1: { storedName: 'birb' } } },
+      kea: { logic: { 2: { storedName: 'birb' } } },
       scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } },
     })
 
     singletonLogic.actions.updateName('birb')
 
     expect(store.getState()).toEqual({
-      kea: { logic: { 1: { storedName: 'birb' } } },
+      kea: { logic: { 2: { storedName: 'birb' } } },
       scenes: { dynamic: { connectedName: 'birb', directName: 'birb' } },
     })
 

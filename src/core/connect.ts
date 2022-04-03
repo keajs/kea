@@ -1,6 +1,6 @@
 import { BuiltLogic, Logic, LogicBuilder, LogicWrapper, Selector } from '../types'
 import { isBuiltLogic, isLogicWrapper } from '../utils'
-import { getContext } from '../kea/context'
+import { getContext, getStoreState } from '../kea/context'
 import { createActionType } from './actions'
 
 /*
@@ -53,22 +53,35 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
         }
         if (isBuiltLogic(otherLogic)) {
           addConnection(logic, otherLogic)
+
           if (getContext().buildHeap.includes(otherLogic)) {
             // circular build (otherLogic -> logic -> otherLogic)
             logic.actionCreators[to] = (...args: any[]) => (otherLogic as BuiltLogic).actionCreators[from](...args)
             logic.actionCreators[to].toString = () => createActionType(from, (otherLogic as BuiltLogic).pathString)
+            logic.actionTypes[to] = logic.actionCreators[to].toString()
           } else {
             logic.actionCreators[to] = otherLogic.actionCreators[from]
+            logic.actionTypes[to] = otherLogic.actionTypes[from]
           }
         } else {
           logic.actionCreators[to] = (otherLogic as Record<string, any>)[from]
-        }
-
-        if (process.env.NODE_ENV !== 'production') {
-          if (typeof logic.actionCreators[to] === 'undefined') {
-            throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
+          if (logic.actionCreators[to]._isKeaAction) {
+            logic.actionTypes[to] = logic.actionCreators[to].toString()
+          } else {
+            logic.actionTypes[to] = logic.actionCreators[to]().type
           }
         }
+        logic.actionKeys[logic.actionTypes[to]] = to
+
+        if (typeof logic.actionCreators[to] === 'undefined') {
+          throw new Error(`[KEA] Logic "${logic.pathString}", connecting to action "${from}" returns 'undefined'`)
+        }
+
+        logic.actions[to] = (...inp: any[]): void => {
+          const builtAction = logic.actionCreators[to](...inp)
+          getContext().store.dispatch(builtAction)
+        }
+        logic.actions[to].toString = () => logic.actionTypes[to]
       }
     }
 
@@ -113,6 +126,15 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
                   return values && values[from]
                 }
           ) as Selector
+        }
+
+        if (logic.selectors[to] && !logic.values.hasOwnProperty(to)) {
+          Object.defineProperty(logic.values, to, {
+            get: function () {
+              return logic.selectors[to](getStoreState(), logic.props)
+            },
+            enumerable: true,
+          })
         }
       }
     }

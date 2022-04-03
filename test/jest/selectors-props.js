@@ -27,9 +27,9 @@ describe('selectors props', () => {
     }
 
     const booksLogic = kea({
-      reducers: ({ actions }) => ({
+      reducers: {
         books: [books, {}],
-      }),
+      },
     })
 
     const bookDetailLogic = kea({

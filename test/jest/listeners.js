@@ -285,7 +285,7 @@ describe('listeners', () => {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
       },
-      reducers:{
+      reducers: {
         username: [
           'keajs',
           {
@@ -379,7 +379,7 @@ describe('listeners', () => {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
       },
-      reducers:{
+      reducers: {
         username: [
           'keajs',
           {
@@ -437,8 +437,8 @@ describe('listeners', () => {
 
     const firstLogic = kea({
       actions: {
-        setUsername: (username) => ({username}),
-        setRepositories: (repositories) => ({repositories}),
+        setUsername: (username) => ({ username }),
+        setRepositories: (repositories) => ({ repositories }),
       },
       reducers: {
         username: [
@@ -623,7 +623,7 @@ describe('listeners', () => {
   test('track running listeners', async () => {
     const firstLogic = kea({
       actions: {
-        setUsername: (username) => ({username}),
+        setUsername: (username) => ({ username }),
       },
       listeners: {
         async setUsername(payload, breakpoint) {

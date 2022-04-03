@@ -4,14 +4,17 @@ import { getContext } from './context'
 import { mountLogic, unmountLogic } from './mount'
 
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext } from '../types'
+import { addConnection } from '../core/connect'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
   runPlugins('beforeLogic', logic, input)
 
+  // Logic builder
   if (typeof input === 'function') {
     input(logic)
   } else {
+    // Legacy kea({}) object style
     if (input.inherit) {
       for (const inheritLogic of input.inherit) {
         for (const inheritInput of inheritLogic.inputs) {
@@ -36,6 +39,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: L['props'] | undefined,
 ): BuiltLogic<L> {
+  const { buildHeap } = getContext()
+
   // return a cached build if possible
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
@@ -45,6 +50,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
   // create a random path
   const uniqueId = ++getContext().input.counter
   const path = [...getContext().options.defaultPath, uniqueId]
+  let finishedBuild = false
 
   // create a blank logic, and add the basic fields and methods
   // other core fields (actions, selectors, values, etc) are added with other plugins below.
@@ -60,6 +66,9 @@ export function getBuiltLogic<L extends Logic = Logic>(
     wrapper,
     extend: (input: LogicInput) => applyInputToLogic(logic, input),
     mount: () => {
+      if (!finishedBuild) {
+        throw new Error(`[KEA] Tried to mount logic "${logic.pathString}" before it finished building`)
+      }
       mountLogic(logic)
       return () => unmountLogic(logic)
     },
@@ -78,20 +87,30 @@ export function getBuiltLogic<L extends Logic = Logic>(
     }
   }
 
-  // cache the logic object
-  setCachedBuiltLogic(wrapper, props, logic)
-
-  // apply all the inputs
+  buildHeap.push(logic)
   runPlugins('beforeBuild', logic, wrapper.inputs)
+
+  // apply all the inputs and builders
   for (const input of wrapper.inputs) {
     applyInputToLogic(logic, input)
   }
 
   // add a connection to ourselves in the end
-  // logic.connections = { ...logic.connections, 'scenes.path.to.logic': logic }
   logic.connections[logic.pathString] = logic
 
   runPlugins('afterBuild', logic, wrapper.inputs)
+  buildHeap.pop()
+
+  // cache the logic object
+  finishedBuild = true
+  setCachedBuiltLogic(wrapper, props, logic)
+
+  // if we were building something when this got triggered, add this as a dependency for the previous logic
+  if (buildHeap.length > 0) {
+    if (!buildHeap[buildHeap.length - 1].connections[logic.pathString]) {
+      addConnection(buildHeap[buildHeap.length - 1], logic)
+    }
+  }
 
   return logic
 }
