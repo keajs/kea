@@ -51,6 +51,9 @@ export function getBuiltLogic<L extends Logic = Logic>(
   // return a cached build if possible
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
+    if (props) {
+      cachedLogic.props = props
+    }
     return cachedLogic
   }
 

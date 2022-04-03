@@ -48,5 +48,14 @@ describe('props', () => {
 
       expect(listenerRan).toBe(true)
     })
+
+    test('props update when building', () => {
+      const logic = kea({})
+      logic.build({ id: 123, key: 'bla' }).mount()
+      expect(logic.props.key).toEqual('bla')
+
+      logic.build({ id: 123, key: 'bla2' })
+      expect(logic.props.key).toEqual('bla2')
+    })
   })
 })
