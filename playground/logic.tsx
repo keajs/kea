@@ -39,7 +39,6 @@ export const logic = kea<logicType<Session>>({
       ],
       persistedNumber: [
         1232,
-        { persist: true },
         {
           updateNumber: (_, { number }) => number,
         },

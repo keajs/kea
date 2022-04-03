@@ -407,7 +407,7 @@ describe('connect', () => {
       let unmount
       expect(() => {
         unmount = logic1.mount()
-      }).toThrow("[KEA] Circular build detected.")
+      }).toThrow('[KEA] Circular build detected.')
     }
 
     test('built logic', () => runTest(true))

@@ -96,7 +96,9 @@ export function reducers<L extends Logic = Logic>(
 
       // first time adding a reducer, but already a selector (having reducer + selector both is ok)
       if (!logic.reducers[key] && logic.selectors[key]) {
-        throw new Error(`[KEA] Logic "${logic.pathString}" can't add reducer "${key}" because a selector with the same name exists.`)
+        throw new Error(
+          `[KEA] Logic "${logic.pathString}" can't add reducer "${key}" because a selector with the same name exists.`,
+        )
       }
 
       // create reducer for mapping

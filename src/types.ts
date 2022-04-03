@@ -115,17 +115,6 @@ export type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
     | [
         ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
-        any,
-        any,
-        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
-      ]
-    | [
-        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
-        any,
-        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
-      ]
-    | [
-        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
         ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
       ]
     | [ReducerDefault<LogicType['reducers'][K], LogicType['props']>]
