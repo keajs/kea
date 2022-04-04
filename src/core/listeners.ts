@@ -127,10 +127,14 @@ function addListeners(logic: BuiltLogic) {
   byPath[logic.pathString] = logic.listeners ?? {}
 
   for (const [key, listenerArray] of Object.entries(logic.listeners ?? {})) {
-    if (!byAction[key]) {
-      byAction[key] = {}
+    const type = key in logic.actionKeys ? key : logic.actionTypes[key]
+    if (!type) {
+      throw new Error(`[KEA] Can not listen to undefined action "${key}" in logic "${logic.pathString}"`)
     }
-    byAction[key][logic.pathString] = listenerArray
+    if (!byAction[type]) {
+      byAction[type] = {}
+    }
+    byAction[type][logic.pathString] = listenerArray
   }
 }
 
@@ -138,10 +142,11 @@ function removeListeners(logic: BuiltLogic) {
   const { byPath, byAction } = getPluginContext<ListenersPluginContext>('listeners')
 
   for (const key of Object.keys(logic.listeners ?? {})) {
-    if (byAction[key]) {
-      delete byAction[key][logic.pathString]
-      if (Object.keys(byAction[key]).length === 0) {
-        delete byAction[key]
+    const type = key in logic.actionKeys ? key : logic.actionTypes[key]
+    if (byAction[type]) {
+      delete byAction[type][logic.pathString]
+      if (Object.keys(byAction[type]).length === 0) {
+        delete byAction[type]
       }
     }
   }
