@@ -24,10 +24,10 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
     if (!logic.listeners) {
       logic.listeners = {}
       afterMount(() => {
-        addListenersByPathString(logic.pathString, logic.listeners ?? {})
+        addListeners(logic)
       })(logic)
       beforeUnmount(() => {
-        removeListenersByPathString(logic.pathString, logic.listeners ?? {})
+        removeListeners(logic)
 
         // trigger all breakpoints
         if (logic.cache.listenerBreakpointCounter) {
@@ -121,32 +121,32 @@ export function sharedListeners<L extends Logic = Logic>(input: LogicInput['shar
   }
 }
 
-function addListenersByPathString(pathString: string, listeners: Record<string, ListenerFunctionWrapper[]>) {
+function addListeners(logic: BuiltLogic) {
   const { byPath, byAction } = getPluginContext<ListenersPluginContext>('listeners')
 
-  byPath[pathString] = listeners
+  byPath[logic.pathString] = logic.listeners ?? {}
 
-  Object.entries(listeners).forEach(([action, listener]) => {
-    if (!byAction[action]) {
-      byAction[action] = {}
+  for (const [key, listenerArray] of Object.entries(logic.listeners ?? {})) {
+    if (!byAction[key]) {
+      byAction[key] = {}
     }
-    byAction[action][pathString] = listener
-  })
+    byAction[key][logic.pathString] = listenerArray
+  }
 }
 
-function removeListenersByPathString(pathString: string, listeners: Record<string, ListenerFunctionWrapper[]>) {
+function removeListeners(logic: BuiltLogic) {
   const { byPath, byAction } = getPluginContext<ListenersPluginContext>('listeners')
 
-  Object.keys(listeners).forEach((action) => {
-    if (byAction[action]) {
-      delete byAction[action][pathString]
-      if (Object.keys(byAction[action]).length === 0) {
-        delete byAction[action]
+  for (const key of Object.keys(logic.listeners ?? {})) {
+    if (byAction[key]) {
+      delete byAction[key][logic.pathString]
+      if (Object.keys(byAction[key]).length === 0) {
+        delete byAction[key]
       }
     }
-  })
+  }
 
-  delete byPath[pathString]
+  delete byPath[logic.pathString]
 }
 
 function trackPendingListener(logic: BuiltLogic, actionKey: string, response: Promise<void>) {
