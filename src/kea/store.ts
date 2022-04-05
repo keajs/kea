@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
+import { createStore as reduxCreateStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
 
 import { createReduxStoreReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from './plugins'
@@ -22,7 +22,7 @@ const defaultOptions = (): CreateStoreOptions => ({
   plugins: [],
 })
 
-export function getStore(opts = {}): Store | void {
+export function createStore(opts = {}): Store | void {
   const context = getContext()
 
   if (!context) {
@@ -53,7 +53,7 @@ export function getStore(opts = {}): Store | void {
   const composeEnchancer: typeof compose = options.compose || compose
 
   // create the store creator
-  const finalCreateStore = composeEnchancer(...options.enhancers)(createStore) as typeof createStore
+  const finalCreateStore = composeEnchancer(...options.enhancers)(reduxCreateStore) as typeof reduxCreateStore
 
   // if we are whitelisting paths
   if (options.paths && options.paths.length > 0) {

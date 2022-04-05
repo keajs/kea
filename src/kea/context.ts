@@ -1,5 +1,5 @@
 import { activatePlugin, runPlugins } from './plugins'
-import { getStore } from './store'
+import { createStore } from './store'
 import { Context, ContextOptions } from '../types'
 import { Store } from 'redux'
 import { corePlugin } from '../core'
@@ -23,7 +23,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore = true, defaults, ...otherOptions } = options
+  const { plugins, createStore: createStoreOptions = true, defaults, ...otherOptions } = options
 
   const newContext = {
     contextId: `kea-context-${contextId++}`,
@@ -74,8 +74,8 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
   Object.defineProperty(newContext, 'store', {
     get: function get() {
       const store: Store = (newContext as any)['__store']
-      if (!store && createStore) {
-        return getStore(typeof createStore === 'object' ? createStore : {})
+      if (!store && createStoreOptions) {
+        return createStore(typeof createStoreOptions === 'object' ? createStoreOptions : {})
       }
       return store
     },
@@ -96,7 +96,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     }
   }
 
-  if (!initial && createStore) {
+  if (!initial && createStoreOptions) {
     context.store // trigger the getter that creates the store
   }
 

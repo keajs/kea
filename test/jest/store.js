@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, getStore, resetContext, getContext, useValues, Provider } from '../../src'
+import { kea, createStore, resetContext, getContext, useValues, Provider } from '../../src'
 import './helper/jsdom'
 import React, { Component } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -34,7 +34,7 @@ describe('store', () => {
       scenes: { something: { name: 'chirpy' } },
       routes: { someRoute: true },
     }
-    const store = getStore({
+    const store = createStore({
       reducers: {
         routes: (state = {}, action) => state,
       },
@@ -53,7 +53,7 @@ describe('store', () => {
       kea: {},
       scenes: { something: { name: 'chirpoo' } },
     }
-    const store = getStore({
+    const store = createStore({
       preloadedState,
     })
 

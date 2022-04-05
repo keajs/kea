@@ -11,7 +11,7 @@ export { BindLogic } from './react/bind'
 export { Provider } from './react/provider'
 
 export { resetContext, openContext, closeContext, getContext, getPluginContext, setPluginContext } from './kea/context'
-export { getStore } from './kea/store'
+export { createStore } from './kea/store'
 export { keaReducer } from './kea/reducer'
 export { activatePlugin } from './kea/plugins'
 
