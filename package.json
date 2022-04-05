@@ -61,7 +61,6 @@
     }
   },
   "peerDependencies": {
-    "kea": ">= 2",
     "react": ">= 16",
     "react-redux": ">= 7",
     "redux": ">= 3",
