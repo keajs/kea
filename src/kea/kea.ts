@@ -107,12 +107,21 @@ export function kea<L extends Logic = Logic>(
   wrapper.findMounted = (props?: Record<string, any>) => {
     return wrapper.isMounted(props) ? getCachedBuiltLogic(wrapper, props) : null
   }
-  wrapper.extend = <ExtendLogic extends Logic = L>(extendedInput: LogicInput<ExtendLogic>) => {
+  wrapper.extend = <ExtendLogic extends Logic = L>(
+    extendedInput:
+      | (LogicInput<ExtendLogic> | LogicBuilder<ExtendLogic>)[]
+      | LogicInput<ExtendLogic>
+      | LogicBuilder<ExtendLogic>,
+  ) => {
     const wrapperContext = getContext().wrapperContexts.get(wrapper)
     if (wrapperContext) {
       throw new Error(`[KEA] Can not extend logic once it has been built.`)
     }
-    wrapper.inputs.push(extendedInput)
+    if (Array.isArray(extendedInput)) {
+      wrapper.inputs = wrapper.inputs.concat(extendedInput as (LogicInput<Logic> | LogicBuilder<Logic>)[])
+    } else {
+      wrapper.inputs.push(extendedInput as LogicInput<Logic> | LogicBuilder<Logic>)
+    }
     return wrapper as unknown as LogicWrapper<ExtendLogic>
   }
 
