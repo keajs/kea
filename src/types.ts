@@ -95,7 +95,7 @@ export interface KeaAction {
   toString(): string
 }
 
-type ReducerActions<LogicType extends Logic, ReducerType> = {
+export type ReducerActions<LogicType extends Logic, ReducerType> = {
   [K in keyof LogicType['actionCreators']]?: (
     state: ReducerType,
     payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
@@ -107,7 +107,7 @@ type ReducerActions<LogicType extends Logic, ReducerType> = {
   ) => ReducerType
 }
 
-type ReducerDefault<Reducer extends () => any, P extends Props> =
+export type ReducerDefault<Reducer extends () => any, P extends Props> =
   | ReturnType<Reducer>
   | ((state: any, props: P) => ReturnType<Reducer>)
 
@@ -154,11 +154,11 @@ export type SelectorDefinitions<LogicType extends Logic> =
 
 export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
 
-type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
+export type ListenerDefinitionsForRecord<A extends Record<string, (...args: any) => any>> = {
   [K in keyof A]?: ListenerFunction<ReturnType<A[K]>> | ListenerFunction<ReturnType<A[K]>>[]
 }
 
-type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
+export type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
   ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
 
 export type ListenerFunction<A extends AnyAction = any> = (
@@ -170,7 +170,7 @@ export type ListenerFunction<A extends AnyAction = any> = (
 
 export type ListenerFunctionWrapper = (action: any, previousState: any) => void
 
-type SharedListenerDefinitions = Record<string, ListenerFunction>
+export type SharedListenerDefinitions = Record<string, ListenerFunction>
 
 type WindowValuesDefinitions<LogicType extends Logic> = Record<string, (window: Window) => any>
 
@@ -263,13 +263,16 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   [key: string]: unknown
 } & LogicType['__keaTypeGenInternalExtraInput']
 
-// MakeLogicType:
-// - create a close-enough approximation of the logic's types if passed two interfaces:
-//
-// MakeLogicType<Values, Actions>
-// - Values = { valueKey: type }
-// - Actions = { actionKey: (id) => void }   // <- this works
-// - Actions = { actionKey: (id) => { id } } // <- adds type completion in reducers
+/**
+  MakeLogicType:
+  - create a close-enough approximation of the logic's types if passed three interfaces:
+
+  MakeLogicType<Values, Actions, Props>
+  - Values = { valueKey: type }
+  - Actions = { actionKey: (id) => void }   // <- this works
+  - Actions = { actionKey: (id) => { id } } // <- adds type completion in reducers
+  - Props = { id: 3 }
+*/
 export interface MakeLogicType<
   Values = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
@@ -305,7 +308,7 @@ export interface MakeLogicType<
     [K in keyof Values]: (...args: any) => Values[K]
   }
 }
-type AnyFunction = (...args: any) => any
+export type AnyFunction = (...args: any) => any
 
 export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
   type: string
