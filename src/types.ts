@@ -75,8 +75,7 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
 }
 
 export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWrapperAdditions<LogicType>
-
-export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => void
+export type LogicBuilder<L extends Logic = Logic, R extends Logic = Logic> = ((logic: BuiltLogic<L>) => R)
 
 // input helpers (using the generated logic type as input)
 

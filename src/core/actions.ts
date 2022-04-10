@@ -1,10 +1,36 @@
-import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder } from '../types'
+import {
+  ActionCreatorForPayloadBuilder,
+  ActionDefinitions,
+  ActionForPayloadBuilder,
+  AnyFunction,
+  KeaAction,
+  KeaReduxAction,
+  Logic,
+  LogicBuilder,
+} from '../types'
 import { getContext } from '../kea/context'
 
+export interface ActionsType<Actions = Record<string, AnyFunction>> extends Logic {
+  actionCreators: {
+    [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
+      ? ActionCreatorForPayloadBuilder<Actions[ActionKey]>
+      : never
+  }
+  actionKeys: Record<string, string>
+  actionTypes: {
+    [ActionKey in keyof Actions]: string
+  }
+  actions: {
+    [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
+      ? ActionForPayloadBuilder<Actions[ActionKey]>
+      : never
+  }
+}
+
 /** Logic builder: actions({ key: (id) => ({ id }) }) */
-export function actions<L extends Logic = Logic>(
-  input: ActionDefinitions<L> | ((logic: L) => ActionDefinitions<L>),
-): LogicBuilder<L> {
+export function actions<L extends Logic = Logic, R = ActionDefinitions<L>, I = R | ((logic: L) => R)>(
+  input: I,
+): LogicBuilder<L, ActionsType<I>> {
   return (logic) => {
     const actions = typeof input === 'function' ? input(logic) : input
     for (const [key, payloadCreator] of Object.entries(actions)) {
@@ -23,6 +49,7 @@ export function actions<L extends Logic = Logic>(
       logic.actionKeys[type] = key
       logic.actionTypes[key] = type
     }
+    return null as any
   }
 }
 
