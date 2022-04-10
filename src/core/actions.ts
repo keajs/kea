@@ -28,9 +28,14 @@ export interface ActionsType<Actions = Record<string, AnyFunction>> extends Logi
 }
 
 /** Logic builder: actions({ key: (id) => ({ id }) }) */
-export function actions<L extends Logic = Logic, R = ActionDefinitions<L>, I = R | ((logic: L) => R)>(
+export function actions<
+  L extends Logic = Logic,
+  R = Record<string, any>,
+  I = ((logic: L) => R) | R,
+  U = I extends (logic: Logic) => infer R ? R : I
+>(
   input: I,
-): LogicBuilder<L, ActionsType<I>> {
+): LogicBuilder<L, ActionsType<U>> {
   return (logic) => {
     const actions = typeof input === 'function' ? input(logic) : input
     for (const [key, payloadCreator] of Object.entries(actions)) {

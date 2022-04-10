@@ -1,12 +1,23 @@
 import { BuiltLogic, Logic, LogicBuilder } from '../types'
 import { getContext } from '../kea/context'
+import { ActionsType } from './actions'
 
-export function defaults<L extends Logic = Logic>(
-  input:
-    | ((logic: L) => (state: any, props: L['props']) => Partial<{ [T in keyof L['values']]: L['values'][T] }>)
-    | ((logic: L) => Partial<{ [T in keyof L['values']]: L['values'][T] }>)
-    | Partial<{ [T in keyof L['values']]: L['values'][T] }>,
-): LogicBuilder<L> {
+export interface DefaultsType<I = Record<string, any>> extends Logic {
+  defaults: {
+    [K in keyof I]: I[K]
+  }
+}
+
+export function defaults<
+  L extends Logic = Logic,
+  R = Record<string, any>,
+  I = ((logic: L) => (state: any, props: L['props']) => R) | ((logic: L) => R) | R,
+  U = I extends (logic: Logic) => (state: any, props: L['props']) => infer R
+    ? R
+    : I extends (logic: Logic) => infer R
+    ? R
+    : I,
+>(input: I): LogicBuilder<L, DefaultsType<U>> {
   return (logic) => {
     const defaults = typeof input === 'function' ? input(logic) : input
 
@@ -21,6 +32,7 @@ export function defaults<L extends Logic = Logic>(
     } else {
       throw new Error(`[KEA] Unknown defaults of type "${typeof defaults}" for logic "${logic.pathString}"`)
     }
+    return null as any
   }
 }
 
