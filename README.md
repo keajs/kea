@@ -6,7 +6,7 @@
 
 ![Kea Logo](https://keajs.org/img/logo.svg)
 
-# Kea v2
+# Kea v3
 
 Open the [documentation](https://keajs.org/) and read from there.
 
