@@ -7,9 +7,7 @@ import { defaults } from './defaults'
 import { reducers } from './reducers'
 import { selectors } from './selectors'
 import { events } from './events'
-import { props } from './props'
-import { key } from './key'
-import { path } from './path'
+import { runPlugins } from '../kea/plugins'
 
 export { actions } from './actions'
 export { connect } from './connect'
@@ -67,8 +65,10 @@ export const corePlugin: KeaPlugin = {
 
     legacyBuild: (logic, input) => {
       'connect' in input && input.connect && connect(input.connect)(logic)
+      runPlugins('legacyBuildAfterConnect', logic, input)
       'actions' in input && input.actions && actions(input.actions)(logic)
       'defaults' in input && input.defaults && defaults(input.defaults)(logic)
+      runPlugins('legacyBuildAfterDefaults', logic, input)
       'reducers' in input && input.reducers && reducers(input.reducers)(logic)
       'selectors' in input && input.selectors && selectors(input.selectors)(logic)
       'sharedListeners' in input && sharedListeners(input.sharedListeners)(logic)

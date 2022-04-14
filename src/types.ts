@@ -100,12 +100,13 @@ export type ReducerActions<LogicType extends Logic, ReducerType> = {
     state: ReducerType,
     payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
   ) => ReducerType
-} & {
-  [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-    state: ReducerType,
-    payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-  ) => ReducerType
-}
+} &
+  {
+    [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+      state: ReducerType,
+      payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+    ) => ReducerType
+  }
 
 export type ReducerDefault<Reducer extends () => any, P extends Props> =
   | ReturnType<Reducer>
@@ -360,6 +361,8 @@ export interface PluginEvents {
   beforeLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
   afterLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
   legacyBuild?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  legacyBuildAfterDefaults?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  legacyBuildAfterConnect?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
   afterBuild?: (logic: BuiltLogic, inputs: (LogicInput | LogicBuilder)[]) => void
   beforeMount?: (logic: BuiltLogic) => void
   afterMount?: (logic: BuiltLogic) => void
