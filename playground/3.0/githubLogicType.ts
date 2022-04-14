@@ -1,6 +1,6 @@
 // Auto-generated with kea-typegen. DO NOT EDIT!
 
-import { Logic } from '../../types'
+import { Logic } from '../../src/types'
 
 export interface githubLogicType<Repository, GithubLogicProps> extends Logic {
   actionCreators: {
