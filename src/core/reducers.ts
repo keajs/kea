@@ -49,17 +49,25 @@ export function reducers<L extends Logic = Logic>(
 
     for (const [key, object] of Object.entries(reducers)) {
       let initialValue: any
+      let reducerOptions: Record<string, any> | undefined
       let reducer
 
       if (Array.isArray(object)) {
         // s = [ value, reducer ]
         initialValue = object[0] ?? null
         reducer = object[Math.max(1, object.length - 1)] ?? {}
+        if (object.length === 3) {
+          reducerOptions = object[1]
+        }
       } else if (typeof object === 'object') {
         initialValue = null
         reducer = object
       } else {
         throw new Error(`[KEA] Logic "${logic.pathString}" reducer "${key}" is set to unsupported value`)
+      }
+
+      if (reducerOptions) {
+        logic.reducerOptions[key] = { ...(logic.reducerOptions[key] ?? {}), ...reducerOptions }
       }
 
       // provide a default value if none previously provided

@@ -29,6 +29,7 @@ export interface Logic {
   defaults: Record<string, any>
   reducers: Record<string, any>
   reducer?: ReducerFunction<any>
+  reducerOptions: Record<string, any>
   selector?: Selector
   selectors: Record<string, Selector>
   values: Record<string, any>
@@ -120,6 +121,11 @@ export type ReducerDefault<Reducer extends () => any, P extends Props> =
 
 export type ReducerDefinitions<LogicType extends Logic> = {
   [K in keyof LogicType['reducers']]?:
+    | [
+        ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
+        Record<string, any>,
+        ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,
+      ]
     | [
         ReducerDefault<LogicType['reducers'][K], LogicType['props']>,
         ReducerActions<LogicType, ReturnType<LogicType['reducers'][K]>>,

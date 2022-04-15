@@ -34,6 +34,7 @@ export const corePlugin: KeaPlugin = {
     listeners: undefined,
     reducers: {},
     reducer: undefined,
+    reducerOptions: {},
     selector: undefined,
     selectors: {},
     sharedListeners: undefined,

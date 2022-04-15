@@ -43,7 +43,7 @@ describe('reducers', () => {
   })
 
   test('it auto-detects local actions from the key in reducers', () => {
-    resetContext({ createStore: true })
+    resetContext()
 
     const logic = kea({
       actions: () => ({
@@ -78,7 +78,7 @@ describe('reducers', () => {
   })
 
   test('it extends reducers instead of overriding them', () => {
-    resetContext({ createStore: true })
+    resetContext()
 
     const logic = kea({
       actions: () => ({
@@ -125,5 +125,31 @@ describe('reducers', () => {
 
     logic.actions.makeMagic()
     expect(logic.values.howMuchMagic).toEqual(104)
+  })
+
+  test('reducerOptions', () => {
+    resetContext()
+
+    const logic = kea({
+      actions: () => ({
+        simpleMagic: true,
+        makeMagic: true,
+        makeABitMoreMagic: true,
+      }),
+
+      reducers: {
+        howMuchMagic: [
+          0,
+          { reducerOptions: 'options' },
+          {
+            simpleMagic: (state) => state + 1,
+            makeMagic: (state) => state + 1,
+          },
+        ],
+      },
+    })
+
+    logic.mount()
+    expect(logic.reducerOptions['howMuchMagic']).toEqual({ reducerOptions: 'options' })
   })
 })
