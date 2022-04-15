@@ -80,9 +80,15 @@ export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => vo
 
 // input helpers (using the generated logic type as input)
 
-export type ActionDefinitions<LogicType extends Logic> =
-  | Record<string, any | ((...args: any[]) => any)>
-  | LogicType['actionCreators']
+export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreators'] extends Record<string, any>
+  ? Partial<{
+      [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
+        ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends any
+          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value']
+          : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
+        : never
+    }>
+  : Record<string, any | ((...args: any[]) => any)>
 
 export interface KeaReduxAction extends AnyAction {
   type: string

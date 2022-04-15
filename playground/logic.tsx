@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { kea } from '../src/kea/kea'
-import { useValues } from '../src/react/hooks'
+import { kea, useValues } from '../src'
 import { logicType } from './logicType'
 import { githubLogic } from './githubLogic'
 
