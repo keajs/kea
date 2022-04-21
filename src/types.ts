@@ -82,13 +82,15 @@ export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => vo
 // input helpers (using the generated logic type as input)
 
 export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreators'] extends Record<string, any>
-  ? Partial<{
-      [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
-        ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends any
-          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value']
-          : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
-        : never
-    }>
+  ? Partial<
+      {
+        [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
+          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends any
+            ? ReturnType<LogicType['actionCreators'][K]>['payload']['value']
+            : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
+          : never
+      }
+    >
   : Record<string, any | ((...args: any[]) => any)>
 
 export interface KeaReduxAction extends AnyAction {
@@ -364,29 +366,53 @@ export interface KeaComponent extends FunctionComponent {
 }
 
 export interface PluginEvents {
+  /** Run after creating a new context, before plugins are activated and the store is created */
   afterOpenContext?: (context: Context, options: ContextOptions) => void
+  /** Run after this plugin has been activated */
   afterPlugin?: () => void
+  /** Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator. */
   beforeReduxStore?: (options: CreateStoreOptions) => void
+  /** Run after the redux store is created. */
   afterReduxStore?: (options: CreateStoreOptions, store: Store) => void
+  /** Run before we start doing anything */
   beforeKea?: (input: LogicInput | LogicBuilder) => void
+  /** before the steps to build the logic (gets an array of inputs from kea(input).extend(input)) */
   beforeBuild?: (logic: BuiltLogic, inputs: (LogicInput | LogicBuilder)[]) => void
+  /** before the steps to convert input into logic (also run once per .extend()) */
   beforeLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  /** after the steps to convert input into logic (also run once per .extend()) */
   afterLogic?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
-  legacyBuild?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
-  legacyBuildAfterDefaults?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
-  legacyBuildAfterConnect?: (logic: BuiltLogic, input: LogicInput | LogicBuilder) => void
+  /** called when building a logic with legeacy LogicInput objects, called after connect: {} runs in code */
+  legacyBuild?: (logic: BuiltLogic, input: LogicInput) => void
+  /** called when building a logic with legeacy LogicInput objects, called after defaults are built in core */
+  legacyBuildAfterConnect?: (logic: BuiltLogic, input: LogicInput) => void
+  /** called when building a logic with legeacy LogicInput objects, called after the legacy core plugin runs */
+  legacyBuildAfterDefaults?: (logic: BuiltLogic, input: LogicInput) => void
+  /** after the steps to build the logic */
   afterBuild?: (logic: BuiltLogic, inputs: (LogicInput | LogicBuilder)[]) => void
+  /** Run before a logic store is mounted in React */
   beforeMount?: (logic: BuiltLogic) => void
+  /** Run after a logic store is mounted in React */
   afterMount?: (logic: BuiltLogic) => void
+  /** Run before a reducer is attached to Redux */
   beforeAttach?: (logic: BuiltLogic) => void
+  /** Run after a reducer is attached to Redux */
   afterAttach?: (logic: BuiltLogic) => void
+  /** Run before a logic is unmounted */
   beforeUnmount?: (logic: BuiltLogic) => void
+  /** Run after a logic is unmounted */
   afterUnmount?: (logic: BuiltLogic) => void
+  /** Run before a reducer is detached frm Redux */
   beforeDetach?: (logic: BuiltLogic) => void
+  /** Run after a reducer is detached frm Redux */
   afterDetach?: (logic: BuiltLogic) => void
+  /** Run before wrapping a React component */
   beforeWrap?: (wrapper: LogicWrapper, Klass: AnyComponent) => void
+  /** Run after wrapping a React component */
   afterWrap?: (wrapper: LogicWrapper, Klass: AnyComponent, Kea: KeaComponent) => void
+  /** Run after mounting and before rendering the component in React's scope (you can use hooks here) */
   beforeRender?: (logic: BuiltLogic, props: Props) => void
+  /** Run when we are removing kea from the system, e.g. when cleaning up after tests */
   beforeCloseContext?: (context: Context) => void
 }
 
@@ -395,8 +421,11 @@ export type PluginEventArrays = {
 }
 
 export interface KeaPlugin {
+  /** Required: name of the plugin */
   name: string
+  /** Default values ...applied on top of built logic */
   defaults?: () => Record<string, any>
+  /** Hook into various lifecycle events */
   events?: PluginEvents
 }
 
