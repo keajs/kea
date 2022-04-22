@@ -14,7 +14,9 @@ export function path<L extends Logic = Logic>(input: PathType | ((key: KeyType) 
       )
     }
     if (typeof input === 'function') {
-      logic.path = input(logic.key!)
+      // if we got a `path(key => [..., key])` function first (kea 2.0 path builders), but no `key()` yet,
+      // take out the undefined key, as the following `key()` function will just append a key.
+      logic.path = input(logic.key!).filter((l) => typeof l !== 'undefined')
     } else {
       logic.path = typeof logic.key !== 'undefined' ? [...input, logic.key] : input
     }
