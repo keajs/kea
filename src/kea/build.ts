@@ -17,7 +17,7 @@ function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) 
   } else {
     // Legacy kea({}) object style
     'props' in input && props(input.props)(logic)
-    'key' in input && input.key && key(input.key)(logic)
+    'key' in input && typeof input.key !== 'undefined' && key(input.key)(logic)
     'path' in input && input.path && path(input.path)(logic)
 
     if (input.inherit) {
