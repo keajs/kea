@@ -95,7 +95,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.4.0 - 2021-05-02
 
-- **Possibly Breaking:** Changed the [default path](https://kea.js.org/docs/guide/debugging#logic-path) for logic
+- **Possibly Breaking:** Changed the [default path](https://v2.keajs.org/docs/guide/debugging#logic-path) for logic
   without a `path` (or when not using the kea babel plugin) from `kea.inline` to `kea.logic`. If you have ever hardcoded
   `"kea.inline"` anywhere, perhaps in tests, this will cause a bit of headache. If you need it set at `kea.inline`, use
   `resetContext({ defaultPath: ['kea', 'inline'] })`.
@@ -155,7 +155,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.0 - 2020-09-08
 
-- [TypeScript support](https://kea.js.org/docs/guide/typescript)!
+- [TypeScript support](https://v2.keajs.org/docs/guide/typescript)!
 - Fix bug with the store being created twice. [#111](https://github.com/keajs/kea/issues/111)
 - No other breaking changes.
 
@@ -189,7 +189,7 @@ described below. Read the announcement blog post to get more context: https://ke
 
 There's also a new babel plugin you might want to check out: https://github.com/keajs/babel-plugin-kea
 
-Finally, Kea 2.0 comes with brand new docs on [https://kea.js.org](https://kea.js.org).
+Finally, Kea 2.0 comes with brand new docs on [https://v2.keajs.org](https://v2.keajs.org).
 (Old docs for [1.0](https://kea-v1.netlify.app/guide/installation) and [0.28](https://5d7a15398fdb1e00073ed27f--kea-v1.netlify.app/))
 
 ### Breaking change
@@ -258,7 +258,7 @@ There are too many changes to list here. See [this document](https://github.com/
 
 - Kea now supports plugins!
 - The previous saga functionality has moved to [kea-saga](https://github.com/keajs/kea-saga). Please install it to continue using sagas!
-- There's a new function, [`getStore`](https://kea.js.org/api/store), which greatly simplifies configuring your store, especially when importing plugins.
+- There's a new function, [`getStore`](https://v0.keajs.org/api/store), which greatly simplifies configuring your store, especially when importing plugins.
 
 ### Removed deprecations
 

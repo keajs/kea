@@ -796,7 +796,7 @@ These are in incubation for now and will be released soon. Either with 1.0 or so
 
 #### kea-next
 
-Next.js will be an officially first class citizen with Kea 1.0. I'm porting the [https://kea.js.org/](kea.js.org) website over to it. See [this repository](https://github.com/keajs/kea-next-test/) and its issue for the current status.
+Next.js will be an officially first class citizen with Kea 1.0. I'm porting the [https://v1.keajs.org/](kea.js.org) website over to it. See [this repository](https://github.com/keajs/kea-next-test/) and its issue for the current status.
 
 #### kea-listeners
 
