@@ -1,5 +1,5 @@
-import { Logic, LogicBuilder, Selector, SelectorDefinitions } from '../types'
-import { createSelector, ParametricSelector } from 'reselect'
+import { Logic, LogicBuilder, Selector, SelectorDefinition, SelectorDefinitions } from '../types'
+import { createSelector, createSelectorCreator, defaultMemoize, ParametricSelector } from 'reselect'
 import { getStoreState } from '../kea/context'
 
 /**
@@ -9,6 +9,7 @@ import { getStoreState } from '../kea/context'
         duckAndChicken: [
           (s) => [s.duckId, s.chickenId],
           (duckId, chickenId) => duckId + chickenId,
+          (a: any, b: any) => bool, // custom isEquals, defaults to `a === b`
         ],
       })
 
@@ -34,7 +35,8 @@ export function selectors<L extends Logic = Logic>(
       addSelectorAndValue(logic, key, (...args) => builtSelectors[key](...args))
     }
 
-    for (const [key, [input, func]] of Object.entries(selectorInputs)) {
+    for (const entry of Object.entries(selectorInputs)) {
+      const [key, [input, func, isEquals]]: [string, SelectorDefinition<L['selectors'], any>] = entry
       const args = input(logic.selectors) as ParametricSelector<any, any, any>[]
 
       if (args.filter((a) => typeof a !== 'function').length > 0) {
@@ -42,8 +44,7 @@ export function selectors<L extends Logic = Logic>(
         const msg = `[KEA] Logic "${logic.pathString}", selector "${key}" has incorrect input: [${argTypes}].`
         throw new Error(msg)
       }
-
-      builtSelectors[key] = createSelector(args, func)
+      builtSelectors[key] = (isEquals ? createSelectorCreator(defaultMemoize, isEquals) : createSelector)(args, func)
 
       addSelectorAndValue(logic, key, (state = getStoreState(), props = logic.props) =>
         builtSelectors[key](state, props),

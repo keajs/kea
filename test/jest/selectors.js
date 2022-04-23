@@ -1,5 +1,5 @@
 /* global test, expect, beforeEach */
-import { kea, resetContext } from '../../src'
+import { kea, resetContext, actions, reducers, selectors } from '../../src'
 
 describe('selectors', () => {
   beforeEach(() => {
@@ -119,5 +119,60 @@ describe('selectors', () => {
     expect(selectorRan).toEqual(1)
 
     unmount()
+  })
+
+  test('support custom memoization functions', () => {
+    const logic = kea([
+      actions({
+        addValue: (value) => ({ value }),
+        setValue: (index, value) => ({ index, value }),
+      }),
+      reducers({
+        values: [
+          [],
+          {
+            addValue: (state, { value }) => [...state, value],
+            setValue: (state, { index, value }) => state.map((s, i) => i === index ? value : s),
+          },
+        ],
+      }),
+      selectors({
+        reversedValues: [(s) => [s.values], (values) => [...values].reverse()],
+        reversedValuesIfLengthChanges: [
+          (s) => [s.values],
+          (values) => [...values].reverse(),
+          (a, b) => a.length === b.length,
+        ],
+      }),
+    ])
+
+    logic.mount()
+    expect(logic.values.values).toEqual([])
+    expect(logic.values.reversedValues).toEqual([])
+
+    logic.actions.addValue('first')
+
+    expect(logic.values.values).toEqual(['first'])
+    expect(logic.values.reversedValues).toEqual(['first'])
+    expect(logic.values.reversedValuesIfLengthChanges).toEqual(['first'])
+
+    logic.actions.addValue('second')
+
+    expect(logic.values.values).toEqual(['first', 'second'])
+    expect(logic.values.reversedValues).toEqual(['second', 'first'])
+    expect(logic.values.reversedValuesIfLengthChanges).toEqual(['second', 'first'])
+
+    logic.actions.setValue(1, 'SECOND')
+
+    expect(logic.values.values).toEqual(['first', 'SECOND'])
+    expect(logic.values.reversedValues).toEqual(['SECOND', 'first'])
+    // DID NOT CHANGE!
+    expect(logic.values.reversedValuesIfLengthChanges).toEqual(['second', 'first'])
+
+    logic.actions.addValue('third')
+
+    expect(logic.values.values).toEqual(['first', 'SECOND', 'third'])
+    expect(logic.values.reversedValues).toEqual(['third', 'SECOND', 'first'])
+    expect(logic.values.reversedValuesIfLengthChanges).toEqual(['third', 'SECOND', 'first'])
   })
 })
