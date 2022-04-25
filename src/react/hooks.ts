@@ -76,7 +76,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
-    pauseOldSubscriptions(() => {
+    pauseSubscriptions(() => {
       unmount.current = builtLogic.mount()
     })
   }
@@ -84,7 +84,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const pathString = useRef(builtLogic.pathString)
 
   if (pathString.current !== builtLogic.pathString) {
-    pauseOldSubscriptions(() => {
+    pauseSubscriptions(() => {
       unmount.current?.()
       unmount.current = builtLogic.mount()
       pathString.current = builtLogic.pathString
@@ -96,14 +96,14 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
     if (!unmount.current) {
-      pauseOldSubscriptions(() => {
+      pauseSubscriptions(() => {
         unmount.current = builtLogic.mount()
         pathString.current = builtLogic.pathString
       })
     }
 
     return function useMountedLogicEffectCleanup() {
-      pauseOldSubscriptions(() => {
+      pauseSubscriptions(() => {
         unmount.current && unmount.current()
         unmount.current = undefined
       })
@@ -113,7 +113,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   return builtLogic as BuiltLogic<L>
 }
 
-function pauseOldSubscriptions(callback: () => void) {
+function pauseSubscriptions(callback: () => void) {
   pauseCounter += 1
   try {
     callback()
