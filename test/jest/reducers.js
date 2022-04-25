@@ -1,4 +1,3 @@
-/* global test, expect */
 import { kea, resetContext } from '../../src'
 
 describe('reducers', () => {

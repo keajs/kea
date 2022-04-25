@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, keaReducer, getContext } from '../../src'
 
 import { createStore, combineReducers } from 'redux'

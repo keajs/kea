@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, actions, reducers, selectors } from '../../src'
 
 describe('selectors', () => {

@@ -1,6 +1,4 @@
-/* global test, expect, beforeEach */
 import { kea } from '../../src'
-import './helper/jsdom'
 import { resetContext } from '../../src'
 
 describe('extend', () => {

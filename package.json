@@ -26,8 +26,7 @@
     "prettier": "prettier --write src/**/*",
     "prepublishOnly": "npm run test && npm run build",
     "start": "npm run watch",
-    "test": "echo yup",
-    "xtest": "yarn run test:jest && yarn run test:tsd && yarn run test:types",
+    "test": "yarn run test:jest && yarn run test:tsd && yarn run test:types",
     "test:jest": "BABEL_ENV=test jest",
     "test:jest:watch": "BABEL_ENV=test jest --watchAll",
     "test:tsd": "yarn run build && cp test/tsd/*.test-d.ts lib/ && tsd",
@@ -45,7 +44,7 @@
     "testMatch": [
       "<rootDir>/test/jest/*"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "setupFilesAfterEnv": [
       "<rootDir>/jest-setup.js"
     ]
@@ -101,7 +100,7 @@
     "@typescript-eslint/parser": "^4.28.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^27.5.1",
+    "babel-jest": "^28.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
@@ -110,7 +109,8 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.24.0",
-    "jest": "^27.5.1",
+    "jest": "^28.0.0",
+    "jest-environment-jsdom": "^28.0.0",
     "jest-environment-node-debug": "^2.0.0",
     "npm-run-all-v2": "^1.0.0",
     "prettier": "^2.3.2",

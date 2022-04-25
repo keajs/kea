@@ -1,7 +1,5 @@
-/* global test, expect */
 import { kea, resetContext, getContext, getPluginContext, setPluginContext, activatePlugin } from '../../src'
-import './helper/jsdom'
-import { corePlugin } from '../../src/core'
+import { corePlugin } from '../../src'
 
 describe('plugins', () => {
   test('the core plugin is activated automatically', () => {

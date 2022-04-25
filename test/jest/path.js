@@ -1,6 +1,5 @@
 import { kea, resetContext } from '../../src'
 
-import './helper/jsdom'
 import React from 'react'
 
 describe('path', () => {

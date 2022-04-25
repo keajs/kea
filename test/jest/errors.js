@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, getContext, resetContext, reducers, selectors, path } from '../../src'
 import { unmountedActionError } from '../../src/kea/kea'
 

@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, keaReducer } from '../../src'
 
 describe('logic singleton', () => {

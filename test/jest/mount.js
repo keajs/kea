@@ -1,7 +1,4 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, getContext } from '../../src'
-
-import './helper/jsdom'
 
 describe('mount', () => {
   beforeEach(() => {

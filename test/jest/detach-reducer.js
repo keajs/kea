@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { resetContext, getContext } from '../../src'
 
 import { detachReducer, DETACH_REDUCER } from '../../src/kea/reducer'

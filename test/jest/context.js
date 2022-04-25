@@ -1,6 +1,4 @@
-/* global test, expect, beforeEach */
 import { kea } from '../../src'
-import './helper/jsdom'
 import { activatePlugin, getContext, openContext, closeContext, resetContext } from '../../src'
 
 describe('context', () => {

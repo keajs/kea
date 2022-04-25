@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, isBreakpoint, getPluginContext } from '../../src'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))

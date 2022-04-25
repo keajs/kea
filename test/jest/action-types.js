@@ -1,4 +1,3 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext } from '../../src'
 
 describe('action types', () => {

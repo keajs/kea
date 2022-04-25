@@ -1,7 +1,5 @@
-/* global test, expect, beforeEach */
 import { kea, getContext, resetContext } from '../../src'
 
-import './helper/jsdom'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'

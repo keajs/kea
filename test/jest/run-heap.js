@@ -1,5 +1,3 @@
-/* global test, expect, beforeEach */
-import './helper/jsdom'
 import { getContext, resetContext, kea, useValues } from '../../src'
 import React from 'react'
 import { Provider } from 'react-redux'
