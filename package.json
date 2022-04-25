@@ -61,7 +61,7 @@
     }
   },
   "peerDependencies": {
-    "react": ">= 16.8"
+    "react": ">= 17"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
