@@ -2,11 +2,11 @@ import { kea, useValues, useAllValues, useActions, useKea, getContext, resetCont
 
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 
 describe('hooks', () => {
   beforeEach(() => {
-    resetContext({ createStore: true })
+    resetContext()
   })
 
   test('useValues and useActions hooks works', () => {
@@ -67,15 +67,11 @@ describe('hooks', () => {
 
     expect(countRendered).toEqual(0)
 
-    render(
-      <Provider store={getContext().store}>
-        <SampleComponent id={12} />
-      </Provider>,
-    )
+    render(<SampleComponent id={12} />)
 
     expect(countRendered).toEqual(1)
 
-    store.dispatch({ type: 'nothing', payload: {} })
+    act(() => store.dispatch({ type: 'nothing', payload: {} }))
 
     expect(countRendered).toEqual(1)
 
@@ -86,19 +82,21 @@ describe('hooks', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
-    logic.actions.updateName('somename')
+    act(() => logic.actions.updateName('somename'))
 
-    expect(countRendered).toEqual(2)
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename' } } })
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('somename')
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
     expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 
+    expect(countRendered).toEqual(2)
     logic.actions.updateName('somename')
     expect(countRendered).toEqual(2)
 
-    logic.actions.updateName('somename3')
+    act(() => logic.actions.updateName('somename3'))
+
     expect(countRendered).toEqual(3)
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
