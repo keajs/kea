@@ -11,7 +11,6 @@
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "transform-babel-env-inline",
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-syntax-import-meta",
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
@@ -55,7 +54,6 @@
         "@babel/preset-react"
       ],
       "plugins": [
-        "transform-babel-env-inline",
         "@babel/plugin-syntax-dynamic-import",
         "@babel/plugin-syntax-import-meta",
         ["@babel/plugin-proposal-class-properties", { "loose": true }],
