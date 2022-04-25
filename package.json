@@ -126,5 +126,8 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "tsd": "^0.17.0",
     "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "use-sync-external-store": "^1.0.0"
   }
 }
