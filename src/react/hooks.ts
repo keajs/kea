@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef, useContext, createContext, startTransition } from 'react'
+import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { kea } from '../kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
@@ -116,7 +116,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
 function pauseOldSubscriptions(callback: () => void) {
   pauseCounter += 1
   try {
-    startTransition(callback)
+    callback()
   } catch (e) {}
   pauseCounter -= 1
 }
