@@ -1,4 +1,17 @@
-import { kea, useValues, useAllValues, useActions, useKea, getContext, resetContext } from '../../src'
+import {
+  kea,
+  useValues,
+  useAllValues,
+  useActions,
+  useKea,
+  getContext,
+  resetContext,
+  path,
+  actions,
+  reducers,
+  afterMount,
+  useMountedLogic,
+} from '../../src'
 
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
@@ -575,5 +588,40 @@ describe('hooks', () => {
     )
 
     expect(() => {}).not.toThrow()
+  })
+
+  test('make sure the order of subscriptions does not matter', () => {
+    const dashLogic = kea([
+      path(['dashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
+    const otherLogic = kea([
+      path(['otherLogic']),
+      afterMount(() => {
+        dashLogic.actions.doit()
+      }),
+    ])
+    function Other() {
+      const { done } = useValues(dashLogic)
+      useMountedLogic(otherLogic)
+      return <div data-testid="other">{done ? 'done' : 'doing'}</div>
+    }
+    function RenderTest() {
+      const { done } = useValues(dashLogic)
+      return (
+        <>
+          <div data-testid="scene">{done ? 'done' : 'doing'}</div>
+          <Other />
+        </>
+      )
+    }
+
+    const { unmount } = render(<RenderTest />)
+
+    expect(screen.getByTestId('other')).toHaveTextContent('done')
+    expect(screen.getByTestId('scene')).toHaveTextContent('done')
+
+    unmount()
   })
 })
