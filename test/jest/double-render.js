@@ -2,7 +2,7 @@ import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
 import { Provider } from 'react-redux'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 
 describe('double render', () => {
   beforeEach(() => {
@@ -75,7 +75,7 @@ describe('double render', () => {
 
     expect(countRendered).toEqual(1)
 
-    store.dispatch({ type: 'nothing', payload: {} })
+    act(() => store.dispatch({ type: 'nothing', payload: {} }))
     expect(countRendered).toEqual(1)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
@@ -85,13 +85,13 @@ describe('double render', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'chirpy' } } })
 
-    store.dispatch(logic.actionCreators.updateName('somename'))
+    act(() => store.dispatch(logic.actionCreators.updateName('somename')))
     expect(countRendered).toEqual(2)
 
-    logic.actions.updateName('somename')
+    act(() => logic.actions.updateName('somename'))
     expect(countRendered).toEqual(2)
 
-    store.dispatch(logic.actionCreators.updateName('somename3'))
+    act(() => store.dispatch(logic.actionCreators.updateName('somename3')))
     expect(countRendered).toEqual(3)
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { lazy: { name: 'somename3' } } })

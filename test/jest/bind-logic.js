@@ -81,14 +81,14 @@ describe('bind logic', () => {
     const unmount1 = logic1.mount()
 
     expect(screen.getByTestId('app')).toHaveTextContent('blamichael')
-    logic1.actions.updateName('haha')
+    act(() => logic1.actions.updateName('haha'))
     expect(screen.getByTestId('app')).toHaveTextContent('hahamichael')
     expect(getStoreActions()).toEqual([12, 15])
     unmount1()
 
     const logic2 = keyedLogic({ id: 15 })
     const unmount2 = logic2.mount()
-    logic2.actions.updateName('hoho')
+    act(() => logic2.actions.updateName('hoho'))
     expect(screen.getByTestId('app')).toHaveTextContent('hahahoho')
     expect(getStoreActions()).toEqual([12, 15])
     unmount2()

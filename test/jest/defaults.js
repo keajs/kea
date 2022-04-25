@@ -2,7 +2,7 @@ import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
 import { Provider } from 'react-redux'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 
 describe('defaults', () => {
   beforeEach(() => {
@@ -68,7 +68,7 @@ describe('defaults', () => {
       scenes: { dynamic: { propsName: 'defaultName' } },
     })
 
-    singletonLogic.actions.updateName('birb')
+    act(() => singletonLogic.actions.updateName('birb'))
 
     expect(store.getState()).toEqual({
       kea: {},
@@ -168,14 +168,14 @@ describe('defaults', () => {
       scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } },
     })
 
-    store.dispatch(singletonLogic.actionCreators.updateStoredName('birb'))
+    act(() => store.dispatch(singletonLogic.actionCreators.updateStoredName('birb')))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 2: { storedName: 'birb' } } },
       scenes: { dynamic: { connectedName: 'storedName', directName: 'storedName' } },
     })
 
-    singletonLogic.actions.updateName('birb')
+    act(() => singletonLogic.actions.updateName('birb'))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 2: { storedName: 'birb' } } },
@@ -285,14 +285,14 @@ describe('defaults', () => {
       scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } },
     })
 
-    dynamicLogic({ id: 12 }).actions.updateStoredName('birb')
+    act(() => dynamicLogic({ id: 12 }).actions.updateStoredName('birb'))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { storedName: 'birb' } } },
       scenes: { dynamic: { 12: { connectedName: 'storedName', directName: 'storedName' } } },
     })
 
-    store.dispatch(dynamicLogic({ id: 12 }).actionCreators.updateName('birb'))
+    act(() => store.dispatch(dynamicLogic({ id: 12 }).actionCreators.updateName('birb')))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { storedName: 'birb' } } },
@@ -364,7 +364,7 @@ describe('defaults', () => {
       kea: { logic: { 1: { propsName: 'defaultName' } } },
     })
 
-    lazyLogic.actions.updateName('birb')
+    act(() => lazyLogic.actions.updateName('birb'))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { propsName: 'birb' } } },
@@ -464,13 +464,13 @@ describe('defaults', () => {
       kea: { logic: { 2: { storedName: 'storedName' }, 1: { connectedName: 'storedName', directName: 'george' } } },
     })
 
-    singletonLogic.actions.updateStoredName('birb')
+    act(() => singletonLogic.actions.updateStoredName('birb'))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 2: { storedName: 'birb' }, 1: { connectedName: 'storedName', directName: 'george' } } },
     })
 
-    store.dispatch(singletonLogic.actionCreators.updateName('birb'))
+    act(() => store.dispatch(singletonLogic.actionCreators.updateName('birb')))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 2: { storedName: 'birb' }, 1: { connectedName: 'birb', directName: 'birb' } } },

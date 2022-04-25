@@ -1,7 +1,6 @@
 import { getContext, resetContext, kea, useValues } from '../../src'
 import React from 'react'
-import { Provider } from 'react-redux'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 
 describe('run heap', () => {
   beforeEach(() => {
@@ -49,11 +48,7 @@ describe('run heap', () => {
       )
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <RootComponent />
-      </Provider>,
-    )
+    render(<RootComponent />)
 
     expect(screen.getByTestId('scene')).toHaveTextContent('home')
     expect(screen.getByTestId('homepage')).toHaveTextContent('On Home')
@@ -61,7 +56,7 @@ describe('run heap', () => {
 
     expect(getContext().mount.counter).toEqual({ 'scenes.root': 1 })
 
-    rootLogic.actions.loadScene('dash')
+    act(() => rootLogic.actions.loadScene('dash'))
 
     expect(getContext().mount.counter).toEqual({ 'scenes.dash': 1, 'scenes.root': 1 })
   })

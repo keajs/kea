@@ -2,7 +2,7 @@ import { kea, resetContext, getContext } from '../../src'
 
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 
 class SampleComponent extends Component {
   render() {
@@ -90,7 +90,7 @@ describe('logic component', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'chirpy' } } })
 
-    singletonLogic.actions.updateName('somename')
+    act(() => singletonLogic.actions.updateName('somename'))
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { something: { name: 'somename' } } })
 
@@ -152,7 +152,7 @@ describe('logic component', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'chirpy' } } } })
 
-    dynamicLogic({ id: 12 }).actions.updateName('somename')
+    act(() => dynamicLogic({ id: 12 }).actions.updateName('somename'))
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { something: { 12: { name: 'somename12' } } } })
 
@@ -221,7 +221,7 @@ describe('logic component', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'chirpy' } } } })
 
-    secondLogic.actions.updateName('somename')
+    act(() => secondLogic.actions.updateName('somename'))
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { homepage: { first: { name: 'somename' } } } })
 
@@ -300,7 +300,7 @@ describe('logic component', () => {
     expect(screen.getByTestId('props')).toHaveTextContent('actions,dispatch,name')
     expect(screen.getByTestId('actions')).toHaveTextContent('updateName,updateNameAgain')
 
-    firstLogic.actions.updateName('somename')
+    act(() => firstLogic.actions.updateName('somename'))
 
     expect(screen.getByTestId('name')).toHaveTextContent('somename')
   })
@@ -395,7 +395,7 @@ describe('logic component', () => {
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'bird' } } } })
 
-    store.dispatch(dynamicLogic({ id: 12 }).actionCreators.updateName('birb'))
+    act(() => store.dispatch(dynamicLogic({ id: 12 }).actionCreators.updateName('birb')))
 
     expect(store.getState()).toEqual({ kea: {}, scenes: { dynamic: { 12: { name: 'birb' } } } })
 

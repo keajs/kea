@@ -2,7 +2,7 @@ import { kea, getContext, resetContext } from '../../src'
 
 import React from 'react'
 import { Provider } from 'react-redux'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 
 describe('connect', () => {
   beforeEach(() => {
@@ -74,11 +74,7 @@ describe('connect', () => {
 
     expect(store.getState()).toEqual({ kea: {} })
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
@@ -89,8 +85,8 @@ describe('connect', () => {
 
     expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
-    logic.actions.updateName('somename')
-    connectedLogic.actions.updateDescription('new description')
+    act(() => logic.actions.updateName('somename'))
+    act(() => connectedLogic.actions.updateDescription('new description'))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
@@ -182,8 +178,8 @@ describe('connect', () => {
 
     expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
-    store.dispatch(logic.actionCreators.updateName('somename'))
-    store.dispatch(connectedLogic.actionCreators.updateDescription('new description'))
+    act(() => store.dispatch(logic.actionCreators.updateName('somename')))
+    act(() => store.dispatch(connectedLogic.actionCreators.updateDescription('new description')))
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
@@ -276,8 +272,10 @@ describe('connect', () => {
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy-12')
     expect(screen.getByTestId('description')).toHaveTextContent('this is a bird')
 
-    logic.actions.updateName('somename')
-    connectedLogic.actions.updateDescription('new description')
+    act(() => {
+      logic.actions.updateName('somename')
+      connectedLogic.actions.updateDescription('new description')
+    })
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { name: 'somename' }, 2: { description: 'new description' } } },
@@ -290,8 +288,6 @@ describe('connect', () => {
   })
 
   test('can connect logic without values/actions', () => {
-    const { store } = getContext()
-
     const connectedLogic = kea({
       actions: () => ({
         updateDescription: (description) => ({ description }),
@@ -333,8 +329,6 @@ describe('connect', () => {
   })
 
   test('can connect logic via array', () => {
-    const { store } = getContext()
-
     const connectedLogic = kea({
       actions: () => ({
         updateDescription: (description) => ({ description }),

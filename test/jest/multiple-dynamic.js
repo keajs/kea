@@ -1,8 +1,7 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-import { Provider } from 'react-redux'
+import { render, screen, act } from '@testing-library/react'
 
 describe('multiple dynamic', () => {
   beforeEach(() => {
@@ -44,11 +43,11 @@ describe('multiple dynamic', () => {
     ]
 
     render(
-      <Provider store={store}>
+      <>
         {allNames.map((name) => (
           <ConnectedComponent key={name.id} id={name.id} defaultName={name.name} />
         ))}
-      </Provider>,
+      </>,
     )
     expect(screen.getAllByRole('heading')).toHaveLength(3)
 
@@ -61,7 +60,7 @@ describe('multiple dynamic', () => {
       scenes: { dynamic: { 12: { name: 'bla' }, 13: { name: 'george' }, 15: { name: 'michael' } } },
     })
 
-    dynamicLogic.build({ id: 12 }).actions.updateName('birb')
+    act(() => dynamicLogic.build({ id: 12 }).actions.updateName('birb'))
 
     expect(screen.getByTestId('sample-12')).toHaveTextContent('12birb')
 
