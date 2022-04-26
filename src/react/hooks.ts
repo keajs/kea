@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
+import React, { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { kea } from '../kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
@@ -54,7 +54,14 @@ export function useAllValues<L extends Logic = Logic>(logic: BuiltLogic<L> | Log
 
 export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['actions'] {
   const builtLogic = useMountedLogic(logic)
-  return builtLogic.actions
+  const response: Record<string, any> = {}
+  for (const key of Object.keys(builtLogic.actions)) {
+    response[key] = (...args: any[]) =>
+      ('startTransition' in React ? React.startTransition : (a: () => void) => a())(() =>
+        builtLogic.actions[key](...args),
+      )
+  }
+  return response
 }
 
 export function isWrapper<L extends Logic = Logic>(
@@ -76,7 +83,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
-    pauseSubscriptions(() => {
+    withPause(() => {
       unmount.current = builtLogic.mount()
     })
   }
@@ -84,7 +91,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const pathString = useRef(builtLogic.pathString)
 
   if (pathString.current !== builtLogic.pathString) {
-    pauseSubscriptions(() => {
+    withPause(() => {
       unmount.current?.()
       unmount.current = builtLogic.mount()
       pathString.current = builtLogic.pathString
@@ -96,14 +103,14 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
     if (!unmount.current) {
-      pauseSubscriptions(() => {
+      withPause(() => {
         unmount.current = builtLogic.mount()
         pathString.current = builtLogic.pathString
       })
     }
 
     return function useMountedLogicEffectCleanup() {
-      pauseSubscriptions(() => {
+      withPause(() => {
         unmount.current && unmount.current()
         unmount.current = undefined
       })
@@ -113,7 +120,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   return builtLogic as BuiltLogic<L>
 }
 
-function pauseSubscriptions(callback: () => void) {
+function withPause(callback: () => void) {
   pauseCounter += 1
   try {
     callback()
