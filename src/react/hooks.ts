@@ -58,7 +58,7 @@ export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | Logic
   for (const key of Object.keys(builtLogic.actions)) {
     response[key] = (...args: any[]) =>
       ('startTransition' in React ? React.startTransition : (a: () => void) => a())(() =>
-        builtLogic.actions[key](...args),
+        withPause(builtLogic.actions[key](...args)),
       )
   }
   return response
