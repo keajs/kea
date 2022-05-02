@@ -1,4 +1,4 @@
-import { createSelector, ParametricSelector } from 'reselect'
+import { createSelector, createSelectorCreator, defaultMemoize, ParametricSelector } from 'reselect'
 import { getStoreState } from '../../context'
 import { Logic, LogicInput, Selector } from '../../types'
 
@@ -33,7 +33,7 @@ export function createSelectors(logic: Logic, input: LogicInput): void {
   })
 
   Object.keys(selectorInputs).forEach((key) => {
-    const [input, func, type] = selectorInputs[key]!
+    const [input, func, type, isEqual] = selectorInputs[key]!
     const args = input(logic.selectors) as ParametricSelector<any, any, any>[]
 
     if (type) {
@@ -48,7 +48,7 @@ export function createSelectors(logic: Logic, input: LogicInput): void {
       }
     }
 
-    builtSelectors[key] = createSelector(args, func)
+    builtSelectors[key] = (isEqual ? createSelectorCreator(defaultMemoize, isEqual) : createSelector)(args, func)
     logic.selectors[key] = (state = getStoreState(), props = logic.props) => builtSelectors[key](state, props)
   })
 }

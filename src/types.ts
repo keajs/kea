@@ -131,9 +131,12 @@ export type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
+export type IsEqualsComparison = (a: any, b: any) => boolean
+
 export type SelectorDefinition<Selectors, SelectorFunction extends any> =
   | [(s: Selectors) => SelectorTuple, SelectorFunction]
   | [(s: Selectors) => SelectorTuple, SelectorFunction, any]
+  | [(s: Selectors) => SelectorTuple, SelectorFunction, any, IsEqualsComparison]
 
 type SelectorDefinitions<LogicType extends Logic> =
   | {
