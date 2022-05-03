@@ -5,7 +5,7 @@ import { LogicInput, LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
 import { getContext } from '../kea/context'
 
 /** True if we dispatched an action *while* rendering. Old subscriptions shouldn't update until after rendering. */
-let pauseCounter = 0
+export let pauseCounter = 0
 
 const getStore = () => getContext().store
 
@@ -120,10 +120,19 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   return builtLogic as BuiltLogic<L>
 }
 
+let timeout: number
 function withPause(callback: () => void) {
+  const previousState = getStore().getState()
   pauseCounter += 1
   try {
     callback()
-  } catch (e) {}
-  pauseCounter -= 1
+  } catch (e) {
+  } finally {
+    pauseCounter -= 1
+  }
+  const newState = getStore().getState()
+  if (previousState !== newState) {
+    timeout && window.clearTimeout(timeout)
+    timeout = window.setTimeout(() => getStore().dispatch({ type: '@KEA/FLUSH' }), 0)
+  }
 }

@@ -1,7 +1,7 @@
 import { activatePlugin, runPlugins } from './plugins'
 import { createStore } from './store'
 import { Context, ContextOptions } from '../types'
-import { Store } from 'redux'
+import type { Store } from 'redux'
 import { corePlugin } from '../core'
 
 let context: Context

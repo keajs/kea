@@ -1,4 +1,5 @@
-import { createStore as reduxCreateStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
+import type { Store, StoreEnhancer } from 'redux'
+import { createStore as reduxCreateStore, applyMiddleware, compose } from '../react/redux'
 
 import { createReduxStoreReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from './plugins'

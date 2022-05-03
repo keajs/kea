@@ -12,7 +12,7 @@
   - for each key, adds to the logic a reducer, a selector and a value
 */
 import { Logic, LogicBuilder, PathType, ReducerDefinitions } from '../types'
-import { AnyAction } from 'redux'
+import type { AnyAction } from 'redux'
 import { combineKeaReducers } from '../kea/reducer'
 import { getStoreState } from '../kea/context'
 import { createSelector } from 'reselect'

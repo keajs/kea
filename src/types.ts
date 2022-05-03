@@ -1,4 +1,4 @@
-import { Reducer, Store, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
+import type { Reducer, Store, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
 import { Context as ReactContext, ComponentType, FunctionComponent } from 'react'
 
 // universal helpers

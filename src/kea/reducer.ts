@@ -1,7 +1,7 @@
 import { getContext } from './context'
 import { runPlugins } from './plugins'
 import { BuiltLogic, ReducerFunction } from '../types'
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
@@ -227,5 +227,5 @@ function regenerateCombinedReducer() {
 
 export function createReduxStoreReducer(): Reducer {
   regenerateCombinedReducer()
-  return (state = defaultState, action) => (getContext().reducers.combined as ReducerFunction)(state, action, state)
+  return (state = defaultState, action) => getContext().reducers.combined?.(state, action, state)
 }

@@ -1,6 +1,7 @@
 import { kea, resetContext, keaReducer, getContext } from '../../src'
+import { recursiveCreateReducer } from '../../src/kea/reducer'
 
-import { createStore, combineReducers } from 'redux'
+import { createStore } from '../../src/react/redux'
 
 describe('logic connected', () => {
   beforeEach(() => {
@@ -205,7 +206,7 @@ describe('logic connected', () => {
 
   test('have it in the store only if there is a reducer', () => {
     const store = createStore(
-      combineReducers({
+      recursiveCreateReducer({
         scenes: keaReducer('scenes'),
       }),
     )
