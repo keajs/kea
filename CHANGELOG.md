@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.5.11 - 2022-05-02
+
+- Add `isEqual(a: any, b: any)` as the 4th argument to the selector array, after `PropTypes`. This will change to the 3rd element in Kea 3.0, which is in active development. The fix was backported from Kea 3.0.  
+
 ## 2.5.10 - 2022-03-19
 
 - Add `resetContext()` option `autoConnectMountWarning`, which warns when a logic is automatically mounted in a listener. 
