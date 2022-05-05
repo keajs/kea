@@ -1,7 +1,6 @@
 import { kea, resetContext, keaReducer, getContext } from '../../src'
 import { recursiveCreateReducer } from '../../src/kea/reducer'
-
-import { createStore } from '../../src/react/redux'
+import { legacy_createStore as createStore } from 'redux'
 
 describe('logic connected', () => {
   beforeEach(() => {
