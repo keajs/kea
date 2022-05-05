@@ -1,10 +1,11 @@
 import type { Store, StoreEnhancer } from 'redux'
-import { createStore as reduxCreateStore, applyMiddleware, compose } from '../react/redux'
+import { createStore as reduxCreateStore, applyMiddleware, compose } from 'redux'
 
 import { createReduxStoreReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from './plugins'
 import { getContext } from './context'
 import { CreateStoreOptions } from '../types'
+import { isPaused } from '../react/hooks'
 
 const reduxDevToolsCompose =
   typeof window !== 'undefined' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
@@ -22,6 +23,21 @@ const defaultOptions = (): CreateStoreOptions => ({
   enhancers: [],
   plugins: [],
 })
+
+/** Pauses Redux listeners when a logic is mounting, to avoid early re-renders from React */
+export const pauseListenersEnhancer: StoreEnhancer = (createStore) => (reducer, initialState) => {
+  const store = createStore(reducer, initialState)
+  const storeSubscribe = store.subscribe
+  store.subscribe = (observer) => {
+    const pausedObserver = () => {
+      if (!isPaused()) {
+        observer()
+      }
+    }
+    return storeSubscribe(pausedObserver)
+  }
+  return store
+}
 
 export function createStore(opts = {}): Store | void {
   const context = getContext()
@@ -54,7 +70,10 @@ export function createStore(opts = {}): Store | void {
   const composeEnchancer: typeof compose = options.compose || compose
 
   // create the store creator
-  const finalCreateStore = composeEnchancer(...options.enhancers)(reduxCreateStore) as typeof reduxCreateStore
+  const finalCreateStore = composeEnchancer(
+    pauseListenersEnhancer,
+    ...options.enhancers,
+  )(reduxCreateStore) as typeof reduxCreateStore
 
   // if we are whitelisting paths
   if (options.paths && options.paths.length > 0) {

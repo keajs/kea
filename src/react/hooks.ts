@@ -6,6 +6,7 @@ import { getContext } from '../kea/context'
 
 /** True if we dispatched an action *while* rendering. Old subscriptions shouldn't update until after rendering. */
 export let pauseCounter = 0
+export const isPaused = () => pauseCounter !== 0
 
 const getStore = () => getContext().store
 
