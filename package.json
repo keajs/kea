@@ -61,11 +61,10 @@
     }
   },
   "peerDependencies": {
-    "kea": ">= 2",
-    "react": ">= 16",
+    "react": ">= 16.8",
     "react-redux": ">= 7",
-    "redux": ">= 3",
-    "reselect": ">= 2"
+    "redux": ">= 4.2",
+    "reselect": ">= 4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
@@ -119,10 +118,10 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-redux": "^7.2.4",
+    "react-redux": "^7.0.1",
     "react-test-renderer": "^17.0.2",
-    "redux": "^4.1.0",
-    "reselect": "^4.0.0",
+    "redux": "^4.2.0",
+    "reselect": "^4.1.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.52.7",
     "rollup-plugin-dts": "^3.0.2",
