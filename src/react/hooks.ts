@@ -5,6 +5,11 @@ import { kea } from '../kea/kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic } from '../types'
 import { getContext } from '../context'
 
+/** True if we dispatched an action in a component's body *while* rendering. For example when mounting a logic.
+ * Old subscriptions shouldn't update until after rendering. */
+export let pauseCounter = 0
+export const isPaused = () => pauseCounter !== 0
+
 export function useKea(input: LogicInput, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
 }
@@ -58,15 +63,19 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
-    unmount.current = builtLogic.mount()
+    withPause(() => {
+      unmount.current = builtLogic.mount()
+    })
   }
 
   const pathString = useRef(builtLogic.pathString)
 
   if (pathString.current !== builtLogic.pathString) {
-    unmount.current()
-    unmount.current = builtLogic.mount()
-    pathString.current = builtLogic.pathString
+    withPause(() => {
+      unmount.current?.()
+      unmount.current = builtLogic.mount()
+      pathString.current = builtLogic.pathString
+    })
   }
 
   useEffect(function useMountedLogicEffect() {
@@ -74,15 +83,37 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
     if (!unmount.current) {
-      unmount.current = builtLogic.mount()
-      pathString.current = builtLogic.pathString
+      withPause(() => {
+        unmount.current = builtLogic.mount()
+        pathString.current = builtLogic.pathString
+      })
     }
 
     return function useMountedLogicEffectCleanup() {
-      unmount.current && unmount.current()
-      unmount.current = undefined
+      withPause(() => {
+        unmount.current && unmount.current()
+        unmount.current = undefined
+      })
     }
   }, [])
 
   return builtLogic as BuiltLogic<L>
+}
+
+let timeout: number
+function withPause(callback: () => void) {
+  const previousState = getContext().store.getState()
+  pauseCounter += 1
+  try {
+    callback()
+  } catch (e) {
+  } finally {
+    pauseCounter -= 1
+  }
+  const newState = getContext().store.getState()
+  if (previousState !== newState) {
+    // TODO: flush only if any subscription changes
+    timeout && window.clearTimeout(timeout)
+    timeout = window.setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
+  }
 }

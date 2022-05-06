@@ -4,6 +4,7 @@ import { createReduxStoreReducer, initRootReducerTree } from './reducer'
 import { runPlugins } from '../plugins'
 import { getContext } from '../context'
 import { CreateStoreOptions } from '../types'
+import { isPaused } from '../react/hooks'
 
 const reduxDevToolsCompose =
   typeof window !== 'undefined' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
@@ -53,7 +54,10 @@ export function getStore(opts = {}): Store | void {
   const composeEnchancer: typeof compose = options.compose || compose
 
   // create the store creator
-  const finalCreateStore = composeEnchancer(...options.enhancers)(createStore) as typeof createStore
+  const finalCreateStore = composeEnchancer(
+    pauseListenersEnhancer,
+    ...options.enhancers,
+  )(createStore) as typeof createStore
 
   // if we are whitelisting paths
   if (options.paths && options.paths.length > 0) {
@@ -73,5 +77,20 @@ export function getStore(opts = {}): Store | void {
   // run post-hooks
   runPlugins('afterReduxStore', options, store)
 
+  return store
+}
+
+/** Pauses Redux listeners when a logic is mounting, to avoid early re-renders from React */
+export const pauseListenersEnhancer: StoreEnhancer = (createStore) => (reducer, initialState) => {
+  const store = createStore(reducer, initialState)
+  const storeSubscribe = store.subscribe
+  store.subscribe = (observer) => {
+    const pausedObserver = () => {
+      if (!isPaused()) {
+        observer()
+      }
+    }
+    return storeSubscribe(pausedObserver)
+  }
   return store
 }
