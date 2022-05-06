@@ -2,13 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.6.0 - 2022-05-06
+
+- Update version requirements of peer dependencies: `reselect` 4.1+, `redux` 4.2+, `react-redux` 7+ and `react` 16.8+.
+- If you're using React 18, upgrade `react-redux` to version 8+.
+
+- Add a "redux listener silencing store enhancer", which prevents Redux's `useSelector`s from updating, when mounting a logic from within the body of a React component (e.g. with `useValues`).
+This effectively silences log spam in React 18 (`Warning: Cannot update a component (`Y`) while rendering a different component (`X`). To locate the bad setState() call inside `X`, follow the stack trace as described.`), and improves performance.
+
+- Set the `autoConnectMountWarning` option to `true` by default. Kea 2.0 introduced ["auto-connect"](https://keajs.org/blog/kea-2.0#auto-connect),
+  and while it works great in reducers and selectors, automatically connecting logic in listeners turned out to be a bad idea.
+  Thus, in Kea 2.6, when accessing values on an unmounted logic, you'll get a warning by default. In Kea 3.0, it will trigger an error.
+
+```js
+import { kea } from 'kea'
+import { otherLogic } from './otherLogic'
+import { yetAnotherLogic } from './yetAnotherLogic'
+
+const logic = kea({
+  // connect: [otherLogic], // should have been explicitly connected like this, or mounted outside the logic
+  actions: { doSomething: true },
+  listeners: {
+    doSomething: () => {
+      // This will now print a warning if `otherLogic` is not mounted.
+      console.log(otherLogic.values.situation)
+    },
+  },
+  reducers: {
+    something: [
+      null,
+      {
+        // This `yetAnotherLogic` will still get connected automatically, not print a warning, and not require `connect`.
+        // However it's still good practice to explicitly define your dependencies.
+        [yetAnotherLogic.actionTypes.loadSessions]: () => 'yes',
+      },
+    ],
+  },
+})
+```
+
+- Support custom selector memoization. Use [`memoizeOptions`](https://github.com/reduxjs/reselect#defaultmemoizefunc-equalitycheckoroptions--defaultequalitycheck) as the 4th `selector` array value, which is then passed directly to reselect:
+
+```js
+const logic = kea({
+  selectors: {
+    widgetKeys: [
+      (selectors) => [selectors.widgets],
+      (widgets) => Object.keys(widgets),
+      null, // PropTypes, will be removed in Kea 3.0
+      { resultEqualityCheck: deepEqual },
+    ],
+  },
+})
+```
+
 ## 2.5.11 - 2022-05-02
 
-- Add `isEqual(a: any, b: any)` as the 4th argument to the selector array, after `PropTypes`. This will change to the 3rd element in Kea 3.0, which is in active development. The fix was backported from Kea 3.0.  
+- Add `isEqual(a: any, b: any)` as the 4th argument to the selector array, after `PropTypes`. This will change to the 3rd element in Kea 3.0, which is in active development. The fix was backported from Kea 3.0.
 
 ## 2.5.10 - 2022-03-19
 
-- Add `resetContext()` option `autoConnectMountWarning`, which warns when a logic is automatically mounted in a listener. 
+- Add `resetContext()` option `autoConnectMountWarning`, which warns when a logic is automatically mounted in a listener.
 
 ## 2.5.9 - 2022-03-14
 
@@ -24,11 +78,11 @@ All notable changes to this project will be documented in this file.
 
 ## 2.5.6 - 2021-10-21
 
-- Add support for connecting to actions in circularly connected logics (`aLogic` connects to `bLogic` to get `bAction`, `bLogic` connects to `aLogic` to get `aAction`). 
+- Add support for connecting to actions in circularly connected logics (`aLogic` connects to `bLogic` to get `bAction`, `bLogic` connects to `aLogic` to get `aAction`).
 
 ## 2.5.5 - 2021-10-21
 
-- Add support for connecting to values in circularly connected logics (`aLogic` connects to `bLogic` to get `bValue`, `bLogic` connects to `aLogic` to get `aValue`). 
+- Add support for connecting to values in circularly connected logics (`aLogic` connects to `bLogic` to get `bValue`, `bLogic` connects to `aLogic` to get `aValue`).
 
 ## 2.5.4 - 2021-10-21
 
