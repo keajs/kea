@@ -141,10 +141,10 @@ test('support custom memoization functions', () => {
     selectors: {
       reversedValues: [(s) => [s.values], (values) => [...values].reverse()],
       reversedValuesIfLengthChanges: [
-        (s) => [s.values],
-        (values) => [...values].reverse(),
+        (s) => [s.values, () => 1],
+        (values, _discarded) => [...values].reverse(),
         null,
-        (a, b) => a.length === b.length,
+        { resultEqualityCheck: (a, b) => a.length === b.length },
       ],
     },
   })

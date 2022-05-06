@@ -1,5 +1,6 @@
 import { Reducer, Store, Action as ReduxAction, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
 import { Context as ReactContext, ComponentType, FunctionComponent } from 'react'
+import { DefaultMemoizeOptions } from 'reselect'
 
 // universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
@@ -131,12 +132,10 @@ export type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
-export type IsEqualsComparison = (a: any, b: any) => boolean
-
 export type SelectorDefinition<Selectors, SelectorFunction extends any> =
   | [(s: Selectors) => SelectorTuple, SelectorFunction]
   | [(s: Selectors) => SelectorTuple, SelectorFunction, any]
-  | [(s: Selectors) => SelectorTuple, SelectorFunction, any, IsEqualsComparison]
+  | [(s: Selectors) => SelectorTuple, SelectorFunction, any, DefaultMemoizeOptions]
 
 type SelectorDefinitions<LogicType extends Logic> =
   | {
