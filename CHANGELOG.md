@@ -32,9 +32,11 @@ const logic = kea({
     something: [
       null,
       {
-        // This `yetAnotherLogic` will still get connected automatically, not print a warning, and not require `connect`.
-        // However it's still good practice to explicitly define your dependencies.
-        [yetAnotherLogic.actionTypes.loadSessions]: () => 'yes',
+          // This `yetAnotherLogic` will still get connected automatically, not print a warning, 
+          // and not require `connect`. That's because it's connected directly at build time, whereas
+          // in the listener, we're running within an asynchronous callback coming from who knows where. 
+          // While this works, it's still good practice to explicitly define your dependencies.
+          [yetAnotherLogic.actionTypes.loadSessions]: () => 'yes',
       },
     ],
   },
