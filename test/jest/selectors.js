@@ -143,7 +143,7 @@ test('support custom memoization functions', () => {
       reversedValuesIfLengthChanges: [
         (s) => [s.values, () => 1],
         (values, _discarded) => [...values].reverse(),
-        null,
+        null, // PropTypes, will be removed in Kea 3.0
         { resultEqualityCheck: (a, b) => a.length === b.length },
       ],
     },
