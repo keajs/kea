@@ -62,7 +62,7 @@
   },
   "peerDependencies": {
     "react": ">= 16",
-    "react-redux": ">= 8",
+    "react-redux": ">= 7",
     "redux": ">= 4.2",
     "reselect": ">= 4.1"
   },
@@ -118,7 +118,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-redux": "^8.0.1",
+    "react-redux": "^7.0.1",
     "react-test-renderer": "^17.0.2",
     "redux": "^4.2.0",
     "reselect": "^4.1.5",
