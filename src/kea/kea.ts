@@ -1,14 +1,7 @@
 import { getContext } from './context'
-
 import { getBuiltLogic, getCachedBuiltLogic } from './build'
-
 import { wrapComponent } from '../react/wrap'
 import { AnyComponent, BuiltLogic, KeaComponent, Logic, LogicBuilder, LogicInput, LogicWrapper, Props } from '../types'
-import { unmountLogic } from './mount'
-
-export function unmountedActionError(key: string, path: string): string {
-  return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!\n\nThis can happen in several situations.\n\nIf you're using values that are not guaranteed to be there (e.g. a reducer that uses otherLogic.actionTypes.something), pass a function instead of an object so that section is lazily evaluated while the logic is built See: https://kea.js.org/docs/guide/additional/#input-objects-vs-functions\n\nIt may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint? https://kea.js.org/docs/guide/additional/#breakpoints\n\nor you may not have mounted the logic 🤔`
-}
 
 /*
 
@@ -158,4 +151,12 @@ export function proxyFields<L extends Logic = Logic>(wrapper: LogicWrapper<L>): 
   for (const key of Object.keys(getContext().plugins.logicFields)) {
     proxyFieldToLogic(wrapper, key as keyof Logic)
   }
+}
+
+export function unmountedActionError(key: string, path: string): string {
+  return `[KEA] Can not access "${key}" on logic "${path}" because it is not mounted!
+This can happen in several situations:
+- You may need to add the "connect(otherLogic)" logic builder, or "useMountedLogic(otherLogic)" hook to make sure the logic is mounted.
+- If "otherLogic" is undefined, your bundler may import and execute code in an unfavourable order. Switch to a function: "connect(() => otherLogic)" 
+- It may be that the logic has already unmounted. Do you have a listener that is missing a breakpoint?`
 }

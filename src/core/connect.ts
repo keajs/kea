@@ -23,7 +23,11 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
     const props = logic.props || {}
     const connect = typeof input === 'function' ? input(props) : input
 
-    const connectLogic = Array.isArray(connect) ? connect : connect.logic
+    const connectLogic = Array.isArray(connect)
+      ? connect
+      : '_isKeaBuild' in connect || '_isKea' in connect
+      ? [connect]
+      : connect.logic
 
     if (connectLogic) {
       for (let otherLogic of connectLogic) {

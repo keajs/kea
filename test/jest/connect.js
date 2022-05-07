@@ -367,6 +367,84 @@ describe('connect', () => {
     expect(connectedLogic.values.description).toEqual('default')
   })
 
+  test('can connect logic directly', () => {
+    const connectedLogic = kea({
+      actions: () => ({
+        updateDescription: (description) => ({ description }),
+      }),
+
+      reducers: ({ actions, props }) => ({
+        description: [
+          'default',
+          {
+            [actions.updateDescription]: (_, payload) => payload.description,
+          },
+        ],
+      }),
+    })
+
+    const logic = kea({
+      connect: connectedLogic,
+
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+
+      reducers: ({ actions, props }) => ({
+        name: [
+          `chirpy-${props.id}`,
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+    })
+
+    logic({ id: 12 }).mount()
+
+    expect(logic.values.name).toEqual('chirpy-12')
+    expect(connectedLogic.values.description).toEqual('default')
+  })
+
+  test('can connect built logic directly', () => {
+    const connectedLogic = kea({
+      actions: () => ({
+        updateDescription: (description) => ({ description }),
+      }),
+
+      reducers: ({ actions, props }) => ({
+        description: [
+          'default',
+          {
+            [actions.updateDescription]: (_, payload) => payload.description,
+          },
+        ],
+      }),
+    })
+
+    const logic = kea({
+      connect: () => connectedLogic(),
+
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+
+      reducers: ({ actions, props }) => ({
+        name: [
+          `chirpy-${props.id}`,
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+    })
+
+    logic({ id: 12 }).mount()
+
+    expect(logic.values.name).toEqual('chirpy-12')
+    expect(connectedLogic.values.description).toEqual('default')
+  })
+
   describe('can connect in a loop', () => {
     const runTest = (buildTheLogic = true) => {
       let logic1
