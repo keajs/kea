@@ -11,10 +11,6 @@ export const isPaused = () => pauseCounter !== 0
 
 const getStoreState = () => getContext().store.getState()
 
-export function useKea(input: LogicInput, deps = []): LogicWrapper {
-  return useMemo(() => kea(input), deps)
-}
-
 export function useSelector(selector: Selector): any {
   return useSyncExternalStore(getContext().store.subscribe, () => selector(getStoreState()))
 }
