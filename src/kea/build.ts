@@ -6,6 +6,7 @@ import { mountLogic, unmountLogic } from './mount'
 import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext } from '../types'
 import { addConnection } from '../core/connect'
 import { key, path, props } from '../core'
+import { shallowCompare } from '../utils'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
@@ -54,8 +55,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
 
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
-    if (props) {
-      cachedLogic.props = props
+    if (props && (!cachedLogic.props || (cachedLogic.props !== props && !shallowCompare(cachedLogic.props, props)))) {
+      cachedLogic.props = { ...cachedLogic.props, ...props }
     }
     return cachedLogic
   }
