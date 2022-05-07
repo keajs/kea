@@ -107,8 +107,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
     // initialize defaults fields as requested by plugins, including core
     for (const plugin of getContext().plugins.activated) {
       if (plugin.defaults) {
-        const defaults = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
-        Object.assign(logic, defaults)
+        const newLogicProperties = typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults
+        Object.assign(logic, newLogicProperties)
       }
     }
 

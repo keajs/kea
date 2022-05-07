@@ -221,7 +221,7 @@ export function combineKeaReducers(reducers: Record<string, ReducerFunction>): R
 
 function regenerateCombinedReducer() {
   const { redux, roots } = getContext().reducers
-  const reducers = Object.assign({}, redux, roots)
+  const reducers = { ...redux, ...roots }
   getContext().reducers.combined = combineKeaReducers(reducers)
 }
 
