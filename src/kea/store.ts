@@ -24,21 +24,6 @@ const defaultOptions = (): CreateStoreOptions => ({
   plugins: [],
 })
 
-/** Pauses Redux listeners when a logic is mounting, to avoid early re-renders from React */
-export const pauseListenersEnhancer: StoreEnhancer = (createStore) => (reducer, initialState) => {
-  const store = createStore(reducer, initialState)
-  const storeSubscribe = store.subscribe
-  store.subscribe = (observer) => {
-    const pausedObserver = () => {
-      if (!isPaused()) {
-        observer()
-      }
-    }
-    return storeSubscribe(pausedObserver)
-  }
-  return store
-}
-
 export function createStore(opts = {}): Store | void {
   const context = getContext()
 
@@ -93,5 +78,20 @@ export function createStore(opts = {}): Store | void {
   // run post-hooks
   runPlugins('afterReduxStore', options, store)
 
+  return store
+}
+
+/** Pauses Redux listeners when a logic is mounting, to avoid early re-renders from React */
+export const pauseListenersEnhancer: StoreEnhancer = (createStore) => (reducer, initialState) => {
+  const store = createStore(reducer, initialState)
+  const storeSubscribe = store.subscribe
+  store.subscribe = (observer) => {
+    const pausedObserver = () => {
+      if (!isPaused()) {
+        observer()
+      }
+    }
+    return storeSubscribe(pausedObserver)
+  }
   return store
 }

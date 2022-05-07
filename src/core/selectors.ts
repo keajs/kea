@@ -36,7 +36,7 @@ export function selectors<L extends Logic = Logic>(
     }
 
     for (const entry of Object.entries(selectorInputs)) {
-      const [key, [input, func, isEquals]]: [string, SelectorDefinition<L['selectors'], any>] = entry
+      const [key, [input, func, memoizeOptions]]: [string, SelectorDefinition<L['selectors'], any>] = entry
       const args = input(logic.selectors) as ParametricSelector<any, any, any>[]
 
       if (args.filter((a) => typeof a !== 'function').length > 0) {
@@ -44,7 +44,7 @@ export function selectors<L extends Logic = Logic>(
         const msg = `[KEA] Logic "${logic.pathString}", selector "${key}" has incorrect input: [${argTypes}].`
         throw new Error(msg)
       }
-      builtSelectors[key] = (isEquals ? createSelectorCreator(defaultMemoize, isEquals) : createSelector)(args, func)
+      builtSelectors[key] = createSelector(args, func, { memoizeOptions })
 
       addSelectorAndValue(logic, key, (state = getStoreState(), props = logic.props) =>
         builtSelectors[key](state, props),

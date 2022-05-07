@@ -4,26 +4,19 @@ import { kea } from '../kea'
 import { LogicInput, LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
 import { getContext } from '../kea/context'
 
-/** True if we dispatched an action *while* rendering. Old subscriptions shouldn't update until after rendering. */
+/** True if we dispatched an action in a component's body *while* rendering. For example when mounting a logic.
+ * Old subscriptions shouldn't update until after rendering. */
 export let pauseCounter = 0
 export const isPaused = () => pauseCounter !== 0
 
-const getStore = () => getContext().store
+const getStoreState = () => getContext().store.getState()
 
 export function useKea(input: LogicInput, deps = []): LogicWrapper {
   return useMemo(() => kea(input), deps)
 }
 
-function subscribeUnlessPaused(onStoreChange: () => void): () => void {
-  return getStore().subscribe(() => {
-    if (pauseCounter === 0) {
-      onStoreChange()
-    }
-  })
-}
-
 export function useSelector(selector: Selector): any {
-  return useSyncExternalStore(subscribeUnlessPaused, () => selector(getStore().getState()))
+  return useSyncExternalStore(getContext().store.subscribe, () => selector(getStoreState()))
 }
 
 export function useValues<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['values'] {
@@ -55,14 +48,7 @@ export function useAllValues<L extends Logic = Logic>(logic: BuiltLogic<L> | Log
 
 export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['actions'] {
   const builtLogic = useMountedLogic(logic)
-  const response: Record<string, any> = {}
-  for (const key of Object.keys(builtLogic.actions)) {
-    response[key] = (...args: any[]) =>
-      ('startTransition' in React ? React.startTransition : (a: () => void) => a())(() =>
-        withPause(builtLogic.actions[key](...args)),
-      )
-  }
-  return response
+  return builtLogic['actions']
 }
 
 export function isWrapper<L extends Logic = Logic>(
@@ -123,7 +109,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
 
 let timeout: number
 function withPause(callback: () => void) {
-  const previousState = getStore().getState()
+  const previousState = getStoreState()
   pauseCounter += 1
   try {
     callback()
@@ -131,9 +117,10 @@ function withPause(callback: () => void) {
   } finally {
     pauseCounter -= 1
   }
-  const newState = getStore().getState()
+  const newState = getStoreState()
   if (previousState !== newState) {
+    // TODO: flush only if any subscription changes
     timeout && window.clearTimeout(timeout)
-    timeout = window.setTimeout(() => getStore().dispatch({ type: '@KEA/FLUSH' }), 0)
+    timeout = window.setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
   }
 }

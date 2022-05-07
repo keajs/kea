@@ -140,7 +140,7 @@ describe('selectors', () => {
         reversedValuesIfLengthChanges: [
           (s) => [s.values],
           (values) => [...values].reverse(),
-          (a, b) => a.length === b.length,
+          { resultEqualityCheck: (a, b) => a.length === b.length },
         ],
       }),
     ])
