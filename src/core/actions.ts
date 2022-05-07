@@ -27,7 +27,6 @@ export function actions<L extends Logic = Logic>(
 }
 
 export function createActionCreator(type: string, payloadCreator: any | ((...args: any[]) => any)): KeaAction {
-  const isObject = (item: any) => typeof item === 'object' && !Array.isArray(item) && item !== null
   const action = <KeaAction>(...payloadArgs: any[]): KeaReduxAction => ({
     type: type,
     payload: typeof payloadCreator === 'function' ? payloadCreator(...payloadArgs) : { value: true },

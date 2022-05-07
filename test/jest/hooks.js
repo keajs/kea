@@ -3,7 +3,6 @@ import {
   useValues,
   useAllValues,
   useActions,
-  useKea,
   getContext,
   resetContext,
   path,
@@ -257,126 +256,6 @@ describe('hooks', () => {
     })
 
     function TogglerComponent() {
-      const { id } = useValues(togglerLogic)
-      const { next } = useActions(togglerLogic)
-
-      return (
-        <div>
-          <SampleComponent id={id} />
-          <button data-testid="next" onClick={next}>
-            next
-          </button>
-        </div>
-      )
-    }
-
-    render(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
-
-    expect(screen.getByTestId('id')).toHaveTextContent('12')
-    expect(screen.getByTestId('name')).toHaveTextContent('brad')
-    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-    expect(store.getState()).toEqual({
-      kea: {},
-      scenes: {
-        hooky: { 12: { name: 'brad' } },
-        toggler: { id: 12 },
-      },
-    })
-
-    fireEvent.click(screen.getByTestId('updateName'))
-
-    expect(screen.getByTestId('id')).toHaveTextContent('12')
-    expect(screen.getByTestId('name')).toHaveTextContent('fred')
-    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
-
-    expect(store.getState()).toEqual({
-      kea: {},
-      scenes: {
-        hooky: { 12: { name: 'fred' } },
-        toggler: { id: 12 },
-      },
-    })
-
-    fireEvent.click(screen.getByTestId('next'))
-
-    expect(screen.getByTestId('id')).toHaveTextContent('13')
-    expect(screen.getByTestId('name')).toHaveTextContent('brad')
-    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-    expect(store.getState()).toEqual({
-      kea: {},
-      scenes: {
-        hooky: { 13: { name: 'brad' } },
-        toggler: { id: 13 },
-      },
-    })
-  })
-
-  test('can define logic with useKea', () => {
-    const { store } = getContext()
-
-    function SampleComponent({ id }) {
-      const logic = useKea({
-        key: (props) => props.id,
-        path: (key) => ['scenes', 'hooky', key],
-        actions: () => ({
-          updateName: (name) => ({ name }),
-        }),
-        reducers: ({ actions, props }) => ({
-          name: [
-            props.defaultName,
-            {
-              [actions.updateName]: (state, payload) => payload.name,
-            },
-          ],
-        }),
-        selectors: ({ selectors }) => ({
-          upperCaseName: [
-            () => [selectors.name],
-            (name) => {
-              return name.toUpperCase()
-            },
-          ],
-        }),
-      })
-      const innerLogic = logic({ id, defaultName: 'brad' })
-
-      const { name, upperCaseName } = useValues(innerLogic)
-      const { updateName } = useActions(innerLogic)
-
-      return (
-        <div>
-          <div data-testid="id">{id}</div>
-          <div data-testid="name">{name}</div>
-          <div data-testid="upperCaseName">{upperCaseName}</div>
-          <div data-testid="updateName" onClick={() => updateName('fred')}>
-            updateName
-          </div>
-        </div>
-      )
-    }
-
-    function TogglerComponent() {
-      const togglerLogic = useKea({
-        path: () => ['scenes', 'toggler'],
-        actions: () => ({
-          next: true,
-        }),
-        reducers: ({ actions }) => ({
-          id: [
-            12,
-            {
-              [actions.next]: (state) => state + 1,
-            },
-          ],
-        }),
-      })
-
       const { id } = useValues(togglerLogic)
       const { next } = useActions(togglerLogic)
 
