@@ -6,11 +6,14 @@ const reservedKeys = {
   path: true,
   pathString: true,
   props: true,
+  inputs: true,
   wrapper: true,
-
   wrap: true,
   build: true,
   mount: true,
+  unmount: true,
+  isMounted: true,
+  findMounted: true,
   extend: true,
 }
 
