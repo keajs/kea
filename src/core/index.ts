@@ -23,6 +23,7 @@ export { path } from './path'
 export const corePlugin: KeaPlugin = {
   name: 'core',
 
+  // assign defaults values to the logic
   defaults: () => ({
     actionCreators: {},
     actionKeys: {},
@@ -43,10 +44,12 @@ export const corePlugin: KeaPlugin = {
   }),
 
   events: {
+    // setup defaults for listeners
     afterPlugin(): void {
       setPluginContext<ListenersPluginContext>('listeners', { byAction: {}, byPath: {}, pendingPromises: new Map() })
     },
 
+    // add listeners middleware
     beforeReduxStore(options: CreateStoreOptions): void {
       options.middleware.push((store) => (next) => (action) => {
         const previousState = store.getState()
@@ -64,6 +67,7 @@ export const corePlugin: KeaPlugin = {
       })
     },
 
+    // support kea 2.0 style object building
     legacyBuild: (logic, input) => {
       'connect' in input && input.connect && connect(input.connect)(logic)
       runPlugins('legacyBuildAfterConnect', logic, input)
