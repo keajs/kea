@@ -86,13 +86,13 @@ export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreato
   ? Partial<
       {
         [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
-          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends any
-            ? ReturnType<LogicType['actionCreators'][K]>['payload']['value']
+          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends true
+            ? true
             : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
           : never
       }
     >
-  : Record<string, any | ((...args: any[]) => any)>
+  : Record<string, true | ((...args: any[]) => any)>
 
 export interface KeaReduxAction extends AnyAction {
   type: string

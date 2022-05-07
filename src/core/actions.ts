@@ -30,12 +30,7 @@ export function createActionCreator(type: string, payloadCreator: any | ((...arg
   const isObject = (item: any) => typeof item === 'object' && !Array.isArray(item) && item !== null
   const action = <KeaAction>(...payloadArgs: any[]): KeaReduxAction => ({
     type: type,
-    payload:
-      typeof payloadCreator === 'function'
-        ? payloadCreator(...payloadArgs)
-        : isObject(payloadCreator)
-        ? payloadCreator
-        : { value: payloadCreator },
+    payload: typeof payloadCreator === 'function' ? payloadCreator(...payloadArgs) : { value: true },
   })
   action.toString = () => type
   action._isKeaAction = true
