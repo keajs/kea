@@ -1,7 +1,7 @@
-import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder } from '../types'
+import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder, PayloadCreatorDefinition } from '../types'
 import { getContext } from '../kea/context'
 
-/** Logic builder: actions({ key: (id) => ({ id }) }) */
+/** Logic builder: actions({ actionWithParams: (id) => ({ id }), actionNoParams: true }) */
 export function actions<L extends Logic = Logic>(
   input: ActionDefinitions<L> | ((logic: L) => ActionDefinitions<L>),
 ): LogicBuilder<L> {
@@ -11,7 +11,7 @@ export function actions<L extends Logic = Logic>(
       const actionCreator: KeaAction =
         typeof payloadCreator === 'function' && '_isKeaAction' in payloadCreator
           ? payloadCreator
-          : createActionCreator(createActionType(key, logic.pathString), payloadCreator)
+          : createActionCreator(createActionType(key, logic.pathString), payloadCreator ?? true)
       const type = actionCreator.toString()
 
       logic.actionCreators[key] = actionCreator
@@ -26,7 +26,7 @@ export function actions<L extends Logic = Logic>(
   }
 }
 
-export function createActionCreator(type: string, payloadCreator: any | ((...args: any[]) => any)): KeaAction {
+export function createActionCreator(type: string, payloadCreator: PayloadCreatorDefinition): KeaAction {
   const action = <KeaAction>(...payloadArgs: any[]): KeaReduxAction => ({
     type: type,
     payload: typeof payloadCreator === 'function' ? payloadCreator(...payloadArgs) : { value: true },

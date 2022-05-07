@@ -1,4 +1,4 @@
-import { BuiltLogic, Logic, LogicBuilder, LogicWrapper, Selector } from '../types'
+import { BuiltLogic, ConnectDefinitions, Logic, LogicBuilder, LogicWrapper, Selector } from '../types'
 import { isBuiltLogic, isLogicWrapper } from '../utils'
 import { getContext, getStoreState } from '../kea/context'
 import { createActionType } from './actions'
@@ -6,19 +6,19 @@ import { createActionType } from './actions'
 /*
   Copy the connect'ed logic stores' selectors and actions into this object
 
-  input.connect = {
+  connect({
     logic: [farmSceneLogic],
     values: [farmSceneLogic, ['chicken']],
     actions: [farmSceneLogic, ['setChicken']]
-  }
-
-  ... converts to:
+  })
 
   logic.connections = { 'scenes.farm': farmSceneLogic }
   logic.actions = { setChicken: (id) => void }
   logic.selectors = { chicken: (state) => state.scenes.farm }
 */
-export function connect<L extends Logic = Logic>(input: any | ((props: L['props']) => any)): LogicBuilder<L> {
+export function connect<L extends Logic = Logic>(
+  input: ConnectDefinitions | ((props: L['props']) => ConnectDefinitions),
+): LogicBuilder<L> {
   return (logic) => {
     const props = logic.props || {}
     const connect = typeof input === 'function' ? input(props) : input
@@ -31,14 +31,15 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
 
     if (connectLogic) {
       for (let otherLogic of connectLogic) {
-        if (otherLogic._isKea) {
+        if ('_isKea' in otherLogic) {
           otherLogic = otherLogic(props)
         }
         addConnection(logic, otherLogic)
       }
-      if (Array.isArray(connect)) {
-        return
-      }
+    }
+
+    if ('_isKeaBuild' in connect || '_isKea' in connect || Array.isArray(connect)) {
+      return
     }
 
     if (connect.actions) {
@@ -89,8 +90,8 @@ export function connect<L extends Logic = Logic>(input: any | ((props: L['props'
       }
     }
 
-    if (connect.values || connect.props) {
-      const response = deconstructMapping(connect.values || connect.props)
+    if (connect.values) {
+      const response = deconstructMapping(connect.values)
 
       for (let [otherLogic, from, to] of response) {
         if (process.env.NODE_ENV !== 'production') {

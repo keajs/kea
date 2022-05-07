@@ -81,7 +81,7 @@ export type LogicWrapper<LogicType extends Logic = Logic> = LogicType & LogicWra
 export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => void
 
 // input helpers (using the generated logic type as input)
-
+export type PayloadCreatorDefinition = true | ((...args: any[]) => any)
 export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreators'] extends Record<string, any>
   ? Partial<
       {
@@ -92,7 +92,7 @@ export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreato
           : never
       }
     >
-  : Record<string, true | ((...args: any[]) => any)>
+  : Record<string, PayloadCreatorDefinition>
 
 export interface KeaReduxAction extends AnyAction {
   type: string
@@ -209,13 +209,22 @@ type LoaderDefinitions<LogicType extends Logic> = {
     | [ReturnType<LogicType['reducers'][K]>, LoaderFunctions<LogicType, ReturnType<LogicType['reducers'][K]>>]
 }
 
+export type ConnectDefinitions =
+  | BuiltLogic
+  | LogicWrapper
+  | (BuiltLogic | LogicWrapper)[]
+  | {
+      logic?: (BuiltLogic | LogicWrapper)[]
+      values?: any[]
+      actions?: any[]
+    }
+
 export type LogicInput<LogicType extends Logic = Logic> = {
   inherit?: LogicWrapper[]
   extend?: LogicInput[]
   key?: (props: LogicType['props']) => KeyType
   path?: PathType | ((key: KeyType) => PathType)
-  connect?: any | ((props: LogicType['props']) => any)
-  constants?: (logic: LogicType) => string[] | string[]
+  connect?: ConnectDefinitions | ((props: LogicType['props']) => ConnectDefinitions)
   actions?: ActionDefinitions<LogicType> | ((logic: LogicType) => ActionDefinitions<LogicType>)
   reducers?: ReducerDefinitions<LogicType> | ((logic: LogicType) => ReducerDefinitions<LogicType>)
   selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
