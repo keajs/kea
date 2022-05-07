@@ -1,7 +1,6 @@
 import { kea, getContext, resetContext } from '../../src'
 
 import React from 'react'
-import { Provider } from 'react-redux'
 import { render, screen, act } from '@testing-library/react'
 
 describe('connect', () => {
@@ -163,11 +162,7 @@ describe('connect', () => {
 
     expect(store.getState()).toEqual({ kea: {} })
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(store.getState()).toEqual({ kea: { logic: { 1: { name: 'chirpy' }, 2: { description: 'default' } } } })
 
@@ -257,11 +252,7 @@ describe('connect', () => {
 
     expect(store.getState()).toEqual({ kea: {} })
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} defaultDescription="this is a bird" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} defaultDescription="this is a bird" />)
 
     expect(store.getState()).toEqual({
       kea: { logic: { 1: { name: 'chirpy-12' }, 2: { description: 'this is a bird' } } },

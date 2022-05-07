@@ -1,7 +1,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
 describe('selectors props', () => {
@@ -40,12 +39,10 @@ describe('selectors props', () => {
     const ConnectedBookDetail = bookDetailLogic(BookDetail)
 
     render(
-      <Provider store={store}>
-        <div className="playground-scene">
-          <ConnectedBookDetail bookId={1} />
-          <ConnectedBookDetail bookId={2} />
-        </div>
-      </Provider>,
+      <div className="playground-scene">
+        <ConnectedBookDetail bookId={1} />
+        <ConnectedBookDetail bookId={2} />
+      </div>,
     )
 
     expect(screen.getByTestId('book-1')).toHaveTextContent('book1')

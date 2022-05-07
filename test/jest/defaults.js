@@ -1,7 +1,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
-import { Provider } from 'react-redux'
 import { render, screen, act } from '@testing-library/react'
 
 describe('defaults', () => {
@@ -54,11 +53,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id="12" defaultName="defaultName" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id="12" defaultName="defaultName" />)
 
     expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
@@ -153,11 +148,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id="12" defaultName="defaultName" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id="12" defaultName="defaultName" />)
 
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
     expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
@@ -270,11 +261,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = dynamicLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id="12" defaultName="defaultName" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id="12" defaultName="defaultName" />)
 
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
     expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
@@ -351,11 +338,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = lazyLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id="12" defaultName="defaultName" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id="12" defaultName="defaultName" />)
 
     expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
@@ -450,11 +433,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id="12" defaultName="defaultName" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id="12" defaultName="defaultName" />)
 
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Storedname')
     expect(screen.getByTestId('connectedName')).toHaveTextContent('storedName')
@@ -544,11 +523,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent />
-      </Provider>,
-    )
+    render(<ConnectedComponent />)
 
     expect(screen.getByTestId('propsName')).toHaveTextContent('defaultName')
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Defaultname')
@@ -639,11 +614,7 @@ describe('defaults', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent />
-      </Provider>,
-    )
+    render(<ConnectedComponent />)
 
     expect(screen.getByTestId('propsName')).toHaveTextContent('henry')
     expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Henry')

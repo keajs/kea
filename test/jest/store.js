@@ -1,6 +1,5 @@
-import { kea, createStore, resetContext, getContext, useValues, Provider } from '../../src'
+import { kea, createStore, resetContext, getContext } from '../../src'
 import React, { Component } from 'react'
-import { Provider as ReduxProvider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 
 class SampleComponent extends Component {
@@ -84,11 +83,7 @@ describe('store', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <ReduxProvider store={store}>
-        <ConnectedComponent id={12} />
-      </ReduxProvider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
@@ -187,37 +182,5 @@ describe('store', () => {
     expect(() => {
       nonExistingLogic.mount()
     }).toThrow(`[KEA] Can not start reducer's path with "birds"! Please add it to the whitelist`)
-  })
-
-  describe('<Provider> wraps the react-redux Provider', () => {
-    const logic = kea({
-      reducers: { bla: ['hi', {}] },
-    })
-
-    function Component() {
-      const { bla } = useValues(logic)
-      return <div data-testid="bla">{bla}</div>
-    }
-
-    beforeEach(() => {
-      resetContext()
-    })
-
-    test('works with <ReactReduxProvider />', () => {
-      render(
-        <ReduxProvider store={getContext().store}>
-          <Component />
-        </ReduxProvider>,
-      )
-      expect(screen.getByTestId('bla')).toHaveTextContent('hi')
-    })
-    test('works with <Provider />', () => {
-      render(
-        <Provider>
-          <Component />
-        </Provider>,
-      )
-      expect(screen.getByTestId('bla')).toHaveTextContent('hi')
-    })
   })
 })

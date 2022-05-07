@@ -1,7 +1,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
 import { render, screen, act } from '@testing-library/react'
 
 class SampleComponent extends Component {
@@ -77,11 +76,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
@@ -139,11 +134,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = dynamicLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
@@ -208,11 +199,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = secondLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
@@ -256,11 +243,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent />
-      </Provider>,
-    )
+    render(<ConnectedComponent />)
 
     expect(screen.getByTestId('props')).toHaveTextContent('actions,dispatch,name')
     expect(screen.getByTestId('actions')).toHaveTextContent('updateName,updateNameAgain')
@@ -291,11 +274,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = firstLogic(secondLogic(ActionComponent))
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent />
-      </Provider>,
-    )
+    render(<ConnectedComponent />)
 
     expect(screen.getByTestId('props')).toHaveTextContent('actions,dispatch,name')
     expect(screen.getByTestId('actions')).toHaveTextContent('updateName,updateNameAgain')
@@ -347,11 +326,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = connectedLogic(RegularSelectorTest)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent />
-      </Provider>,
-    )
+    render(<ConnectedComponent />)
 
     expect(screen.getByTestId('values')).toHaveTextContent('chirpy,value')
   })
@@ -384,11 +359,7 @@ describe('logic component', () => {
 
     const ConnectedComponent = dynamicLogic(SampleComponent)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} defaultName="bird" />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} defaultName="bird" />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('bird')

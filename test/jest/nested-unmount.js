@@ -2,7 +2,6 @@ import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { Provider } from 'react-redux'
 
 describe('nested unmount', () => {
   beforeEach(() => {
@@ -76,11 +75,7 @@ describe('nested unmount', () => {
 
     // start
 
-    render(
-      <Provider store={store}>
-        <ConnectedOuterComponent />
-      </Provider>,
-    )
+    render(<ConnectedOuterComponent />)
 
     expect(screen.getByTestId('inner-shown')).toHaveTextContent('true')
     expect(screen.getByTestId('name')).toHaveTextContent('George')
@@ -171,11 +166,7 @@ describe('nested unmount', () => {
 
     // start
 
-    render(
-      <Provider store={store}>
-        <ConnectedOuterComponent />
-      </Provider>,
-    )
+    render(<ConnectedOuterComponent />)
 
     expect(screen.getByTestId('edit-shown')).toHaveTextContent('false')
     expect(screen.getByTestId('name')).toHaveTextContent('Bob')
@@ -303,11 +294,7 @@ describe('nested unmount', () => {
       { id: '5', name: 'fifth' },
     ]
 
-    render(
-      <Provider store={store}>
-        <ElementList />
-      </Provider>,
-    )
+    render(<ElementList />)
 
     expect(screen.queryByTestId('name')).toEqual(null)
     expect(screen.getByTestId('increment')).toHaveTextContent('0')
@@ -455,11 +442,7 @@ describe('nested unmount', () => {
       { id: '5', name: 'fifth' },
     ]
 
-    render(
-      <Provider store={store}>
-        <ElementList />
-      </Provider>,
-    )
+    render(<ElementList />)
 
     expect(screen.queryByTestId('id')).toEqual(null)
     expect(screen.getByTestId('increment')).toHaveTextContent('0')

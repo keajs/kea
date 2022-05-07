@@ -1,7 +1,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React from 'react'
-import { Provider } from 'react-redux'
 import { render, screen, act } from '@testing-library/react'
 
 describe('double render', () => {
@@ -67,11 +66,7 @@ describe('double render', () => {
 
     expect(countRendered).toEqual(0)
 
-    render(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
+    render(<ConnectedComponent id={12} />)
 
     expect(countRendered).toEqual(1)
 

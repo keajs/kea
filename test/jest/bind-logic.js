@@ -1,6 +1,5 @@
 import { kea, resetContext, getContext, useValues, BindLogic } from '../../src'
 import React, { useState } from 'react'
-import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 
@@ -58,11 +57,7 @@ describe('bind logic', () => {
       return <div data-testid="name">{name}</div>
     }
 
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>,
-    )
+    render(<App />)
 
     expect(screen.getAllByTestId('name').length).toEqual(2)
 

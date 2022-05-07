@@ -1,7 +1,6 @@
 import { kea, resetContext, getContext } from '../../src'
 
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 
 class SampleComponent extends Component {
@@ -59,13 +58,7 @@ describe('snapshot', () => {
 
     const ConnectedComponent = singletonLogic(SampleComponent)
 
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <ConnectedComponent id={12} />
-        </Provider>,
-      )
-      .toJSON()
+    const tree = renderer.create(<ConnectedComponent id={12} />).toJSON()
 
     expect(tree).toMatchSnapshot()
   })

@@ -13,7 +13,6 @@ import {
 } from '../../src'
 
 import React, { useEffect } from 'react'
-import { Provider } from 'react-redux'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { withPause } from '../../src/react/hooks'
 
@@ -175,11 +174,7 @@ describe('hooks', () => {
       )
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <SampleComponent id={12} />
-      </Provider>,
-    )
+    render(<SampleComponent id={12} />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('brad')
@@ -269,11 +264,7 @@ describe('hooks', () => {
       )
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
+    render(<TogglerComponent />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('brad')
@@ -398,11 +389,7 @@ describe('hooks', () => {
       )
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
+    render(<TogglerComponent />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('brad')
@@ -463,11 +450,7 @@ describe('hooks', () => {
       return <div />
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <SampleComponent />
-      </Provider>,
-    )
+    render(<SampleComponent />)
 
     expect(() => {}).not.toThrow()
   })

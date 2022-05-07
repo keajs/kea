@@ -2,7 +2,6 @@ import { kea, useValues, useActions, getContext, resetContext } from '../../src'
 
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Provider } from 'react-redux'
 
 describe('dynamic remount', () => {
   beforeEach(() => {
@@ -79,11 +78,7 @@ describe('dynamic remount', () => {
       )
     }
 
-    render(
-      <Provider store={getContext().store}>
-        <TogglerComponent />
-      </Provider>,
-    )
+    render(<TogglerComponent />)
 
     expect(screen.getByTestId('id')).toHaveTextContent('12')
     expect(screen.getByTestId('name')).toHaveTextContent('brad')
