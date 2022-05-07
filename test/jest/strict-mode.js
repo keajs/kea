@@ -3,7 +3,7 @@ import React, { useEffect, useLayoutEffect } from 'react'
 import { render } from '@testing-library/react'
 
 // React.StrictMode is broken. Kea mounts its own logic *in the body of the component* -- yes, boohoo, I know --
-// and that causes it to never unmount logic. This file documents the broken behaviour.
+// and that causes it to never unmount logic if React then renders it twice. This file documents the broken behaviour.
 describe('strict mode', () => {
   beforeEach(() => {
     resetContext()
