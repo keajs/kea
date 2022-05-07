@@ -2,6 +2,7 @@ import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
 import { getContext } from '../kea/context'
+import { isLogicWrapper } from '../utils'
 
 /** True if we dispatched an action in a component's body *while* rendering. For example when mounting a logic.
  * Old subscriptions shouldn't update until after rendering. */
@@ -46,21 +47,12 @@ export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | Logic
   return builtLogic['actions']
 }
 
-export function isWrapper<L extends Logic = Logic>(
-  toBeDetermined: BuiltLogic<L> | LogicWrapper<L>,
-): toBeDetermined is LogicWrapper<L> {
-  if ((toBeDetermined as LogicWrapper)._isKea) {
-    return true
-  }
-  return false
-}
-
 const blankContext = createContext(undefined as BuiltLogic | undefined)
 
 export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): BuiltLogic<L> {
-  const builtLogicContext = isWrapper(logic) ? getContext().react.contexts.get(logic as LogicWrapper) : null
+  const builtLogicContext = isLogicWrapper(logic) ? getContext().react.contexts.get(logic) : null
   const defaultBuiltLogic = useContext(builtLogicContext || blankContext)
-  const builtLogic = isWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
+  const builtLogic = isLogicWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
 
   const unmount = useRef(undefined as undefined | (() => void))
 
@@ -114,7 +106,6 @@ export function withPause(callback: () => void) {
   }
   const newState = getStoreState()
   if (previousState !== newState) {
-    // TODO: flush only if any subscription changes
     timeout && window.clearTimeout(timeout)
     timeout = window.setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
   }
