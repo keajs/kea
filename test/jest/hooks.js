@@ -16,6 +16,9 @@ import {
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { render, screen, fireEvent, act } from '@testing-library/react'
+import { withPause } from '../../src/react/hooks'
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 describe('hooks', () => {
   beforeEach(() => {
@@ -623,5 +626,69 @@ describe('hooks', () => {
     expect(screen.getByTestId('scene')).toHaveTextContent('done')
 
     unmount()
+  })
+
+  it('withPause works as expected', async () => {
+    resetContext({
+      createStore: {
+        middleware: [
+          ({ dispatch, getState }) =>
+            (next) =>
+            (action) => {
+              log.push({ type: `redux action ${action.type}`, path: action.payload?.path })
+              next(action)
+            },
+        ],
+      },
+    })
+    let log = []
+    const dashLogic = kea([
+      path(['dashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
+    const bashLogic = kea([
+      path(['bashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
+
+    const { store } = getContext()
+    store.subscribe(() => {
+      log.push({ type: 'in redux listener', state: store.getState() })
+    })
+
+    log.push({ type: 'pre dashLogic mount' })
+    dashLogic.mount()
+    log.push({ type: 'post dashLogic mount' })
+
+    log.push({ type: 'pre paused bashLogic mount' })
+    withPause(() => {
+      bashLogic.mount()
+    })
+    log.push({ type: 'post paused bashLogic mount' })
+    log.push({ type: 'starting await' })
+
+    await delay(0)
+
+    log.push({ type: 'after await setTimeout(0)' })
+
+    expect(log).toEqual([
+      { type: 'pre dashLogic mount' },
+      { type: 'redux action @KEA/ATTACH_REDUCER', path: ['dashLogic'] },
+      { type: 'in redux listener', state: { kea: {}, dashLogic: { done: false } } },
+      { type: 'post dashLogic mount' },
+      { type: 'pre paused bashLogic mount' },
+      { type: 'redux action @KEA/ATTACH_REDUCER', path: ['bashLogic'] },
+      { type: 'post paused bashLogic mount' },
+      { type: 'starting await' },
+      { type: 'redux action @KEA/FLUSH', path: undefined },
+      {
+        type: 'in redux listener',
+        state: { bashLogic: { done: false }, dashLogic: { done: false }, kea: {} },
+      },
+      { type: 'after await setTimeout(0)' },
+    ])
+    expect(1).toBe(1)
   })
 })

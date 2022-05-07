@@ -104,7 +104,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
 }
 
 let timeout: number
-function withPause(callback: () => void) {
+export function withPause(callback: () => void) {
   const previousState = getStoreState()
   pauseCounter += 1
   try {
