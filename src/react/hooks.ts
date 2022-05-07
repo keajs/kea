@@ -1,7 +1,6 @@
-import React, { useMemo, useEffect, useRef, useContext, createContext } from 'react'
+import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { kea } from '../kea'
-import { LogicInput, LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
+import { LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
 import { getContext } from '../kea/context'
 
 /** True if we dispatched an action in a component's body *while* rendering. For example when mounting a logic.

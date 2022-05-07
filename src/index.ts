@@ -4,7 +4,7 @@ export * from './core'
 
 import { resetContext } from './kea/context'
 
-export { kea } from './kea'
+export { kea } from './kea/kea'
 
 export { useValues, useAllValues, useActions, useMountedLogic, useSelector } from './react/hooks'
 export { BindLogic } from './react/bind'
