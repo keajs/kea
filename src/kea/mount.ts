@@ -18,6 +18,12 @@ export function mountLogic(logic: BuiltLogic, count = 1): void {
     if (counter[pathString] === count) {
       const connectedLogic = logic.connections[pathString]
 
+      if (typeof connectedLogic === 'undefined') {
+        throw new Error(
+          `[KEA] Can not find connected logic at "${pathString}". Got "undefined" instead of the logic when trying to mount "${logic.pathString}".`,
+        )
+      }
+
       runPlugins('beforeMount', connectedLogic)
       connectedLogic.events.beforeMount && connectedLogic.events.beforeMount()
 
