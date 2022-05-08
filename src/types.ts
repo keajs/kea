@@ -105,18 +105,30 @@ export interface KeaAction {
   toString(): string
 }
 
-export type ReducerActions<LogicType extends Logic, ReducerType> = {
-  [K in keyof LogicType['actionCreators']]?: (
-    state: ReducerType,
-    payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
-  ) => ReducerType
-} &
-  {
-    [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-      state: ReducerType,
-      payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-    ) => ReducerType
-  }
+export type ReducerActions<
+  LogicType extends Logic,
+  ReducerType,
+> = LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
+  ? {
+      [K in keyof LogicType['actionCreators']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
+      ) => ReducerType
+    }
+  : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+  ? {
+      [K in keyof LogicType['actionCreators']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
+      ) => ReducerType
+    } &
+      {
+        [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+          state: ReducerType,
+          payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+        ) => ReducerType
+      }
+  : never
 
 export type ReducerDefault<Reducer extends () => any, P extends Props> =
   | ReturnType<Reducer>
@@ -174,8 +186,13 @@ export type ListenerDefinitionsForRecord<A extends Record<string, (...args: any)
   [K in keyof A]?: ListenerFunction<ReturnType<A[K]>> | ListenerFunction<ReturnType<A[K]>>[]
 }
 
-export type ListenerDefinitions<LogicType extends Logic> = ListenerDefinitionsForRecord<LogicType['actionCreators']> &
-  ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
+export type ListenerDefinitions<LogicType extends Logic> =
+  LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
+    ? ListenerDefinitionsForRecord<LogicType['actionCreators']>
+    : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+    ? ListenerDefinitionsForRecord<LogicType['actionCreators']> &
+        ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
+    : never
 
 export type ListenerFunction<A extends AnyAction = any> = (
   payload: A['payload'],
