@@ -1,4 +1,4 @@
-import { kea, resetContext } from '../../src'
+import { kea, props, resetContext } from '../../src'
 
 describe('props', () => {
   beforeEach(() => {
@@ -86,6 +86,17 @@ describe('props', () => {
       const builtLogic2 = logic(props2)
       expect(builtLogic1.props === props1).toEqual(true)
       expect(builtLogic2.props === props1).toEqual(true)
+    })
+
+    test('default props', () => {
+      const logic = kea([props({ key1: 'l', key2: 'l' }), props({ key2: 'm', key3: 'n' })])
+      const builtLogic = logic({ key0: 'N', key1: 'N' })
+      expect(builtLogic.props).toEqual({
+        key0: 'N',
+        key1: 'N',
+        key2: 'l',
+        key3: 'n',
+      })
     })
   })
 })

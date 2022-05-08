@@ -10,7 +10,8 @@ export function props<L extends Logic = Logic>(input: L['props']): LogicBuilder<
       }
     }
     if (change) {
-      logic.props = { ...logic.props, ...input }
+      // set the props that haven't been passed in to the defaults
+      logic.props = { ...input, ...logic.props }
     }
   }
 }
