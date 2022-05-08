@@ -19,7 +19,7 @@ export type ListenersPluginContext = {
   pendingPromises: Map<Promise<void>, [BuiltLogic, string]>
 }
 
-export function listeners<L extends Logic = Logic>(input: LogicInput['listeners']): LogicBuilder<L> {
+export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listeners']): LogicBuilder<L> {
   return (logic) => {
     if (!logic.listeners) {
       logic.listeners = {}
@@ -112,7 +112,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput['listeners'
   }
 }
 
-export function sharedListeners<L extends Logic = Logic>(input: LogicInput['sharedListeners']): LogicBuilder<L> {
+export function sharedListeners<L extends Logic = Logic>(input: LogicInput<L>['sharedListeners']): LogicBuilder<L> {
   return (logic) => {
     logic.sharedListeners = {
       ...(logic.sharedListeners || {}),
