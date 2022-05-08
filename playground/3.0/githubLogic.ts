@@ -1,6 +1,17 @@
 import { githubLogicType } from './githubLogicType'
-import { kea } from "../../src"
-import { connect, actions, defaults, reducers, selectors, afterMount, listeners, key, props, path } from '../../src/core'
+import { kea } from '../../src'
+import {
+  connect,
+  actions,
+  defaults,
+  reducers,
+  selectors,
+  afterMount,
+  listeners,
+  key,
+  props,
+  path,
+} from '../../src/core'
 
 const API_URL = 'https://api.github.com'
 
@@ -33,6 +44,13 @@ export const githubLogic = kea<githubLogicType<Repository, GithubLogicProps>>([
     username: 'keajs',
     repositories: [] as Repository[],
   }),
+  {
+    reducers: {
+      username: {
+        setUsername: (_, { username }) => username,
+      },
+    },
+  },
   reducers({
     username: {
       setUsername: (_, { username }) => username,
