@@ -57,7 +57,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
-    withPause(() => {
+    batchChanges(() => {
       unmount.current = builtLogic.mount()
     })
   }
@@ -65,7 +65,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const pathString = useRef(builtLogic.pathString)
 
   if (pathString.current !== builtLogic.pathString) {
-    withPause(() => {
+    batchChanges(() => {
       unmount.current?.()
       unmount.current = builtLogic.mount()
       pathString.current = builtLogic.pathString
@@ -77,14 +77,14 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
     if (!unmount.current) {
-      withPause(() => {
+      batchChanges(() => {
         unmount.current = builtLogic.mount()
         pathString.current = builtLogic.pathString
       })
     }
 
     return function useMountedLogicEffectCleanup() {
-      withPause(() => {
+      batchChanges(() => {
         unmount.current && unmount.current()
         unmount.current = undefined
       })
@@ -95,7 +95,9 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
 }
 
 let timeout: number
-export function withPause(callback: () => void) {
+/** Delay Redux subscriptions from firing and asking React to re-render.
+ * Will set a Timeout to flush if store changed during callback. */
+export function batchChanges(callback: () => void) {
   const previousState = getStoreState()
   pauseCounter += 1
   try {
