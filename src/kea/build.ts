@@ -7,6 +7,7 @@ import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, Wrapp
 import { addConnection } from '../core/connect'
 import { key, path, props } from '../core'
 import { shallowCompare } from '../utils'
+import { batchChanges } from '../react/hooks'
 
 // Converts `input` into `logic` by running all build steps in succession
 function applyInputToLogic(logic: BuiltLogic, input: LogicInput | LogicBuilder) {
@@ -59,8 +60,10 @@ export function getBuiltLogic<L extends Logic = Logic>(
     if (props && (!cachedLogic.props || (cachedLogic.props !== props && !shallowCompare(cachedLogic.props, props)))) {
       cachedLogic.props = { ...cachedLogic.props, ...props }
     }
-    if (oldProps !== cachedLogic.props) {
-      cachedLogic.events.propsChanged?.(cachedLogic.props, oldProps)
+    if (oldProps !== cachedLogic.props && cachedLogic.events.propsChanged) {
+      batchChanges(() => {
+        cachedLogic.events.propsChanged?.(cachedLogic.props, oldProps)
+      })
     }
     return cachedLogic
   }
