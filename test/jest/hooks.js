@@ -14,7 +14,7 @@ import {
 
 import React, { useEffect } from 'react'
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { withPause } from '../../src/react/hooks'
+import { batchChanges } from '../../src/react/hooks'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -490,7 +490,7 @@ describe('hooks', () => {
     unmount()
   })
 
-  it('withPause works as expected', async () => {
+  it('batchChanges works as expected', async () => {
     resetContext({
       createStore: {
         middleware: [
@@ -525,7 +525,7 @@ describe('hooks', () => {
     log.push({ type: 'post dashLogic mount' })
 
     log.push({ type: 'pre paused bashLogic mount' })
-    withPause(() => {
+    batchChanges(() => {
       bashLogic.mount()
     })
     log.push({ type: 'post paused bashLogic mount' })
