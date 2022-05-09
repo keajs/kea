@@ -200,11 +200,13 @@ export type ListenerDefinitions<LogicType extends Logic> =
     : never
 
 export type EventDefinitions<LogicType extends Logic> = {
-  beforeMount?: () => void
-  afterMount?: () => void
-  beforeUnmount?: () => void
-  afterUnmount?: () => void
-  propsChanged?: (props: Logic['props'], oldProps: Logic['props']) => void
+  beforeMount?: (() => void) | (() => void)[]
+  afterMount?: (() => void) | (() => void)[]
+  beforeUnmount?: (() => void) | (() => void)[]
+  afterUnmount?: (() => void) | (() => void)[]
+  propsChanged?:
+    | ((props: Logic['props'], oldProps: Logic['props']) => void)
+    | ((props: Logic['props'], oldProps: Logic['props']) => void)[]
 }
 
 export type ListenerFunction<A extends AnyAction = any> = (

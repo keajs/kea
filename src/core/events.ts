@@ -1,4 +1,4 @@
-import { EventDefinitions, Logic, LogicBuilder, PartialRecord } from '../types'
+import { EventDefinitions, Logic, LogicBuilder } from '../types'
 
 export function events<L extends Logic = Logic>(
   input: EventDefinitions<L> | ((logic: L) => EventDefinitions<L>),
@@ -8,7 +8,9 @@ export function events<L extends Logic = Logic>(
 
     for (const key of Object.keys(events) as (keyof typeof events)[]) {
       const event = events[key]
-      const newEvent = Array.isArray(event) ? () => event.forEach((e) => e()) : event
+      const newEvent = Array.isArray(event)
+        ? (props: any, oldProps: any) => event.forEach((e: any) => e(props, oldProps))
+        : event
 
       if (logic.events[key]) {
         const oldEvent = logic.events[key]
