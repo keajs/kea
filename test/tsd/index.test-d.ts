@@ -6,7 +6,6 @@ import {
   BuiltLogic,
   PathType,
   Selector,
-  LogicEventType,
   ListenerFunctionWrapper,
   KeaReduxAction,
   KeyType,
@@ -106,7 +105,13 @@ expectType<{ [pathString: string]: BuiltLogic }>(logic.connections)
 expectType<Record<string, ListenerFunctionWrapper[]> | undefined>(logic.listeners)
 expectType<PathType>(logic.path)
 expectType<string>(logic.pathString)
-expectType<Partial<Record<LogicEventType, () => void>>>(logic.events)
+expectType<{
+  beforeMount?: (() => void) | undefined
+  afterMount?: (() => void) | undefined
+  beforeUnmount?: (() => void) | undefined
+  afterUnmount?: (() => void) | undefined
+  propsChanged?: ((props: any, oldProps: any) => void) | undefined
+}>(logic.events)
 expectType<Record<string, any>>(logic.__keaTypeGenInternalReducerActions)
 
 /*
@@ -121,7 +126,13 @@ expectType<{ [pathString: string]: BuiltLogic }>(logic2.connections)
 expectType<Record<string, ListenerFunctionWrapper[]> | undefined>(logic2.listeners)
 expectType<PathType>(logic2.path)
 expectType<string>(logic2.pathString)
-expectType<Partial<Record<LogicEventType, () => void>>>(logic2.events)
+expectType<{
+  beforeMount?: (() => void) | undefined
+  afterMount?: (() => void) | undefined
+  beforeUnmount?: (() => void) | undefined
+  afterUnmount?: (() => void) | undefined
+  propsChanged?: ((props: any, oldProps: any) => void) | undefined
+}>(logic2.events)
 expectType<Record<string, any>>(logic2.__keaTypeGenInternalReducerActions)
 
 // new compared to test 3
