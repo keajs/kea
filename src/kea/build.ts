@@ -55,8 +55,12 @@ export function getBuiltLogic<L extends Logic = Logic>(
 
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
+    const oldProps = cachedLogic.props
     if (props && (!cachedLogic.props || (cachedLogic.props !== props && !shallowCompare(cachedLogic.props, props)))) {
       cachedLogic.props = { ...cachedLogic.props, ...props }
+    }
+    if (oldProps !== cachedLogic.props) {
+      cachedLogic.events.propsChanged?.(cachedLogic.props, oldProps)
     }
     return cachedLogic
   }

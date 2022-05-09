@@ -8,7 +8,6 @@ export type KeyType = string | number | boolean
 export type PathType = KeyType[]
 export type Selector = (state?: any, props?: any) => any
 export type Props = Record<string, any> // nb! used in kea and react
-export type LogicEventType = 'beforeMount' | 'afterMount' | 'beforeUnmount' | 'afterUnmount'
 export type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
 // logic base class
@@ -34,7 +33,13 @@ export interface Logic {
   selector?: Selector
   selectors: Record<string, Selector>
   values: Record<string, any>
-  events: PartialRecord<LogicEventType, () => void>
+  events: {
+    beforeMount?: () => void
+    afterMount?: () => void
+    beforeUnmount?: () => void
+    afterUnmount?: () => void
+    propsChanged?: (props: any, oldProps: any) => void
+  }
 
   // listeners
   listeners?: Record<string, ListenerFunctionWrapper[]>
@@ -194,6 +199,14 @@ export type ListenerDefinitions<LogicType extends Logic> =
         ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
     : never
 
+export type EventDefinitions<LogicType extends Logic> = {
+  beforeMount?: () => void
+  afterMount?: () => void
+  beforeUnmount?: () => void
+  afterUnmount?: () => void
+  propsChanged?: (props: Logic['props'], oldProps: Logic['props']) => void
+}
+
 export type ListenerFunction<A extends AnyAction = any> = (
   payload: A['payload'],
   breakpoint: BreakPointFunction,
@@ -247,9 +260,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   selectors?: SelectorDefinitions<LogicType> | ((logic: LogicType) => SelectorDefinitions<LogicType>)
   listeners?: ListenerDefinitions<LogicType> | ((logic: LogicType) => ListenerDefinitions<LogicType>)
   sharedListeners?: SharedListenerDefinitions | ((logic: LogicType) => SharedListenerDefinitions)
-  events?:
-    | PartialRecord<LogicEventType, (() => void) | (() => void)[]>
-    | ((logic: LogicType) => PartialRecord<LogicEventType, (() => void) | (() => void)[]>)
+  events?: EventDefinitions<LogicType> | ((logic: LogicType) => EventDefinitions<LogicType>)
   defaults?:
     | ((logic: LogicType) => (state: any, props: LogicType['props']) => Record<string, any>)
     | ((logic: LogicType) => Record<string, any>)

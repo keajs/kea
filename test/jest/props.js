@@ -1,4 +1,4 @@
-import { kea, props, resetContext } from '../../src'
+import { kea, props, resetContext, propsChanged, events } from '../../src'
 
 describe('props', () => {
   beforeEach(() => {
@@ -88,15 +88,53 @@ describe('props', () => {
       expect(builtLogic2.props === props1).toEqual(true)
     })
 
-    test('default props', () => {
-      const logic = kea([props({ key1: 'l', key2: 'l' }), props({ key2: 'm', key3: 'n' })])
+    test('props changed', () => {
+      const log = []
+      const log2 = []
+      const logic = kea([
+        props({ key1: 'l', key2: 'l' }),
+        propsChanged(({ actions, props }, oldProps) => {
+          log.push({ props, oldProps })
+        }),
+        events({
+          propsChanged: (props, oldProps) => {
+            log2.push({ props, oldProps })
+          },
+        }),
+      ])
       const builtLogic = logic({ key0: 'N', key1: 'N' })
-      expect(builtLogic.props).toEqual({
-        key0: 'N',
-        key1: 'N',
-        key2: 'l',
-        key3: 'n',
-      })
+      builtLogic.mount()
+      logic({ key2: 'X', key1: 'X' })
+      logic({ key4: 'A' })
+
+      expect(log).toEqual([
+        {
+          oldProps: {
+            key0: 'N',
+            key1: 'N',
+            key2: 'l',
+          },
+          props: {
+            key0: 'N',
+            key1: 'X',
+            key2: 'X',
+          },
+        },
+        {
+          oldProps: {
+            key0: 'N',
+            key1: 'X',
+            key2: 'X',
+          },
+          props: {
+            key0: 'N',
+            key1: 'X',
+            key2: 'X',
+            key4: 'A',
+          },
+        },
+      ])
+      expect(log).toEqual(log2)
     })
   })
 })

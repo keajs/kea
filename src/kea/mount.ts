@@ -25,7 +25,7 @@ export function mountLogic(logic: BuiltLogic, count = 1): void {
       }
 
       runPlugins('beforeMount', connectedLogic)
-      connectedLogic.events.beforeMount && connectedLogic.events.beforeMount()
+      connectedLogic.events.beforeMount?.()
 
       mounted[pathString] = connectedLogic
 
@@ -34,7 +34,7 @@ export function mountLogic(logic: BuiltLogic, count = 1): void {
       }
 
       runPlugins('afterMount', connectedLogic)
-      connectedLogic.events.afterMount && connectedLogic.events.afterMount()
+      connectedLogic.events.afterMount?.()
     }
   }
 }
@@ -56,7 +56,7 @@ export function unmountLogic(logic: BuiltLogic): void {
       const connectedLogic = logic.connections[pathString]
 
       runPlugins('beforeUnmount', connectedLogic)
-      connectedLogic.events.beforeUnmount && connectedLogic.events.beforeUnmount()
+      connectedLogic.events.beforeUnmount?.()
 
       delete mounted[pathString]
       delete counter[pathString]
@@ -66,7 +66,7 @@ export function unmountLogic(logic: BuiltLogic): void {
       }
 
       runPlugins('afterUnmount', connectedLogic)
-      connectedLogic.events.afterUnmount && connectedLogic.events.afterUnmount()
+      connectedLogic.events.afterUnmount?.()
 
       // clear build cache
       getContext().wrapperContexts.get(logic.wrapper)?.builtLogics.delete(logic.key)
