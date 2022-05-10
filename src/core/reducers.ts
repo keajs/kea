@@ -120,6 +120,8 @@ export function reducers<L extends Logic = Logic>(
 
           if (mapping[action.type]) {
             return mapping[action.type](state, action.payload, action.meta)
+          } else if (logic.actionKeys[action.type] && mapping[logic.actionKeys[action.type]]) {
+            return mapping[logic.actionKeys[action.type]](state, action.payload, action.meta)
           } else {
             return state
           }

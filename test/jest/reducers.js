@@ -1,4 +1,4 @@
-import { kea, resetContext } from '../../src'
+import { kea, actions, reducers, resetContext } from '../../src'
 
 describe('reducers', () => {
   test('it converts reducer arrays correctly', () => {
@@ -150,5 +150,19 @@ describe('reducers', () => {
 
     logic.mount()
     expect(logic.reducerOptions['howMuchMagic']).toEqual({ reducerOptions: 'options' })
+  })
+
+  test('can reduce to actions that were not yet added', () => {
+    resetContext()
+    const logic1 = kea([reducers({ value: { undefinedAction: () => true } }), actions({ undefinedAction: true })])
+    const logic2 = kea([actions({ definedAction: true }), reducers({ value: { definedAction: () => true } })])
+
+    logic1.mount()
+    logic1.actions.undefinedAction()
+    expect(logic1.values.value).toEqual(true)
+
+    logic2.mount()
+    logic2.actions.definedAction()
+    expect(logic2.values.value).toEqual(true)
   })
 })
