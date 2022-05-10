@@ -1,4 +1,4 @@
-import { kea, resetContext, isBreakpoint, getPluginContext } from '../../src'
+import { kea, resetContext, isBreakpoint, getPluginContext, listeners, actions } from '../../src'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -682,5 +682,35 @@ describe('listeners', () => {
     await delay(100)
 
     expect(gotThem).toEqual(['context2'])
+  })
+
+  test('can listen to actions that were not yet added', () => {
+    resetContext()
+    let logic1Listenerd = false
+    let logic2Listenerd = false
+    const logic1 = kea([
+      listeners({
+        undefinedAction: () => {
+          logic1Listenerd = true
+        },
+      }),
+      actions({ undefinedAction: true }),
+    ])
+    const logic2 = kea([
+      actions({ definedAction: true }),
+      listeners({
+        definedAction: () => {
+          logic2Listenerd = true
+        },
+      }),
+    ])
+
+    logic1.mount()
+    logic1.actions.undefinedAction()
+    expect(logic1Listenerd).toEqual(true)
+
+    logic2.mount()
+    logic2.actions.definedAction()
+    expect(logic1Listenerd).toEqual(true)
   })
 })
