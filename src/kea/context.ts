@@ -1,9 +1,8 @@
-import { corePlugin } from '../core'
-import { listenersPlugin } from '../listeners'
-import { activatePlugin, runPlugins } from '../plugins'
-import { getStore } from '../store/store'
+import { activatePlugin, runPlugins } from './plugins'
+import { createStore } from './store'
 import { Context, ContextOptions } from '../types'
-import { Store } from 'redux'
+import type { Store } from 'redux'
+import { corePlugin } from '../core'
 
 let context: Context
 
@@ -24,37 +23,25 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     console.error('[KEA] overwriting already opened context. This may lead to errors.')
   }
 
-  const { plugins, createStore = true, defaults, skipPlugins, ...otherOptions } = options
+  const { plugins, createStore: createStoreOptions = true, defaults, ...otherOptions } = options
 
   const newContext = {
     contextId: `kea-context-${contextId++}`,
     plugins: {
       activated: [],
-      buildOrder: [],
-      buildSteps: {},
       events: {},
       logicFields: {},
       contexts: {},
     },
 
-    input: {
-      logicPathCreators: new Map(),
-      logicPathCounter: 0,
-      defaults: defaults || undefined,
-    },
-
-    build: {
-      cache: {},
-      heap: [],
-    },
+    inputCounter: 0,
+    reducerDefaults: defaults,
+    wrapperContexts: new WeakMap(),
+    buildHeap: [],
 
     mount: {
       counter: {},
       mounted: {},
-    },
-
-    run: {
-      heap: [],
     },
 
     react: {
@@ -74,9 +61,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
     options: {
       debug: false,
-      autoMount: false,
-      autoConnect: true,
-      autoConnectMountWarning: true,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',
@@ -90,8 +74,8 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
   Object.defineProperty(newContext, 'store', {
     get: function get() {
       const store: Store = (newContext as any)['__store']
-      if (!store && createStore) {
-        return getStore(typeof createStore === 'object' ? createStore : {})
+      if (!store && createStoreOptions) {
+        return createStore(typeof createStoreOptions === 'object' ? createStoreOptions : {})
       }
       return store
     },
@@ -104,10 +88,6 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
 
   activatePlugin(corePlugin)
 
-  if (!skipPlugins || skipPlugins.indexOf('listeners') === -1) {
-    activatePlugin(listenersPlugin)
-  }
-
   runPlugins('afterOpenContext', newContext, options)
 
   if (plugins) {
@@ -116,7 +96,7 @@ export function openContext(options: ContextOptions = {}, initial = false): Cont
     }
   }
 
-  if (!initial && createStore) {
+  if (!initial && createStoreOptions) {
     context.store // trigger the getter that creates the store
   }
 
@@ -139,37 +119,15 @@ export function resetContext(options: ContextOptions = {}, initial = false): Con
   return openContext(options, initial)
 }
 
-export function withContext(
-  code: (context?: Context) => any,
-  options = {},
-): {
-  context: Context
-  returnValue: unknown
-} {
-  const oldContext = context
-
-  openContext(options, false)
-  const newContext = context
-  const returnValue = code(context)
-  closeContext()
-
-  context = oldContext
-
-  return {
-    context: newContext,
-    returnValue,
-  }
-}
-
-export function getPluginContext(name: string): Record<string, any> {
+export function getPluginContext<Context = Record<string, any>>(name: string): Context {
   const { plugins } = getContext()
   if (!plugins.contexts[name]) {
     plugins.contexts[name] = {}
   }
-  return plugins.contexts[name]
+  return plugins.contexts[name] as Context
 }
 
-export function setPluginContext(name: string, pluginContext: Record<string, any>): void {
+export function setPluginContext<Context = Record<string, any>>(name: string, pluginContext: Context): void {
   const { plugins } = getContext()
   plugins.contexts[name] = pluginContext
 }

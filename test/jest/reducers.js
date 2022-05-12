@@ -1,225 +1,168 @@
-/* global test, expect */
-import { kea, resetContext } from '../../src'
+import { kea, actions, reducers, resetContext } from '../../src'
 
-import PropTypes from 'prop-types'
+describe('reducers', () => {
+  test('it converts reducer arrays correctly', () => {
+    resetContext()
 
-test('it converts reducer arrays correctly', () => {
-  resetContext()
+    const reducerFunction = (state) => state
 
-  const reducerFunction = state => state
+    const logic = kea({
+      defaults: () => ({
+        milk: 'not found',
+      }),
 
-  const logic = kea({
-    defaults: () => ({
-      milk: 'not found',
-    }),
+      reducers: () => ({
+        null: [],
+        noPropNoOptions: [0, { ACTION: reducerFunction }],
+        onlyDefault: [0],
+        withoutDefault: { ACTION: reducerFunction },
+      }),
+    })
 
-    reducers: () => ({
-      everything: [0, PropTypes.number, { persist: true }, { ACTION: reducerFunction }],
-      noProp: [0, { persist: true }, { ACTION: reducerFunction }],
-      noOptions: [0, PropTypes.number, { ACTION: reducerFunction }],
-      noPropNoOptions: [0, { ACTION: reducerFunction }],
-      onlyDefault: [0],
-      withoutDefault: { ACTION: reducerFunction },
-      justAFunction: reducerFunction,
-    }),
+    logic.mount()
+
+    expect(Object.keys(logic.reducers).sort()).toEqual(['noPropNoOptions', 'null', 'onlyDefault', 'withoutDefault'])
+    expect(Object.keys(logic.defaults).sort()).toEqual([
+      'milk',
+      'noPropNoOptions',
+      'null',
+      'onlyDefault',
+      'withoutDefault',
+    ])
+    expect(typeof logic.reducers.null).toBe('function')
+    expect(typeof logic.reducers.noPropNoOptions).toBe('function')
+    expect(typeof logic.reducers.onlyDefault).toBe('function')
+    expect(typeof logic.reducers.withoutDefault).toBe('function')
+
+    expect(logic.defaults.milk).toBe('not found')
+    expect(logic.defaults.null).toBe(null)
+    expect(logic.defaults.noPropNoOptions).toBe(0)
+    expect(logic.defaults.onlyDefault).toBe(0)
+    expect(logic.defaults.withoutDefault).toBe(null)
   })
 
-  logic.mount()
+  test('it auto-detects local actions from the key in reducers', () => {
+    resetContext()
 
-  expect(Object.keys(logic.reducers).sort()).toEqual([
-    'everything',
-    'justAFunction',
-    'noOptions',
-    'noProp',
-    'noPropNoOptions',
-    'onlyDefault',
-    'withoutDefault',
-  ])
-  expect(Object.keys(logic.defaults).sort()).toEqual([
-    'everything',
-    'justAFunction',
-    'milk',
-    'noOptions',
-    'noProp',
-    'noPropNoOptions',
-    'onlyDefault',
-    'withoutDefault',
-  ])
-  expect(Object.keys(logic.propTypes).sort()).toEqual(['everything', 'noOptions'])
-  expect(Object.keys(logic.reducerOptions).sort()).toEqual([
-    'everything',
-    'justAFunction',
-    'noOptions',
-    'noProp',
-    'noPropNoOptions',
-    'onlyDefault',
-    'withoutDefault',
-  ])
+    const logic = kea({
+      actions: () => ({
+        makeMagic: true,
+        moreMagic: (value) => ({ value }),
+      }),
 
-  expect(typeof logic.reducers.everything).toBe('function')
-  expect(typeof logic.reducers.noProp).toBe('function')
-  expect(typeof logic.reducers.noOptions).toBe('function')
-  expect(typeof logic.reducers.noPropNoOptions).toBe('function')
-  expect(typeof logic.reducers.onlyDefault).toBe('function')
-  expect(typeof logic.reducers.withoutDefault).toBe('function')
-  expect(typeof logic.reducers.justAFunction).toBe('function')
+      defaults: { howMuchMagic: 0 },
 
-  expect(logic.defaults.everything).toBe(0)
-  expect(logic.defaults.milk).toBe('not found')
-  expect(logic.defaults.noProp).toBe(0)
-  expect(logic.defaults.noOptions).toBe(0)
-  expect(logic.defaults.noPropNoOptions).toBe(0)
-  expect(logic.defaults.onlyDefault).toBe(0)
-  expect(logic.defaults.withoutDefault).toBe(null)
-  expect(logic.defaults.justAFunction).toBe(null)
+      reducers: ({ actions }) => ({
+        howMuchMagic: {
+          makeMagic: (state) => state + 1,
+          [actions.moreMagic]: (state, { value }) => state + value,
+        },
+      }),
+    })
 
-  expect(logic.propTypes.everything).toBe(PropTypes.number)
-  expect(logic.propTypes.noOptions).toBe(PropTypes.number)
+    logic.mount()
 
-  expect(logic.reducerOptions.everything).toEqual({ persist: true })
-  expect(logic.reducerOptions.noProp).toEqual({ persist: true })
-})
+    expect(Object.keys(logic.reducers).sort()).toEqual(['howMuchMagic'])
 
-test('it auto-detects local actions from the key in reducers', () => {
-  resetContext({ createStore: true })
+    expect(logic.defaults.howMuchMagic).toEqual(0)
+    expect(logic.values.howMuchMagic).toEqual(0)
 
-  const logic = kea({
-    actions: () => ({
-      makeMagic: true,
-      moreMagic: value => ({ value }),
-    }),
+    logic.actions.makeMagic()
 
-    defaults: { howMuchMagic: 0 },
+    expect(logic.values.howMuchMagic).toEqual(1)
 
-    reducers: ({ actions }) => ({
-      howMuchMagic: {
-        makeMagic: state => state + 1,
-        [actions.moreMagic]: (state, { value }) => state + value,
+    logic.actions.moreMagic(100)
+
+    expect(logic.values.howMuchMagic).toEqual(101)
+  })
+
+  test('it extends reducers instead of overriding them', () => {
+    resetContext()
+
+    const logic = kea({
+      actions: () => ({
+        simpleMagic: true,
+        makeMagic: true,
+        makeABitMoreMagic: true,
+      }),
+
+      reducers: ({ actions }) => ({
+        howMuchMagic: [
+          0,
+          {
+            simpleMagic: (state) => state + 1,
+            makeMagic: (state) => state + 1,
+          },
+        ],
+      }),
+    })
+
+    logic.extend({
+      actions: () => ({
+        moreMagic: true,
+      }),
+
+      reducers: ({ actions }) => ({
+        howMuchMagic: [
+          0,
+          {
+            makeMagic: (state) => state + 2,
+            moreMagic: (state) => state + 100,
+          },
+        ],
+      }),
+    })
+
+    logic.mount()
+    expect(logic.values.howMuchMagic).toEqual(0)
+
+    logic.actions.makeMagic()
+    expect(logic.values.howMuchMagic).toEqual(2)
+
+    logic.actions.moreMagic()
+    expect(logic.values.howMuchMagic).toEqual(102)
+
+    logic.actions.makeMagic()
+    expect(logic.values.howMuchMagic).toEqual(104)
+  })
+
+  test('reducerOptions', () => {
+    resetContext()
+
+    const logic = kea({
+      actions: () => ({
+        simpleMagic: true,
+        makeMagic: true,
+        makeABitMoreMagic: true,
+      }),
+
+      reducers: {
+        howMuchMagic: [
+          0,
+          { reducerOptions: 'options' },
+          {
+            simpleMagic: (state) => state + 1,
+            makeMagic: (state) => state + 1,
+          },
+        ],
       },
-    }),
+    })
+
+    logic.mount()
+    expect(logic.reducerOptions['howMuchMagic']).toEqual({ reducerOptions: 'options' })
   })
 
-  logic.mount()
+  test('can reduce to actions that were not yet added', () => {
+    resetContext()
+    const logic1 = kea([reducers({ value: { undefinedAction: () => true } }), actions({ undefinedAction: true })])
+    const logic2 = kea([actions({ definedAction: true }), reducers({ value: { definedAction: () => true } })])
 
-  expect(Object.keys(logic.reducers).sort()).toEqual(['howMuchMagic'])
+    logic1.mount()
+    logic1.actions.undefinedAction()
+    expect(logic1.values.value).toEqual(true)
 
-  expect(logic.defaults.howMuchMagic).toEqual(0)
-  expect(logic.values.howMuchMagic).toEqual(0)
-
-  logic.actions.makeMagic()
-
-  expect(logic.values.howMuchMagic).toEqual(1)
-
-  logic.actions.moreMagic(100)
-
-  expect(logic.values.howMuchMagic).toEqual(101)
-})
-
-test('it extends reducers instead of overriding them', () => {
-  resetContext({ createStore: true })
-
-  const logic = kea({
-    actions: () => ({
-      simpleMagic: true,
-      makeMagic: true,
-      makeABitMoreMagic: true,
-    }),
-
-    reducers: ({ actions }) => ({
-      howMuchMagic: [
-        0,
-        {
-          simpleMagic: state => state + 1,
-          makeMagic: state => state + 1,
-        },
-      ],
-    }),
+    logic2.mount()
+    logic2.actions.definedAction()
+    expect(logic2.values.value).toEqual(true)
   })
-
-  logic.extend({
-    actions: () => ({
-      moreMagic: true,
-    }),
-
-    reducers: ({ actions }) => ({
-      howMuchMagic: [
-        0,
-        {
-          makeMagic: state => state + 2,
-          moreMagic: state => state + 100,
-        },
-      ],
-    }),
-  })
-
-  logic.mount()
-  expect(logic.values.howMuchMagic).toEqual(0)
-
-  logic.actions.makeMagic()
-  expect(logic.values.howMuchMagic).toEqual(2)
-
-  logic.actions.moreMagic()
-  expect(logic.values.howMuchMagic).toEqual(102)
-
-  logic.actions.makeMagic()
-  expect(logic.values.howMuchMagic).toEqual(104)
-})
-
-test('it overrides reducers when extending with { replace: true }', () => {
-  resetContext({ createStore: true })
-
-  const logic = kea({
-    actions: () => ({
-      makeMagic: true,
-    }),
-
-    reducers: ({ actions }) => ({
-      howMuchMagic: [
-        0,
-        {
-          makeMagic: state => state + 1,
-        },
-      ],
-    }),
-  })
-
-  logic.extend({
-    actions: () => ({
-      moreMagic: true,
-    }),
-
-    reducers: ({ actions }) => ({
-      howMuchMagic: [
-        0,
-        { replace: true },
-        {
-          moreMagic: state => state + 100,
-        },
-      ],
-    }),
-  })
-
-  logic.mount()
-  expect(logic.values.howMuchMagic).toEqual(0)
-
-  logic.actions.makeMagic()
-  expect(logic.values.howMuchMagic).toEqual(0)
-
-  logic.actions.moreMagic()
-  expect(logic.values.howMuchMagic).toEqual(100)
-
-  logic.actions.makeMagic()
-  expect(logic.values.howMuchMagic).toEqual(100)
-})
-
-test('function reducers work', () => {
-  const logic = kea({
-    reducers: () => ({
-      justAFunction: ['no milk to day', () => 'my love has gone away'],
-    }),
-  })
-
-  logic.mount()
-
-  expect(logic.values.justAFunction).toBe('my love has gone away')
 })

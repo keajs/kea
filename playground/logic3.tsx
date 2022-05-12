@@ -1,5 +1,18 @@
 import * as React from 'react'
-import { kea, useValues } from '../src'
+import {
+  actions,
+  defaults,
+  events,
+  kea,
+  key,
+  listeners,
+  path,
+  props,
+  reducers,
+  selectors,
+  sharedListeners,
+  useValues,
+} from '../src'
 import { logicType } from './logicType'
 import { githubLogic } from './githubLogic'
 
@@ -8,21 +21,18 @@ interface Session {
   type: string
 }
 
-export const logic = kea<logicType<Session>>({
-  props: {} as {
-    id: number
-  },
-  key: (props) => props.id,
-  path: (key) => ['scenes', 'homepage', 'index', key],
-  constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
-  actions: () => ({
+export const logic = kea<logicType<Session>>([
+  props({} as { id: number }),
+  key((props) => props.id),
+  path((key) => ['scenes', 'homepage', 'index', key]),
+  actions({
     updateName: (name: string) => ({ name }),
     updateNumber: (number: number) => ({ number }),
   }),
-  defaults: {
+  defaults({
     yetAnotherNameWithNullDefault: 'blue' as string | null,
-  },
-  reducers: () => {
+  }),
+  reducers(() => {
     return {
       name: [
         'birdname',
@@ -53,8 +63,8 @@ export const logic = kea<logicType<Session>>({
         },
       ],
     }
-  },
-  selectors: ({ selectors, values }) => ({
+  }),
+  selectors(({ selectors }) => ({
     capitalizedName: [
       (s) => [s.name, s.number],
       (name, number) => {
@@ -73,31 +83,31 @@ export const logic = kea<logicType<Session>>({
         return capitalizedName.toUpperCase()
       },
     ],
-  }),
-  loaders: () => ({
-    sessions: {
-      __default: [] as Session[],
-      loadSessions: async (selectedDate: string): Promise<Session[]> => {
-        const response = { user: 3, type: 'bla' }
-        return [response]
-      },
-    },
-  }),
-  listeners: () => ({
+  })),
+  // loaders(() => ({
+  //   sessions: {
+  //     __default: [] as Session[],
+  //     loadSessions: async (selectedDate: string): Promise<Session[]> => {
+  //       const response = { user: 3, type: 'bla' }
+  //       return [response]
+  //     },
+  //   },
+  // })),
+  listeners(() => ({
     updateNumber: ({ number }) => {
       console.log(number)
     },
     [githubLogic.actionTypes.setUsername]: ({ username }) => {
       console.log(username)
     },
-  }),
-  sharedListeners: () => ({}),
-  events: {
+  })),
+  sharedListeners(() => ({})),
+  events({
     afterMount: () => {
       console.log('after mount')
     },
-  },
-})
+  }),
+])
 
 function MyComponent(): JSX.Element {
   const { number } = useValues(logic)

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`snapshots must match 1`] = `
+exports[`snapshot snapshots must match 1`] = `
 <div>
   <div
     className="id"
@@ -24,4 +24,4 @@ exports[`snapshots must match 1`] = `
     updateName
   </div>
 </div>
-`
+`;

@@ -1,165 +1,149 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, keaReducer } from '../../src'
 
-import PropTypes from 'prop-types'
-
-beforeEach(() => {
-  resetContext()
-})
-
-test('singleton logic has all the right properties', () => {
-  keaReducer('scenes')
-
-  const response = kea({
-    path: () => ['scenes', 'homepage', 'index'],
-    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
-    actions: ({ constants }) => ({
-      updateName: name => ({ name }),
-    }),
-    reducers: ({ actions, constants }) => ({
-      name: [
-        'chirpy',
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ constants, selectors }) => ({
-      upperCaseName: [
-        () => [selectors.capitalizedName],
-        capitalizedName => {
-          return capitalizedName.toUpperCase()
-        },
-        PropTypes.string,
-      ],
-      capitalizedName: [
-        () => [selectors.name],
-        name => {
-          return name
-            .trim()
-            .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
-            .join(' ')
-        },
-        PropTypes.string,
-      ],
-    }),
+describe('logic singleton', () => {
+  beforeEach(() => {
+    resetContext()
   })
 
-  expect(response._isKea).toBe(true)
-  expect(response._isKeaWithKey).toBe(false)
+  test('singleton logic has all the right properties', () => {
+    keaReducer('scenes')
 
-  expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+    const response = kea({
+      path: () => ['scenes', 'homepage', 'index'],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions }) => ({
+        name: [
+          'chirpy',
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        upperCaseName: [
+          () => [selectors.capitalizedName],
+          (capitalizedName) => {
+            return capitalizedName.toUpperCase()
+          },
+        ],
+        capitalizedName: [
+          () => [selectors.name],
+          (name) => {
+            return name
+              .trim()
+              .split(' ')
+              .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+              .join(' ')
+          },
+        ],
+      }),
+    })
 
-  expect(() => {
-    response.path
-  }).toThrow() // eslint-disable-line
-  expect(() => {
-    response.actions
-  }).toThrow() // eslint-disable-line
-  expect(() => {
-    response.selectors
-  }).toThrow() // eslint-disable-line
+    expect(response._isKea).toBe(true)
 
-  response.mount()
+    expect(() => {
+      response.path
+    }).toThrow() // eslint-disable-line
+    expect(() => {
+      response.actions
+    }).toThrow() // eslint-disable-line
+    expect(() => {
+      response.selectors
+    }).toThrow() // eslint-disable-line
 
-  // check generic
-  expect(response.path).toEqual(['scenes', 'homepage', 'index'])
-  expect(Object.keys(response.connections)).toEqual(['scenes.homepage.index'])
-  expect(response.constants).toEqual({ SOMETHING: 'SOMETHING', SOMETHING_ELSE: 'SOMETHING_ELSE' })
+    response.mount()
 
-  // actions
-  expect(Object.keys(response.actions)).toEqual(['updateName'])
-  const { updateName } = response.actionCreators
-  expect(typeof updateName).toBe('function')
-  expect(updateName.toString()).toBe('update name (scenes.homepage.index)')
-  expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
+    // check generic
+    expect(response.path).toEqual(['scenes', 'homepage', 'index'])
+    expect(Object.keys(response.connections)).toEqual(['scenes.homepage.index'])
 
-  // reducers
-  const defaultValues = { name: 'chirpy' }
-  const state = { scenes: { homepage: { index: defaultValues } } }
-  expect(Object.keys(response.reducers).sort()).toEqual(['name'])
+    // actions
+    expect(Object.keys(response.actions)).toEqual(['updateName'])
+    const { updateName } = response.actionCreators
+    expect(typeof updateName).toBe('function')
+    expect(updateName.toString()).toBe('update name (scenes.homepage.index)')
+    expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
 
-  expect(response.reducers).toHaveProperty('name')
-  expect(response.propTypes.name).toEqual(PropTypes.string)
-  expect(response.defaults.name).toEqual('chirpy')
+    // reducers
+    const defaultValues = { name: 'chirpy' }
+    const state = { scenes: { homepage: { index: defaultValues } } }
+    expect(Object.keys(response.reducers).sort()).toEqual(['name'])
 
-  const nameReducer = response.reducers.name
-  expect(nameReducer).toBeDefined()
-  expect(nameReducer('', updateName('newName'))).toBe('newName')
+    expect(response.reducers).toHaveProperty('name')
+    expect(response.defaults.name).toEqual('chirpy')
 
-  expect(response.reducers).not.toHaveProperty('capitalizedName')
-  expect(response.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
-  expect(response.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
+    const nameReducer = response.reducers.name
+    expect(nameReducer).toBeDefined()
+    expect(nameReducer('', updateName('newName'))).toBe('newName')
 
-  // big reducer
-  expect(typeof response.reducer).toBe('function')
-  expect(response.reducer({}, { type: 'random action' })).toEqual(defaultValues)
-  expect(response.reducer({ name: 'something' }, { type: 'random action' })).toEqual({ name: 'something' })
-  expect(response.reducer({ name: 'something' }, updateName('newName'))).toEqual({ name: 'newName' })
+    expect(response.reducers).not.toHaveProperty('capitalizedName')
+    expect(response.defaults).not.toHaveProperty('capitalizedName', 'chirpy')
 
-  // selectors
-  expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
-  expect(response.selectors.name(state)).toEqual('chirpy')
-  expect(response.selectors.capitalizedName(state)).toEqual('Chirpy')
-  expect(response.selectors.upperCaseName(state)).toEqual('CHIRPY')
+    // big reducer
+    expect(typeof response.reducer).toBe('function')
+    expect(response.reducer({}, { type: 'random action' })).toEqual(defaultValues)
+    expect(response.reducer({ name: 'something' }, { type: 'random action' })).toEqual({ name: 'something' })
+    expect(response.reducer({ name: 'something' }, updateName('newName'))).toEqual({ name: 'newName' })
 
-  // root selector
-  expect(response.selector(state)).toEqual(defaultValues)
-})
+    // selectors
+    expect(Object.keys(response.selectors).sort()).toEqual(['capitalizedName', 'name', 'upperCaseName'])
+    expect(response.selectors.name(state)).toEqual('chirpy')
+    expect(response.selectors.capitalizedName(state)).toEqual('Chirpy')
+    expect(response.selectors.upperCaseName(state)).toEqual('CHIRPY')
 
-test('it is not a singleton if there is a key', () => {
-  keaReducer('scenes')
-
-  const response = kea({
-    key: props => props.id,
-    path: key => ['scenes', 'homepage', 'index', key],
-    constants: () => ['SOMETHING', 'SOMETHING_ELSE'],
-    actions: ({ constants }) => ({
-      updateName: name => ({ name }),
-    }),
-    reducers: ({ actions, constants }) => ({
-      name: [
-        'chirpy',
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        name => {
-          return name
-            .trim()
-            .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
-            .join(' ')
-        },
-        PropTypes.string,
-      ],
-    }),
+    // root selector
+    expect(response.selector(state)).toEqual(defaultValues)
   })
 
-  expect(() => response.mount()).toThrow()
+  test('it is not a singleton if there is a key', () => {
+    keaReducer('scenes')
 
-  // check generic
-  expect(response._isKea).toBe(true)
-  expect(response._isKeaWithKey).toBe(true)
+    const response = kea({
+      key: (props) => props.id,
+      path: (key) => ['scenes', 'homepage', 'index', key],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions }) => ({
+        name: [
+          'chirpy',
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        capitalizedName: [
+          () => [selectors.name],
+          (name) => {
+            return name
+              .trim()
+              .split(' ')
+              .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+              .join(' ')
+          },
+        ],
+      }),
+    })
 
-  expect(response.path).not.toBeDefined()
-  expect(response.constants).not.toBeDefined()
+    expect(() => response.mount()).toThrow()
 
-  // actions
-  expect(response.actions).not.toBeDefined()
+    // check generic
+    expect(response._isKea).toBe(true)
 
-  // reducers
-  expect(response.reducer).not.toBeDefined()
-  expect(response.reducers).not.toBeDefined()
+    expect(() => response.path).toThrow()
 
-  // selectors
-  expect(response.selector).not.toBeDefined()
-  expect(response.selectors).not.toBeDefined()
+    // actions
+    expect(() => response.actions).toThrow()
+
+    // reducers
+    expect(() => response.reducer).toThrow()
+    expect(() => response.reducers).toThrow()
+
+    // selectors
+    expect(() => response.selector).toThrow()
+    expect(() => response.selectors).toThrow()
+  })
 })

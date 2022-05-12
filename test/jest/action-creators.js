@@ -1,55 +1,37 @@
-/* global test, expect, beforeEach */
-import { kea, resetContext, keaReducer } from '../../src'
+import { kea, resetContext, createActionCreator } from '../../src'
 
-import PropTypes from 'prop-types'
-import { createAction } from '../../src/core/shared/actions'
-
-beforeEach(() => {
-  resetContext()
-})
-
-test('action creators work the right way', () => {
-  const logic = kea({
-    path: () => ['scenes', 'homepage', 'index'],
-    actions: ({ constants }) => ({
-      updateName: name => ({ name }),
-      actionWithBool: true,
-      actionWithInteger: 12,
-      actionWithNull: null,
-      manualAction: createAction('custom_type', a => a),
-    }),
+describe('action creators', () => {
+  beforeEach(() => {
+    resetContext()
   })
 
-  logic.mount()
+  test('action creators work the right way', () => {
+    const logic = kea({
+      path: () => ['scenes', 'homepage', 'index'],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+        actionWithTrue: true,
+        manualAction: createActionCreator('custom_type', (a) => a),
+      }),
+    })
 
-  expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
-  expect(Object.keys(logic.actions).sort()).toEqual([
-    'actionWithBool',
-    'actionWithInteger',
-    'actionWithNull',
-    'manualAction',
-    'updateName',
-  ])
+    logic.mount()
 
-  const { actionWithBool, actionWithInteger, actionWithNull, manualAction, updateName } = logic.actionCreators
+    expect(logic.path).toEqual(['scenes', 'homepage', 'index'])
+    expect(Object.keys(logic.actions).sort()).toEqual(['actionWithTrue', 'manualAction', 'updateName'])
 
-  expect(typeof updateName).toBe('function')
-  expect(updateName.toString()).toBe('update name (scenes.homepage.index)')
-  expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
+    const { actionWithTrue, manualAction, updateName } = logic.actionCreators
 
-  expect(typeof actionWithBool).toBe('function')
-  expect(actionWithBool.toString()).toBe('action with bool (scenes.homepage.index)')
-  expect(actionWithBool()).toEqual({ payload: { value: true }, type: actionWithBool.toString() })
+    expect(typeof updateName).toBe('function')
+    expect(updateName.toString()).toBe('update name (scenes.homepage.index)')
+    expect(updateName('newname')).toEqual({ payload: { name: 'newname' }, type: updateName.toString() })
 
-  expect(typeof actionWithInteger).toBe('function')
-  expect(actionWithInteger.toString()).toBe('action with integer (scenes.homepage.index)')
-  expect(actionWithInteger()).toEqual({ payload: { value: 12 }, type: actionWithInteger.toString() })
+    expect(typeof actionWithTrue).toBe('function')
+    expect(actionWithTrue.toString()).toBe('action with true (scenes.homepage.index)')
+    expect(actionWithTrue()).toEqual({ payload: { value: true }, type: actionWithTrue.toString() })
 
-  expect(typeof actionWithNull).toBe('function')
-  expect(actionWithNull.toString()).toBe('action with null (scenes.homepage.index)')
-  expect(actionWithNull()).toEqual({ payload: { value: null }, type: actionWithNull.toString() })
-
-  expect(typeof manualAction).toBe('function')
-  expect(manualAction.toString()).toBe('custom_type')
-  expect(manualAction({ key: 'newname' })).toEqual({ payload: { key: 'newname' }, type: manualAction.toString() })
+    expect(typeof manualAction).toBe('function')
+    expect(manualAction.toString()).toBe('custom_type')
+    expect(manualAction({ key: 'newname' })).toEqual({ payload: { key: 'newname' }, type: manualAction.toString() })
+  })
 })

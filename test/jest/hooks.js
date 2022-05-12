@@ -1,322 +1,138 @@
-/* global test, expect, beforeEach */
-import { kea, useValues, useAllValues, useActions, useKea, getContext, resetContext } from '../../src'
+import {
+  kea,
+  useValues,
+  useAllValues,
+  useActions,
+  getContext,
+  resetContext,
+  path,
+  actions,
+  reducers,
+  afterMount,
+  useMountedLogic,
+} from '../../src'
 
-import './helper/jsdom'
 import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Provider } from 'react-redux'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import { batchChanges } from '../../src/react/hooks'
 
-beforeEach(() => {
-  resetContext({ createStore: true })
-})
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-test('useValues and useActions hooks works', () => {
-  const { store } = getContext()
-  const logic = kea({
-    path: () => ['scenes', 'hooky'],
-    actions: () => ({
-      updateName: (name) => ({ name }),
-    }),
-    reducers: ({ actions }) => ({
-      name: [
-        'chirpy',
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ selectors }) => ({
-      upperCaseName: [
-        () => [selectors.capitalizedName],
-        (capitalizedName) => {
-          return capitalizedName.toUpperCase()
-        },
-        PropTypes.string,
-      ],
-      capitalizedName: [
-        () => [selectors.name],
-        (name) => {
-          return name
-            .trim()
-            .split(' ')
-            .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
-            .join(' ')
-        },
-        PropTypes.string,
-      ],
-    }),
+describe('hooks', () => {
+  beforeEach(() => {
+    resetContext()
   })
 
-  let countRendered = 0
+  test('useValues and useActions hooks works', () => {
+    const { store } = getContext()
+    const logic = kea({
+      path: () => ['scenes', 'hooky'],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions }) => ({
+        name: [
+          'chirpy',
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        upperCaseName: [
+          () => [selectors.capitalizedName],
+          (capitalizedName) => {
+            return capitalizedName.toUpperCase()
+          },
+        ],
+        capitalizedName: [
+          () => [selectors.name],
+          (name) => {
+            return name
+              .trim()
+              .split(' ')
+              .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+              .join(' ')
+          },
+        ],
+      }),
+    })
 
-  function SampleComponent({ id }) {
-    const { name, capitalizedName, upperCaseName } = useValues(logic)
-    const { updateName } = useActions(logic)
+    let countRendered = 0
 
-    countRendered += 1
+    function SampleComponent({ id }) {
+      const { name, capitalizedName, upperCaseName } = useValues(logic)
+      const { updateName } = useActions(logic)
 
-    return (
-      <div>
-        <div data-testid="id">{id}</div>
-        <div data-testid="name">{name}</div>
-        <div data-testid="capitalizedName">{capitalizedName}</div>
-        <div data-testid="upperCaseName">{upperCaseName}</div>
-        <div data-testid="updateName" onClick={() => updateName('bob')}>
-          updateName
+      countRendered += 1
+
+      return (
+        <div>
+          <div data-testid="id">{id}</div>
+          <div data-testid="name">{name}</div>
+          <div data-testid="capitalizedName">{capitalizedName}</div>
+          <div data-testid="upperCaseName">{upperCaseName}</div>
+          <div data-testid="updateName" onClick={() => updateName('bob')}>
+            updateName
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  expect(countRendered).toEqual(0)
+    expect(countRendered).toEqual(0)
 
-  render(
-    <Provider store={getContext().store}>
-      <SampleComponent id={12} />
-    </Provider>,
-  )
+    render(<SampleComponent id={12} />)
 
-  expect(countRendered).toEqual(1)
+    expect(countRendered).toEqual(1)
 
-  store.dispatch({ type: 'nothing', payload: {} })
+    act(() => store.dispatch({ type: 'nothing', payload: {} }))
 
-  expect(countRendered).toEqual(1)
+    expect(countRendered).toEqual(1)
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
-  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('chirpy')
+    expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Chirpy')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('CHIRPY')
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'chirpy' } } })
 
-  logic.actions.updateName('somename')
+    act(() => logic.actions.updateName('somename'))
 
-  expect(countRendered).toEqual(2)
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename' } } })
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('somename')
-  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('somename')
+    expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME')
 
-  logic.actions.updateName('somename')
-  expect(countRendered).toEqual(2)
+    expect(countRendered).toEqual(2)
+    logic.actions.updateName('somename')
+    expect(countRendered).toEqual(2)
 
-  logic.actions.updateName('somename3')
-  expect(countRendered).toEqual(3)
+    act(() => logic.actions.updateName('somename3'))
 
-  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
+    expect(countRendered).toEqual(3)
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('somename3')
-  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename3')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME3')
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { name: 'somename3' } } })
 
-  fireEvent.click(screen.getByTestId('updateName'))
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('somename3')
+    expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Somename3')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('SOMENAME3')
 
-  expect(countRendered).toEqual(4)
+    fireEvent.click(screen.getByTestId('updateName'))
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('bob')
-  expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Bob')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BOB')
-})
+    expect(countRendered).toEqual(4)
 
-test('useValues and useActions hooks accept logic built with props', () => {
-  const { store } = getContext()
-  const logic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'hooky', key],
-    actions: () => ({
-      updateName: (name) => ({ name }),
-    }),
-    reducers: ({ actions, props }) => ({
-      name: [
-        props.defaultName,
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ selectors }) => ({
-      upperCaseName: [
-        () => [selectors.name],
-        (name) => {
-          return name.toUpperCase()
-        },
-        PropTypes.string,
-      ],
-    }),
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('bob')
+    expect(screen.getByTestId('capitalizedName')).toHaveTextContent('Bob')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BOB')
   })
 
-  function SampleComponent({ id }) {
-    const innerLogic = logic({ id, defaultName: 'brad' })
-
-    const { name, upperCaseName } = useValues(innerLogic)
-    const { updateName } = useActions(innerLogic)
-
-    return (
-      <div>
-        <div data-testid="id">{id}</div>
-        <div data-testid="name">{name}</div>
-        <div data-testid="upperCaseName">{upperCaseName}</div>
-        <div data-testid="updateName" onClick={() => updateName('fred')}>
-          updateName
-        </div>
-      </div>
-    )
-  }
-
-  render(
-    <Provider store={getContext().store}>
-      <SampleComponent id={12} />
-    </Provider>,
-  )
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'brad' } } } })
-
-  fireEvent.click(screen.getByTestId('updateName'))
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('fred')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
-
-  expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'fred' } } } })
-})
-
-test('can change key/path of logic once it has been accessed in a hook', () => {
-  const { store } = getContext()
-  const logic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'hooky', key],
-    actions: () => ({
-      updateName: (name) => ({ name }),
-    }),
-    reducers: ({ actions, props }) => ({
-      name: [
-        props.defaultName,
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ selectors }) => ({
-      upperCaseName: [
-        () => [selectors.name],
-        (name) => {
-          return name.toUpperCase()
-        },
-        PropTypes.string,
-      ],
-    }),
-  })
-
-  function SampleComponent({ id }) {
-    const innerLogic = logic({ id, defaultName: 'brad' })
-
-    const { name, upperCaseName } = useValues(innerLogic)
-    const { updateName } = useActions(innerLogic)
-
-    return (
-      <div>
-        <div data-testid="id">{id}</div>
-        <div data-testid="name">{name}</div>
-        <div data-testid="upperCaseName">{upperCaseName}</div>
-        <div data-testid="updateName" onClick={() => updateName('fred')}>
-          updateName
-        </div>
-      </div>
-    )
-  }
-
-  const togglerLogic = kea({
-    path: () => ['scenes', 'toggler'],
-    actions: () => ({
-      next: true,
-    }),
-    reducers: ({ actions }) => ({
-      id: [
-        12,
-        {
-          [actions.next]: (state) => state + 1,
-        },
-      ],
-    }),
-  })
-
-  function TogglerComponent() {
-    const { id } = useValues(togglerLogic)
-    const { next } = useActions(togglerLogic)
-
-    return (
-      <div>
-        <SampleComponent id={id} />
-        <button data-testid="next" onClick={next}>
-          next
-        </button>
-      </div>
-    )
-  }
-
-  render(
-    <Provider store={getContext().store}>
-      <TogglerComponent />
-    </Provider>,
-  )
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'brad' } },
-      toggler: { id: 12 },
-    },
-  })
-
-  fireEvent.click(screen.getByTestId('updateName'))
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('fred')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'fred' } },
-      toggler: { id: 12 },
-    },
-  })
-
-  fireEvent.click(screen.getByTestId('next'))
-
-  expect(screen.getByTestId('id')).toHaveTextContent('13')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 13: { name: 'brad' } },
-      toggler: { id: 13 },
-    },
-  })
-})
-
-test('can define logic with useKea', () => {
-  const { store } = getContext()
-
-  function SampleComponent({ id }) {
-    const logic = useKea({
+  test('useValues and useActions hooks accept logic built with props', () => {
+    const { store } = getContext()
+    const logic = kea({
       key: (props) => props.id,
       path: (key) => ['scenes', 'hooky', key],
       actions: () => ({
@@ -325,7 +141,6 @@ test('can define logic with useKea', () => {
       reducers: ({ actions, props }) => ({
         name: [
           props.defaultName,
-          PropTypes.string,
           {
             [actions.updateName]: (state, payload) => payload.name,
           },
@@ -337,29 +152,90 @@ test('can define logic with useKea', () => {
           (name) => {
             return name.toUpperCase()
           },
-          PropTypes.string,
         ],
       }),
     })
-    const innerLogic = logic({ id, defaultName: 'brad' })
 
-    const { name, upperCaseName } = useValues(innerLogic)
-    const { updateName } = useActions(innerLogic)
+    function SampleComponent({ id }) {
+      const innerLogic = logic({ id, defaultName: 'brad' })
 
-    return (
-      <div>
-        <div data-testid="id">{id}</div>
-        <div data-testid="name">{name}</div>
-        <div data-testid="upperCaseName">{upperCaseName}</div>
-        <div data-testid="updateName" onClick={() => updateName('fred')}>
-          updateName
+      const { name, upperCaseName } = useValues(innerLogic)
+      const { updateName } = useActions(innerLogic)
+
+      return (
+        <div>
+          <div data-testid="id">{id}</div>
+          <div data-testid="name">{name}</div>
+          <div data-testid="upperCaseName">{upperCaseName}</div>
+          <div data-testid="updateName" onClick={() => updateName('fred')}>
+            updateName
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  function TogglerComponent() {
-    const togglerLogic = useKea({
+    render(<SampleComponent id={12} />)
+
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('brad')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'brad' } } } })
+
+    fireEvent.click(screen.getByTestId('updateName'))
+
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('fred')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
+
+    expect(store.getState()).toEqual({ kea: {}, scenes: { hooky: { 12: { name: 'fred' } } } })
+  })
+
+  test('can change key/path of logic once it has been accessed in a hook', () => {
+    const { store } = getContext()
+    const logic = kea({
+      key: (props) => props.id,
+      path: (key) => ['scenes', 'hooky', key],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions, props }) => ({
+        name: [
+          props.defaultName,
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        upperCaseName: [
+          () => [selectors.name],
+          (name) => {
+            return name.toUpperCase()
+          },
+        ],
+      }),
+    })
+
+    function SampleComponent({ id }) {
+      const innerLogic = logic({ id, defaultName: 'brad' })
+
+      const { name, upperCaseName } = useValues(innerLogic)
+      const { updateName } = useActions(innerLogic)
+
+      return (
+        <div>
+          <div data-testid="id">{id}</div>
+          <div data-testid="name">{name}</div>
+          <div data-testid="upperCaseName">{upperCaseName}</div>
+          <div data-testid="updateName" onClick={() => updateName('fred')}>
+            updateName
+          </div>
+        </div>
+      )
+    }
+
+    const togglerLogic = kea({
       path: () => ['scenes', 'toggler'],
       actions: () => ({
         next: true,
@@ -374,220 +250,307 @@ test('can define logic with useKea', () => {
       }),
     })
 
-    const { id } = useValues(togglerLogic)
-    const { next } = useActions(togglerLogic)
+    function TogglerComponent() {
+      const { id } = useValues(togglerLogic)
+      const { next } = useActions(togglerLogic)
 
-    return (
-      <div>
-        <SampleComponent id={id} />
-        <button data-testid="next" onClick={next}>
-          next
-        </button>
-      </div>
-    )
-  }
-
-  render(
-    <Provider store={getContext().store}>
-      <TogglerComponent />
-    </Provider>,
-  )
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'brad' } },
-      toggler: { id: 12 },
-    },
-  })
-
-  fireEvent.click(screen.getByTestId('updateName'))
-
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('fred')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'fred' } },
-      toggler: { id: 12 },
-    },
-  })
-
-  fireEvent.click(screen.getByTestId('next'))
-
-  expect(screen.getByTestId('id')).toHaveTextContent('13')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
-
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 13: { name: 'brad' } },
-      toggler: { id: 13 },
-    },
-  })
-})
-
-test('can get all props with useAllValuess', () => {
-  const { store } = getContext()
-  const logic = kea({
-    key: (props) => props.id,
-    path: (key) => ['scenes', 'hooky', key],
-    actions: () => ({
-      updateName: (name) => ({ name }),
-    }),
-    reducers: ({ actions, props }) => ({
-      name: [
-        props.defaultName,
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ selectors }) => ({
-      upperCaseName: [
-        () => [selectors.name],
-        (name) => {
-          return name.toUpperCase()
-        },
-        PropTypes.string,
-      ],
-    }),
-  })
-
-  function SampleComponent({ id }) {
-    const innerLogic = logic({ id, defaultName: 'brad' })
-
-    const allProps = useAllValues(innerLogic)
-
-    const { name, upperCaseName } = allProps
-
-    // extract the props a second time and expect nothing to break because of this
-    if (id === 12) {
-      const { name, upperCaseName } = allProps
-      let a = name + upperCaseName
+      return (
+        <div>
+          <SampleComponent id={id} />
+          <button data-testid="next" onClick={next}>
+            next
+          </button>
+        </div>
+      )
     }
 
-    const { updateName } = useActions(innerLogic)
+    render(<TogglerComponent />)
 
-    return (
-      <div>
-        <div data-testid="id">{id}</div>
-        <div data-testid="name">{name}</div>
-        <div data-testid="upperCaseName">{upperCaseName}</div>
-        <div data-testid="updateName" onClick={() => updateName('fred')}>
-          updateName
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('brad')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 12: { name: 'brad' } },
+        toggler: { id: 12 },
+      },
+    })
+
+    fireEvent.click(screen.getByTestId('updateName'))
+
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('fred')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 12: { name: 'fred' } },
+        toggler: { id: 12 },
+      },
+    })
+
+    fireEvent.click(screen.getByTestId('next'))
+
+    expect(screen.getByTestId('id')).toHaveTextContent('13')
+    expect(screen.getByTestId('name')).toHaveTextContent('brad')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 13: { name: 'brad' } },
+        toggler: { id: 13 },
+      },
+    })
+  })
+
+  test('can get all props with useAllValuess', () => {
+    const { store } = getContext()
+    const logic = kea({
+      key: (props) => props.id,
+      path: (key) => ['scenes', 'hooky', key],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions, props }) => ({
+        name: [
+          props.defaultName,
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        upperCaseName: [
+          () => [selectors.name],
+          (name) => {
+            return name.toUpperCase()
+          },
+        ],
+      }),
+    })
+
+    function SampleComponent({ id }) {
+      const innerLogic = logic({ id, defaultName: 'brad' })
+
+      const allProps = useAllValues(innerLogic)
+
+      const { name, upperCaseName } = allProps
+
+      // extract the props a second time and expect nothing to break because of this
+      if (id === 12) {
+        const { name, upperCaseName } = allProps
+        let a = name + upperCaseName
+      }
+
+      const { updateName } = useActions(innerLogic)
+
+      return (
+        <div>
+          <div data-testid="id">{id}</div>
+          <div data-testid="name">{name}</div>
+          <div data-testid="upperCaseName">{upperCaseName}</div>
+          <div data-testid="updateName" onClick={() => updateName('fred')}>
+            updateName
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  const togglerLogic = kea({
-    path: () => ['scenes', 'toggler'],
-    actions: () => ({
-      next: true,
-    }),
-    reducers: ({ actions }) => ({
-      id: [
-        12,
-        {
-          [actions.next]: (state) => state + 1,
-        },
-      ],
-    }),
+    const togglerLogic = kea({
+      path: () => ['scenes', 'toggler'],
+      actions: () => ({
+        next: true,
+      }),
+      reducers: ({ actions }) => ({
+        id: [
+          12,
+          {
+            [actions.next]: (state) => state + 1,
+          },
+        ],
+      }),
+    })
+
+    function TogglerComponent() {
+      const { id } = useValues(togglerLogic)
+      const { next } = useActions(togglerLogic)
+
+      return (
+        <div>
+          <SampleComponent id={id} />
+          <button data-testid="next" onClick={next}>
+            next
+          </button>
+        </div>
+      )
+    }
+
+    render(<TogglerComponent />)
+
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('brad')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 12: { name: 'brad' } },
+        toggler: { id: 12 },
+      },
+    })
+
+    fireEvent.click(screen.getByTestId('updateName'))
+
+    expect(screen.getByTestId('id')).toHaveTextContent('12')
+    expect(screen.getByTestId('name')).toHaveTextContent('fred')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 12: { name: 'fred' } },
+        toggler: { id: 12 },
+      },
+    })
+
+    fireEvent.click(screen.getByTestId('next'))
+
+    expect(screen.getByTestId('id')).toHaveTextContent('13')
+    expect(screen.getByTestId('name')).toHaveTextContent('brad')
+    expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+
+    expect(store.getState()).toEqual({
+      kea: {},
+      scenes: {
+        hooky: { 13: { name: 'brad' } },
+        toggler: { id: 13 },
+      },
+    })
   })
 
-  function TogglerComponent() {
-    const { id } = useValues(togglerLogic)
-    const { next } = useActions(togglerLogic)
+  test('will not crash hen running action after unmount', () => {
+    const { store } = getContext()
+    const logic = kea({
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+    })
 
-    return (
-      <div>
-        <SampleComponent id={id} />
-        <button data-testid="next" onClick={next}>
-          next
-        </button>
-      </div>
-    )
-  }
+    function SampleComponent({ id }) {
+      const { updateName } = useActions(logic)
 
-  render(
-    <Provider store={getContext().store}>
-      <TogglerComponent />
-    </Provider>,
-  )
+      useEffect(() => {
+        return () => updateName('yes')
+      }, [])
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+      return <div />
+    }
 
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'brad' } },
-      toggler: { id: 12 },
-    },
+    render(<SampleComponent />)
+
+    expect(() => {}).not.toThrow()
   })
 
-  fireEvent.click(screen.getByTestId('updateName'))
+  test('make sure the order of subscriptions does not matter', () => {
+    const dashLogic = kea([
+      path(['dashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
+    const otherLogic = kea([
+      path(['otherLogic']),
+      afterMount(() => {
+        dashLogic.actions.doit()
+      }),
+    ])
+    function Other() {
+      const { done } = useValues(dashLogic)
+      useMountedLogic(otherLogic)
+      return <div data-testid="other">{done ? 'done' : 'doing'}</div>
+    }
+    function RenderTest() {
+      const { done } = useValues(dashLogic)
+      return (
+        <>
+          <div data-testid="scene">{done ? 'done' : 'doing'}</div>
+          <Other />
+        </>
+      )
+    }
 
-  expect(screen.getByTestId('id')).toHaveTextContent('12')
-  expect(screen.getByTestId('name')).toHaveTextContent('fred')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('FRED')
+    const { unmount } = render(<RenderTest />)
 
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 12: { name: 'fred' } },
-      toggler: { id: 12 },
-    },
+    expect(screen.getByTestId('other')).toHaveTextContent('done')
+    expect(screen.getByTestId('scene')).toHaveTextContent('done')
+
+    unmount()
   })
 
-  fireEvent.click(screen.getByTestId('next'))
+  it('batchChanges works as expected', async () => {
+    resetContext({
+      createStore: {
+        middleware: [
+          ({ dispatch, getState }) =>
+            (next) =>
+            (action) => {
+              log.push({ type: `redux action ${action.type}`, path: action.payload?.path })
+              next(action)
+            },
+        ],
+      },
+    })
+    let log = []
+    const dashLogic = kea([
+      path(['dashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
+    const bashLogic = kea([
+      path(['bashLogic']),
+      actions({ doit: true }),
+      reducers({ done: [false, { doit: () => true }] }),
+    ])
 
-  expect(screen.getByTestId('id')).toHaveTextContent('13')
-  expect(screen.getByTestId('name')).toHaveTextContent('brad')
-  expect(screen.getByTestId('upperCaseName')).toHaveTextContent('BRAD')
+    const { store } = getContext()
+    store.subscribe(() => {
+      log.push({ type: 'in redux listener', state: store.getState() })
+    })
 
-  expect(store.getState()).toEqual({
-    kea: {},
-    scenes: {
-      hooky: { 13: { name: 'brad' } },
-      toggler: { id: 13 },
-    },
+    log.push({ type: 'pre dashLogic mount' })
+    dashLogic.mount()
+    log.push({ type: 'post dashLogic mount' })
+
+    log.push({ type: 'pre paused bashLogic mount' })
+    batchChanges(() => {
+      bashLogic.mount()
+    })
+    log.push({ type: 'post paused bashLogic mount' })
+    log.push({ type: 'starting await' })
+
+    await delay(0)
+
+    log.push({ type: 'after await setTimeout(0)' })
+
+    expect(log).toEqual([
+      { type: 'pre dashLogic mount' },
+      { type: 'redux action @KEA/ATTACH_REDUCER', path: ['dashLogic'] },
+      { type: 'in redux listener', state: { kea: {}, dashLogic: { done: false } } },
+      { type: 'post dashLogic mount' },
+      { type: 'pre paused bashLogic mount' },
+      { type: 'redux action @KEA/ATTACH_REDUCER', path: ['bashLogic'] },
+      { type: 'post paused bashLogic mount' },
+      { type: 'starting await' },
+      { type: 'redux action @KEA/FLUSH', path: undefined },
+      {
+        type: 'in redux listener',
+        state: { bashLogic: { done: false }, dashLogic: { done: false }, kea: {} },
+      },
+      { type: 'after await setTimeout(0)' },
+    ])
+    expect(1).toBe(1)
   })
-})
-
-test('will not crash hen running action after unmount', () => {
-  const { store } = getContext()
-  const logic = kea({
-    actions: () => ({
-      updateName: (name) => ({ name }),
-    }),
-  })
-
-  function SampleComponent({ id }) {
-    const { updateName } = useActions(logic)
-
-    useEffect(() => {
-      return () => updateName('yes')
-    }, [])
-
-    return <div />
-  }
-
-  render(
-    <Provider store={getContext().store}>
-      <SampleComponent />
-    </Provider>,
-  )
-
-  expect(() => {}).not.toThrow()
 })

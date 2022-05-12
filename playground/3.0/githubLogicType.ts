@@ -1,28 +1,22 @@
 // Auto-generated with kea-typegen. DO NOT EDIT!
 
-import { Logic } from '../src/types'
+import { Logic } from '../../src/types'
 
-export interface githubLogicType<Repository> extends Logic {
+export interface githubLogicType<Repository, GithubLogicProps> extends Logic {
   actionCreators: {
-    setUsername: (
-      username: string,
-    ) => {
+    setUsername: (username: string) => {
       type: 'set username (samples.githubLogic)'
       payload: {
         username: string
       }
     }
-    setRepositories: (
-      repositories: Repository[],
-    ) => {
+    setRepositories: (repositories: Repository[]) => {
       type: 'set repositories (samples.githubLogic)'
       payload: {
         repositories: Repository[]
       }
     }
-    setFetchError: (
-      error: string,
-    ) => {
+    setFetchError: (error: string) => {
       type: 'set fetch error (samples.githubLogic)'
       payload: {
         error: string
@@ -68,7 +62,7 @@ export interface githubLogicType<Repository> extends Logic {
   }
   path: ['samples', 'githubLogic']
   pathString: 'samples.githubLogic'
-  props: Record<string, unknown>
+  props: GithubLogicProps
   reducer: (
     state: any,
     action: any,
@@ -86,9 +80,7 @@ export interface githubLogicType<Repository> extends Logic {
     isLoading: (state: boolean, action: any, fullState: any) => boolean
     error: (state: string | null, action: any, fullState: any) => string | null
   }
-  selector: (
-    state: any,
-  ) => {
+  selector: (state: any) => {
     username: string
     repositories: Repository[]
     isLoading: boolean
@@ -110,7 +102,6 @@ export interface githubLogicType<Repository> extends Logic {
     sortedRepositories: Repository[]
   }
   _isKea: true
-  _isKeaWithKey: false
   __keaTypeGenInternalSelectorTypes: {
     sortedRepositories: (arg1: Repository[]) => Repository[]
   }

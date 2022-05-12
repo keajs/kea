@@ -1,20 +1,21 @@
 import { useMemo, useEffect, useRef, useContext, createContext } from 'react'
-import { useSelector } from 'react-redux'
-
-import { kea } from '../kea/kea'
-import { LogicInput, LogicWrapper, BuiltLogic, Logic } from '../types'
-import { getContext } from '../context'
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
+import { LogicWrapper, BuiltLogic, Logic, Selector } from '../types'
+import { getContext } from '../kea/context'
+import { isLogicWrapper } from '../utils'
 
 /** True if we dispatched an action in a component's body *while* rendering. For example when mounting a logic.
  * Old subscriptions shouldn't update until after rendering. */
 export let pauseCounter = 0
 export const isPaused = () => pauseCounter !== 0
 
-export function useKea(input: LogicInput, deps = []): LogicWrapper {
-  return useMemo(() => kea(input), deps)
+const getStoreState = () => getContext().store.getState()
+
+export function useSelector(selector: Selector): any {
+  return useSyncExternalStore(getContext().store.subscribe, () => selector(getStoreState()))
 }
 
-export function useValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
+export function useValues<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['values'] {
   const builtLogic = useMountedLogic(logic)
 
   return useMemo(() => {
@@ -30,40 +31,33 @@ export function useValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['val
   }, [builtLogic.pathString])
 }
 
-export function useAllValues<L extends BuiltLogic | LogicWrapper>(logic: L): L['values'] {
+export function useAllValues<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['values'] {
   const builtLogic = useMountedLogic(logic)
 
   const response: Record<string, any> = {}
-  for (const key of Object.keys(builtLogic['selectors'])) {
-    response[key] = useSelector(builtLogic['selectors'][key])
+  for (const key of Object.keys(builtLogic.selectors)) {
+    response[key] = useSelector(builtLogic.selectors[key])
   }
 
   return response
 }
 
-export function useActions<L extends BuiltLogic | LogicWrapper>(logic: L): L['actions'] {
+export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['actions'] {
   const builtLogic = useMountedLogic(logic)
   return builtLogic['actions']
-}
-
-export function isWrapper(toBeDetermined: BuiltLogic | LogicWrapper): toBeDetermined is LogicWrapper {
-  if ((toBeDetermined as LogicWrapper)._isKea) {
-    return true
-  }
-  return false
 }
 
 const blankContext = createContext(undefined as BuiltLogic | undefined)
 
 export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): BuiltLogic<L> {
-  const builtLogicContext = isWrapper(logic) ? getContext().react.contexts.get(logic as LogicWrapper) : null
+  const builtLogicContext = isLogicWrapper(logic) ? getContext().react.contexts.get(logic) : null
   const defaultBuiltLogic = useContext(builtLogicContext || blankContext)
-  const builtLogic = isWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
+  const builtLogic = isLogicWrapper(logic) ? defaultBuiltLogic || logic.build() : logic
 
   const unmount = useRef(undefined as undefined | (() => void))
 
   if (!unmount.current) {
-    withPause(() => {
+    batchChanges(() => {
       unmount.current = builtLogic.mount()
     })
   }
@@ -71,7 +65,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   const pathString = useRef(builtLogic.pathString)
 
   if (pathString.current !== builtLogic.pathString) {
-    withPause(() => {
+    batchChanges(() => {
       unmount.current?.()
       unmount.current = builtLogic.mount()
       pathString.current = builtLogic.pathString
@@ -83,14 +77,14 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
     // Thus if we're here and there's still no `unmount.current`, it's because we just refreshed.
     // Normally we still mount the logic sync in the component, just to have the data there when selectors fire.
     if (!unmount.current) {
-      withPause(() => {
+      batchChanges(() => {
         unmount.current = builtLogic.mount()
         pathString.current = builtLogic.pathString
       })
     }
 
     return function useMountedLogicEffectCleanup() {
-      withPause(() => {
+      batchChanges(() => {
         unmount.current && unmount.current()
         unmount.current = undefined
       })
@@ -101,8 +95,10 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
 }
 
 let timeout: number
-function withPause(callback: () => void) {
-  const previousState = getContext().store.getState()
+/** Delay Redux subscriptions from firing and asking React to re-render.
+ * Will set a Timeout to flush if store changed during callback. */
+export function batchChanges(callback: () => void) {
+  const previousState = getStoreState()
   pauseCounter += 1
   try {
     callback()
@@ -110,9 +106,8 @@ function withPause(callback: () => void) {
   } finally {
     pauseCounter -= 1
   }
-  const newState = getContext().store.getState()
+  const newState = getStoreState()
   if (previousState !== newState) {
-    // TODO: flush only if any subscription changes
     timeout && window.clearTimeout(timeout)
     timeout = window.setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
   }
