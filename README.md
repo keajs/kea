@@ -8,7 +8,10 @@
 
 # Kea v3
 
-Open the [documentation](https://keajs.org/) and read from there.
+**🗞🚨🗞🚨 Subscribe to the [Kea Newsletter](https://keajs.ck.page/80aecebec7) to keep up to date with latest news! 🗞🚨🗞🚨**
+
+[Read the documentation](https://keajs.org/)
+
 
 ## Thank you to our backers!
 
