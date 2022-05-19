@@ -1,7 +1,7 @@
 import { BuiltLogic, LogicWrapper } from '../types'
 import * as React from 'react'
 import { useMountedLogic } from './hooks'
-import { getContext } from '../context'
+import { getContext } from '../kea/context'
 
 export type BindPropsProps = {
   logic: LogicWrapper

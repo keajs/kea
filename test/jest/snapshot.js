@@ -1,10 +1,6 @@
-/* global test, expect, beforeEach */
 import { kea, resetContext, getContext } from '../../src'
 
-import './helper/jsdom'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 
 class SampleComponent extends Component {
@@ -25,51 +21,45 @@ class SampleComponent extends Component {
   }
 }
 
-beforeEach(() => {
-  resetContext()
-})
-
-test('snapshots must match', () => {
-  const { store } = getContext()
-
-  const singletonLogic = kea({
-    path: () => ['scenes', 'something'],
-    actions: ({ constants }) => ({
-      updateName: name => ({ name }),
-    }),
-    reducers: ({ actions, constants }) => ({
-      name: [
-        'chirpy',
-        PropTypes.string,
-        {
-          [actions.updateName]: (state, payload) => payload.name,
-        },
-      ],
-    }),
-    selectors: ({ constants, selectors }) => ({
-      capitalizedName: [
-        () => [selectors.name],
-        name => {
-          return name
-            .trim()
-            .split(' ')
-            .map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
-            .join(' ')
-        },
-        PropTypes.string,
-      ],
-    }),
+describe('snapshot', () => {
+  beforeEach(() => {
+    resetContext()
   })
 
-  const ConnectedComponent = singletonLogic(SampleComponent)
+  test('snapshots must match', () => {
+    const { store } = getContext()
 
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <ConnectedComponent id={12} />
-      </Provider>,
-    )
-    .toJSON()
+    const singletonLogic = kea({
+      path: () => ['scenes', 'something'],
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      reducers: ({ actions }) => ({
+        name: [
+          'chirpy',
+          {
+            [actions.updateName]: (state, payload) => payload.name,
+          },
+        ],
+      }),
+      selectors: ({ selectors }) => ({
+        capitalizedName: [
+          () => [selectors.name],
+          (name) => {
+            return name
+              .trim()
+              .split(' ')
+              .map((k) => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`)
+              .join(' ')
+          },
+        ],
+      }),
+    })
 
-  expect(tree).toMatchSnapshot()
+    const ConnectedComponent = singletonLogic(SampleComponent)
+
+    const tree = renderer.create(<ConnectedComponent id={12} />).toJSON()
+
+    expect(tree).toMatchSnapshot()
+  })
 })

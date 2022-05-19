@@ -1,7 +1,14 @@
 import React from 'react'
-import { Provider as ReactReduxProvider } from 'react-redux'
-import { getContext } from '../context'
+
+let warned = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production'
 
 export function Provider({ children }: { children: React.ReactNode }): JSX.Element {
-  return <ReactReduxProvider store={getContext().store}>{children}</ReactReduxProvider>
+  if (!warned) {
+    console.warn(
+      "[KEA] <Provider> is now a no-op and should be removed. If you need it for Redux, use react-redux's <Provider store={getContext().store} />, or use Kea's useSelector.",
+    )
+    warned = true
+  }
+
+  return <>{children}</>
 }

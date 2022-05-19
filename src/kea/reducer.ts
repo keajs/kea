@@ -1,7 +1,7 @@
-import { getContext } from '../context'
-import { runPlugins } from '../plugins'
+import { getContext } from './context'
+import { runPlugins } from './plugins'
 import { BuiltLogic, ReducerFunction } from '../types'
-import { Reducer } from 'redux'
+import type { Reducer } from 'redux'
 
 export const ATTACH_REDUCER = '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = '@KEA/DETACH_REDUCER'
@@ -199,14 +199,12 @@ export function recursiveCreateReducer(treeNode: ReducerFunction | Record<string
 // Instead we'll simply discard the keys we don't need.
 // Please note that logic reducers are still built with redux's combineReducers.
 export function combineKeaReducers(reducers: Record<string, ReducerFunction>): ReducerFunction {
-  const reducerKeys = Object.keys(reducers)
-
   return function combination(state = {}, action, fullState) {
+    const reducerKeys = Object.keys(reducers)
     let stateChanged = Object.keys(state).length !== reducerKeys.length
     const nextState: Record<string, any> = {}
 
-    for (let i = 0; i < reducerKeys.length; i++) {
-      const key = reducerKeys[i]
+    for (const key of reducerKeys) {
       const reducer = reducers[key]
       const previousKeyState = state[key]
       const nextKeyState = reducer(previousKeyState, action, fullState || state)
@@ -223,11 +221,11 @@ export function combineKeaReducers(reducers: Record<string, ReducerFunction>): R
 
 function regenerateCombinedReducer() {
   const { redux, roots } = getContext().reducers
-  const reducers = Object.assign({}, redux, roots)
+  const reducers = { ...redux, ...roots }
   getContext().reducers.combined = combineKeaReducers(reducers)
 }
 
 export function createReduxStoreReducer(): Reducer {
   regenerateCombinedReducer()
-  return (state = defaultState, action) => (getContext().reducers.combined as ReducerFunction)(state, action, state)
+  return (state = defaultState, action) => getContext().reducers.combined?.(state, action, state)
 }

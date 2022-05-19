@@ -1,8 +1,11 @@
-import { createStore, applyMiddleware, compose, Store, StoreEnhancer } from 'redux'
+// The Redux maintainers have deprecated "createStore" to push everyone to use Redux Toolkit :/
+// so we must import `createStore` as `legacy_createStore`
+import { legacy_createStore as reduxCreateStore, applyMiddleware, compose } from 'redux'
+import type { Store, StoreEnhancer } from 'redux'
 
 import { createReduxStoreReducer, initRootReducerTree } from './reducer'
-import { runPlugins } from '../plugins'
-import { getContext } from '../context'
+import { runPlugins } from './plugins'
+import { getContext } from './context'
 import { CreateStoreOptions } from '../types'
 import { isPaused } from '../react/hooks'
 
@@ -11,9 +14,7 @@ const reduxDevToolsCompose =
     ? (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
     : compose
 
-// this must be a function as we need new objects every time
-// otherwise it could happen that the "middleware" array gets mutated on the default
-const defaultOptions = (): CreateStoreOptions => ({
+const createDefaultOptions = (): CreateStoreOptions => ({
   paths: [],
   reducers: {},
   preloadedState: undefined,
@@ -23,24 +24,24 @@ const defaultOptions = (): CreateStoreOptions => ({
   plugins: [],
 })
 
-export function getStore(opts = {}): Store | void {
+export function createStore(opts = {}): Store | void {
   const context = getContext()
 
   if (!context) {
-    console.error('[KEA] Can not create a store without being in a context')
+    console.error('[KEA] Can not create a store without a Kea context.')
     return
   }
 
   if (context['__store']) {
-    console.error('[KEA] Already attached to a store! Exiting. Please reset the context before requesing a store')
+    console.error('[KEA] Already attached to a store! Exiting. Please reset the kea context before creating a store.')
     return
   }
 
   // clone options
-  const options = Object.assign({}, defaultOptions(), opts)
+  const options = { ...createDefaultOptions(), ...opts }
 
   // clone redux reducers
-  context.reducers.redux = Object.assign({}, options.reducers)
+  context.reducers.redux = { ...options.reducers }
 
   // run pre-hooks
   runPlugins('beforeReduxStore', options)
@@ -57,7 +58,7 @@ export function getStore(opts = {}): Store | void {
   const finalCreateStore = composeEnchancer(
     pauseListenersEnhancer,
     ...options.enhancers,
-  )(createStore) as typeof createStore
+  )(reduxCreateStore) as typeof reduxCreateStore
 
   // if we are whitelisting paths
   if (options.paths && options.paths.length > 0) {
@@ -71,7 +72,7 @@ export function getStore(opts = {}): Store | void {
   }
 
   // create store
-  const store = finalCreateStore(createReduxStoreReducer(), Object.assign({}, options.preloadedState))
+  const store = finalCreateStore(createReduxStoreReducer(), { ...options.preloadedState })
   context['__store'] = store
 
   // run post-hooks

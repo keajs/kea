@@ -4,33 +4,25 @@ import { Logic } from '../src/types'
 
 export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFieldData> extends Logic {
   actionCreators: {
-    setForm: (
-      form: FormInstance,
-    ) => {
+    setForm: (form: FormInstance) => {
       type: 'set form (samples.complexLogic)'
       payload: {
         form: FormInstance
       }
     }
-    selectAction: (
-      id: string | null,
-    ) => {
+    selectAction: (id: string | null) => {
       type: 'select action (samples.complexLogic)'
       payload: {
         id: string | null
       }
     }
-    newAction: (
-      element?: HTMLElement,
-    ) => {
+    newAction: (element?: HTMLElement) => {
       type: 'new action (samples.complexLogic)'
       payload: {
         element: HTMLElement | undefined
       }
     }
-    inspectForElementWithIndex: (
-      index: number | null,
-    ) => {
+    inspectForElementWithIndex: (index: number | null) => {
       type: 'inspect for element with index (samples.complexLogic)'
       payload: {
         index: number | null
@@ -46,9 +38,7 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
         index: number | null
       }
     }
-    setEditingFields: (
-      editingFields: AntdFieldData[],
-    ) => {
+    setEditingFields: (editingFields: AntdFieldData[]) => {
       type: 'set editing fields (samples.complexLogic)'
       payload: {
         editingFields: AntdFieldData[]
@@ -57,12 +47,10 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
     incrementCounter: () => {
       type: 'increment counter (samples.complexLogic)'
       payload: {
-        value: boolean
+        value: true
       }
     }
-    saveAction: (
-      formValues: ActionForm,
-    ) => {
+    saveAction: (formValues: ActionForm) => {
       type: 'save action (samples.complexLogic)'
       payload: {
         formValues: ActionForm
@@ -71,24 +59,22 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
     deleteAction: () => {
       type: 'delete action (samples.complexLogic)'
       payload: {
-        value: boolean
+        value: true
       }
     }
     showButtonActions: () => {
       type: 'show button actions (samples.complexLogic)'
       payload: {
-        value: boolean
+        value: true
       }
     }
     hideButtonActions: () => {
       type: 'hide button actions (samples.complexLogic)'
       payload: {
-        value: boolean
+        value: true
       }
     }
-    setShowActionsTooltip: (
-      showActionsTooltip: boolean,
-    ) => {
+    setShowActionsTooltip: (showActionsTooltip: boolean) => {
       type: 'set show actions tooltip (samples.complexLogic)'
       payload: {
         showActionsTooltip: boolean
@@ -155,7 +141,7 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
       action: {
         type: 'hide button actions (samples.complexLogic)'
         payload: {
-          value: boolean
+          value: true
         }
       },
       previousState: any,
@@ -175,7 +161,7 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
   props: Record<string, unknown>
   reducer: (
     state: any,
-    action: () => any,
+    action: any,
     fullState: any,
   ) => {
     buttonActionsVisible: boolean
@@ -198,9 +184,7 @@ export interface complexLogicType<ActionType, ActionForm, FormInstance, AntdFiel
     counter: (state: number, action: any, fullState: any) => number
     showActionsTooltip: (state: boolean, action: any, fullState: any) => boolean
   }
-  selector: (
-    state: any,
-  ) => {
+  selector: (state: any) => {
     buttonActionsVisible: boolean
     selectedActionId: number | 'new' | null
     newActionForElement: HTMLElement | null
