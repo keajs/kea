@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.0.1 - 2022-05-19
+- Remove incorrect `peerDependencies` from `package.json`
+
+## 3.0.0 - 2022-05-12
+
+- Read more here: https://keajs.org/blog/kea-3.0
+
 ## 2.6.0 - 2022-05-06
 
 - Update version requirements of peer dependencies: `reselect` 4.1+, `redux` 4.2+, `react-redux` 7+ and `react` 16.8+.
