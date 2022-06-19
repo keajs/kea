@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.0.2 - 2022-06-19
+
+- Remove reference to `window` from `hooks.ts`
+
 ## 3.0.1 - 2022-05-19
+
 - Remove incorrect `peerDependencies` from `package.json`
 
 ## 3.0.0 - 2022-05-12
@@ -15,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - If you're using React 18, upgrade `react-redux` to version 8+.
 
 - Add a "redux listener silencing store enhancer", which prevents Redux's `useSelector`s from updating, when mounting a logic from within the body of a React component (e.g. with `useValues`).
-This effectively silences log spam in React 18 (`Warning: Cannot update a component (`Y`) while rendering a different component (`X`). To locate the bad setState() call inside `X`, follow the stack trace as described.`), and improves performance.
+  This effectively silences log spam in React 18 (`Warning: Cannot update a component (`Y`) while rendering a different component (`X`). To locate the bad setState() call inside `X`, follow the stack trace as described.`), and improves performance.
 
 - Set the `autoConnectMountWarning` option to `true` by default. Kea 2.0 introduced ["auto-connect"](https://keajs.org/blog/kea-2.0#auto-connect),
   and while it works great in reducers and selectors, automatically connecting logic in listeners turned out to be a bad idea.
@@ -39,11 +44,11 @@ const logic = kea({
     something: [
       null,
       {
-          // This `yetAnotherLogic` will still get connected automatically, not print a warning, 
-          // and not require `connect`. That's because it's connected directly at build time, whereas
-          // in the listener, we're running within an asynchronous callback coming from who knows where. 
-          // While this works, it's still good practice to explicitly define your dependencies.
-          [yetAnotherLogic.actionTypes.loadSessions]: () => 'yes',
+        // This `yetAnotherLogic` will still get connected automatically, not print a warning,
+        // and not require `connect`. That's because it's connected directly at build time, whereas
+        // in the listener, we're running within an asynchronous callback coming from who knows where.
+        // While this works, it's still good practice to explicitly define your dependencies.
+        [yetAnotherLogic.actionTypes.loadSessions]: () => 'yes',
       },
     ],
   },
