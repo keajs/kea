@@ -94,7 +94,7 @@ export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | 
   return builtLogic as BuiltLogic<L>
 }
 
-let timeout: number
+let timeout: any
 /** Delay Redux subscriptions from firing and asking React to re-render.
  * Will set a Timeout to flush if store changed during callback. */
 export function batchChanges(callback: () => void) {
@@ -108,7 +108,7 @@ export function batchChanges(callback: () => void) {
   }
   const newState = getStoreState()
   if (previousState !== newState) {
-    timeout && window.clearTimeout(timeout)
-    timeout = window.setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
+    timeout && clearTimeout(timeout)
+    timeout = setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
   }
 }
