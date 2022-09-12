@@ -88,15 +88,13 @@ export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => vo
 // input helpers (using the generated logic type as input)
 export type PayloadCreatorDefinition = true | ((...args: any[]) => any)
 export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreators'] extends Record<string, any>
-  ? Partial<
-      {
-        [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
-          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends true
-            ? true
-            : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
-          : never
-      }
-    >
+  ? Partial<{
+      [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
+        ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends true
+          ? true
+          : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
+        : never
+    }>
   : Record<string, PayloadCreatorDefinition>
 
 export interface KeaReduxAction extends AnyAction {
@@ -126,13 +124,12 @@ export type ReducerActions<
         state: ReducerType,
         payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
       ) => ReducerType
-    } &
-      {
-        [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-          state: ReducerType,
-          payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-        ) => ReducerType
-      }
+    } & {
+      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+      ) => ReducerType
+    }
   : never
 
 export type ReducerDefault<Reducer extends () => any, P extends Props> =
@@ -363,6 +360,20 @@ export interface MakeLogicType<
     [K in keyof Values]: (...args: any) => Values[K]
   }
 }
+
+interface KeaTypeInput {
+  props?: Props
+  actions?: Record<string, AnyFunction>
+  values?: Record<string, unknown>
+}
+
+export type KeaType<
+  Input extends KeaTypeInput = KeaTypeInput,
+  Actions = Input["actions"],
+  LogicProps = Input["props"],
+  Values = Input["values"]
+> = MakeLogicType<Values, Actions, LogicProps>;
+
 export type AnyFunction = (...args: any) => any
 
 export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
