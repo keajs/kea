@@ -171,6 +171,11 @@ export type SelectorDefinition<Selectors, SelectorFunction extends any> =
   | [(s: Selectors) => SelectorTuple, SelectorFunction]
   | [(s: Selectors) => SelectorTuple, SelectorFunction, DefaultMemoizeOptions]
 
+export type SelectorCombo<Selectors, ReturnType, T1 extends any = any, T2 extends any = any>=
+  // | [(s: Selectors) => [(...args: any[]) => string], (arg1: number) => any]
+  | [(s: Selectors) => [(...args: any[]) => T1], (arg1: T1) => any]
+  // | [(s: Selectors) => [(...args: any[]) => T1, (...args: any[]) => T2], (arg1: T1, arg2: T2) => any]
+
 export type SelectorDefinitions<LogicType extends Logic> =
   | {
       [K in keyof LogicType['__keaTypeGenInternalSelectorTypes']]?: SelectorDefinition<
@@ -179,7 +184,11 @@ export type SelectorDefinitions<LogicType extends Logic> =
       >
     }
   | {
-      [key: string]: SelectorDefinition<LogicType['selectors'], any>
+      [K in keyof LogicType['values']]?: SelectorCombo<LogicType['selectors'], LogicType['values'][K]>
+    }
+  | {
+      [key: string]: SelectorCombo<LogicType['selectors'], any>
+      // [key: string]: SelectorDefinition<LogicType['selectors'], any>
     }
 
 export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
@@ -326,8 +335,8 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   - Props = { id: 3 }
 */
 export interface MakeLogicType<
-  Values = Record<string, unknown>,
-  Actions = Record<string, AnyFunction>,
+  Values extends Record<string, any> = Record<string, unknown>,
+  Actions extends Record<string, AnyFunction> = Record<string, AnyFunction>,
   LogicProps = Props,
 > extends Logic {
   actionCreators: {
@@ -369,10 +378,14 @@ interface KeaTypeInput {
 
 export type KeaType<
   Input extends KeaTypeInput = KeaTypeInput,
-  Actions = Input["actions"],
-  LogicProps = Input["props"],
-  Values = Input["values"]
-> = MakeLogicType<Values, Actions, LogicProps>;
+  Actions extends Record<string, AnyFunction> = Input['actions'] extends Record<string, AnyFunction>
+    ? Input['actions']
+    : Record<string, AnyFunction>,
+  Props = Input['props'],
+  Values extends Record<string, any> = Input['values'] extends Record<string, any>
+    ? Input['values']
+    : Record<string, any>,
+> = MakeLogicType<Values, Actions, Props>
 
 export type AnyFunction = (...args: any) => any
 
