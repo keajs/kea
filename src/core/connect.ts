@@ -46,12 +46,10 @@ export function connect<L extends Logic = Logic>(
       const response = deconstructMapping(connect.actions)
 
       for (let [otherLogic, from, to] of response) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
-            throw new Error(
-              `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request action "${from}"`,
-            )
-          }
+        if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
+          throw new Error(
+            `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request action "${from}"`,
+          )
         }
         if (isLogicWrapper(otherLogic)) {
           otherLogic = otherLogic.build(props)
@@ -94,12 +92,10 @@ export function connect<L extends Logic = Logic>(
       const response = deconstructMapping(connect.values)
 
       for (let [otherLogic, from, to] of response) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
-            throw new Error(
-              `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request prop "${from}"`,
-            )
-          }
+        if (typeof otherLogic !== 'function' && typeof otherLogic !== 'object') {
+          throw new Error(
+            `[KEA] Logic "${logic.pathString}" can not connect to ${typeof otherLogic} to request prop "${from}"`,
+          )
         }
 
         if (isLogicWrapper(otherLogic)) {

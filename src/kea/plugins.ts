@@ -33,14 +33,12 @@ export function activatePlugin(pluginToActivate: KeaPlugin | (() => KeaPlugin)):
   if (plugin.defaults) {
     const fields = Object.keys(typeof plugin.defaults === 'function' ? plugin.defaults() : plugin.defaults)
     for (const key of fields) {
-      if (process.env.NODE_ENV !== 'production') {
-        if (plugins.logicFields[key] || (reservedKeys as any)[key]) {
-          console.error(
-            `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${
-              plugins.logicFields[key] || 'core'
-            }`,
-          )
-        }
+      if (plugins.logicFields[key] || (reservedKeys as any)[key]) {
+        console.error(
+          `[KEA] Plugin "${plugin.name}" redefines logic field "${key}". Previously defined by ${
+            plugins.logicFields[key] || 'core'
+          }`,
+        )
       }
       plugins.logicFields[key] = plugin.name
     }

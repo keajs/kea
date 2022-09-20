@@ -1,6 +1,6 @@
 import React from 'react'
 
-let warned = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production'
+let warned = process.env.NODE_ENV === 'test'
 
 export function Provider({ children }: { children: React.ReactNode }): JSX.Element {
   if (!warned) {

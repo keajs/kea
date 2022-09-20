@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.0.3 - 2022-09-20
+
+- Show better errors in production
+
 ## 3.0.2 - 2022-06-19
 
 - Remove reference to `window` from `hooks.ts`

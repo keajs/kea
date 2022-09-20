@@ -150,9 +150,7 @@ function getDefaultState(
     if (fullState) {
       return defaultValue(fullState, logic.props)
     } else {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.pathString}"`)
-      }
+      console.error(`[KEA] Store not initialized and can't get default value of "${key}" in "${logic.pathString}"`)
       return undefined
     }
   }
