@@ -1,4 +1,4 @@
-import { kea, resetContext, actions, reducers, selectors } from '../../src'
+import { kea, resetContext, actions, reducers, selectors, key } from '../../src'
 
 describe('selectors', () => {
   beforeEach(() => {
@@ -173,5 +173,44 @@ describe('selectors', () => {
     expect(logic.values.values).toEqual(['first', 'SECOND', 'third'])
     expect(logic.values.reversedValues).toEqual(['third', 'SECOND', 'first'])
     expect(logic.values.reversedValuesIfLengthChanges).toEqual(['third', 'SECOND', 'first'])
+  })
+
+  test('props selectors', () => {
+    const logic = kea([
+      key((props) => props.id),
+      selectors({
+        id: [
+          (s, p) => [p.id],
+          (id) => {
+            return id
+          },
+        ],
+      }),
+    ])
+
+    const builtLogic = logic({ id: 1 })
+    builtLogic.mount()
+
+    expect(builtLogic.values.id).toEqual(1)
+  })
+
+  test('props selectors throw', () => {
+    const logic = kea([
+      key((props) => props.id),
+      selectors({
+        id: [
+          (s, p) => [p.somethingElse],
+          (id) => {
+            return id
+          },
+        ],
+      }),
+    ])
+
+    expect(() => {
+      const builtLogic = logic({ id: 1 })
+    }).toThrow(
+      '[KEA] Prop "somethingElse" not found for logic "kea.logic.1.1". Attempted to use in a selector. Please specify a default via props({ somethingElse: \'\' }) to resolve.',
+    )
   })
 })

@@ -1,14 +1,14 @@
-import { Logic, LogicBuilder, Selector, SelectorDefinition, SelectorDefinitions } from '../types'
+import { Logic, LogicBuilder, LogicPropSelectors, Selector, SelectorDefinition, SelectorDefinitions } from '../types'
 import { createSelector, createSelectorCreator, defaultMemoize, ParametricSelector } from 'reselect'
 import { getStoreState } from '../kea/context'
 
 /**
   Logic builder:
-
+      props({} as { id: number })
       selector({
         duckAndChicken: [
-          (s) => [s.duckId, s.chickenId],
-          (duckId, chickenId) => duckId + chickenId,
+          (s, p) => [s.duckId, s.chickenId, p.id],
+          (duckId, chickenId, id) => duckId + chickenId + id,
           (a: any, b: any) => bool, // custom isEquals, defaults to `a === b`
         ],
       })
@@ -35,9 +35,32 @@ export function selectors<L extends Logic = Logic>(
       addSelectorAndValue(logic, key, (...args) => builtSelectors[key](...args))
     }
 
+    const propSelectors =
+      typeof Proxy !== 'undefined'
+        ? new Proxy(logic.props, {
+            get(target, prop) {
+              if (!(prop in target)) {
+                throw new Error(
+                  `[KEA] Prop "${String(prop)}" not found for logic "${
+                    logic.pathString
+                  }". Attempted to use in a selector. Please specify a default via props({ ${String(
+                    prop,
+                  )}: '' }) to resolve.`,
+                )
+              }
+              return () => target[prop]
+            },
+          })
+        : (Object.fromEntries(
+            Object.keys(logic.props).map((key) => [key, () => logic.props[key]]),
+          ) as LogicPropSelectors<L>)
+
     for (const entry of Object.entries(selectorInputs)) {
-      const [key, [input, func, memoizeOptions]]: [string, SelectorDefinition<L['selectors'], any>] = entry
-      const args = input(logic.selectors) as ParametricSelector<any, any, any>[]
+      const [key, [input, func, memoizeOptions]]: [
+        string,
+        SelectorDefinition<L['selectors'], LogicPropSelectors<L>, any>,
+      ] = entry
+      const args: ParametricSelector<any, any, any>[] = input(logic.selectors, propSelectors)
 
       if (args.filter((a) => typeof a !== 'function').length > 0) {
         const argTypes = args.map((a) => typeof a).join(', ')

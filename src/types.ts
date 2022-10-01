@@ -88,15 +88,13 @@ export type LogicBuilder<L extends Logic = Logic> = (logic: BuiltLogic<L>) => vo
 // input helpers (using the generated logic type as input)
 export type PayloadCreatorDefinition = true | ((...args: any[]) => any)
 export type ActionDefinitions<LogicType extends Logic> = LogicType['actionCreators'] extends Record<string, any>
-  ? Partial<
-      {
-        [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
-          ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends true
-            ? true
-            : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
-          : never
-      }
-    >
+  ? Partial<{
+      [K in keyof LogicType['actionCreators']]: LogicType['actionCreators'][K] extends Function
+        ? ReturnType<LogicType['actionCreators'][K]>['payload']['value'] extends true
+          ? true
+          : (...args: Parameters<LogicType['actionCreators'][K]>) => LogicType['actionCreators'][K]['payload']
+        : never
+    }>
   : Record<string, PayloadCreatorDefinition>
 
 export interface KeaReduxAction extends AnyAction {
@@ -126,13 +124,12 @@ export type ReducerActions<
         state: ReducerType,
         payload: ReturnType<LogicType['actionCreators'][K]>['payload'],
       ) => ReducerType
-    } &
-      {
-        [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
-          state: ReducerType,
-          payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
-        ) => ReducerType
-      }
+    } & {
+      [K in keyof LogicType['__keaTypeGenInternalReducerActions']]?: (
+        state: ReducerType,
+        payload: ReturnType<LogicType['__keaTypeGenInternalReducerActions'][K]>['payload'],
+      ) => ReducerType
+    }
   : never
 
 export type ReducerDefault<Reducer extends () => any, P extends Props> =
@@ -170,19 +167,24 @@ export type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
 
-export type SelectorDefinition<Selectors, SelectorFunction extends any> =
-  | [(s: Selectors) => SelectorTuple, SelectorFunction]
-  | [(s: Selectors) => SelectorTuple, SelectorFunction, DefaultMemoizeOptions]
+export type SelectorDefinition<Selectors, PropSelectors, SelectorFunction extends any> =
+  | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction]
+  | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction, DefaultMemoizeOptions]
+
+export type LogicPropSelectors<LogicType extends Logic> = {
+  [PK in keyof LogicType['props']]: () => LogicType['props'][PK]
+}
 
 export type SelectorDefinitions<LogicType extends Logic> =
   | {
       [K in keyof LogicType['__keaTypeGenInternalSelectorTypes']]?: SelectorDefinition<
         LogicType['selectors'],
+        LogicPropSelectors<LogicType>,
         LogicType['__keaTypeGenInternalSelectorTypes'][K]
       >
     }
   | {
-      [key: string]: SelectorDefinition<LogicType['selectors'], any>
+      [key: string]: SelectorDefinition<LogicType['selectors'], LogicPropSelectors<LogicType>, any>
     }
 
 export type BreakPointFunction = (() => void) & ((ms: number) => Promise<void>)
