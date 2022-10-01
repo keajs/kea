@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.0.4 - 2022-10-01
+
+- Support "prop selectors" in selectors. Now `p.id` is a shorthand for `(_, props) => props.id`. For example:
+
+```ts
+const logic = kea([
+  props({} as { id: number }),
+  selectors({
+    duckAndChicken: [
+      (s, p) => [s.duckId, s.chickenId, p.id],
+      (duckId, chickenId, id) => duckId + chickenId + id,
+    ],
+  })
+])
+```
+
 ## 3.0.3 - 2022-09-20
 
 - Show better errors in production
