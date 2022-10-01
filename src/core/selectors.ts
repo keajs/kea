@@ -5,7 +5,7 @@ import { getStoreState } from '../kea/context'
 /**
   Logic builder:
       props({} as { id: number })
-      selector({
+      selectors({
         duckAndChicken: [
           (s, p) => [s.duckId, s.chickenId, p.id],
           (duckId, chickenId, id) => duckId + chickenId + id,
