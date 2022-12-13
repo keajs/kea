@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.1 - 2022-12-13
+
+- Add support for `asyncActions`:
+
+```ts
+const logic = kea([
+  actions({
+    fetchUser: (id: number) => ({ id }),
+  }),
+  listeners({
+    fetchUser: async ({ id }, breakpoint) => {
+      await breakpoint(100)
+      const user = await fetch(`https://example.com/users/${id}`)
+      breakpoint()
+      return user
+    },
+  }),
+])
+const user = await logic.actions.fetchUser(1)
+```
+
+The promise returns whatever is returned in the _first listener_ that listens to this action. Ususally
+that's the output of the only listener is the same logic that creates the action.
+
+In case you use breakpoints, and the action is called multiple times, all the promises will resolve 
+when the last called action returns.
+
+That means in the case of
+
+```ts
+const promise1 = logic.actions.fetchUser(1)
+const promise2 = logic.actions.fetchUser(1)
+```
+
+Both promises will resolve at the same time. The first dispatch one that breaks will resolve when the second one finishes.
+
+To make this work, each created action now also comes with an ever-increasing `dispatchId`:
+
+```js
+logic.actionCreators.fetchUser(123) === {
+  type: 'fetch user (logic)',
+  payload: { id: 123 },
+  dispatchId: 1,
+}
+```
+
+To disable setting `dispatchId` and hence support for async actions, call `resetContext({ disableAsyncActions: true })`.
+
+
 ## 3.1.0 - 2022-12-13
 
 - Make `logic.props` mutable, and store props input immutably in `logic.lastProps`. This fixes a bug:
@@ -32,11 +81,8 @@ Previously `propValues` would contain `[0, 0]`, but now it contains `[1, 2]`.
 const logic = kea([
   props({} as { id: number }),
   selectors({
-    duckAndChicken: [
-      (s, p) => [s.duckId, s.chickenId, p.id],
-      (duckId, chickenId, id) => duckId + chickenId + id,
-    ],
-  })
+    duckAndChicken: [(s, p) => [s.duckId, s.chickenId, p.id], (duckId, chickenId, id) => duckId + chickenId + id],
+  }),
 ])
 ```
 

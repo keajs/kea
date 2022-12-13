@@ -56,10 +56,11 @@ export function selectors<L extends Logic = Logic>(
           ) as LogicPropSelectors<L>)
 
     for (const entry of Object.entries(selectorInputs)) {
-      const [key, [input, func, memoizeOptions]]: [
-        string,
-        SelectorDefinition<L['selectors'], LogicPropSelectors<L>, any>,
-      ] = entry
+      const [key, arr]: [string, SelectorDefinition<L['selectors'], LogicPropSelectors<L>, any> | undefined] = entry
+      if (!arr) {
+        throw new Error(`[KEA] Logic "${logic.pathString}" selector "${key}" is undefined`)
+      }
+      const [input, func, memoizeOptions] = arr
       const args: ParametricSelector<any, any, any>[] = input(logic.selectors, propSelectors)
 
       if (args.filter((a) => typeof a !== 'function').length > 0) {

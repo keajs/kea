@@ -16,22 +16,22 @@
   },
   "homepage": "https://github.com/keajs/kea#readme",
   "scripts": {
-    "build": "yarn run clean && yarn run compile",
+    "build": "pnpm run clean && pnpm run compile",
     "clean": "rimraf lib/*",
-    "compile": "npm run compile:rollup",
+    "compile": "pnpm run compile:rollup",
     "compile:tsc": "tsc -p .",
     "compile:rollup": "rollup -c",
     "watch": "rollup -cw",
     "lint": "eslint src/**/*.{ts,tsx}",
     "prettier": "prettier --write src/**/*",
-    "prepublishOnly": "npm run test && npm run build",
-    "start": "npm run watch",
-    "test": "yarn run test:jest && yarn run test:tsd && yarn run test:types",
+    "prepublishOnly": "pnpm run test && npm run build",
+    "start": "pnpm run watch",
+    "test": "pnpm run test:jest && pnpm run test:tsd && pnpm run test:types",
     "test:jest": "BABEL_ENV=test jest",
     "test:jest:watch": "BABEL_ENV=test jest --watchAll",
-    "test:tsd": "yarn run build && cp test/tsd/*.test-d.ts lib/ && tsd",
+    "test:tsd": "pnpm run build && cp test/tsd/*.test-d.ts lib/ && tsd",
     "test:types": "tsc",
-    "test:types:watch": "npm run type-check -- --watch"
+    "test:types:watch": "pnpm run type-check -- --watch"
   },
   "files": [
     "lib",
@@ -91,8 +91,10 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@types/jest": "^27.4.1",
+    "@types/node": "^18.11.14",
     "@types/react": "^18.0.6",
     "@types/react-redux": "^7.1.24",
+    "@types/use-sync-external-store": "^0.0.3",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "babel-core": "^7.0.0-bridge.0",
@@ -125,6 +127,6 @@
   "dependencies": {
     "redux": "^4.2.0",
     "reselect": "^4.1.5",
-    "use-sync-external-store": "^1.0.0"
+    "use-sync-external-store": "^1.2.0"
   }
 }
