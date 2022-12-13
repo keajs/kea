@@ -16,6 +16,7 @@ export interface Logic {
   path: PathType
   pathString: string
   props: any
+  lastProps: any
   key?: KeyType
   keyBuilder?: (props: any) => KeyType
 

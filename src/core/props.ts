@@ -6,7 +6,8 @@ export function props<L extends Logic = Logic>(input: L['props']): LogicBuilder<
     // set the props that haven't been initialized on build
     const newProps = { ...input, ...logic.props }
     if (!shallowCompare(logic.props, newProps)) {
-      logic.props = newProps
+      logic.lastProps = newProps
+      Object.assign(logic.props, newProps)
     }
   }
 }

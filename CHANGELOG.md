@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.0 - 2022-12-13
+
+- Make `logic.props` mutable, and store props input immutably in `logic.lastProps`. This fixes a bug:
+
+```ts
+const propValues = []
+const logic = kea([
+  actions({ doStuff: true }),
+  listeners(({ props }) => ({
+    doStuff: () => {
+      propValues.push(props.value)
+    },
+  })),
+])
+
+logic({ value: 0 }).mount()
+logic({ value: 1 }).actions.doStuff()
+logic({ value: 2 }).actions.doStuff()
+```
+
+Previously `propValues` would contain `[0, 0]`, but now it contains `[1, 2]`.
+
 ## 3.0.4 - 2022-10-01
 
 - Support "prop selectors" in selectors. Now `p.id` is a shorthand for `(_, props) => props.id`. For example:

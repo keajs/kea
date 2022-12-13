@@ -1,4 +1,4 @@
-import { kea, props, resetContext, propsChanged, events } from '../../src'
+import { kea, props, resetContext, propsChanged, events, actions, listeners, shallowCompare } from '../../src'
 
 describe('props', () => {
   beforeEach(() => {
@@ -81,11 +81,48 @@ describe('props', () => {
       expect(props1 === props2).toEqual(false)
 
       const builtLogic1 = logic(props1)
-      expect(builtLogic1.props === props1).toEqual(true)
+      expect(builtLogic1.lastProps === props1).toEqual(true)
+      expect(shallowCompare(builtLogic1.lastProps, props1)).toEqual(true)
 
       const builtLogic2 = logic(props2)
-      expect(builtLogic1.props === props1).toEqual(true)
-      expect(builtLogic2.props === props1).toEqual(true)
+      expect(builtLogic1.lastProps === props1).toEqual(true)
+      expect(builtLogic2.lastProps === props1).toEqual(true)
+      expect(shallowCompare(builtLogic1.lastProps, props1)).toEqual(true)
+      expect(shallowCompare(builtLogic2.lastProps, props1)).toEqual(true)
+    })
+
+    test('changed props in a listener via logic', () => {
+      const propValues = []
+      const logic = kea([
+        actions({ doStuff: true }),
+        listeners((logic) => ({
+          doStuff: () => {
+            propValues.push(logic.props.value)
+          },
+        })),
+      ])
+
+      logic({ value: 0 }).mount()
+      logic({ value: 1 }).actions.doStuff()
+      logic({ value: 2 }).actions.doStuff()
+      expect(propValues).toEqual([1, 2])
+    })
+
+    test('changed props in a listener directly', () => {
+      const propValues = []
+      const logic = kea([
+        actions({ doStuff: true }),
+        listeners(({ props }) => ({
+          doStuff: () => {
+            propValues.push(props.value)
+          },
+        })),
+      ])
+
+      logic({ value: 0 }).mount()
+      logic({ value: 1 }).actions.doStuff()
+      logic({ value: 2 }).actions.doStuff()
+      expect(propValues).toEqual([1, 2])
     })
 
     test('props changed', () => {
@@ -94,11 +131,11 @@ describe('props', () => {
       const logic = kea([
         props({ key1: 'l', key2: 'l' }),
         propsChanged(({ actions, props }, oldProps) => {
-          log.push({ props, oldProps })
+          log.push({ props: { ...props }, oldProps })
         }),
         events({
           propsChanged: (props, oldProps) => {
-            log2.push({ props, oldProps })
+            log2.push({ props: { ...props }, oldProps })
           },
         }),
       ])

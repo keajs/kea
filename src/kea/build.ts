@@ -56,13 +56,22 @@ export function getBuiltLogic<L extends Logic = Logic>(
 
   const cachedLogic = getCachedBuiltLogic(wrapper, props)
   if (cachedLogic) {
-    const oldProps = cachedLogic.props
-    if (props && (!cachedLogic.props || (cachedLogic.props !== props && !shallowCompare(cachedLogic.props, props)))) {
-      cachedLogic.props = { ...cachedLogic.props, ...props }
+    let prevPropsClone: Props | null = null
+    if (
+      props &&
+      (!cachedLogic.props ||
+        (cachedLogic.lastProps !== props &&
+          (!shallowCompare(cachedLogic.lastProps, props) ||
+            !shallowCompare(cachedLogic.props, { ...cachedLogic.props, ...props }))))
+    ) {
+      prevPropsClone = { ...cachedLogic.props }
+      Object.assign(cachedLogic.props, props)
+      cachedLogic.lastProps = props
     }
-    if (oldProps !== cachedLogic.props && cachedLogic.events.propsChanged) {
+    if (prevPropsClone && cachedLogic.events.propsChanged) {
+      const newPropsClone = { ...cachedLogic.props }
       batchChanges(() => {
-        cachedLogic.events.propsChanged?.(cachedLogic.props, oldProps)
+        cachedLogic.events.propsChanged?.(newPropsClone, prevPropsClone)
       })
     }
     return cachedLogic
@@ -82,7 +91,8 @@ export function getBuiltLogic<L extends Logic = Logic>(
     keyBuilder: undefined,
     path: path,
     pathString: path.join('.'),
-    props: props ?? {},
+    props: { ...props },
+    lastProps: props ?? {},
 
     // methods
     wrapper,
