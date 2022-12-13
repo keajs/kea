@@ -19,38 +19,46 @@ export function actions<L extends Logic = Logic>(
           : createActionCreator(createActionType(key, logic.pathString), payloadCreator ?? true)
       const type = actionCreator.toString()
 
+      const {
+        options: { disableAsyncActions },
+      } = getContext()
+
       logic.actionCreators[key] = actionCreator
       logic.actions[key] = (...inp: any[]) => {
         const builtAction = actionCreator(...inp)
-        getContext().store.dispatch({ ...builtAction, dispatchId: nextDispatchId() })
+        getContext().store.dispatch(
+          disableAsyncActions ? builtAction : { ...builtAction, dispatchId: nextDispatchId() },
+        )
       }
       logic.actions[key].toString = () => type
-      logic.asyncActions[key] = async (...inp: any[]) => {
-        const builtAction = actionCreator(...inp)
-        let dispatchId = nextDispatchId()
-        getContext().store.dispatch({ ...builtAction, dispatchId })
-        const { pendingDispatches } = getPluginContext<ListenersPluginContext>('listeners')
-        while (true) {
-          const promises = pendingDispatches.get(dispatchId)
-          if (!promises) {
-            return
-          }
-          try {
-            const responses = await Promise.all(promises)
-            return responses[0]
-          } catch (e: any) {
-            if (isBreakpoint(e)) {
-              if ('__keaDispatchId' in e) {
-                dispatchId = e.__keaDispatchId
-                // loop again
+      if (!disableAsyncActions) {
+        logic.asyncActions[key] = async (...inp: any[]) => {
+          const builtAction = actionCreator(...inp)
+          let dispatchId = nextDispatchId()
+          getContext().store.dispatch({ ...builtAction, dispatchId })
+          const { pendingDispatches } = getPluginContext<ListenersPluginContext>('listeners')
+          while (true) {
+            const promises = pendingDispatches.get(dispatchId)
+            if (!promises) {
+              return
+            }
+            try {
+              const responses = await Promise.all(promises)
+              return responses[0]
+            } catch (e: any) {
+              if (isBreakpoint(e)) {
+                if ('__keaDispatchId' in e) {
+                  dispatchId = e.__keaDispatchId
+                  // loop again
+                }
+              } else {
+                throw e
               }
-            } else {
-              throw e
             }
           }
         }
+        logic.asyncActions[key].toString = () => type
       }
-      logic.asyncActions[key].toString = () => type
       logic.actionKeys[type] = key
       logic.actionTypes[key] = type
     }

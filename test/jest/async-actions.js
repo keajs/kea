@@ -97,4 +97,28 @@ describe('async actions', () => {
     expect(val1).toEqual('hello-2')
     expect(val2).toEqual('hello-2')
   })
+
+  test('respects disableAsyncActions', async () => {
+    let listenerFinished = false
+    let dispatchId = null
+
+    resetContext({ disableAsyncActions: true })
+
+    const logic = kea({
+      actions: () => ({
+        updateName: (name) => ({ name }),
+      }),
+      listeners: ({ actions, props }) => ({
+        updateName: async (payload, breakpoint, action) => {
+          dispatchId = action.dispatchId
+          listenerFinished = true
+        },
+      }),
+    })
+
+    logic.mount()
+    logic.actions.updateName('name')
+    expect(logic.asyncActions).toEqual({})
+    expect(logic.actionCreators.updateName('name').dispatchId).toBeUndefined()
+  })
 })
