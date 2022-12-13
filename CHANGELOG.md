@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.1 - 2022-12-13
+
+- Add support for `asyncActions`:
+
+```ts
+const logic = kea([
+  actions({
+    setUser: (user) => ({ user }),
+    fetchUser: (id: number) => ({ id }),
+  }),
+  reducers({ user: { setUser: (_, { user }) => user } }),
+  listeners({
+    fetchUser: async ({ id }, breakpoint) => {
+      const user = await fetch(`https://example.com/users/${id}`)
+      breakpoint()
+      actions.setUser(user)
+    },
+  }),
+])
+await logic.actions.fetchUser(1)
+console.log(logic.values.user)
+```
+
 ## 3.1.0 - 2022-12-13
 
 - Make `logic.props` mutable, and store props input immutably in `logic.lastProps`. This fixes a bug:
@@ -32,11 +55,8 @@ Previously `propValues` would contain `[0, 0]`, but now it contains `[1, 2]`.
 const logic = kea([
   props({} as { id: number }),
   selectors({
-    duckAndChicken: [
-      (s, p) => [s.duckId, s.chickenId, p.id],
-      (duckId, chickenId, id) => duckId + chickenId + id,
-    ],
-  })
+    duckAndChicken: [(s, p) => [s.duckId, s.chickenId, p.id], (duckId, chickenId, id) => duckId + chickenId + id],
+  }),
 ])
 ```
 

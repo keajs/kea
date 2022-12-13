@@ -1,8 +1,10 @@
 import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder, PayloadCreatorDefinition } from '../types'
 import { getContext, getPluginContext } from '../kea/context'
 import type { ListenersPluginContext } from './listeners'
+import { isBreakpoint } from './listeners'
 
 let asyncCounter = 0
+const nextQueryId = () => String(++asyncCounter)
 
 /** Logic builder: actions({ actionWithParams: (id) => ({ id }), actionNoParams: true }) */
 export function actions<L extends Logic = Logic>(
@@ -20,16 +22,32 @@ export function actions<L extends Logic = Logic>(
       logic.actionCreators[key] = actionCreator
       logic.actions[key] = (...inp: any[]) => {
         const builtAction = actionCreator(...inp)
-        getContext().store.dispatch(builtAction)
+        getContext().store.dispatch({ ...builtAction, queryId: nextQueryId() })
       }
       logic.actions[key].toString = () => type
       logic.asyncActions[key] = async (...inp: any[]) => {
         const builtAction = actionCreator(...inp)
-        const queryId = `async-${++asyncCounter}`
+        let queryId = nextQueryId()
         getContext().store.dispatch({ ...builtAction, queryId })
-        const promises = getPluginContext<ListenersPluginContext>('listeners').pendingQueries.get(queryId)
-        if (promises) {
-          return Promise.all(promises)
+        const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
+        while (true) {
+          const promises = pendingQueries.get(queryId)
+          if (!promises) {
+            return
+          }
+          try {
+            const responses = await Promise.all(promises)
+            return responses[0]
+          } catch (e: any) {
+            if (isBreakpoint(e)) {
+              if ('__keaQueryId' in e) {
+                queryId = e.__keaQueryId
+                // loop again
+              }
+            } else {
+              throw e
+            }
+          }
         }
       }
       logic.asyncActions[key].toString = () => type

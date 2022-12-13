@@ -380,7 +380,7 @@ export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Pa
 }
 
 export type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
-export type AsyncActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => Promise<void>
+export type AsyncActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => Promise<any>
 
 // kea setup stuff
 

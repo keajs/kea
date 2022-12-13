@@ -40,6 +40,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
     }
 
     logic.cache.listenerBreakpointCounter ??= {}
+    logic.cache.listenerLastQueryId ??= {}
 
     const listeners = (typeof input === 'function' ? input(logic) : input) as Record<string, ListenerFunction>
     const { contextId } = getContext()
@@ -62,13 +63,16 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
           return (action, previousState) => {
             const breakCounter = (logic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
             logic.cache.listenerBreakpointCounter[listenerKey] = breakCounter
+            logic.cache.listenerLastQueryId[listenerKey] = action.queryId
 
             const throwIfCalled = () => {
               if (
                 logic.cache.listenerBreakpointCounter[listenerKey] !== breakCounter ||
                 contextId !== getContext().contextId
               ) {
-                throw new Error(LISTENERS_BREAKPOINT)
+                const error = new Error(LISTENERS_BREAKPOINT)
+                ;(error as any).__keaQueryId = logic.cache.listenerLastQueryId[listenerKey]
+                throw error
               }
             }
 
