@@ -401,6 +401,7 @@ export interface InternalContextOptions {
   attachStrategy: 'dispatch' | 'replace'
   detachStrategy: 'dispatch' | 'replace' | 'persist'
   defaultPath: string[]
+  disableDispatchId: boolean
   // ...otherOptions
 }
 

@@ -7,7 +7,7 @@ describe('async actions', () => {
 
   test('can wait for async actions', async () => {
     let listenerFinished = false
-    let queryId = null
+    let dispatchId = null
 
     const logic = kea({
       actions: () => ({
@@ -16,22 +16,23 @@ describe('async actions', () => {
       listeners: ({ actions, props }) => ({
         updateName: async (payload, breakpoint, action) => {
           await breakpoint(100)
-          queryId = action.queryId
+          dispatchId = action.dispatchId
           listenerFinished = true
+          return 'from1'
         },
       }),
     })
 
     logic.mount()
     const response = await logic.asyncActions.updateName('name')
-    expect(response).toBe('from1')
-    expect(listenerFinished).toBe(true)
-    expect(queryId).toBe(expect.any(String))
+    expect(response).toEqual('from1')
+    expect(listenerFinished).toEqual(true)
+    expect(dispatchId).toEqual(expect.any(String))
   })
 
   test('can wait for async actions with multiple logics', async () => {
     let listenersFinished = 0
-    const queryIds = []
+    const dispatchIds = []
 
     const firstLogic = kea({
       actions: () => ({
@@ -41,7 +42,7 @@ describe('async actions', () => {
         updateName: async (payload, breakpoint, action) => {
           await breakpoint(100)
           listenersFinished += 1
-          queryIds.push(action.queryId)
+          dispatchIds.push(action.dispatchId)
           return 'from1'
         },
       }),
@@ -52,7 +53,7 @@ describe('async actions', () => {
         updateName: async (payload, breakpoint, action) => {
           await breakpoint(200)
           listenersFinished += 1
-          queryIds.push(action.queryId)
+          dispatchIds.push(action.dispatchId)
           return 'from2'
         },
       }),
@@ -61,9 +62,9 @@ describe('async actions', () => {
     firstLogic.mount()
     otherLogic.mount()
     const response = await firstLogic.asyncActions.updateName('name')
-    expect(response).toBe('from1')
-    expect(listenersFinished).toBe(2)
-    expect(queryIds).toEqual([expect.any(String), expect.any(String)])
+    expect(response).toEqual('from1')
+    expect(listenersFinished).toEqual(2)
+    expect(dispatchIds).toEqual([expect.any(String), expect.any(String)])
   })
 
   test('breakpoints', async () => {
@@ -78,7 +79,7 @@ describe('async actions', () => {
         updateName: async (payload, breakpoint, action) => {
           i++
           await breakpoint(100)
-          finished.push(action.queryId)
+          finished.push(action.dispatchId)
           return `hello-${i}`
         },
       }),

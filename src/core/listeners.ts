@@ -17,7 +17,7 @@ export type ListenersPluginContext = {
   byPath: Record<string, Record<string, ListenerFunctionWrapper[]>>
   byAction: Record<string, Record<string, ListenerFunctionWrapper[]>>
   pendingPromises: Map<Promise<void>, [BuiltLogic, string]>
-  pendingQueries: Map<string, Set<Promise<void>>>
+  pendingDispatches: Map<string, Set<Promise<void>>>
 }
 
 export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listeners']): LogicBuilder<L> {
@@ -40,7 +40,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
     }
 
     logic.cache.listenerBreakpointCounter ??= {}
-    logic.cache.listenerLastQueryId ??= {}
+    logic.cache.listenerLastDispatchId ??= {}
 
     const listeners = (typeof input === 'function' ? input(logic) : input) as Record<string, ListenerFunction>
     const { contextId } = getContext()
@@ -63,7 +63,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
           return (action, previousState) => {
             const breakCounter = (logic.cache.listenerBreakpointCounter[listenerKey] || 0) + 1
             logic.cache.listenerBreakpointCounter[listenerKey] = breakCounter
-            logic.cache.listenerLastQueryId[listenerKey] = action.queryId
+            logic.cache.listenerLastDispatchId[listenerKey] = action.dispatchId
 
             const throwIfCalled = () => {
               if (
@@ -71,7 +71,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
                 contextId !== getContext().contextId
               ) {
                 const error = new Error(LISTENERS_BREAKPOINT)
-                ;(error as any).__keaQueryId = logic.cache.listenerLastQueryId[listenerKey]
+                ;(error as any).__keaDispatchId = logic.cache.listenerLastDispatchId[listenerKey]
                 throw error
               }
             }
@@ -92,8 +92,8 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
 
               if (response && response.then && typeof response.then === 'function') {
                 trackPendingListener(logic, actionKey, response)
-                if (action.queryId) {
-                  addQueryListener(action.queryId, response)
+                if (action.dispatchId) {
+                  addDispatchListener(action.dispatchId, response)
                 }
                 return response
                   .catch((e: any) => {
@@ -102,7 +102,7 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
                     }
                   })
                   .finally(() => {
-                    removeQueryListener(action.queryId, response)
+                    removeDispatchListener(action.dispatchId, response)
                   })
               }
             } catch (e: any) {
@@ -172,23 +172,23 @@ function trackPendingListener(logic: BuiltLogic, actionKey: string, response: Pr
   response.then(remove).catch(remove)
 }
 
-function addQueryListener(queryId: string, response: Promise<void>) {
-  const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
-  const queries = pendingQueries.get(queryId)
-  if (queries) {
-    queries.add(response)
+function addDispatchListener(dispatchId: string, response: Promise<void>) {
+  const { pendingDispatches } = getPluginContext<ListenersPluginContext>('listeners')
+  const dispatches = pendingDispatches.get(dispatchId)
+  if (dispatches) {
+    dispatches.add(response)
   } else {
-    pendingQueries.set(queryId, new Set([response]))
+    pendingDispatches.set(dispatchId, new Set([response]))
   }
 }
 
-function removeQueryListener(queryId: string, response: Promise<void>) {
-  const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
-  const queries = pendingQueries.get(queryId)
-  if (queries) {
-    queries.delete(response)
-    if (queries.size === 0) {
-      pendingQueries.delete(queryId)
+function removeDispatchListener(dispatchId: string, response: Promise<void>) {
+  const { pendingDispatches } = getPluginContext<ListenersPluginContext>('listeners')
+  const dispatches = pendingDispatches.get(dispatchId)
+  if (dispatches) {
+    dispatches.delete(response)
+    if (dispatches.size === 0) {
+      pendingDispatches.delete(dispatchId)
     }
   }
 }

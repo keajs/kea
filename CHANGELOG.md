@@ -25,6 +25,18 @@ await logic.actions.fetchUser(1)
 console.log(logic.values.user)
 ```
 
+To make this work, each created action now also comes with a `dispatchId`:
+
+```js
+logic.actionCreators.fetchUser(123) === {
+  type: 'fetch user (logic)',
+  payload: { id: 123 },
+  dispatchId: 1,
+}
+```
+
+This can be disabled by calling `resetContext({ disableDispatchId: true })`.
+
 ## 3.1.0 - 2022-12-13
 
 - Make `logic.props` mutable, and store props input immutably in `logic.lastProps`. This fixes a bug:

@@ -4,7 +4,7 @@ import type { ListenersPluginContext } from './listeners'
 import { isBreakpoint } from './listeners'
 
 let asyncCounter = 0
-const nextQueryId = () => String(++asyncCounter)
+const nextDispatchId = () => String(++asyncCounter)
 
 /** Logic builder: actions({ actionWithParams: (id) => ({ id }), actionNoParams: true }) */
 export function actions<L extends Logic = Logic>(
@@ -22,16 +22,16 @@ export function actions<L extends Logic = Logic>(
       logic.actionCreators[key] = actionCreator
       logic.actions[key] = (...inp: any[]) => {
         const builtAction = actionCreator(...inp)
-        getContext().store.dispatch({ ...builtAction, queryId: nextQueryId() })
+        getContext().store.dispatch({ ...builtAction, dispatchId: nextDispatchId() })
       }
       logic.actions[key].toString = () => type
       logic.asyncActions[key] = async (...inp: any[]) => {
         const builtAction = actionCreator(...inp)
-        let queryId = nextQueryId()
-        getContext().store.dispatch({ ...builtAction, queryId })
-        const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
+        let dispatchId = nextDispatchId()
+        getContext().store.dispatch({ ...builtAction, dispatchId })
+        const { pendingDispatches } = getPluginContext<ListenersPluginContext>('listeners')
         while (true) {
-          const promises = pendingQueries.get(queryId)
+          const promises = pendingDispatches.get(dispatchId)
           if (!promises) {
             return
           }
@@ -40,8 +40,8 @@ export function actions<L extends Logic = Logic>(
             return responses[0]
           } catch (e: any) {
             if (isBreakpoint(e)) {
-              if ('__keaQueryId' in e) {
-                queryId = e.__keaQueryId
+              if ('__keaDispatchId' in e) {
+                dispatchId = e.__keaDispatchId
                 // loop again
               }
             } else {

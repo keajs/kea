@@ -51,7 +51,7 @@ export const corePlugin: KeaPlugin = {
         byAction: {},
         byPath: {},
         pendingPromises: new Map(),
-        pendingQueries: new Map(),
+        pendingDispatches: new Map(),
       })
     },
 
