@@ -25,6 +25,7 @@ export interface Logic {
   actionKeys: Record<string, string>
   actionTypes: Record<string, string>
   actions: Record<string, any>
+  asyncActions: Record<string, any>
   cache: Record<string, any>
   connections: { [pathString: string]: BuiltLogic }
   defaults: Record<string, any>
@@ -332,7 +333,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   - Props = { id: 3 }
 */
 export interface MakeLogicType<
-  Values = Record<string, unknown>,
+  Values extends Record<string, any> = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
   LogicProps = Props,
 > extends Logic {
@@ -348,6 +349,11 @@ export interface MakeLogicType<
   actions: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
       ? ActionForPayloadBuilder<Actions[ActionKey]>
+      : never
+  }
+  asyncActions: {
+    [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
+      ? AsyncActionForPayloadBuilder<Actions[ActionKey]>
       : never
   }
   defaults: Values
@@ -374,6 +380,7 @@ export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Pa
 }
 
 export type ActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => void
+export type AsyncActionForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => Promise<void>
 
 // kea setup stuff
 

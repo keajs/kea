@@ -127,7 +127,10 @@ export function getPluginContext<Context = Record<string, any>>(name: string): C
   return plugins.contexts[name] as Context
 }
 
-export function setPluginContext<Context = Record<string, any>>(name: string, pluginContext: Context): void {
+export function setPluginContext<Context extends Record<string, any> = Record<string, any>>(
+  name: string,
+  pluginContext: Context,
+): void {
   const { plugins } = getContext()
   plugins.contexts[name] = pluginContext
 }

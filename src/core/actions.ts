@@ -1,5 +1,8 @@
 import { ActionDefinitions, KeaAction, KeaReduxAction, Logic, LogicBuilder, PayloadCreatorDefinition } from '../types'
-import { getContext } from '../kea/context'
+import { getContext, getPluginContext } from '../kea/context'
+import type { ListenersPluginContext } from './listeners'
+
+let asyncCounter = 0
 
 /** Logic builder: actions({ actionWithParams: (id) => ({ id }), actionNoParams: true }) */
 export function actions<L extends Logic = Logic>(
@@ -10,7 +13,7 @@ export function actions<L extends Logic = Logic>(
     for (const [key, payloadCreator] of Object.entries(actions)) {
       const actionCreator: KeaAction =
         typeof payloadCreator === 'function' && '_isKeaAction' in payloadCreator
-          ? payloadCreator
+          ? (payloadCreator as KeaAction)
           : createActionCreator(createActionType(key, logic.pathString), payloadCreator ?? true)
       const type = actionCreator.toString()
 
@@ -20,6 +23,16 @@ export function actions<L extends Logic = Logic>(
         getContext().store.dispatch(builtAction)
       }
       logic.actions[key].toString = () => type
+      logic.asyncActions[key] = async (...inp: any[]) => {
+        const builtAction = actionCreator(...inp)
+        const queryId = `async-${++asyncCounter}`
+        getContext().store.dispatch({ ...builtAction, queryId })
+        const promises = getPluginContext<ListenersPluginContext>('listeners').pendingQueries.get(queryId)
+        if (promises) {
+          return Promise.all(promises)
+        }
+      }
+      logic.asyncActions[key].toString = () => type
       logic.actionKeys[type] = key
       logic.actionTypes[key] = type
     }

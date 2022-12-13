@@ -29,6 +29,7 @@ export const corePlugin: KeaPlugin = {
     actionKeys: {},
     actionTypes: {},
     actions: {},
+    asyncActions: {},
     cache: {},
     connections: {},
     defaults: {},
@@ -46,7 +47,12 @@ export const corePlugin: KeaPlugin = {
   events: {
     // setup defaults for listeners
     afterPlugin(): void {
-      setPluginContext<ListenersPluginContext>('listeners', { byAction: {}, byPath: {}, pendingPromises: new Map() })
+      setPluginContext<ListenersPluginContext>('listeners', {
+        byAction: {},
+        byPath: {},
+        pendingPromises: new Map(),
+        pendingQueries: new Map(),
+      })
     },
 
     // add listeners middleware

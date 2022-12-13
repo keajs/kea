@@ -52,10 +52,10 @@ export function createStore(opts = {}): Store | void {
   }
 
   // use a special compose function?
-  const composeEnchancer: typeof compose = options.compose || compose
+  const composeEnhancer: typeof compose = options.compose || compose
 
   // create the store creator
-  const finalCreateStore = composeEnchancer(
+  const finalCreateStore = composeEnhancer(
     pauseListenersEnhancer,
     ...options.enhancers,
   )(reduxCreateStore) as typeof reduxCreateStore

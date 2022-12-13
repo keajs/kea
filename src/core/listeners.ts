@@ -17,6 +17,7 @@ export type ListenersPluginContext = {
   byPath: Record<string, Record<string, ListenerFunctionWrapper[]>>
   byAction: Record<string, Record<string, ListenerFunctionWrapper[]>>
   pendingPromises: Map<Promise<void>, [BuiltLogic, string]>
+  pendingQueries: Map<string, Set<Promise<void>>>
 }
 
 export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listeners']): LogicBuilder<L> {
@@ -87,11 +88,18 @@ export function listeners<L extends Logic = Logic>(input: LogicInput<L>['listene
 
               if (response && response.then && typeof response.then === 'function') {
                 trackPendingListener(logic, actionKey, response)
-                return response.catch((e: any) => {
-                  if (e.message !== LISTENERS_BREAKPOINT) {
-                    throw e
-                  }
-                })
+                if (action.queryId) {
+                  addQueryListener(action.queryId, response)
+                }
+                return response
+                  .catch((e: any) => {
+                    if (e.message !== LISTENERS_BREAKPOINT) {
+                      throw e
+                    }
+                  })
+                  .finally(() => {
+                    removeQueryListener(action.queryId, response)
+                  })
               }
             } catch (e: any) {
               if (e.message !== LISTENERS_BREAKPOINT) {
@@ -158,4 +166,25 @@ function trackPendingListener(logic: BuiltLogic, actionKey: string, response: Pr
     pendingPromises.delete(response)
   }
   response.then(remove).catch(remove)
+}
+
+function addQueryListener(queryId: string, response: Promise<void>) {
+  const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
+  const queries = pendingQueries.get(queryId)
+  if (queries) {
+    queries.add(response)
+  } else {
+    pendingQueries.set(queryId, new Set([response]))
+  }
+}
+
+function removeQueryListener(queryId: string, response: Promise<void>) {
+  const { pendingQueries } = getPluginContext<ListenersPluginContext>('listeners')
+  const queries = pendingQueries.get(queryId)
+  if (queries) {
+    queries.delete(response)
+    if (queries.size === 0) {
+      pendingQueries.delete(queryId)
+    }
+  }
 }
