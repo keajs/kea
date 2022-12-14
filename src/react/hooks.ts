@@ -47,6 +47,11 @@ export function useActions<L extends Logic = Logic>(logic: BuiltLogic<L> | Logic
   return builtLogic['actions']
 }
 
+export function useAsyncActions<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): L['asyncActions'] {
+  const builtLogic = useMountedLogic(logic)
+  return builtLogic['asyncActions']
+}
+
 const blankContext = createContext(undefined as BuiltLogic | undefined)
 
 export function useMountedLogic<L extends Logic = Logic>(logic: BuiltLogic<L> | LogicWrapper<L>): BuiltLogic<L> {

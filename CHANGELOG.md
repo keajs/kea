@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.2 - 2022-12-14
+
+- Add `useAsyncActions` hook
+
 ## 3.1.1 - 2022-12-13
 
 - Add support for `asyncActions`:

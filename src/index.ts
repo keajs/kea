@@ -6,7 +6,15 @@ import { resetContext } from './kea/context'
 
 export { kea } from './kea/kea'
 
-export { useValues, useAllValues, useActions, useMountedLogic, useSelector, batchChanges } from './react/hooks'
+export {
+  useValues,
+  useAllValues,
+  useActions,
+  useAsyncActions,
+  useMountedLogic,
+  useSelector,
+  batchChanges,
+} from './react/hooks'
 export { BindLogic } from './react/bind'
 export { Provider } from './react/provider'
 
