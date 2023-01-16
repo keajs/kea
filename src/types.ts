@@ -112,7 +112,7 @@ export interface KeaAction {
 
 export type ReducerActions<
   LogicType extends Logic,
-  ReducerType,
+  ReducerType
 > = LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
   ? {
       [K in keyof LogicType['actionCreators']]?: (
@@ -195,13 +195,14 @@ export type ListenerDefinitionsForRecord<A extends Record<string, (...args: any)
   [K in keyof A]?: ListenerFunction<ReturnType<A[K]>> | ListenerFunction<ReturnType<A[K]>>[]
 }
 
-export type ListenerDefinitions<LogicType extends Logic> =
-  LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
-    ? ListenerDefinitionsForRecord<LogicType['actionCreators']>
-    : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
-    ? ListenerDefinitionsForRecord<LogicType['actionCreators']> &
-        ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
-    : never
+export type ListenerDefinitions<
+  LogicType extends Logic
+> = LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
+  ? ListenerDefinitionsForRecord<LogicType['actionCreators']>
+  : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+  ? ListenerDefinitionsForRecord<LogicType['actionCreators']> &
+      ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
+  : never
 
 export type EventDefinitions<LogicType extends Logic> = {
   beforeMount?: (() => void) | (() => void)[]
@@ -275,7 +276,9 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
-  urlToAction?: (logic: LogicType) => Record<
+  urlToAction?: (
+    logic: LogicType,
+  ) => Record<
     string,
     (
       params: Record<string, string | undefined>,
@@ -302,7 +305,9 @@ export type LogicInput<LogicType extends Logic = Logic> = {
       },
     ) => any
   >
-  actionToUrl?: (logic: LogicType) => {
+  actionToUrl?: (
+    logic: LogicType,
+  ) => {
     [K in keyof LogicType['actionCreators']]?: (
       payload: Record<string, any>,
     ) =>
@@ -335,7 +340,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values extends Record<string, any> = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps = Props,
+  LogicProps = Props
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -372,9 +377,61 @@ export interface MakeLogicType<
     [K in keyof Values]: (...args: any) => Values[K]
   }
 }
+
+export interface KeaLogicTypeInput {
+  values?: Record<string, unknown>
+  actions?: Record<string, AnyFunction>
+  props?: Props
+
+  __keaTypeGenInternalSelectorTypes?: Record<string, any>
+  __keaTypeGenInternalReducerActions?: Record<string, any>
+  __keaTypeGenInternalExtraInput?: Record<string, any>
+}
+
+/** Create a logicType for a logic from minimal input. Used in typegen inline mode. */
+export interface KeaLogicType<Input extends KeaLogicTypeInput> extends Logic {
+  actionCreators: {
+    [ActionKey in keyof Input['actions']]: Input['actions'][ActionKey] extends AnyFunction
+      ? ActionCreatorForPayloadBuilder<Input['actions'][ActionKey]>
+      : never
+  }
+  actionKeys: Record<string, string>
+  actionTypes: {
+    [ActionKey in keyof Input['actions']]: string
+  }
+  actions: {
+    [ActionKey in keyof Input['actions']]: Input['actions'][ActionKey] extends AnyFunction
+      ? ActionForPayloadBuilder<Input['actions'][ActionKey]>
+      : never
+  }
+  defaults: Input['values'] extends Record<string, unknown> ? Input['values'] : Record<string, unknown>
+  props: Input['props']
+  reducer: ReducerFunction<Input['values']>
+  reducers: {
+    [Value in keyof Input['values']]: ReducerFunction<Input['values'][Value]>
+  }
+  selector: (state: any, props: Input['props']) => Input['values']
+  selectors: {
+    [Value in keyof Input['values']]: (state: any, props: Input['props']) => Input['values'][Value]
+  }
+  values: Input['values'] extends Record<string, unknown> ? Input['values'] : Record<string, unknown>
+
+  __keaTypeGenInternalSelectorTypes: Input['__keaTypeGenInternalSelectorTypes'] extends Record<string, any>
+    ? Input['__keaTypeGenInternalSelectorTypes']
+    : Record<string, any>
+  __keaTypeGenInternalReducerActions: Input['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+    ? Input['__keaTypeGenInternalReducerActions']
+    : Record<string, any>
+  __keaTypeGenInternalExtraInput: Input['__keaTypeGenInternalExtraInput'] extends Record<string, any>
+    ? Input['__keaTypeGenInternalExtraInput']
+    : Record<string, any>
+}
+
 export type AnyFunction = (...args: any) => any
 
-export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
+export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
+  ...args: Parameters<B>
+) => {
   type: string
   payload: ReturnType<B>
 }
