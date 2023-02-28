@@ -76,8 +76,12 @@ export interface LogicWrapperAdditions<LogicType extends Logic> {
   build: (props?: LogicType['props']) => BuiltLogic<LogicType>
   mount: () => () => void
   unmount: () => void
-  isMounted: (props?: Record<string, any>) => boolean
-  findMounted: (props?: Record<string, any>) => BuiltLogic<LogicType> | null
+  /** Is a logic with the given key or props mounted? */
+  isMounted: (keyOrProps?: KeyType | Record<string, any>) => boolean
+  /** Find a mounted logic or return null */
+  findMounted: (keyOrProps?: KeyType | Record<string, any>) => BuiltLogic<LogicType> | null
+  /** Find a mounted logic or throw */
+  find: (keyOrProps?: KeyType | Record<string, any>) => BuiltLogic<LogicType>
   extend: <ExtendLogicType extends Logic = LogicType>(
     extendedInput: LogicInput<ExtendLogicType>,
   ) => LogicWrapper<ExtendLogicType>
@@ -112,7 +116,7 @@ export interface KeaAction {
 
 export type ReducerActions<
   LogicType extends Logic,
-  ReducerType
+  ReducerType,
 > = LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
   ? {
       [K in keyof LogicType['actionCreators']]?: (
@@ -195,14 +199,13 @@ export type ListenerDefinitionsForRecord<A extends Record<string, (...args: any)
   [K in keyof A]?: ListenerFunction<ReturnType<A[K]>> | ListenerFunction<ReturnType<A[K]>>[]
 }
 
-export type ListenerDefinitions<
-  LogicType extends Logic
-> = LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
-  ? ListenerDefinitionsForRecord<LogicType['actionCreators']>
-  : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
-  ? ListenerDefinitionsForRecord<LogicType['actionCreators']> &
-      ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
-  : never
+export type ListenerDefinitions<LogicType extends Logic> =
+  LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, never>
+    ? ListenerDefinitionsForRecord<LogicType['actionCreators']>
+    : LogicType['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+    ? ListenerDefinitionsForRecord<LogicType['actionCreators']> &
+        ListenerDefinitionsForRecord<LogicType['__keaTypeGenInternalReducerActions']>
+    : never
 
 export type EventDefinitions<LogicType extends Logic> = {
   beforeMount?: (() => void) | (() => void)[]
@@ -276,9 +279,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
   // plugins
   loaders?: LoaderDefinitions<LogicType> | ((logic: LogicType) => LoaderDefinitions<LogicType>)
   windowValues?: WindowValuesDefinitions<LogicType> | ((logic: LogicType) => WindowValuesDefinitions<LogicType>)
-  urlToAction?: (
-    logic: LogicType,
-  ) => Record<
+  urlToAction?: (logic: LogicType) => Record<
     string,
     (
       params: Record<string, string | undefined>,
@@ -305,9 +306,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
       },
     ) => any
   >
-  actionToUrl?: (
-    logic: LogicType,
-  ) => {
+  actionToUrl?: (logic: LogicType) => {
     [K in keyof LogicType['actionCreators']]?: (
       payload: Record<string, any>,
     ) =>
@@ -340,7 +339,7 @@ export type LogicInput<LogicType extends Logic = Logic> = {
 export interface MakeLogicType<
   Values extends Record<string, any> = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
-  LogicProps = Props
+  LogicProps = Props,
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -429,9 +428,7 @@ export interface KeaLogicType<Input extends KeaLogicTypeInput> extends Logic {
 
 export type AnyFunction = (...args: any) => any
 
-export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (
-  ...args: Parameters<B>
-) => {
+export type ActionCreatorForPayloadBuilder<B extends AnyFunction> = (...args: Parameters<B>) => {
   type: string
   payload: ReturnType<B>
 }

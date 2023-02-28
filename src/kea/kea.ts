@@ -1,7 +1,17 @@
 import { getContext } from './context'
-import { getBuiltLogic, getCachedBuiltLogic } from './build'
+import { getBuiltLogic, getCachedBuiltLogicByKey, getCachedBuiltLogicByProps } from './build'
 import { wrapComponent } from '../react/wrap'
-import { AnyComponent, BuiltLogic, KeaComponent, Logic, LogicBuilder, LogicInput, LogicWrapper, Props } from '../types'
+import {
+  AnyComponent,
+  BuiltLogic,
+  KeaComponent,
+  Logic,
+  LogicBuilder,
+  LogicInput,
+  LogicWrapper,
+  Props,
+  KeyType,
+} from '../types'
 
 /*
 
@@ -89,16 +99,27 @@ export function kea<L extends Logic = Logic>(
   wrapper.build = (props?: Props) => getBuiltLogic(wrapper, props)
   wrapper.mount = () => wrapper.build().mount()
   wrapper.unmount = () => wrapper.build().unmount()
-  wrapper.isMounted = (props?: Record<string, any>) => {
-    const builtLogic = getCachedBuiltLogic(wrapper, props)
-    if (!builtLogic) {
-      return false
+  wrapper.isMounted = (keyOrProps?: Record<string, any> | KeyType) => !!wrapper.findMounted(keyOrProps)
+  wrapper.findMounted = (keyOrProps?: Record<string, any> | KeyType) => {
+    try {
+      return wrapper.find(keyOrProps)
+    } catch (e) {
+      return null
     }
-    const counter = getContext().mount.counter[builtLogic.pathString]
-    return typeof counter === 'number' && counter > 0
   }
-  wrapper.findMounted = (props?: Record<string, any>) => {
-    return wrapper.isMounted(props) ? getCachedBuiltLogic(wrapper, props) : null
+  wrapper.find = (keyOrProps?: Record<string, any> | KeyType) => {
+    const builtLogic =
+      typeof keyOrProps === 'object'
+        ? getCachedBuiltLogicByProps<L>(wrapper, keyOrProps)
+        : getCachedBuiltLogicByKey<L>(wrapper, keyOrProps)
+    if (builtLogic && getContext().mount.counter[builtLogic.pathString] > 0) {
+      return builtLogic
+    }
+    const keyString =
+      typeof keyOrProps !== 'undefined'
+        ? ` with ${typeof keyOrProps === 'object' ? 'props' : 'key'} ${JSON.stringify(keyOrProps)}`
+        : ''
+    throw new Error(`[KEA] Can not find mounted ${builtLogic?.pathString ?? 'logic'}${keyString}`)
   }
   wrapper.extend = <ExtendLogic extends Logic = L>(
     extendedInput:

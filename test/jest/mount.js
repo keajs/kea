@@ -136,28 +136,44 @@ describe('mount', () => {
       expect(isLogicBuilt()).toBeFalsy()
       expect(logic.isMounted()).toEqual(false)
       expect(logic.findMounted()).toEqual(null)
+      expect(() => {
+        logic.find()
+      }).toThrowError('[KEA] Can not find mounted logic')
       expect(isLogicBuilt()).toBeFalsy()
       const u1 = logic.mount()
       expect(isLogicBuilt()).toBeTruthy()
       expect(logic.isMounted()).toEqual(true)
       expect(logic.findMounted()).toEqual(logic())
+      expect(logic.find()).toEqual(logic())
       u1()
       expect(isLogicBuilt()).toBeFalsy()
     })
 
-    test('isMounted/findMounted() on logicWrapper with a key and no props returns false', () => {
+    test('isMounted() on logicWrapper with a key and no props returns false', () => {
       const logic = kea({ key: ({ id }) => id })
       expect(logic.isMounted()).toBeFalsy()
     })
 
-    test('isMounted/findMounted() on logicWrapper accepts props', () => {
+    test('isMounted/findMounted/find() on logicWrapper accepts props', () => {
       const logic = kea({ key: ({ id }) => id })
       expect(logic.isMounted({ id: 12 })).toEqual(false)
+      expect(logic.isMounted(12)).toEqual(false)
       expect(logic.findMounted({ id: 12 })).toEqual(null)
+      expect(logic.findMounted(12)).toEqual(null)
+      expect(() => {
+        logic.find({ id: 12 })
+      }).toThrowError('[KEA] Can not find mounted logic with props {"id":12}')
+      expect(() => {
+        logic.find(12)
+      }).toThrowError('[KEA] Can not find mounted logic with key 12')
 
       logic({ id: 12 }).mount()
       expect(logic.isMounted({ id: 12 })).toEqual(true)
+      expect(logic.isMounted(12)).toEqual(true)
       expect(logic.findMounted({ id: 12 })).toEqual(logic({ id: 12 }))
+      expect(logic.findMounted(12)).toEqual(logic({ id: 12 }))
+      expect(logic.find({ id: 12 })).toEqual(logic({ id: 12 }))
+      expect(logic.find(12)).toEqual(logic({ id: 12 }))
     })
 
     test('buildLogic', async () => {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.4 - 2023-01-16
+
+- Support searching by key in `logic.findMounted(123)` and `logic.isMounted('string key')`.
+- Adds `logic.find(keyOrProps?)`, which throws if the logic is not mounted.
+
 ## 3.1.3 - 2023-01-16
 
 - Release with experimental `KeaLogicType` type builder (experimental only in 3.1.x).

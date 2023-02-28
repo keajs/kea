@@ -3,7 +3,7 @@ import { getContext } from './context'
 
 import { mountLogic, unmountLogic } from './mount'
 
-import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext } from '../types'
+import { Logic, LogicWrapper, Props, LogicInput, BuiltLogic, LogicBuilder, WrapperContext, KeyType } from '../types'
 import { addConnection } from '../core/connect'
 import { key, path, props } from '../core'
 import { shallowCompare } from '../utils'
@@ -54,7 +54,7 @@ export function getBuiltLogic<L extends Logic = Logic>(
     throw new Error(`[KEA] Circular build detected.`)
   }
 
-  const cachedLogic = getCachedBuiltLogic(wrapper, props)
+  const cachedLogic = getCachedBuiltLogicByProps(wrapper, props)
   if (cachedLogic) {
     let prevPropsClone: Props | null = null
     if (
@@ -161,13 +161,21 @@ export function getBuiltLogic<L extends Logic = Logic>(
   return logic
 }
 
-export function getCachedBuiltLogic<L extends Logic = Logic>(
+export function getCachedBuiltLogicByKey<L extends Logic = Logic>(
+  wrapper: LogicWrapper<L>,
+  key: KeyType | undefined,
+): BuiltLogic<L> | null {
+  const wrapperContext = getWrapperContext(wrapper)
+  const builtLogic = wrapperContext.builtLogics.get(key)
+  return builtLogic ?? null
+}
+
+export function getCachedBuiltLogicByProps<L extends Logic = Logic>(
   wrapper: LogicWrapper<L>,
   props: Props | undefined,
 ): BuiltLogic<L> | null {
   const wrapperContext = getWrapperContext(wrapper)
-  const builtLogic = wrapperContext.builtLogics.get(wrapperContext?.keyBuilder?.(props ?? {}))
-  return builtLogic ?? null
+  return getCachedBuiltLogicByKey<L>(wrapper, wrapperContext?.keyBuilder?.(props ?? {}))
 }
 
 export function getWrapperContext<L extends Logic = Logic>(wrapper: LogicWrapper<L>): WrapperContext<L> {
