@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.5 - 2023-03-16
+- Fix bug with deriving default key from undefined props.
+
 ## 3.1.4 - 2023-01-16
 
 - Support searching by key in `logic.findMounted(123)` and `logic.isMounted('string key')`.

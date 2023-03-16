@@ -109,7 +109,7 @@ export function kea<L extends Logic = Logic>(
   }
   wrapper.find = (keyOrProps?: Record<string, any> | KeyType) => {
     const builtLogic =
-      typeof keyOrProps === 'object'
+      typeof keyOrProps === 'object' || typeof keyOrProps === 'undefined'
         ? getCachedBuiltLogicByProps<L>(wrapper, keyOrProps)
         : getCachedBuiltLogicByKey<L>(wrapper, keyOrProps)
     if (builtLogic && getContext().mount.counter[builtLogic.pathString] > 0) {

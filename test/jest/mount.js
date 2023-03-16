@@ -1,4 +1,4 @@
-import { kea, resetContext, getContext } from '../../src'
+import { kea, resetContext, getContext, path, key } from '../../src'
 
 describe('mount', () => {
   beforeEach(() => {
@@ -192,5 +192,11 @@ describe('mount', () => {
       logic.mount()
       expect(logic.isMounted()).toEqual(true)
     })
+  })
+
+  test('can mount logic with default key', () => {
+    const logic = kea([path((key) => ['scenes', 'misc', key]), key(({ id }) => id ?? 'default')])
+    logic.mount()
+    expect(logic.isMounted()).toEqual(true)
   })
 })
