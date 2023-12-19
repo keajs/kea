@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.6 - 2023-12-19
+- Increase the amount of supported selectors in a selector's input from 11 to 16.
+
 ## 3.1.5 - 2023-03-16
 - Fix bug with deriving default key from undefined props.
 

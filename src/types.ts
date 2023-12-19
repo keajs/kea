@@ -172,6 +172,86 @@ export type SelectorTuple =
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
   | [Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector, Selector]
+  | [
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+    ]
+  | [
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+    ]
+  | [
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+    ]
+  | [
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+    ]
+  | [
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+      Selector,
+    ]
 
 export type SelectorDefinition<Selectors, PropSelectors, SelectorFunction extends any> =
   | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction]
