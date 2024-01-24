@@ -8,8 +8,6 @@
 
 # Kea v3
 
-**🗞🚨🗞🚨 Subscribe to the [Kea Newsletter](https://keajs.ck.page/80aecebec7) to keep up to date with latest news! 🗞🚨🗞🚨**
-
 [Read the documentation](https://keajs.org/)
 
 
