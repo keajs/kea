@@ -8,6 +8,7 @@ import { reducers } from './reducers'
 import { selectors } from './selectors'
 import { events } from './events'
 import { runPlugins } from '../kea/plugins'
+import {Action} from "redux";
 
 export { actions } from './actions'
 export { connect } from './connect'
@@ -57,7 +58,7 @@ export const corePlugin: KeaPlugin = {
 
     // add listeners middleware
     beforeReduxStore(options: CreateStoreOptions): void {
-      options.middleware.push((store) => (next) => (action) => {
+      options.middleware.push((store) => (next) => (action: any) => {
         const previousState = store.getState()
         const response = next(action)
         const { byAction } = getPluginContext<ListenersPluginContext>('listeners')

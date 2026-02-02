@@ -1,5 +1,5 @@
 import { Logic, LogicBuilder, LogicPropSelectors, Selector, SelectorDefinition, SelectorDefinitions } from '../types'
-import { createSelector, createSelectorCreator, defaultMemoize, ParametricSelector } from 'reselect'
+import { createSelector, Selector as ReselectSelector } from 'reselect'
 import { getStoreState } from '../kea/context'
 
 /**
@@ -61,7 +61,7 @@ export function selectors<L extends Logic = Logic>(
         throw new Error(`[KEA] Logic "${logic.pathString}" selector "${key}" is undefined`)
       }
       const [input, func, memoizeOptions] = arr
-      const args: ParametricSelector<any, any, any>[] = input(logic.selectors, propSelectors)
+      const args: ReselectSelector<any, any, any>[] = input(logic.selectors, propSelectors)
 
       if (args.filter((a) => typeof a !== 'function').length > 0) {
         const argTypes = args.map((a) => typeof a).join(', ')

@@ -1,6 +1,6 @@
-import type { Reducer, Store, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
+import { Reducer, Store, Middleware, StoreEnhancer, compose, AnyAction } from 'redux'
 import { Context as ReactContext, ComponentType, FunctionComponent } from 'react'
-import { DefaultMemoizeOptions } from 'reselect'
+import { WeakMapMemoizeOptions } from 'reselect'
 
 // universal helpers
 export type AnyComponent = ComponentType | FunctionComponent
@@ -257,7 +257,7 @@ export type SelectorTuple =
 
 export type SelectorDefinition<Selectors, PropSelectors, SelectorFunction extends any> =
   | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction]
-  | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction, DefaultMemoizeOptions]
+  | [(s: Selectors, p: PropSelectors) => SelectorTuple, SelectorFunction, WeakMapMemoizeOptions]
 
 export type LogicPropSelectors<LogicType extends Logic> = {
   [PK in keyof LogicType['props']]: () => LogicType['props'][PK]
