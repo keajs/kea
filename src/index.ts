@@ -1,3 +1,4 @@
+import { setGlobalDevModeChecks } from 'reselect'
 export * from './types'
 export * from './utils'
 export * from './core'
@@ -29,8 +30,12 @@ export { isBreakpoint } from './core/listeners'
 
 // Must do this to make TSD happy, as otherwise rollup+dts produces an invalid .d.ts file
 import { ATTACH_REDUCER as A, DETACH_REDUCER as D } from './kea/reducer'
+
 export const ATTACH_REDUCER = A as '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = D as '@KEA/DETACH_REDUCER'
+
+// without this we throw warnings at selectors with just one input that return the same value (aka aliases)
+setGlobalDevModeChecks({ inputStabilityCheck: 'never' })
 
 // this will create a default context
 resetContext({}, true)
