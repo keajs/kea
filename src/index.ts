@@ -35,7 +35,7 @@ export const ATTACH_REDUCER = A as '@KEA/ATTACH_REDUCER'
 export const DETACH_REDUCER = D as '@KEA/DETACH_REDUCER'
 
 // without this we throw warnings at selectors with just one input that return the same value (aka aliases)
-setGlobalDevModeChecks({ inputStabilityCheck: 'never' })
+setGlobalDevModeChecks({ identityFunctionCheck: 'never' })
 
 // this will create a default context
 resetContext({}, true)
