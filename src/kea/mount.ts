@@ -69,7 +69,7 @@ export function unmountLogic(logic: BuiltLogic): void {
       connectedLogic.events.afterUnmount?.()
 
       // clear build cache
-      getContext().wrapperContexts.get(logic.wrapper)?.builtLogics.delete(connectedLogic.key)
+      getContext().wrapperContexts.get(connectedLogic.wrapper)?.builtLogics.delete(connectedLogic.key)
     }
   }
 }
