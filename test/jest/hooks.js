@@ -490,6 +490,37 @@ describe('hooks', () => {
     unmount()
   })
 
+  it('batchChanges does not throw when store.getState() is called during dispatch', () => {
+    const { store } = getContext()
+
+    const logic = kea([
+      path(['batchTest']),
+      actions({ doSomething: true }),
+      reducers({ done: [false, { doSomething: () => true }] }),
+    ])
+
+    const unmountLogic = logic.mount()
+
+    const badReducer = (state = {}, action) => {
+      if (action.type === 'TRIGGER_BATCH_DURING_DISPATCH') {
+        batchChanges(() => {
+          unmountLogic()
+        })
+      }
+      return state
+    }
+    store.replaceReducer((state = {}, action) => {
+      return {
+        ...badReducer(state, action),
+        ...getContext().reducers.combined(state, action, state),
+      }
+    })
+
+    expect(() => {
+      store.dispatch({ type: 'TRIGGER_BATCH_DURING_DISPATCH' })
+    }).not.toThrow()
+  })
+
   it('batchChanges works as expected', async () => {
     resetContext({
       createStore: {

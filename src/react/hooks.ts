@@ -11,6 +11,15 @@ export const isPaused = () => pauseCounter !== 0
 
 const getStoreState = () => getContext().store.getState()
 
+/** Returns undefined instead of throwing if Redux is mid-dispatch. */
+const safeGetStoreState = () => {
+  try {
+    return getStoreState()
+  } catch {
+    return undefined
+  }
+}
+
 export function useSelector(selector: Selector): any {
   return useSyncExternalStore(getContext().store.subscribe, () => selector(getStoreState()))
 }
@@ -103,7 +112,7 @@ let timeout: any
 /** Delay Redux subscriptions from firing and asking React to re-render.
  * Will set a Timeout to flush if store changed during callback. */
 export function batchChanges(callback: () => void) {
-  const previousState = getStoreState()
+  const previousState = safeGetStoreState()
   pauseCounter += 1
   try {
     callback()
@@ -111,7 +120,7 @@ export function batchChanges(callback: () => void) {
   } finally {
     pauseCounter -= 1
   }
-  const newState = getStoreState()
+  const newState = safeGetStoreState()
   if (previousState !== newState) {
     timeout && clearTimeout(timeout)
     timeout = setTimeout(() => getContext().store.dispatch({ type: '@KEA/FLUSH' }), 0)
