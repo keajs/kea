@@ -422,6 +422,7 @@ export interface MakeLogicType<
   Values extends Record<string, any> = Record<string, unknown>,
   Actions = Record<string, AnyFunction>,
   LogicProps = Props,
+  Meta extends KeaLogicTypeInput = {},
 > extends Logic {
   actionCreators: {
     [ActionKey in keyof Actions]: Actions[ActionKey] extends AnyFunction
@@ -448,21 +449,35 @@ export interface MakeLogicType<
   reducers: {
     [Value in keyof Values]: ReducerFunction<Values[Value]>
   }
-  selector: (state: any, props: LogicProps) => Values
+  key: Meta['key'] extends KeyType ? Meta['key'] : KeyType | undefined
+  selector: (state: any, props?: LogicProps) => Values
   selectors: {
-    [Value in keyof Values]: (state: any, props: LogicProps) => Values[Value]
+    [Value in keyof Values]: (state: any, props?: LogicProps) => Values[Value]
   }
+  sharedListeners: Meta['sharedListeners'] extends Record<string, ListenerFunction>
+    ? Meta['sharedListeners']
+    : Record<string, ListenerFunction> | undefined
   values: Values
 
-  __keaTypeGenInternalSelectorTypes: {
-    [K in keyof Values]: (...args: any) => Values[K]
-  }
+  __keaTypeGenInternalSelectorTypes: Meta['__keaTypeGenInternalSelectorTypes'] extends Record<string, any>
+    ? Meta['__keaTypeGenInternalSelectorTypes']
+    : {
+        [K in keyof Values]: (...args: any) => Values[K]
+      }
+  __keaTypeGenInternalReducerActions: Meta['__keaTypeGenInternalReducerActions'] extends Record<string, any>
+    ? Meta['__keaTypeGenInternalReducerActions']
+    : Record<string, any>
+  __keaTypeGenInternalExtraInput: Meta['__keaTypeGenInternalExtraInput'] extends Record<string, any>
+    ? Meta['__keaTypeGenInternalExtraInput']
+    : Record<string, any>
 }
 
 export interface KeaLogicTypeInput {
   values?: Record<string, unknown>
   actions?: Record<string, AnyFunction>
   props?: Props
+  key?: KeyType
+  sharedListeners?: Record<string, ListenerFunction>
 
   __keaTypeGenInternalSelectorTypes?: Record<string, any>
   __keaTypeGenInternalReducerActions?: Record<string, any>
@@ -491,10 +506,14 @@ export interface KeaLogicType<Input extends KeaLogicTypeInput> extends Logic {
   reducers: {
     [Value in keyof Input['values']]: ReducerFunction<Input['values'][Value]>
   }
-  selector: (state: any, props: Input['props']) => Input['values']
+  key: Input['key'] extends KeyType ? Input['key'] : KeyType | undefined
+  selector: (state: any, props?: Input['props']) => Input['values']
   selectors: {
-    [Value in keyof Input['values']]: (state: any, props: Input['props']) => Input['values'][Value]
+    [Value in keyof Input['values']]: (state: any, props?: Input['props']) => Input['values'][Value]
   }
+  sharedListeners: Input['sharedListeners'] extends Record<string, ListenerFunction>
+    ? Input['sharedListeners']
+    : Record<string, ListenerFunction> | undefined
   values: Input['values'] extends Record<string, unknown> ? Input['values'] : Record<string, unknown>
 
   __keaTypeGenInternalSelectorTypes: Input['__keaTypeGenInternalSelectorTypes'] extends Record<string, any>

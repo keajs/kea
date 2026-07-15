@@ -10,6 +10,7 @@ import {
   KeaReduxAction,
   KeyType,
   ReducerFunction,
+  ListenerFunction,
   // It's a bit of a hack, but it works! :-)
   // This file is copied to "lib/" and tested against the built bundle, thus we are importing from "." (index.js)
   // ... requiring the following comments:
@@ -78,14 +79,16 @@ expectType<{
   pinned: (state: boolean, action: KeaReduxAction, fullState: any) => boolean
 }>(logic.reducers)
 
-expectType<(state: any, props: DashboardProps) => DashboardValues>(logic.selector)
+expectType<(state: any, props?: DashboardProps) => DashboardValues>(logic.selector)
 
 expectType<{
-  id: (state: any, props: DashboardProps) => number
-  created_at: (state: any, props: DashboardProps) => string
-  name: (state: any, props: DashboardProps) => string
-  pinned: (state: any, props: DashboardProps) => boolean
+  id: (state: any, props?: DashboardProps) => number
+  created_at: (state: any, props?: DashboardProps) => string
+  name: (state: any, props?: DashboardProps) => string
+  pinned: (state: any, props?: DashboardProps) => boolean
 }>(logic.selectors)
+
+logic.selectors.id({})
 
 expectType<{
   id: (...args: any) => number
@@ -113,6 +116,20 @@ expectType<{
   propsChanged?: ((props: any, oldProps: any) => void) | undefined
 }>(logic.events)
 expectType<Record<string, any>>(logic.__keaTypeGenInternalReducerActions)
+
+interface DashboardMeta {
+  key: string
+  sharedListeners: Record<'saveDashboard', ListenerFunction>
+  __keaTypeGenInternalSelectorTypes: {
+    name: (prefix: string) => string
+  }
+}
+
+const logicWithMeta = kea<MakeLogicType<DashboardValues, DashboardActions, DashboardProps, DashboardMeta>>({})
+
+expectType<string>(logicWithMeta.key)
+expectType<Record<'saveDashboard', ListenerFunction>>(logicWithMeta.sharedListeners)
+expectType<(prefix: string) => string>(logicWithMeta.__keaTypeGenInternalSelectorTypes.name)
 
 /*
  * 4. Test Empty Logic
